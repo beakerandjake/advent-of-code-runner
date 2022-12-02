@@ -2,7 +2,7 @@
   "name": "advent-of-code-runner",
   "version": "1.0.0",
   "description": "CLI for running and submitting Advent of Code Puzzles",
-  "main": "index.js",
+  "main": "main.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -17,6 +17,8 @@
   },
   "homepage": "https://github.com/beakerandjake/advent-of-code-runner#readme",
   "dependencies": {
+    "commander": "^9.4.1",
     "dotenv": "^16.0.3"
-  }
+  },
+  "type":"module"
 }
