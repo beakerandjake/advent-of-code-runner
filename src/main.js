@@ -1,5 +1,6 @@
-import { downloadInputFile } from './downloadInputFile.js';
+import { downloadInput } from './downloadInput.js';
 import { logger } from './logger.js';
+import { saveInputToFile } from './io.js';
 
 // const input = await downloadInputFile(
 //   process.env.AOC_YEAR,
@@ -8996,6 +8997,4 @@ const z = `
 6630
 `;
 
-const size = (Buffer.byteLength(z, 'utf-8') / 1000).toFixed(2);
-
-logger.info('size: %skb', size);
+await saveInputToFile(2022, 1, z);

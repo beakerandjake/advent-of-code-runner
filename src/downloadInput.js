@@ -18,7 +18,7 @@ const getInputURL = (year, dayNumber) =>
  * @param {String} authenticationToken
  * @returns {Promise<String>} The puzzle input for the given day.
  */
-export const downloadInputFile = async (
+export const downloadInput = async (
   year,
   dayNumber,
   authenticationToken
