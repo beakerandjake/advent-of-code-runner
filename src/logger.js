@@ -16,7 +16,7 @@ export const logger = createLogger({
         // format.simple would be nice to use, but doesn't print a human readable stack trace.
         // write a custom printf that mirrors format.simple, but prints a better stack trace.
         format.printf(({ level, message, stack }) => {
-          if (printStackTrace) {
+          if (printStackTrace && stack) {
             return `${level}: ${message} - ${stack}`;
           }
           return `${level}: ${message}`;
