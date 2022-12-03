@@ -1,9 +1,7 @@
-import { config } from 'dotenv';
+import get from 'lodash.get';
+import has from 'lodash.has';
 
-// bootstrap dotenv
-config();
-
-const config = {
+const CONFIG = {
     logging: {
         level: process.env.LOG_LEVEL || 'info',
         includeStackTrace: process.env.NODE_ENV !== 'production'
@@ -15,6 +13,18 @@ const config = {
     }
 };
 
-export const getConfigValue = (key) => {
-    return config[key] || null;
+// TODO, set from command line too.
+
+/**
+ * Returns the configuration value of the specified key.
+ * @param {String} key - The key of the config value to access
+ * @param {Boolean} silentFail - If set to false requesting a key which does not exist will raise an exception
+ * @returns {any}
+ */
+export const getConfigValue = (key, silentFail = false) => {
+    if (!silentFail && !has(CONFIG, key)) {
+        throw new Error(`Unknown config key: ${key}`);
+    }
+
+    return get(CONFIG, key, null);
 };
