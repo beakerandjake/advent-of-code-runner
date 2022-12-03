@@ -10,6 +10,7 @@ const CONFIG = {
     year: process.env.AOC_YEAR || new Date().getFullYear(),
     authenticationToken: process.env.AOC_AUTHENTICATION_TOKEN || null,
     baseUrl: process.env.AOC_BASE_URL || 'https://adventofcode.com',
+    userAgent: 'https://github.com/beakerandjake/advent-of-code-runner by beakerandjake',
   },
 };
 
