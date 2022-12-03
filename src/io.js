@@ -63,7 +63,7 @@ export const inputFileExits = async (year, day) => {
 export const loadInputFile = async (year, day) => {
   const fileName = getFileName(year, day);
   logger.verbose('loading input for year: %s, day: %s at: %s', year, day, fileName);
-  const input = await readFile(fileName);
-  logger.debug('loaded input file of size: %skb', sizeOfStringInKb(input));
-  return input.toString();
+  const text = (await readFile(fileName)).toString();
+  logger.debug('loaded input file of size: %skb', sizeOfStringInKb(text));
+  return text;
 };
