@@ -11,7 +11,7 @@ const INPUTS_FOLDER = join(cwd(), 'inputs');
  * @param {Number} year
  * @param {Number} day
  */
-const getFileName = (year, day) => join(INPUTS_FOLDER, `${year}`, `day_${day}.txt`);
+const getFileName = (year, day) => join(INPUTS_FOLDER, `${year}_${day}.txt`);
 
 /**
  * Recursively creates all directories which do not exist. Existing directories will be skipped.

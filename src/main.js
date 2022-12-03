@@ -17,4 +17,9 @@ if (!await inputFileExits(year, day)) {
   input = await loadInputFile(year, day);
 }
 
-logger.info('loaded input: %s', input);
+logger.info('loaded input: %s', !!input);
+
+// 2022_day_1.js
+
+// 2022 / day_1.js
+// 2022_day_1.js
