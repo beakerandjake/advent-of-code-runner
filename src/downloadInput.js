@@ -1,6 +1,7 @@
 import { logger } from './logger.js';
+import { getConfigValue } from './config.js';
 
-const BASE_URL = process.env.AOC_BASE_URL || 'https://adventofcode.com';
+const BASE_URL = getConfigValue('aoc.baseUrl');
 
 /**
  * Generates a URL which when queried, returns the input for the given year and day.
