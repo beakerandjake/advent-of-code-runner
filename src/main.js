@@ -3,6 +3,7 @@ import { inputFileExits, saveInputToFile, loadInputFile } from './io.js';
 import { getConfigValue } from './config.js';
 import { logger } from './logger.js';
 import { solve } from './solve.js';
+import { humanizeDuration } from './utils.js';
 
 const year = getConfigValue('aoc.year');
 const day = 1;
@@ -18,9 +19,9 @@ if (!await inputFileExits(year, day)) {
   input = await loadInputFile(year, day);
 }
 
-const solution = await solve(year, day, input);
+const result = await solve(year, day, input);
 
-logger.info('solution: %s', solution);
+logger.info('solution: %s solved in: %s', result.solution, humanizeDuration(result.executionTimeNs));
 
 // 2022_day_1.js
 

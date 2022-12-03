@@ -17,32 +17,6 @@ const importSolution = async (path) => {
 };
 
 /**
- * Converts a duration in nanoseconds to a human readable duration, up to seconds.
- * @param {Number} nanoseconds
- */
-const humanizeDuration = (nanoseconds) => {
-  const seconds = Number(nanoseconds) / (1000 * 1000 * 1000);
-
-  if (seconds >= 1) {
-    return `${parseFloat(seconds.toFixed(2))}s`;
-  }
-
-  const milliseconds = nanoseconds / (1000 * 1000);
-
-  if (milliseconds >= 1) {
-    return `${milliseconds.toFixed(3)}ms`;
-  }
-
-  const microseconds = nanoseconds / 1000;
-
-  if (microseconds >= 1) {
-    return `${microseconds.toFixed(3)}μs`;
-  }
-
-  return `${nanoseconds}ns`;
-};
-
-/**
  * Runs the solution for the given day.
  * @param {Number} year
  * @param {Number} day
@@ -60,11 +34,9 @@ export const solve = async (year, day, input) => {
 
   const start = hrtime.bigint();
 
-  importedSolveFn(input);
+  const result = importedSolveFn(input);
 
   const end = hrtime.bigint();
 
-  logger.info('result: %s', humanizeDuration(Number(end - start)));
-
-  return null;
+  return { solution: result, executionTimeNs: Number(end - start) };
 };
