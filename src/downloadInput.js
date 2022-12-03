@@ -16,6 +16,7 @@ const getInputURL = (year, dayNumber) => `${BASE_URL}/${year}/day/${dayNumber}/i
  * @param {Number} year
  * @param {Number} dayNumber
  * @param {String} authenticationToken
+ * @returns {Promise<String>} The puzzle input for the given day.
  */
 export const downloadInput = async (
   year,
