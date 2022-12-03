@@ -18,7 +18,7 @@ if (!await inputFileExits(year, day)) {
   input = await loadInputFile(year, day);
 }
 
-const solution = runDay(year, day, input);
+const solution = await runDay(year, day, input);
 
 logger.info('solution: %s', solution);
 
