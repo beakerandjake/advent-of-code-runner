@@ -32,7 +32,10 @@ export const downloadInput = async (
   logger.debug('querying url for input: %s', url);
 
   const response = await fetch(url, {
-    headers: { Cookie: `session=${authenticationToken}` },
+    headers: {
+      Cookie: `session=${authenticationToken}`,
+      'User-Agent': getConfigValue('aoc.userAgent'),
+    },
   });
 
   // bad request, authentication failed.
