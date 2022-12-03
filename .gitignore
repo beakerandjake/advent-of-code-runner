@@ -106,3 +106,5 @@ dist
 # ignore local development folders
 inputs/
 solutions/
+
+.DS_Store
