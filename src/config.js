@@ -18,11 +18,10 @@ const CONFIG = {
 /**
  * Returns the configuration value of the specified key.
  * @param {String} key - The key of the config value to access
- * @param {Boolean} silentFail - If set to false requesting a key which does not exist will raise an exception
  * @returns {any}
  */
-export const getConfigValue = (key, silentFail = false) => {
-    if (!silentFail && !has(CONFIG, key)) {
+export const getConfigValue = (key) => {
+    if (!has(CONFIG, key)) {
         throw new Error(`Unknown config key: ${key}`);
     }
 
