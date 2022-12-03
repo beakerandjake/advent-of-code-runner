@@ -1,5 +1,6 @@
 import { logger } from './logger.js';
 import { getConfigValue } from './config.js';
+import { sizeOfStringInKb } from './utils.js';
 
 const BASE_URL = getConfigValue('aoc.baseUrl');
 
@@ -54,7 +55,7 @@ export const downloadInput = async (
 
   const text = (await response.text()) || '';
 
-  logger.debug('downloaded: %skb', (Buffer.byteLength(text, 'utf-8') / 1000).toFixed(2));
+  logger.debug('downloaded: %skb', sizeOfStringInKb(text));
 
   return text.trim();
 };

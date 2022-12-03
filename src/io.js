@@ -1,7 +1,8 @@
-import { writeFile, mkdir, access } from 'fs/promises';
+import { writeFile, mkdir, access, readFile } from 'fs/promises';
 import { cwd } from 'process';
 import { join, dirname } from 'path';
 import { logger } from './logger.js';
+import { sizeOfStringInKb } from './utils.js';
 
 const INPUTS_FOLDER = join(cwd(), 'inputs');
 
@@ -42,7 +43,7 @@ export const saveInputToFile = async (year, day, input) => {
  * Checks to see if an input file has already been created for that days puzzle.
  * @param {Number} year
  * @param {Number} day
- * @returns {Promise<boolean>}
+ * @returns {Promise<Boolean>}
  */
 export const inputFileExits = async (year, day) => {
   logger.verbose('checking if input file exists for year: %s, day: %s', year, day);
@@ -55,4 +56,18 @@ export const inputFileExits = async (year, day) => {
     logger.debug('input file does not exist');
     return false;
   }
+};
+
+/**
+ * Loads the input file for the days puzzle.
+ * @param {Number} year
+ * @param {Promise<String>} day
+ * @returns {String}
+ */
+export const loadInputFile = async (year, day) => {
+  const fileName = getFileName(year, day);
+  logger.verbose('loading input for year: %s, day: %s at: %s', year, day, fileName);
+  const input = await readFile(fileName);
+  logger.debug('loaded input file of size: %skb', sizeOfStringInKb(input));
+  return input;
 };
