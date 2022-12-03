@@ -7,11 +7,11 @@ import { sizeOfStringInKb } from './utils.js';
 const INPUTS_FOLDER = join(cwd(), 'inputs');
 
 /**
- * Returns the file name for the given year and day
+ * Returns the file name for the input file for the given year and day
  * @param {Number} year
  * @param {Number} day
  */
-const getFileName = (year, day) => join(INPUTS_FOLDER, `${year}_${day}.txt`);
+const getInputFileName = (year, day) => join(INPUTS_FOLDER, `${year}_${day}.txt`);
 
 /**
  * Recursively creates all directories which do not exist. Existing directories will be skipped.
@@ -24,13 +24,13 @@ const ensureDirectoriesExist = async (fileName) => {
 };
 
 /**
- * Creates a file in the cwd with pattern "/{year}/day/day_{day}.txt"
+ * Saves the input to a file in the cwd with pattern "/inputs/{year}_{day}.txt"
  * If the file already exists it will be overwritten.
  * @param {Number} year
  * @param {Number} day
  */
 export const saveInputToFile = async (year, day, input) => {
-  const fileName = getFileName(year, day);
+  const fileName = getInputFileName(year, day);
   logger.verbose('saving input for year: %s, day: %s at: %s', year, day, fileName);
   await ensureDirectoriesExist(fileName);
   await writeFile(fileName, input);
@@ -46,7 +46,7 @@ export const inputFileExits = async (year, day) => {
   logger.verbose('checking if input file exists for year: %s, day: %s', year, day);
 
   try {
-    await access(getFileName(year, day));
+    await access(getInputFileName(year, day));
     logger.debug('input file exists');
     return true;
   } catch (error) {
@@ -61,7 +61,7 @@ export const inputFileExits = async (year, day) => {
  * @param {Promise<String>} day
  */
 export const loadInputFile = async (year, day) => {
-  const fileName = getFileName(year, day);
+  const fileName = getInputFileName(year, day);
   logger.verbose('loading input for year: %s, day: %s at: %s', year, day, fileName);
   const text = (await readFile(fileName)).toString();
   logger.debug('loaded input file of size: %skb', sizeOfStringInKb(text));
