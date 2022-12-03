@@ -1,4 +1,4 @@
-import { downloadInput } from './downloadInput.js';
+import { downloadInput } from './api.js';
 import { inputFileExits, saveInputToFile, loadInputFile } from './io.js';
 import { getConfigValue } from './config.js';
 import { logger } from './logger.js';

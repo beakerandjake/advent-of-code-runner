@@ -10,6 +10,16 @@ import { sizeOfStringInKb } from './utils.js';
 const getInputURL = (year, dayNumber) => `${getConfigValue('aoc.baseUrl')}/${year}/day/${dayNumber}/input`;
 
 /**
+ * Creates a headers object which can be passed to fetch.
+ * Contains the headers necessary to interact with the aoc api.
+ * @param {String} authenticationToken
+ */
+const getHeaders = (authenticationToken) => ({
+  Cookie: `session=${authenticationToken}`,
+  'User-Agent': getConfigValue('aoc.userAgent'),
+});
+
+/**
  * Queries the Advent of Code website for the input for a given year and day.
  * @param {Number} year
  * @param {Number} dayNumber
@@ -32,10 +42,7 @@ export const downloadInput = async (
   logger.debug('querying url for input: %s', url);
 
   const response = await fetch(url, {
-    headers: {
-      Cookie: `session=${authenticationToken}`,
-      'User-Agent': getConfigValue('aoc.userAgent'),
-    },
+    headers: getHeaders(authenticationToken),
   });
 
   // bad request, authentication failed.
