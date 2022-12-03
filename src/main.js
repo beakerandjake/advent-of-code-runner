@@ -40,3 +40,6 @@ logger.info('solution: %s solved in: %s', result.solution, humanizeDuration(resu
 // init command to scaffold solution files for an entire year
 //  create a day_x.js file for each day of that month.
 //  skip creation of files that already exist.
+
+// swallow console logs for solutions and route to winston instead with custom
+// log level and color. 
