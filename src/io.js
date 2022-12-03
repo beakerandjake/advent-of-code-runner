@@ -10,7 +10,6 @@ const INPUTS_FOLDER = join(cwd(), 'inputs');
  * Returns the file name for the given year and day
  * @param {Number} year
  * @param {Number} day
- * @returns {String}
  */
 const getFileName = (year, day) => join(INPUTS_FOLDER, `${year}`, `day_${day}.txt`);
 
@@ -29,7 +28,6 @@ const ensureDirectoriesExist = async (fileName) => {
  * If the file already exists it will be overwritten.
  * @param {Number} year
  * @param {Number} day
- * @param {String} input - The content to write to the file
  */
 export const saveInputToFile = async (year, day, input) => {
   const fileName = getFileName(year, day);
@@ -43,7 +41,6 @@ export const saveInputToFile = async (year, day, input) => {
  * Checks to see if an input file has already been created for that days puzzle.
  * @param {Number} year
  * @param {Number} day
- * @returns {Promise<Boolean>}
  */
 export const inputFileExits = async (year, day) => {
   logger.verbose('checking if input file exists for year: %s, day: %s', year, day);
@@ -62,12 +59,11 @@ export const inputFileExits = async (year, day) => {
  * Loads the input file for the days puzzle.
  * @param {Number} year
  * @param {Promise<String>} day
- * @returns {String}
  */
 export const loadInputFile = async (year, day) => {
   const fileName = getFileName(year, day);
   logger.verbose('loading input for year: %s, day: %s at: %s', year, day, fileName);
   const input = await readFile(fileName);
   logger.debug('loaded input file of size: %skb', sizeOfStringInKb(input));
-  return input;
+  return input.toString();
 };

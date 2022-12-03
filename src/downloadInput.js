@@ -6,9 +6,8 @@ const BASE_URL = getConfigValue('aoc.baseUrl');
 
 /**
  * Generates a URL which when queried, returns the input for the given year and day.
- * @param {number} year
- * @param {number} dayNumber
- * @returns {String}
+ * @param {Number} year
+ * @param {Number} dayNumber
  */
 const getInputURL = (year, dayNumber) => `${BASE_URL}/${year}/day/${dayNumber}/input`;
 
@@ -17,7 +16,6 @@ const getInputURL = (year, dayNumber) => `${BASE_URL}/${year}/day/${dayNumber}/i
  * @param {Number} year
  * @param {Number} dayNumber
  * @param {String} authenticationToken
- * @returns {Promise<String>} The puzzle input for the given day.
  */
 export const downloadInput = async (
   year,
