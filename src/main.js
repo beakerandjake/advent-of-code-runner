@@ -2,6 +2,7 @@ import { downloadInput } from './downloadInput.js';
 import { inputFileExits, saveInputToFile, loadInputFile } from './io.js';
 import { getConfigValue } from './config.js';
 import { logger } from './logger.js';
+import { runDay } from './runDay.js';
 
 const year = getConfigValue('aoc.year');
 const day = 1;
@@ -17,7 +18,9 @@ if (!await inputFileExits(year, day)) {
   input = await loadInputFile(year, day);
 }
 
-logger.info('loaded input: %s', !!input);
+const solution = runDay(year, day, input);
+
+logger.info('solution: %s', solution);
 
 // 2022_day_1.js
 
