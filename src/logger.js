@@ -1,6 +1,6 @@
 import { createLogger, format, transports } from 'winston';
 
-const printStackTrace = process.env.NODE_END !== 'production';
+const printStackTrace = process.env.NODE_ENV !== 'production';
 
 export const logger = createLogger({
   level: process.env.LOG_LEVEL || 'info',
