@@ -23,7 +23,7 @@ export const downloadInput = async (
   dayNumber,
   authenticationToken
 ) => {
-  logger.info('downloading input file for year: %s, day: %s', year, dayNumber);
+  logger.verbose('downloading input file for year: %s, day: %s', year, dayNumber);
 
   if (!authenticationToken) {
     throw new Error('Authentication Token is required to download input file.');
@@ -31,7 +31,7 @@ export const downloadInput = async (
 
   const url = getInputURL(year, dayNumber);
 
-  logger.info('querying url for input: %s', url);
+  logger.debug('querying url for input: %s', url);
 
   const response = await fetch(url, {
     headers: { Cookie: `session=${authenticationToken}` },
@@ -54,7 +54,7 @@ export const downloadInput = async (
 
   const text = (await response.text()) || '';
 
-  logger.info('downloaded: %skb', (Buffer.byteLength(text, 'utf-8') / 1000).toFixed(2))
+  logger.debug('downloaded: %skb', (Buffer.byteLength(text, 'utf-8') / 1000).toFixed(2))
 
   return text.trim();
 };
