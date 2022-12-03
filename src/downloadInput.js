@@ -42,6 +42,11 @@ export const downloadInput = async (
     throw new Error('Authentication failed, double check authentication token');
   }
 
+  // not found, invalid day or year.
+  if (response.status === 404) {
+    throw new Error('That year/day combination could not be found');
+  }
+
   // handle all other error status codes
   if (!response.ok) {
     throw new Error(`Failed to download input file: ${response.statusText}`);
@@ -49,7 +54,7 @@ export const downloadInput = async (
 
   const text = (await response.text()) || '';
 
-  logger.info('downloaded: %skb', (Buffer.byteLength(z, 'utf-8') / 1000).toFixed(2))
+  logger.info('downloaded: %skb', (Buffer.byteLength(text, 'utf-8') / 1000).toFixed(2))
 
   return text.trim();
 };
