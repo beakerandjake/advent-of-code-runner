@@ -1,7 +1,7 @@
 import { writeFile, mkdir, access } from 'fs/promises';
-import { logger } from './logger.js';
 import { cwd } from 'process';
 import { join, dirname } from 'path';
+import { logger } from './logger.js';
 
 const INPUTS_FOLDER = join(cwd(), 'inputs');
 
@@ -11,12 +11,11 @@ const INPUTS_FOLDER = join(cwd(), 'inputs');
  * @param {Number} day
  * @returns {String}
  */
-const getFileName = (year, day) =>
-  join(INPUTS_FOLDER, `${year}`, `day_${day}.txt`);
+const getFileName = (year, day) => join(INPUTS_FOLDER, `${year}`, `day_${day}.txt`);
 
 /**
  * Recursively creates all directories which do not exist. Existing directories will be skipped.
- * @param {String} fileName 
+ * @param {String} fileName
  */
 const ensureDirectoriesExist = async (fileName) => {
   const directory = dirname(fileName);
@@ -41,8 +40,8 @@ export const saveInputToFile = async (year, day, input) => {
 
 /**
  * Checks to see if an input file has already been created for that days puzzle.
- * @param {Number} year 
- * @param {Number} day 
+ * @param {Number} year
+ * @param {Number} day
  * @returns {Promise<boolean>}
  */
 export const inputFileExits = async (year, day) => {

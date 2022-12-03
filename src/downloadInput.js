@@ -9,8 +9,7 @@ const BASE_URL = getConfigValue('aoc.baseUrl');
  * @param {number} dayNumber
  * @returns {String}
  */
-const getInputURL = (year, dayNumber) =>
-  `${BASE_URL}/${year}/day/${dayNumber}/input`;
+const getInputURL = (year, dayNumber) => `${BASE_URL}/${year}/day/${dayNumber}/input`;
 
 /**
  * Queries the Advent of Code website for the input for a given year and day.
@@ -22,7 +21,7 @@ const getInputURL = (year, dayNumber) =>
 export const downloadInput = async (
   year,
   dayNumber,
-  authenticationToken
+  authenticationToken,
 ) => {
   logger.verbose('downloading input file for year: %s, day: %s', year, dayNumber);
 
@@ -55,7 +54,7 @@ export const downloadInput = async (
 
   const text = (await response.text()) || '';
 
-  logger.debug('downloaded: %skb', (Buffer.byteLength(text, 'utf-8') / 1000).toFixed(2))
+  logger.debug('downloaded: %skb', (Buffer.byteLength(text, 'utf-8') / 1000).toFixed(2));
 
   return text.trim();
 };
