@@ -73,13 +73,18 @@ export const downloadInput = async (
  */
 const getSubmitSolutionUrl = (year, day) => `${getConfigValue('aoc.baseUrl')}/${year}/day/${day}/answer`;
 
-const parseSolutionResponseHtml = (html) => {
+/**
+ * Determine if the solution was correct or not.
+ * @param {String} responseBody - The body of the response
+ * @returns
+ */
+export const getSolutionResult = async (responseBody) => {
   // wrong answer too hight: That's not the right answer; your answer is too high.
 // invalid part (part not 1 or 2, or submitting 2 without solving 1):
 //     You don't seem to be solving the right level.  Did you already complete it?
 //
 // general shape is <main><article><p>
-  logger.info('parsing solution result from: %s', html);
+  logger.info('parsing solution result from: %s', responseBody);
   return 'COOL GUY';
 };
 
@@ -122,6 +127,7 @@ export const submitSolution = async (year, day, part, solution, authenticationTo
     throw new Error(`Failed to post solution: ${response.statusText}`);
   }
 
-  const text = await response.text();
-  return parseSolutionResponseHtml(text);
+  const bodyText = await response.text();
+
+  return getSolutionResult(bodyText);
 };

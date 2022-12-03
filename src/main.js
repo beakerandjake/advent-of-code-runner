@@ -1,4 +1,4 @@
-import { downloadInput, parseSolutionResponseHtml, submitSolution } from './api.js';
+import { downloadInput, getSolutionResult, submitSolution } from './api.js';
 import { inputFileExits, saveInputToFile, loadInputFile } from './io.js';
 import { getConfigValue } from './config.js';
 import { logger } from './logger.js';
@@ -149,7 +149,7 @@ ga('send', 'pageview');
 </html>
 `;
 
-const result = parseSolutionResponseHtml(mockHtml);
+const result = getSolutionResult(mockHtml);
 logger.info('parsed result: %s', result);
 
 // Submit Problem
