@@ -1,4 +1,4 @@
-import { downloadInput } from './api.js';
+import { downloadInput, submitSolution } from './api.js';
 import { inputFileExits, saveInputToFile, loadInputFile } from './io.js';
 import { getConfigValue } from './config.js';
 import { logger } from './logger.js';
@@ -7,21 +7,28 @@ import { humanizeDuration } from './utils.js';
 
 const year = getConfigValue('aoc.year');
 const day = 1;
+const part = 1;
 
-let input;
+// let input;
 
-if (!await inputFileExits(year, day)) {
-  // download and cache input when it doesn't exist.
-  input = await downloadInput(year, day, getConfigValue('aoc.authenticationToken'));
-  await saveInputToFile(year, day, input);
-} else {
-  // load cached input instead of re-downloading.
-  input = await loadInputFile(year, day);
-}
+// if (!await inputFileExits(year, day)) {
+//   // download and cache input when it doesn't exist.
+//   input = await downloadInput(year, day, getConfigValue('aoc.authenticationToken'));
+//   await saveInputToFile(year, day, input);
+// } else {
+//   // load cached input instead of re-downloading.
+//   input = await loadInputFile(year, day);
+// }
 
-const result = await solve(year, day, input);
+// const { solution, executionTimeNs } = await solve(year, day, input);
 
-logger.info('solution: %s solved in: %s', result.solution, humanizeDuration(result.executionTimeNs));
+const solution = '55';
+
+// logger.info('solution: %s solved in: %s', solution, humanizeDuration(executionTimeNs));
+
+const submissionResult = await submitSolution(year, day, part, solution, getConfigValue('aoc.authenticationToken'));
+
+logger.info('submission result: %s', submissionResult);
 
 // Submit Problem
 
@@ -42,4 +49,4 @@ logger.info('solution: %s solved in: %s', result.solution, humanizeDuration(resu
 //  skip creation of files that already exist.
 
 // swallow console logs for solutions and route to winston instead with custom
-// log level and color. 
+// log level and color.
