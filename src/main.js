@@ -23,7 +23,20 @@ const result = await solve(year, day, input);
 
 logger.info('solution: %s solved in: %s', result.solution, humanizeDuration(result.executionTimeNs));
 
-// 2022_day_1.js
+// Submit Problem
 
-// 2022 / day_1.js
-// 2022_day_1.js
+// Store data on local machine,
+// Hash the session token and store which problems have been solved
+// prevent re-submissions
+// store last submission time, don't allow submission if too soon
+// provide way to clear local data.
+
+// Allow ctrl+c to cancel a running solution
+
+// validate day / year, don't allow days in the future
+// validate day (don't select invalid day of month (1-25))
+// validate year, set minimum year
+
+// init command to scaffold solution files for an entire year
+//  create a day_x.js file for each day of that month.
+//  skip creation of files that already exist.

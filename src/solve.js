@@ -33,9 +33,7 @@ export const solve = async (year, day, input) => {
   }
 
   const start = hrtime.bigint();
-
   const result = importedSolveFn(input);
-
   const end = hrtime.bigint();
 
   return { solution: result, executionTimeNs: Number(end - start) };
