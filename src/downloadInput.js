@@ -47,9 +47,9 @@ export const downloadInput = async (
     throw new Error(`Failed to download input file: ${response.statusText}`);
   }
 
-  const text = await response.text();
+  const text = (await response.text()) || '';
 
   logger.info('downloaded: %skb', (Buffer.byteLength(z, 'utf-8') / 1000).toFixed(2))
 
-  return text;
+  return text.trim();
 };
