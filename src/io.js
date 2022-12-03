@@ -1,4 +1,4 @@
-import { writeFile, mkdir } from 'fs/promises';
+import { writeFile, mkdir, access } from 'fs/promises';
 import { logger } from './logger.js';
 import { cwd } from 'process';
 import { join, dirname } from 'path';
@@ -39,8 +39,23 @@ export const saveInputToFile = async (year, day, input) => {
   logger.info('saving input for year: %s, day: %s at: %s', year, day, fileName);
 
   await ensureDirectoriesExist(fileName);
-  
+
   logger.info('dirname %s', dirname(fileName));
 
   await writeFile(fileName, input);
+};
+
+/**
+ * Checks to see if an input file has already been created for that days puzzle.
+ * @param {Number} year 
+ * @param {Number} day 
+ * @returns {Promise<boolean>}
+ */
+export const inputFileExits = async (year, day) => {
+  try {
+    await access(getFileName(year, day));
+    return true;
+  } catch (error) {
+    return false;
+  }
 };
