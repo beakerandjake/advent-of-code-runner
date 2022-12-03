@@ -1,4 +1,3 @@
-/* eslint-disable import/extensions */
 import { downloadInput } from './downloadInput.js';
 import { inputFileExits, saveInputToFile } from './io.js';
 import { getConfigValue } from './config.js';
