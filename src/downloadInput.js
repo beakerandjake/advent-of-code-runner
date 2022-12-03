@@ -2,14 +2,12 @@ import { logger } from './logger.js';
 import { getConfigValue } from './config.js';
 import { sizeOfStringInKb } from './utils.js';
 
-const BASE_URL = getConfigValue('aoc.baseUrl');
-
 /**
  * Generates a URL which when queried, returns the input for the given year and day.
  * @param {Number} year
  * @param {Number} dayNumber
  */
-const getInputURL = (year, dayNumber) => `${BASE_URL}/${year}/day/${dayNumber}/input`;
+const getInputURL = (year, dayNumber) => `${getConfigValue('aoc.baseUrl')}/${year}/day/${dayNumber}/input`;
 
 /**
  * Queries the Advent of Code website for the input for a given year and day.
