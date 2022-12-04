@@ -7,7 +7,7 @@ import { humanizeDuration } from './utils.js';
 
 const year = getConfigValue('aoc.year');
 const day = 1;
-const part = 1;
+const part = 2;
 
 // eslint-disable-next-line no-unused-vars
 const main = async () => {
@@ -32,6 +32,10 @@ const main = async () => {
 };
 
 // await main();
+
+const input = await loadInputFile(year, day);
+const { solution, executionTimeMs } = await solve(year, day, part, input);
+logger.info('solution: %s solved in: %s', solution, humanizeDuration(executionTimeMs));
 
 // Submit Problem
 

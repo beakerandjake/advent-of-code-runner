@@ -37,6 +37,12 @@ const CONFIG = {
     },
     submitRateLimitMs: 300000,
   },
+  solutions: {
+    partFunctions: [
+      { key: 1, name: 'partOne' },
+      { key: 2, name: 'partTwo' },
+    ],
+  },
 };
 
 // TODO, set from command line too.
