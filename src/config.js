@@ -12,7 +12,10 @@ const CONFIG = {
     baseUrl: process.env.AOC_BASE_URL || 'https://adventofcode.com',
     userAgent: 'https://github.com/beakerandjake/advent-of-code-runner by beakerandjake',
     responseParsing: {
-      rateLimitRegex: /please wait (.*) before trying again/mi,
+      correctSolution: /that's the right answer/gmi,
+      incorrectSolution: /that's not the right answer/gmi,
+      badLevel: /you don't seem to be solving the right level/gmi,
+      tooManyRequests: /you gave an answer too recently/gmi,
       sanitizers: [
         // remove return to day link
         { pattern: /\[Return to Day \d+\]/, replace: '' },

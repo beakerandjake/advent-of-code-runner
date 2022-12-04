@@ -32,7 +32,7 @@ const main = async () => {
   logger.info('submission result: %s', submissionResult);
 };
 
-await main();
+// await main();
 
 const mockHtml = `
 text <!DOCTYPE html>
@@ -150,7 +150,12 @@ ga('send', 'pageview');
 </html>
 `;
 
-// parseSolutionResponse(mockHtml);
+const tooManySubmissions = '<main>You gave an answer too recently; you have to wait after submitting an answer before trying again.  You have 4m 36s left to wait. [Return to Day 1]</main>';
+const incorrect = '<main>That\'s not the right answer; your answer is too high.</main>';
+const correct = '<main>That\'s the right answer.</main>';
+const levelError = '<main>You don\'t seem to be solving the right level.  Did you already complete it? [Return to Day 1]</main>';
+
+parseSolutionResponse(levelError);
 
 // Submit Problem
 
