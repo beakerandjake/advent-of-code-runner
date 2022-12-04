@@ -22,27 +22,31 @@ const extractMessage = (responseBody = '') => {
   return textContent;
 };
 
+const sanitizeMessage = (message = '') => getConfigValue('aoc.responseParsing.sanitizers').reduce((acc, sanitizer) => acc.replace(sanitizer.pattern, sanitizer.replace), message);
+
 /**
- * Returns a new Date with x minutes added to it.
+ * Returns a new Date with x milliseconds added to it.
  * @param {Date} date
- * @param {Number} minutes
+ * @param {Number} ms
  */
-const addMinutesToDate = (date, minutes) => new Date(date.getTime() + (Math.abs(minutes) * 60000));
+const addMsToDate = (date, ms) => new Date(date.getTime() + ms);
 
 /**
  * Parses a human readable string into a date from now.
  * @param {String} duration - A human readable string in the format "AMOUNT UNIT" ie "five minutes"
  */
 const parseRateLimitExpiration = (duration) => {
-  logger.debug('parsing rate limit expiration date from duration string: "%s"', duration);
+  logger.debug('parsing expiration date from duration string: "%s"', duration);
 
   try {
-    // convert from words to numbers ex: "ten minutes" to "10 minutes"
     const [amount, unit] = duration.split(' ');
-    const convertedDuration = `${numbered.parse(amount)} ${unit}`;
-    logger.debug('converted: "%s" into: "%s"', duration, convertedDuration);
+
+    // convert from words to numbers ex: "ten minutes" to "10 minutes"
+    const parsedAmount = numbered.parse(amount) || parseInt(amount, 10);
+    logger.debug('parsed number: %d from: "%s"', parsedAmount, amount);
 
     // parse the converted duration into seconds.
+    const convertedDuration = `${parsedAmount} ${unit}`;
     const seconds = timestring(convertedDuration);
     logger.debug('parsed %s seconds from: "%s"', seconds, convertedDuration);
 
@@ -80,6 +84,38 @@ const parseRateLimit = (message) => {
   return { message: rateLimitMessage, expirationDate: rateLimitExpiration };
 };
 
+const getNextSubmissionTime = (message) => {
+  const matches = message.match(getConfigValue('aoc.responseParsing.rateLimitRegex'));
+
+  // if the response didn't explicitly include a rate limit message, use default rate limit
+  if (!matches) {
+    return addMsToDate(new Date(), getConfigValue('aoc.submitRateLimitMs'));
+  }
+
+  try {
+    const [amount, unit] = matches[1].split(' ');
+    // convert from words to numbers ex: "ten minutes" to "10 minutes"
+    const parsedAmount = numbered.parse(amount) || parseInt(amount, 10);
+    logger.debug('parsed number: %d from: "%s"', parsedAmount, amount);
+
+    // parse the converted duration into seconds.
+    const convertedDuration = `${parsedAmount} ${unit}`;
+    const seconds = timestring(convertedDuration);
+    logger.debug('parsed %s seconds from: "%s"', seconds, convertedDuration);
+
+    if (seconds <= 0) {
+      throw new Error('Parsed zero seconds from duration string');
+    }
+
+    return addMsToDate(new Date(), Math.max(1, seconds * 1000));
+  } catch (error) {
+    // lots could fail here, just return default value instead of raising exception.
+    logger.error('Failed to parse next submission time from message. "%s"', matches[0]);
+  }
+
+  return addMsToDate(new Date(), getConfigValue('aoc.submitRateLimitMs'));
+};
+
 /**
  * Determine if the solution was correct or not.
  * @param {String} responseBody - The body of the response
@@ -92,9 +128,7 @@ export const parseSolutionResponse = (responseBody) => {
     throw new Error('Failed to parse response from API, could not get message from main element');
   }
 
-  const rateLimit = parseRateLimit(message);
-
-  console.log('rate limit', rateLimit);
+  const sanitizedMessage = sanitizeMessage(message);
 
   // determine if success,
 
@@ -104,3 +138,8 @@ export const parseSolutionResponse = (responseBody) => {
 };
 
 // \[Return to Day \d+\]
+
+// That's not the right answer. Because you have guessed incorrectly 6 times on this puzzle, please wait 5 minutes before trying again. 
+// You gave an answer too recently; you have to wait after submitting an answer before trying again.  You have 4m 36s left to wait. [Return to Day 1]
+// You don't seem to be solving at the right level
+// That's the right answer.

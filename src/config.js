@@ -12,8 +12,27 @@ const CONFIG = {
     baseUrl: process.env.AOC_BASE_URL || 'https://adventofcode.com',
     userAgent: 'https://github.com/beakerandjake/advent-of-code-runner by beakerandjake',
     responseParsing: {
-      rateLimitRegex: /Please wait (.*) before trying again./mi,
+      rateLimitRegex: /please wait (.*) before trying again/mi,
+      sanitizers: [
+        // remove return to day link
+        { pattern: /\[Return to Day \d+\]/, replace: '' },
+        // remove help message
+        {
+          pattern: 'If you\'re stuck, make sure you\'re using the full input data; there are also some general tips on the about page, or you can ask for hints on the subreddit.',
+          replace: '',
+        },
+        {
+          pattern: /\(You guessed .*\)/m,
+          replace: '',
+        },
+        // standardize whitespace
+        {
+          pattern: /\s\s+/g,
+          replace: ' ',
+        },
+      ],
     },
+    submitRateLimitMs: 300000,
   },
 };
 
