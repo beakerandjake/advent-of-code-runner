@@ -7,7 +7,7 @@ import { humanizeDuration } from './utils.js';
 
 const year = getConfigValue('aoc.year');
 const day = 1;
-const part = 2;
+const part = 1;
 
 // eslint-disable-next-line no-unused-vars
 const main = async () => {
@@ -45,8 +45,6 @@ logger.info('solution: %s solved in: %s', solution, humanizeDuration(executionTi
 // store last submission time, don't allow submission if too soon
 // provide way to clear local data.
 
-// Allow ctrl+c to cancel a running solution
-
 // validate day / year, don't allow days in the future
 // validate day (don't select invalid day of month (1-25))
 // validate year, set minimum year
@@ -55,5 +53,6 @@ logger.info('solution: %s solved in: %s', solution, humanizeDuration(executionTi
 //  create a day_x.js file for each day of that month.
 //  skip creation of files that already exist.
 
+// Allow ctrl+c to cancel a running solution (run solution on worker thread or process?)
 // swallow console logs for solutions and route to winston instead with custom
 // log level and color.
