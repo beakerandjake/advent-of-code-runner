@@ -1,4 +1,5 @@
-import { downloadInput, getSolutionResult, submitSolution } from './api.js';
+import { downloadInput, submitSolution } from './api.js';
+import { parseSolutionResponse } from './parseApiResponse.js';
 import { inputFileExits, saveInputToFile, loadInputFile } from './io.js';
 import { getConfigValue } from './config.js';
 import { logger } from './logger.js';
@@ -131,7 +132,7 @@ If you'd like to hang out, I'm @ericwastl on Twitter.
 </div><!--/sidebar-->
 
 <main>
-<article><p>That's not the right answer; your answer is too high.  If you're stuck, make sure you're using the full input data; there are also some general tips on the <a href="/2022/about">about page</a>, or you can ask for hints on the <a href="https://www.reddit.com/r/adventofcode/" target="_blank">subreddit</a>.  Please wait one minute before trying again. (You guessed <span style="white-space:nowrap;"><code>1000000000</code>.)</span> <a href="/2022/day/1">[Return to Day 1]</a></p></article>
+<article><p>That's not the right answer; your answer is too high.  If you're stuck, make sure you're using the full input data; there are also some general tips on the <a href="/2022/about">about page</a>, or you can ask for hints on the <a href="https://www.reddit.com/r/adventofcode/" target="_blank">subreddit</a>.  Please wait fifteen minutes before trying again. (You guessed <span style="white-space:nowrap;"><code>1000000000</code>.)</span> <a href="/2022/day/1">[Return to Day 1]</a></p></article>
 </main>
 
 <!-- ga -->
@@ -149,8 +150,7 @@ ga('send', 'pageview');
 </html>
 `;
 
-const result = getSolutionResult(mockHtml);
-logger.info('parsed result: %s', result);
+parseSolutionResponse(mockHtml);
 
 // Submit Problem
 

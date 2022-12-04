@@ -1,6 +1,7 @@
 import { logger } from './logger.js';
 import { getConfigValue } from './config.js';
 import { sizeOfStringInKb } from './utils.js';
+import { parseSolutionResponse } from './parseApiResponse.js';
 
 /**
  * Creates a headers object which can be passed to fetch.
@@ -74,21 +75,6 @@ export const downloadInput = async (
 const getSubmitSolutionUrl = (year, day) => `${getConfigValue('aoc.baseUrl')}/${year}/day/${day}/answer`;
 
 /**
- * Determine if the solution was correct or not.
- * @param {String} responseBody - The body of the response
- * @returns
- */
-export const getSolutionResult = async (responseBody) => {
-  // wrong answer too hight: That's not the right answer; your answer is too high.
-// invalid part (part not 1 or 2, or submitting 2 without solving 1):
-//     You don't seem to be solving the right level.  Did you already complete it?
-//
-// general shape is <main><article><p>
-  logger.info('parsing solution result from: %s', responseBody);
-  return 'COOL GUY';
-};
-
-/**
  * Post a solution for the problem of the given year / day / part.
  * @param {Number} year - The year of the puzzle
  * @param {Number} day - The day of the puzzle.
@@ -129,5 +115,5 @@ export const submitSolution = async (year, day, part, solution, authenticationTo
 
   const bodyText = await response.text();
 
-  return getSolutionResult(bodyText);
+  return parseSolutionResponse(bodyText);
 };

@@ -11,6 +11,9 @@ const CONFIG = {
     authenticationToken: process.env.AOC_AUTHENTICATION_TOKEN || null,
     baseUrl: process.env.AOC_BASE_URL || 'https://adventofcode.com',
     userAgent: 'https://github.com/beakerandjake/advent-of-code-runner by beakerandjake',
+    responseParsing: {
+      rateLimitRegex: /Please wait (.*) before trying again./mi,
+    },
   },
 };
 
