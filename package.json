@@ -23,8 +23,6 @@
     "jsdom": "^20.0.3",
     "lodash.get": "^4.4.2",
     "lodash.has": "^4.5.2",
-    "numbered": "^1.1.0",
-    "timestring": "^6.0.0",
     "winston": "^3.8.2"
   },
   "type": "module",
