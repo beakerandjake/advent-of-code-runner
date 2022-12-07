@@ -4,6 +4,10 @@ import { getConfigValue } from './config.js';
 import { logger } from './logger.js';
 import { loadFileContents, saveFile } from './io.js';
 
+// TODO: can cache and watch for file changes to invalidate
+// cache, helps with multiple gets being called, and can potentially remove
+// a read on a write.
+
 const DATA_FILE_PATH = join(
   getConfigValue('dataStore.folderPath'),
   getConfigValue('dataStore.fileName'),
