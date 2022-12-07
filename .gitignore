@@ -103,8 +103,12 @@ dist
 # TernJS port file
 .tern-port
 
+# mac specific
+.DS_Store
+
 # ignore local development folders
 inputs/
 solutions/
 
-.DS_Store
+# ignore data store
+aocr-data.json
