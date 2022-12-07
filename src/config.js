@@ -38,7 +38,9 @@ const CONFIG = {
         },
       ],
     },
-    submitRateLimitMs: 300000,
+    rateLimiting: {
+      defaultTimeoutMs: 300000,
+    },
   },
   solutions: {
     partFunctions: [

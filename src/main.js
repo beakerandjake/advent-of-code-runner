@@ -4,7 +4,6 @@ import { getConfigValue } from './config.js';
 import { logger } from './logger.js';
 import { solve } from './solve.js';
 import { humanizeDuration } from './utils.js';
-import { clearStore, getStoreValue, setStoreValue } from './store.js';
 
 const year = getConfigValue('aoc.year');
 const day = 1;
@@ -38,11 +37,6 @@ const main = async () => {
 // const { solution, executionTimeMs } = await solve(year, day, part, input);
 // logger.info('solution: %s solved in: %s', solution, humanizeDuration(executionTimeMs));
 
-await getStoreValue('hello');
-await setStoreValue('hello', 'darkness');
-await clearStore();
-await getStoreValue('hello');
-
 // Submit Problem
 
 // Store data on local machine,
@@ -62,3 +56,28 @@ await getStoreValue('hello');
 // Allow ctrl+c to cancel a running solution (run solution on worker thread or process?)
 // swallow console logs for solutions and route to winston instead with custom
 // log level and color.
+
+// /**
+//  * Generates a key to identify the puzzle for the specific year/day/part combination.
+//  * @param {Number} year
+//  * @param {Number} day
+//  * @param {Number} part
+//  */
+// const generatePuzzleKey = (year, day, part) => `${year}_${day}_${part}`;
+
+// /**
+//  * Store the fact that the puzzle has been solved.
+//  * Prevents re-submissions of already solved puzzles.
+//  * @param {Number} year
+//  * @param {Number} day
+//  * @param {Number} part
+//  */
+// export const setPuzzleSolved = (year, day, part) => {};
+
+// /**
+//  * Has this puzzle already been solved?
+//  * @param {Number} year
+//  * @param {Number} day
+//  * @param {Number} part
+//  */
+// export const hasPuzzleBeenSolved = (year, day, part) => {};
