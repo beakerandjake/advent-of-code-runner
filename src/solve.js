@@ -59,9 +59,7 @@ const getFunctionToExecute = (solution, part) => {
 export const solve = async (year, day, part, input) => {
   logger.verbose('running solution for year: %s, day: %s, part: %s', year, day, part);
 
-  // import the solution file and get the function to execute
-  const solutionFilePath = getSolutionFileName(year, day);
-  const importedModule = await importSolution(solutionFilePath);
+  const importedModule = await importSolution(getSolutionFileName(year, day));
   const functionToExecute = getFunctionToExecute(importedModule, part);
 
   logger.debug('starting execution of solution');

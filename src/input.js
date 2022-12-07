@@ -18,7 +18,7 @@ const getInputFileName = (year, day) => join(getConfigValue('inputs.path'), `${y
    */
 export const saveInputToFile = async (year, day, input) => {
   logger.verbose('saving input for year: %s, day: %s', year, day);
-  await saveFile(getInputFileName(year, day), input);
+  return saveFile(getInputFileName(year, day), input);
 };
 
 /**

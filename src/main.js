@@ -39,7 +39,7 @@ const main = async () => {
 // logger.info('solution: %s solved in: %s', solution, humanizeDuration(executionTimeMs));
 
 await getStoreValue('hello');
-await setStoreValue('hello', 'not today');
+await setStoreValue('hello', 'darkness');
 
 // Submit Problem
 

@@ -1,9 +1,8 @@
 import { get, set } from 'lodash-es';
-import { readFile, writeFile } from 'fs/promises';
 import { join } from 'path';
 import { getConfigValue } from './config.js';
 import { logger } from './logger.js';
-import { ensureDirectoriesExist } from './io.js';
+import { loadFileToString, saveFile } from './io.js';
 
 const DATA_FILE_PATH = join(
   getConfigValue('dataStore.folderPath'),
@@ -14,11 +13,9 @@ const DATA_FILE_PATH = join(
  * Loads and returns the contents of the data store file (if any)
  */
 const getDataFileContents = async () => {
-  logger.debug('loading data file at: %s', DATA_FILE_PATH);
-
   try {
-    const data = await readFile(DATA_FILE_PATH);
-    return JSON.parse(data);
+    const contents = await loadFileToString(DATA_FILE_PATH);
+    return JSON.parse(contents);
   } catch (error) {
     logger.info('failed to load data store file at: %s', DATA_FILE_PATH);
     return {};
@@ -44,8 +41,7 @@ export const getStoreValue = async (key, defaultValue = undefined) => {
  */
 const saveDataFileContents = async (data) => {
   logger.debug('updating data store file file with new data');
-  await ensureDirectoriesExist(DATA_FILE_PATH);
-  writeFile(DATA_FILE_PATH, JSON.stringify(data));
+  saveFile(DATA_FILE_PATH, JSON.stringify(data));
 };
 
 /**
@@ -57,5 +53,6 @@ export const setStoreValue = async (key, value) => {
   logger.debug('setting store value with key: "%s" to: %s', key, value);
   const data = await getDataFileContents();
   set(data, key, value);
-  saveDataFileContents(data);
+  await saveDataFileContents(data);
+  logger.debug('set store value with key: "%s"', key);
 };
