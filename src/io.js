@@ -1,20 +1,9 @@
 import {
   writeFile, mkdir, access, readFile,
 } from 'fs/promises';
-import { cwd } from 'process';
-import { join, dirname } from 'path';
+import { dirname } from 'path';
 import { logger } from './logger.js';
 import { sizeOfStringInKb } from './utils.js';
-
-const SOLUTIONS_FOLDER = join(cwd(), 'solutions');
-
-
-/**
- * Returns the file name for a solution file for the given year and day.
- * @param {Number} year
- * @param {Number} day
- */
-export const getSolutionFileName = (year, day) => join(SOLUTIONS_FOLDER, `${year}`, `day_${day}.js`);
 
 /**
  * Recursively creates all directories which do not exist. Existing directories will be skipped.
