@@ -68,9 +68,9 @@ export const solve = async (year, day, part, input) => {
   const start = hrtime.bigint();
   const solution = functionToExecute(input);
   const end = hrtime.bigint();
-  const executionTimeMs = Number(end - start);
+  const executionTimeNs = Number(end - start);
 
-  logger.debug('solution executed in: %d ms', executionTimeMs);
+  logger.debug('solution executed in: %dns', executionTimeNs);
 
-  return { solution, executionTimeMs };
+  return { solution, executionTimeNs };
 };

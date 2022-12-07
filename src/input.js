@@ -37,6 +37,6 @@ export const inputFileExits = async (year, day) => {
    * @param {Promise<String>} day
    */
 export const loadInputFile = async (year, day) => {
-  logger.verbose('loading input for year: %s, day: %s', year, day);
+  logger.verbose('loading cached input for year: %s, day: %s', year, day);
   return loadFileToString(getInputFileName(year, day));
 };

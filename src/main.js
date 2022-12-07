@@ -23,7 +23,7 @@ const main = async () => {
     input = await loadInputFile(year, day);
   }
 
-  const { solution, executionTimeNs } = await solve(year, day, input);
+  const { solution, executionTimeNs } = await solve(year, day, part, input);
 
   logger.info('solution: %s solved in: %s', solution, humanizeDuration(executionTimeNs));
 
