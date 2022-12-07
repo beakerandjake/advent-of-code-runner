@@ -27,7 +27,7 @@ export const getSolutionFileName = (year, day) => join(SOLUTIONS_FOLDER, `${year
  * Recursively creates all directories which do not exist. Existing directories will be skipped.
  * @param {String} fileName
  */
-const ensureDirectoriesExist = async (fileName) => {
+export const ensureDirectoriesExist = async (fileName) => {
   const directory = dirname(fileName);
   logger.debug('ensuring directories exists: %s', directory);
   await mkdir(directory, { recursive: true });
