@@ -6,15 +6,8 @@ import { join, dirname } from 'path';
 import { logger } from './logger.js';
 import { sizeOfStringInKb } from './utils.js';
 
-const INPUTS_FOLDER = join(cwd(), 'inputs');
 const SOLUTIONS_FOLDER = join(cwd(), 'solutions');
 
-/**
- * Returns the file name for the input file for the given year and day
- * @param {Number} year
- * @param {Number} day
- */
-const getInputFileName = (year, day) => join(INPUTS_FOLDER, `${year}_${day}.txt`);
 
 /**
  * Returns the file name for a solution file for the given year and day.
@@ -34,46 +27,41 @@ export const ensureDirectoriesExist = async (fileName) => {
 };
 
 /**
- * Saves the input to a file in the cwd with pattern "/inputs/{year}_{day}.txt"
- * If the file already exists it will be overwritten.
- * @param {Number} year
- * @param {Number} day
+ * Writes the data to the file, overwriting the existing file if already exists, creating if not.
+ * @param {String} fileName
+ * @param {String|Stream} data
  */
-export const saveInputToFile = async (year, day, input) => {
-  const fileName = getInputFileName(year, day);
-  logger.verbose('saving input for year: %s, day: %s at: %s', year, day, fileName);
+export const saveFile = async (fileName, data) => {
+  logger.debug('writing file: %s', fileName);
   await ensureDirectoriesExist(fileName);
-  await writeFile(fileName, input);
-  logger.debug('successfully wrote input file');
+  await writeFile(fileName, data);
+  logger.debug('successfully wrote file: %s', fileName);
 };
 
 /**
- * Checks to see if an input file has already been created for that days puzzle.
- * @param {Number} year
- * @param {Number} day
+ * Checks to see if the file exists at the given path.
+ * @param {String} fileName
  */
-export const inputFileExits = async (year, day) => {
-  logger.verbose('checking if input file exists for year: %s, day: %s', year, day);
+export const fileExists = async (fileName) => {
+  logger.debug('checking if file exists: %s', fileName);
 
   try {
-    await access(getInputFileName(year, day));
-    logger.debug('input file exists');
+    await access(fileName);
+    logger.debug('file exists');
     return true;
   } catch (error) {
-    logger.debug('input file does not exist');
+    logger.debug('file does not exist');
     return false;
   }
 };
 
 /**
- * Loads the input file for the days puzzle.
- * @param {Number} year
- * @param {Promise<String>} day
+ * Attempts to load the file at the given path and returns the string content.
+ * @param {String} fileName
  */
-export const loadInputFile = async (year, day) => {
-  const fileName = getInputFileName(year, day);
-  logger.verbose('loading input for year: %s, day: %s at: %s', year, day, fileName);
+export const loadFileToString = async (fileName) => {
+  logger.debug('loading file: %s', fileName);
   const text = (await readFile(fileName)).toString();
-  logger.debug('loaded input file of size: %skb', sizeOfStringInKb(text));
+  logger.debug('loaded file at: %s, size: %skb', fileName, sizeOfStringInKb(text));
   return text;
 };

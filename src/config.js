@@ -45,6 +45,10 @@ const CONFIG = {
       { key: 1, name: 'partOne' },
       { key: 2, name: 'partTwo' },
     ],
+    path: process.env.AOC_SOLUTIONS_FOLDER_PATH || join(cwd(), 'solutions'),
+  },
+  inputs: {
+    path: (process.env.AOC_INPUTS_FOLDER || join(cwd(), 'inputs')),
   },
   dataStore: {
     folderPath: process.env.AOC_DATA_FOLDER || cwd(),

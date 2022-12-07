@@ -1,5 +1,5 @@
 import { downloadInput, submitSolution } from './api.js';
-import { inputFileExits, saveInputToFile, loadInputFile } from './io.js';
+import { inputFileExits, saveInputToFile, loadInputFile } from './input.js';
 import { getConfigValue } from './config.js';
 import { logger } from './logger.js';
 import { solve } from './solve.js';

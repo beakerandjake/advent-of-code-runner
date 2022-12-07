@@ -1,12 +1,17 @@
 import { get } from 'lodash-es';
-import { hrtime } from 'node:process';
-import { getConfigValue } from './config.js';
+import { join } from 'path';
+import { hrtime } from 'process';
 import { SolutionFileMissingRequiredFunctionError } from './errors/SolutionFileMissingRequiredFunctionError.js';
 import { SolutionFileNotFoundError } from './errors/SolutionFIleNotFoundError.js';
-import { getSolutionFileName } from './io.js';
+import { getConfigValue } from './config.js';
 import { logger } from './logger.js';
 
-const SOLUTION_FUNCTIONS = getConfigValue('solutions.partFunctions');
+/**
+ * Returns the file name for a solution file for the given year and day.
+ * @param {Number} year
+ * @param {Number} day
+ */
+const getSolutionFileName = (year, day) => join(getConfigValue('solutions.path'), `${year}`, `day_${day}.js`);
 
 /**
  * Attempts to dynamically import the solution module at the specified location.
@@ -28,7 +33,7 @@ const importSolution = async (path) => {
  * @param {Number} part
  */
 const getFunctionToExecute = (solution, part) => {
-  const functionName = SOLUTION_FUNCTIONS.find((x) => x.key === part)?.name;
+  const functionName = getConfigValue('solutions.partFunctions').find((x) => x.key === part)?.name;
 
   if (!functionName) {
     throw new Error(`Unknown solution part: ${part}`);
