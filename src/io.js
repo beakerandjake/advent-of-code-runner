@@ -3,7 +3,6 @@ import {
 } from 'fs/promises';
 import { dirname } from 'path';
 import { logger } from './logger.js';
-import { sizeOfStringInKb } from './utils.js';
 
 /**
  * Recursively creates all directories which do not exist. Existing directories will be skipped.
@@ -11,7 +10,7 @@ import { sizeOfStringInKb } from './utils.js';
  */
 export const ensureDirectoriesExist = async (fileName) => {
   const directory = dirname(fileName);
-  logger.debug('ensuring directories exists: %s', directory);
+  logger.silly('ensuring directories exists: %s', directory);
   await mkdir(directory, { recursive: true });
 };
 
@@ -21,10 +20,10 @@ export const ensureDirectoriesExist = async (fileName) => {
  * @param {String|Stream} data
  */
 export const saveFile = async (fileName, data) => {
-  logger.debug('writing file: %s', fileName);
+  logger.silly('writing file: %s', fileName);
   await ensureDirectoriesExist(fileName);
   await writeFile(fileName, data);
-  logger.debug('successfully wrote file: %s', fileName);
+  logger.silly('successfully wrote file: %s', fileName);
 };
 
 /**
@@ -32,14 +31,14 @@ export const saveFile = async (fileName, data) => {
  * @param {String} fileName
  */
 export const fileExists = async (fileName) => {
-  logger.debug('checking if file exists: %s', fileName);
+  logger.silly('checking if file exists: %s', fileName);
 
   try {
     await access(fileName);
-    logger.debug('file exists');
+    logger.silly('file exists');
     return true;
   } catch (error) {
-    logger.debug('file does not exist');
+    logger.silly('file does not exist');
     return false;
   }
 };
@@ -49,6 +48,6 @@ export const fileExists = async (fileName) => {
  * @param {String} fileName
  */
 export const loadFileContents = async (fileName) => {
-  logger.debug('loading file contents: %s', fileName);
+  logger.silly('loading file contents: %s', fileName);
   return (await readFile(fileName)).toString();
 };

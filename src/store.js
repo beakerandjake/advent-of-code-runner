@@ -17,7 +17,7 @@ const getDataFileContents = async () => {
     const contents = await loadFileContents(DATA_FILE_PATH);
     return JSON.parse(contents);
   } catch (error) {
-    logger.info('failed to load data store file at: %s', DATA_FILE_PATH);
+    logger.silly('failed to load data store file at: %s', DATA_FILE_PATH);
     return {};
   }
 };
@@ -29,10 +29,10 @@ const getDataFileContents = async () => {
  * @param {any} defaultValue
  */
 export const getStoreValue = async (key, defaultValue = undefined) => {
-  logger.debug('loading store value with key: "%s"', key);
+  logger.silly('loading store value with key: "%s"', key);
   const data = await getDataFileContents();
   const toReturn = get(data, key, defaultValue);
-  logger.debug('loaded value from store: %s', toReturn);
+  logger.silly('loaded value from store: %s', toReturn);
   return toReturn;
 };
 
@@ -40,7 +40,7 @@ export const getStoreValue = async (key, defaultValue = undefined) => {
  * Updates or creates the data store file with the data.
  */
 const saveDataFileContents = async (data) => {
-  logger.debug('updating data store file file with new data');
+  logger.silly('updating data store file file with new data');
   return saveFile(DATA_FILE_PATH, JSON.stringify(data));
 };
 
@@ -50,17 +50,17 @@ const saveDataFileContents = async (data) => {
  * @param {Any} value
  */
 export const setStoreValue = async (key, value) => {
-  logger.debug('setting store value with key: "%s" to: %s', key, value);
+  logger.silly('setting store value with key: "%s" to: %s', key, value);
   const data = await getDataFileContents();
   set(data, key, value);
   await saveDataFileContents(data);
-  logger.debug('set store value with key: "%s"', key);
+  logger.silly('set store value with key: "%s"', key);
 };
 
 /**
  * Clears the data store file and all saved values.
  */
 export const clearStore = async () => {
-  logger.debug('clearing data store file');
+  logger.silly('clearing data store file');
   await saveDataFileContents({});
 };
