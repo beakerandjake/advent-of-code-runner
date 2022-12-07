@@ -4,6 +4,7 @@ import { getConfigValue } from './config.js';
 import { logger } from './logger.js';
 import { solve } from './solve.js';
 import { humanizeDuration } from './utils.js';
+import { getStoreValue } from './store.js';
 
 const year = getConfigValue('aoc.year');
 const day = 1;
@@ -33,9 +34,11 @@ const main = async () => {
 
 // await main();
 
-const input = await loadInputFile(year, day);
-const { solution, executionTimeMs } = await solve(year, day, part, input);
-logger.info('solution: %s solved in: %s', solution, humanizeDuration(executionTimeMs));
+// const input = await loadInputFile(year, day);
+// const { solution, executionTimeMs } = await solve(year, day, part, input);
+// logger.info('solution: %s solved in: %s', solution, humanizeDuration(executionTimeMs));
+
+const test = getStoreValue('hello');
 
 // Submit Problem
 

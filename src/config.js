@@ -1,5 +1,7 @@
 import get from 'lodash.get';
 import has from 'lodash.has';
+import { join } from 'path';
+import { cwd } from 'process';
 
 const CONFIG = {
   logging: {
@@ -10,18 +12,20 @@ const CONFIG = {
     year: process.env.AOC_YEAR || new Date().getFullYear(),
     authenticationToken: process.env.AOC_AUTHENTICATION_TOKEN || null,
     baseUrl: process.env.AOC_BASE_URL || 'https://adventofcode.com',
-    userAgent: 'https://github.com/beakerandjake/advent-of-code-runner by beakerandjake',
+    userAgent:
+      'https://github.com/beakerandjake/advent-of-code-runner by beakerandjake',
     responseParsing: {
-      correctSolution: /that's the right answer/gmi,
-      incorrectSolution: /that's not the right answer/gmi,
-      badLevel: /you don't seem to be solving the right level/gmi,
-      tooManyRequests: /you gave an answer too recently/gmi,
+      correctSolution: /that's the right answer/gim,
+      incorrectSolution: /that's not the right answer/gim,
+      badLevel: /you don't seem to be solving the right level/gim,
+      tooManyRequests: /you gave an answer too recently/gim,
       sanitizers: [
         // remove return to day link
         { pattern: /\[Return to Day \d+\]/, replace: '' },
         // remove help message
         {
-          pattern: 'If you\'re stuck, make sure you\'re using the full input data; there are also some general tips on the about page, or you can ask for hints on the subreddit.',
+          pattern:
+            "If you're stuck, make sure you're using the full input data; there are also some general tips on the about page, or you can ask for hints on the subreddit.",
           replace: '',
         },
         {
@@ -42,6 +46,10 @@ const CONFIG = {
       { key: 1, name: 'partOne' },
       { key: 2, name: 'partTwo' },
     ],
+  },
+  dataStore: {
+    folderPath: process.env.AOC_DATA_FOLDER || cwd(),
+    fileName: 'aocr-data.json',
   },
 };
 
