@@ -1,5 +1,4 @@
-import get from 'lodash.get';
-import has from 'lodash.has';
+import { has, get } from 'lodash-es';
 import { join } from 'path';
 import { cwd } from 'process';
 

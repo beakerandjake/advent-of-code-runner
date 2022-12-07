@@ -1,4 +1,4 @@
-import get from 'lodash.get';
+import { get } from 'lodash-es';
 import { hrtime } from 'node:process';
 import { getConfigValue } from './config.js';
 import { SolutionFileMissingRequiredFunctionError } from './errors/SolutionFileMissingRequiredFunctionError.js';
