@@ -48,9 +48,7 @@ export const fileExists = async (fileName) => {
  * Attempts to load the file at the given path and returns the string content.
  * @param {String} fileName
  */
-export const loadFileToString = async (fileName) => {
-  logger.debug('loading file: %s', fileName);
-  const text = (await readFile(fileName)).toString();
-  logger.debug('loaded file at: %s, size: %skb', fileName, sizeOfStringInKb(text));
-  return text;
+export const loadFileContents = async (fileName) => {
+  logger.debug('loading file contents: %s', fileName);
+  return (await readFile(fileName)).toString();
 };

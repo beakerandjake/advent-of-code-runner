@@ -4,7 +4,7 @@ import { getConfigValue } from './config.js';
 import { logger } from './logger.js';
 import { solve } from './solve.js';
 import { humanizeDuration } from './utils.js';
-import { getStoreValue, setStoreValue } from './store.js';
+import { clearStore, getStoreValue, setStoreValue } from './store.js';
 
 const year = getConfigValue('aoc.year');
 const day = 1;
@@ -40,6 +40,8 @@ const main = async () => {
 
 await getStoreValue('hello');
 await setStoreValue('hello', 'darkness');
+await clearStore();
+await getStoreValue('hello');
 
 // Submit Problem
 

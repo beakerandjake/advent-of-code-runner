@@ -2,7 +2,7 @@ import { get, set } from 'lodash-es';
 import { join } from 'path';
 import { getConfigValue } from './config.js';
 import { logger } from './logger.js';
-import { loadFileToString, saveFile } from './io.js';
+import { loadFileContents, saveFile } from './io.js';
 
 const DATA_FILE_PATH = join(
   getConfigValue('dataStore.folderPath'),
@@ -14,7 +14,7 @@ const DATA_FILE_PATH = join(
  */
 const getDataFileContents = async () => {
   try {
-    const contents = await loadFileToString(DATA_FILE_PATH);
+    const contents = await loadFileContents(DATA_FILE_PATH);
     return JSON.parse(contents);
   } catch (error) {
     logger.info('failed to load data store file at: %s', DATA_FILE_PATH);
@@ -41,7 +41,7 @@ export const getStoreValue = async (key, defaultValue = undefined) => {
  */
 const saveDataFileContents = async (data) => {
   logger.debug('updating data store file file with new data');
-  saveFile(DATA_FILE_PATH, JSON.stringify(data));
+  return saveFile(DATA_FILE_PATH, JSON.stringify(data));
 };
 
 /**
@@ -55,4 +55,12 @@ export const setStoreValue = async (key, value) => {
   set(data, key, value);
   await saveDataFileContents(data);
   logger.debug('set store value with key: "%s"', key);
+};
+
+/**
+ * Clears the data store file and all saved values.
+ */
+export const clearStore = async () => {
+  logger.debug('clearing data store file');
+  await saveDataFileContents({});
 };

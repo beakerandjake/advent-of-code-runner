@@ -1,7 +1,7 @@
 import { join } from 'path';
 import { logger } from './logger.js';
 import { getConfigValue } from './config.js';
-import { fileExists, loadFileToString, saveFile } from './io.js';
+import { fileExists, loadFileContents, saveFile } from './io.js';
 
 /**
    * Returns the file name for the input file for the given year and day
@@ -38,5 +38,5 @@ export const inputFileExits = async (year, day) => {
    */
 export const loadInputFile = async (year, day) => {
   logger.verbose('loading cached input for year: %s, day: %s', year, day);
-  return loadFileToString(getInputFileName(year, day));
+  return loadFileContents(getInputFileName(year, day));
 };
