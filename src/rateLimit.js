@@ -3,6 +3,9 @@ import { getConfigValue } from './config.js';
 import { logger } from './logger.js';
 import { getStoreValue, setStoreValue } from './store.js';
 
+/**
+ * The key used in the data store where the last request time value is saved.
+ */
 const LAST_REQUEST_STORE_KEY = 'lastRequestTime';
 
 /**
