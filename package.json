@@ -21,8 +21,7 @@
     "commander": "^9.4.1",
     "dotenv": "^16.0.3",
     "jsdom": "^20.0.3",
-    "lodash.get": "^4.4.2",
-    "lodash.has": "^4.5.2",
+    "lodash-es": "^4.17.21",
     "winston": "^3.8.2"
   },
   "type": "module",
