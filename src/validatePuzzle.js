@@ -7,11 +7,11 @@ import { getConfigValue } from './config.js';
  * @param {Any} value
  */
 const parseNumber = (value) => {
-  if (!value && value !== 0) {
+  if (!Number.isInteger(value)) {
     return NaN;
   }
 
-  return parseInt(value);
+  return value;
 };
 
 /**

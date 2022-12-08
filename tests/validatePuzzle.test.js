@@ -1,7 +1,20 @@
 import { yearIsValid, dayIsValid, partIsValid } from '../src/validatePuzzle';
 
 const commonFailCases = [
-  null, undefined, '', Infinity, 'Cats!', true, [], 0, -100, Promise.resolve(1), new Error(), () => 1,
+  null,
+  undefined,
+  '',
+  Infinity,
+  'Cats!',
+  true,
+  [],
+  0,
+  -100,
+  Promise.resolve(1),
+  new Error(),
+  () => 1,
+  1.205,
+  '3',
 ];
 
 test.each(commonFailCases)('yearIsValid - false on: %p', (value) => {
