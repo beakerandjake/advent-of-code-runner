@@ -41,11 +41,12 @@ const CONFIG = {
     rateLimiting: {
       defaultTimeoutMs: 300000,
     },
-    validation: {
+    puzzleValidation: {
       minYear: 2015,
       minDay: 1,
       maxDay: 25,
       parts: [1, 2],
+      month: 12,
     },
   },
   solutions: {
