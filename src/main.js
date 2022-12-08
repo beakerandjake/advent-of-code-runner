@@ -2,7 +2,7 @@ import { downloadInput, submitSolution } from './api.js';
 import { inputFileExits, saveInputToFile, loadInputFile } from './input.js';
 import { getConfigValue } from './config.js';
 import { logger } from './logger.js';
-import { solve, solve2 } from './solve.js';
+import { solve } from './solve.js';
 import { humanizeDuration } from './utils.js';
 
 const year = getConfigValue('aoc.year');
@@ -34,9 +34,8 @@ const main = async () => {
 // await main();
 
 const input = await loadInputFile(year, day);
-const solveTwo = await solve2(year, day, part, input);
+const solveTwo = await solve(year, day, part, input);
 // const solve1 = await solve(year, day, part, input);
-// logger.info('solve1: %s solved in: %s', solve1.solution, humanizeDuration(solve1.executionTimeNs));
 logger.info('solve2: %s solved in: %s', solveTwo.solution, humanizeDuration(solveTwo.executionTimeNs));
 
 // const input = await loadInputFile(year, day);

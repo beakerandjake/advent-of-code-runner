@@ -1,79 +1,115 @@
-import { isMainThread, parentPort, workerData } from 'worker_threads';
-import { exit, hrtime } from 'process';
+import { isMainThread, workerData, parentPort } from 'worker_threads';
+import { hrtime } from 'process';
 import { SolutionFileMissingRequiredFunctionError } from './errors/SolutionFileMissingRequiredFunctionError.js';
-import { SolutionFileNotFoundError } from './errors/SolutionFIleNotFoundError.js';
-import { loadFileContents } from './io.js';
+import { SolutionRaisedError } from './errors/SolutionRaisedError.js';
 
-const MESSAGE_TYPES = {
+let executeFn = async () => { throw new Error('Function is only implemented on main thread!'); };
+
+/**
+ * Defines the type of messages that a Worker can send back to the main thread.
+ */
+const WORKER_MESSAGE_TYPES = {
   log: 'LOG',
   solution: 'SOLUTION',
 };
 
-export const messageTypes = { ...MESSAGE_TYPES };
-
-if (!isMainThread) {
-  /**
- * Post a message to the parent asking it to log data.
- * @param {*} message
- * @param  {...any} args
+/**
+ * Sends a message from the Worker to the main thread asking the main thread
+ * to log the specified data.
+ * @param {String} level
+ * @param {String} message
+ * @param  {...Any} args
  */
-  const log = (level, message, ...args) => {
-    parentPort.postMessage(({
-      type: MESSAGE_TYPES.log, level, message, params: [...args],
-    }));
+const logFromWorker = (level, message, ...args) => {
+  parentPort.postMessage({
+    type: WORKER_MESSAGE_TYPES.log,
+    level,
+    message: `worker - ${message}`,
+    meta: args,
+  });
+};
+
+if (isMainThread) {
+  // if executing from the main thread, then export a function
+  // to spawn the worker and handle the results.
+
+  const { fileURLToPath } = await import('url');
+  const { Worker } = await import('worker_threads');
+  const { logger } = await import('./logger.js');
+
+  executeFn = async (solutionFileName, functionToExecute, input) => {
+    logger.debug('spawning worker to execute solution');
+
+    return new Promise((resolve, reject) => {
+      const worker = new Worker(fileURLToPath(import.meta.url), {
+        workerData: {
+          solutionFileName,
+          functionToExecute,
+          input,
+        },
+        stdout: true,
+        stderr: true,
+      });
+
+      // listen to messages from the worker, this is how we will get the solution.
+      worker.on('message', (data) => {
+        switch (data.type) {
+          // worker just wants to log, pipe it through to our logger.
+          case WORKER_MESSAGE_TYPES.log:
+            logger.log(data.level, data.message, ...(data.meta || []));
+            break;
+          // worker finished executing and has a solution, we can resolve our promise.
+          case WORKER_MESSAGE_TYPES.solution:
+            resolve({ solution: data.solution, executionTimeNs: data.executionTimeNs });
+            break;
+          default:
+            reject(Error(`solution runner worker send unknown message type: ${data.type}`));
+            break;
+        }
+      });
+
+      // handle uncaught exceptions from user code we are executing.
+      worker.on('error', (error) => reject(error));
+
+      // handle potential edge case where worker does not send a solution message.
+      worker.on('exit', () => reject(new Error('solution runners worker exited without sending a solution message')));
+
+      // forward console.log and console.error messages to the main logger with special category.
+      // TODO need special category / formatting for user output.
+      worker.stdout.on('data', (chunk) => logger.info('got chunk from worker: %s', chunk?.toString().trim()));
+      worker.stderr.on('data', (data) => logger.info('got error from worker: %s', data?.toString().trim()));
+    });
   };
+} else {
+  // if executing as a worker, then load the solution and execute it.
+  // post the results back to the main thread.
 
-  /**
- * Attempts to dynamically import the solution module at the specified location.
- * @param {String} path
- */
-  const importSolution = async (path) => {
-    log('debug', 'importing solution file at: %s', path);
+  logFromWorker('debug', 'importing solution module from file: %s', workerData.solutionFileName);
 
-    try {
-      return await import(path);
-    } catch (error) {
-      throw new SolutionFileNotFoundError(`Failed to load Solution file, ensure file exists: ${path}`);
-    }
-  };
+  const importedSolutionModule = await import(workerData.solutionFileName);
+  const functionToExecute = importedSolutionModule[workerData.functionToExecute];
 
-  /**
- * Attempts to return the function for the puzzle part
- * @param {Object} solution
- * @param {Number} part
- */
-  const getFunctionToExecute = (module, functionName) => {
-    const toReturn = module[functionName];
+  // ensure function is present and is actually a function.
+  if (!functionToExecute || !(functionToExecute instanceof Function)) {
+    throw new SolutionFileMissingRequiredFunctionError(`Solution file must export function: "${workerData.functionToExecute}" as a named export.`);
+  }
 
-    if (!toReturn || !(toReturn instanceof Function)) {
-      throw new SolutionFileMissingRequiredFunctionError(`Solution file must export function: "${functionName}" as a named export.`);
-    }
+  try {
+    logFromWorker('debug', 'executing solution function: %s', workerData.functionToExecute);
 
-    return toReturn;
-  };
+    const start = hrtime.bigint();
+    const solution = functionToExecute(workerData.input);
+    const end = hrtime.bigint();
+    const executionTimeNs = Number(end - start);
 
-  log('warn', 'got worker data: %s', workerData);
-
-  const importedModule = await importSolution(workerData.solutionFileName);
-  const functionToExecute = getFunctionToExecute(importedModule, workerData.functionToExecute);
-  const input = loadFileContents(workerData.inputFileName);
-
-  // profile and execute solution code.
-  const start = hrtime.bigint();
-  const solution = functionToExecute(input);
-  const end = hrtime.bigint();
-  const executionTimeNs = Number(end - start);
-
-  log('warn', 'executed in: %dns', executionTimeNs);
-
-  parentPort.postMessage(({
-    type: MESSAGE_TYPES.solution, solution, executionTimeNs,
-  }));
-
-  // console.log('worker data', workerData);
-
-  // console.log('console logging from the the solutionRunner.js');
-  // console.error('console error from the the solutionRunner.js');
-
-// parentPort.postMessage('posting a message from the worker!');
+    parentPort.postMessage({
+      type: WORKER_MESSAGE_TYPES.solution,
+      solution,
+      executionTimeNs,
+    });
+  } catch (error) {
+    throw new SolutionRaisedError('Error raised when running solution', error);
+  }
 }
+
+export const execute = executeFn;
