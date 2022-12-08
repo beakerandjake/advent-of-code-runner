@@ -48,7 +48,7 @@ const CONFIG = {
       // also allows possibility that aoc doesn't run during a specific year.
       // also ensures that this package gets updates at least once a year to support
       // that years aoc and any changes that might be needed.
-      years: [2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022],
+      years: range(2015, 2023),
       days: range(1, 26),
       parts: [1, 2],
     },
