@@ -1,4 +1,3 @@
-import { parseInt, toNumber } from 'lodash-es';
 import { getMonth, getYear } from 'date-fns';
 import { getConfigValue } from './config.js';
 
