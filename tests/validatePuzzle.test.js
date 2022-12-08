@@ -1,4 +1,11 @@
+import { jest } from '@jest/globals';
 import { yearIsValid, dayIsValid, partIsValid } from '../src/validatePuzzle';
+
+jest.unstable_mockModule('../src/config.js', () => ({
+  getConfigValue: jest.fn(),
+}));
+
+const { getConfigValue } = await import('../src/config.js');
 
 const commonFailCases = [
   null,
@@ -22,6 +29,13 @@ test.each(commonFailCases)('yearIsValid - false on: %p', (value) => {
 });
 
 test('yearIsValid - false on before start year', () => {
+  const z = getConfigValue('logging');
+  console.log('z', z);
+  getConfigValue.mockImplementation(() => 'asdf');
+
+  const q = getConfigValue('logging');
+  console.log('q', q);
+
   expect(yearIsValid(2003)).toBe(false);
 });
 

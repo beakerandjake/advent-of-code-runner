@@ -6,6 +6,12 @@ module.exports = {
   },
   extends: 'airbnb-base',
   overrides: [
+    {
+      files: ['tests/*.test.js'], // Or *.test.js
+      rules: {
+        'no-console': 'off',
+      },
+    },
   ],
   parserOptions: {
     ecmaVersion: 'latest',
