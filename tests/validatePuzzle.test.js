@@ -49,97 +49,39 @@ describe('validatePuzzle', () => {
 
     test('false when after max year', () => {
       overrideConfigValues([
-        ['aoc.puzzleValidation.minYear', 1990],
-        ['aoc.puzzleValidation.maxYear', 2000],
+        ['aoc.puzzleValidation.years', [1990, 2000, 2001]],
       ]);
       expect(yearIsValid(2024)).toBe(false);
     });
 
+    test('true when equal to max year', () => {
+      overrideConfigValues([
+        ['aoc.puzzleValidation.years', [1990, 2000, 2001]],
+      ]);
+      expect(yearIsValid(2001)).toBe(true);
+    });
+
     test('false when before min year', () => {
       overrideConfigValues([
-        ['aoc.puzzleValidation.minYear', 1945],
+        ['aoc.puzzleValidation.years', [1967, 1968, 1969]],
       ]);
       expect(yearIsValid(1922)).toBe(false);
     });
 
-    test('throws RangeError when minYear > maxYear', () => {
+    test('true when equal to min year', () => {
       overrideConfigValues([
-        ['aoc.puzzleValidation.minYear', 2015],
-        ['aoc.puzzleValidation.maxYear', 2003],
+        ['aoc.puzzleValidation.years', [2022, 2023, 2024]],
+
       ]);
-      expect(() => yearIsValid(2016)).toThrow(RangeError);
-    });
-
-    test('false when current year is max year and not currently december', () => {
-      const maxYear = 1967;
-
-      jest.useFakeTimers().setSystemTime(new Date(1967, 4, 3));
-
-      overrideConfigValues([
-        ['aoc.puzzleValidation.minYear', 1945],
-        ['aoc.puzzleValidation.maxYear', maxYear],
-      ]);
-      expect(yearIsValid(maxYear)).toBe(false);
-
-      jest.useRealTimers();
-    });
-
-    test('true when current year is max year and currently december', () => {
-      const maxYear = 1967;
-
-      jest.useFakeTimers().setSystemTime(new Date(maxYear, 11, 1));
-
-      overrideConfigValues([
-        ['aoc.puzzleValidation.minYear', 1945],
-        ['aoc.puzzleValidation.maxYear', maxYear],
-      ]);
-      expect(yearIsValid(maxYear)).toBe(true);
-
-      jest.useRealTimers();
-    });
-
-    test('false when current year is min year and not currently december', () => {
-      const minYear = 1967;
-
-      jest.useFakeTimers().setSystemTime(new Date(minYear, 4, 3));
-
-      overrideConfigValues([
-        ['aoc.puzzleValidation.minYear', minYear],
-        ['aoc.puzzleValidation.maxYear', 1980],
-      ]);
-      expect(yearIsValid(minYear)).toBe(false);
-
-      jest.useRealTimers();
-    });
-
-    test('true when current year is min year and currently december', () => {
-      const minYear = 1967;
-
-      jest.useFakeTimers().setSystemTime(new Date(minYear, 11, 3));
-
-      overrideConfigValues([
-        ['aoc.puzzleValidation.minYear', minYear],
-        ['aoc.puzzleValidation.maxYear', 1980],
-      ]);
-      expect(yearIsValid(minYear)).toBe(true);
-
-      jest.useRealTimers();
-    });
-
-    test('true when year is min year', () => {
-      overrideConfigValues([
-        ['aoc.puzzleValidation.minYear', 2015],
-        ['aoc.puzzleValidation.maxYear', 2020],
-      ]);
-      expect(yearIsValid(2015)).toBe(true);
+      expect(yearIsValid(2022)).toBe(true);
     });
 
     test('true when year is between min year and max year', () => {
       overrideConfigValues([
-        ['aoc.puzzleValidation.minYear', 2018],
-        ['aoc.puzzleValidation.maxYear', 2020],
+        ['aoc.puzzleValidation.years', [2022, 2023, 2024]],
+
       ]);
-      expect(yearIsValid(2019)).toBe(true);
+      expect(yearIsValid(2023)).toBe(true);
     });
   });
 
@@ -149,55 +91,44 @@ describe('validatePuzzle', () => {
     });
 
     test('false when before min day', () => {
+      const minDay = 18;
       overrideConfigValues([
-        ['aoc.puzzleValidation.minDay', 50],
-        ['aoc.puzzleValidation.maxDay', 60],
+        ['aoc.puzzleValidation.days', [minDay, 19, 20, 21]],
       ]);
-      expect(dayIsValid(15)).toBe(false);
-    });
-
-    test('false when after max day', () => {
-      const maxDay = 23843;
-      overrideConfigValues([
-        ['aoc.puzzleValidation.minDay', 1],
-        ['aoc.puzzleValidation.maxDay', maxDay],
-      ]);
-      expect(dayIsValid(maxDay + 1)).toBe(false);
-    });
-
-    test('false when day', () => {
-      const maxDay = 23843;
-      overrideConfigValues([
-        ['aoc.puzzleValidation.minDay', 1],
-        ['aoc.puzzleValidation.maxDay', maxDay],
-      ]);
-      expect(dayIsValid(maxDay + 1)).toBe(false);
+      expect(dayIsValid(minDay - 1)).toBe(false);
     });
 
     test('true when equal to min day', () => {
-      const minDay = 7;
+      const minDay = 18;
       overrideConfigValues([
-        ['aoc.puzzleValidation.minDay', minDay],
-        ['aoc.puzzleValidation.maxDay', minDay * 2],
+        ['aoc.puzzleValidation.days', [minDay, 19, 20, 21]],
+
       ]);
       expect(dayIsValid(minDay)).toBe(true);
     });
 
-    test('true when equal to max day', () => {
-      const maxDay = 7;
+    test('false when after max day', () => {
+      const maxDay = 21;
       overrideConfigValues([
-        ['aoc.puzzleValidation.minDay', 1],
-        ['aoc.puzzleValidation.maxDay', maxDay],
+        ['aoc.puzzleValidation.days', [18, 19, 20, maxDay]],
+      ]);
+      expect(dayIsValid(maxDay + 1)).toBe(false);
+    });
+
+    test('true when equal to max day', () => {
+      const maxDay = 21;
+      overrideConfigValues([
+        ['aoc.puzzleValidation.days', [18, 19, 20, maxDay]],
       ]);
       expect(dayIsValid(maxDay)).toBe(true);
     });
 
     test('true when between min day and max day', () => {
       overrideConfigValues([
-        ['aoc.puzzleValidation.minDay', 1],
-        ['aoc.puzzleValidation.maxDay', 15],
+        ['aoc.puzzleValidation.days', [18, 19, 20]],
+
       ]);
-      expect(dayIsValid(6)).toBe(true);
+      expect(dayIsValid(19)).toBe(true);
     });
   });
 
@@ -228,6 +159,20 @@ describe('validatePuzzle', () => {
     });
   });
 });
+
+// test('false when current year is max year and not currently december', () => {
+//   const maxYear = 1967;
+
+//   jest.useFakeTimers().setSystemTime(new Date(1967, 4, 3));
+
+//   overrideConfigValues([
+//     ['aoc.puzzleValidation.minYear', 1945],
+//     ['aoc.puzzleValidation.maxYear', maxYear],
+//   ]);
+//   expect(yearIsValid(maxYear)).toBe(false);
+
+//   jest.useRealTimers();
+// });
 
 // test.each(commonFailCases)('yearIsValid - false on: %p', (value) => {
 //   expect(yearIsValid(value)).toBe(false);

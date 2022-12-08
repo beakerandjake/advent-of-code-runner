@@ -1,4 +1,3 @@
-import { getMonth } from 'date-fns';
 import { getConfigValue } from './config.js';
 
 /**
@@ -16,20 +15,7 @@ export const yearIsValid = (year) => {
     return false;
   }
 
-  const startYear = getConfigValue('aoc.puzzleValidation.minYear');
-  const endYear = getConfigValue('aoc.puzzleValidation.maxYear');
-
-  // sanity in case someone changed their clocks.
-  if (startYear > endYear) {
-    throw new RangeError(`End year: ${endYear} is less than start year: ${startYear}. How did you time travel?`);
-  }
-
-  // if it's not christmas time in the current year then the current year isn't valid.
-  if ((year === endYear || year === startYear) && getMonth(new Date()) !== getConfigValue('aoc.puzzleValidation.month')) {
-    return false;
-  }
-
-  return year >= startYear && year <= endYear;
+  return getConfigValue('aoc.puzzleValidation.years').includes(year);
 };
 
 /**
@@ -41,9 +27,7 @@ export const dayIsValid = (day) => {
     return false;
   }
 
-  // todo check puzzle unlock time.
-
-  return day >= getConfigValue('aoc.puzzleValidation.minDay') && day <= getConfigValue('aoc.puzzleValidation.maxDay');
+  return getConfigValue('aoc.puzzleValidation.days').includes(day);
 };
 
 /**

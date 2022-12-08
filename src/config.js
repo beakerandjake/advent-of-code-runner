@@ -1,7 +1,9 @@
 import { getYear } from 'date-fns';
-import { has, get } from 'lodash-es';
+import { has, get, range } from 'lodash-es';
 import { join } from 'path';
 import { cwd } from 'process';
+
+const CURRENT_YEAR = getYear(new Date());
 
 const CONFIG = {
   logging: {
@@ -9,7 +11,7 @@ const CONFIG = {
     includeStackTrace: process.env.NODE_ENV !== 'production',
   },
   aoc: {
-    year: process.env.AOC_YEAR || new Date().getFullYear(),
+    year: process.env.AOC_YEAR || CURRENT_YEAR,
     authenticationToken: process.env.AOC_AUTHENTICATION_TOKEN || null,
     baseUrl: process.env.AOC_BASE_URL || 'https://adventofcode.com',
     userAgent:
@@ -43,12 +45,9 @@ const CONFIG = {
       defaultTimeoutMs: 300000,
     },
     puzzleValidation: {
-      minYear: 2015,
-      maxYear: getYear(Date.now()),
-      minDay: 1,
-      maxDay: 25,
+      years: range(2015, CURRENT_YEAR + 1),
+      days: range(1, 26),
       parts: [1, 2],
-      month: 11,
     },
   },
   solutions: {
