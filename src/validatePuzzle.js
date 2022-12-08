@@ -1,4 +1,4 @@
-import { toNumber } from 'lodash-es';
+import { parseInt, toNumber } from 'lodash-es';
 import { getMonth, getYear } from 'date-fns';
 import { getConfigValue } from './config.js';
 
@@ -11,7 +11,7 @@ const parseNumber = (value) => {
     return NaN;
   }
 
-  return toNumber(value);
+  return parseInt(value);
 };
 
 /**
