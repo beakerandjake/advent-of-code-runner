@@ -2,25 +2,17 @@ import { getMonth, getYear } from 'date-fns';
 import { getConfigValue } from './config.js';
 
 /**
- * Attempts to parse a number from the specified value.
+ * Returns true if the value is an integer.
  * @param {Any} value
  */
-const parseNumber = (value) => {
-  if (!Number.isInteger(value)) {
-    return NaN;
-  }
-
-  return value;
-};
+const isPositiveInteger = (value) => Number.isFinite(value) && Number.isInteger(value) && value > 0;
 
 /**
  * Is the year one where aoc happened?
  * @param {Number} year
  */
 export const yearIsValid = (year) => {
-  const parsed = parseNumber(year);
-
-  if (Number.isNaN(parsed)) {
+  if (!isPositiveInteger(year)) {
     return false;
   }
 
@@ -37,7 +29,7 @@ export const yearIsValid = (year) => {
     return false;
   }
 
-  return parsed >= startYear && parsed <= endYear;
+  return year >= startYear && year <= endYear;
 };
 
 /**
@@ -45,9 +37,7 @@ export const yearIsValid = (year) => {
  * @param {Number} day
  */
 export const dayIsValid = (day) => {
-  const parsed = parseNumber(day);
-
-  if (Number.isNaN(parsed)) {
+  if (!isPositiveInteger(day)) {
     return false;
   }
 
@@ -61,11 +51,9 @@ export const dayIsValid = (day) => {
  * @param {Number} part
  */
 export const partIsValid = (part) => {
-  const parsed = parseNumber(part);
-
-  if (Number.isNaN(parsed)) {
+  if (!isPositiveInteger(part)) {
     return false;
   }
 
-  return getConfigValue('aoc.puzzleValidation.parts').includes(parsed);
+  return getConfigValue('aoc.puzzleValidation.parts').includes(part);
 };
