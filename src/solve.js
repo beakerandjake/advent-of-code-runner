@@ -1,5 +1,7 @@
 import { join } from 'path';
 import { getConfigValue } from './config.js';
+import { SolutionFileNotFoundError } from './errors/SolutionFileNotFoundError.js';
+import { fileExists } from './io.js';
 import { logger } from './logger.js';
 import { execute } from './solutionRunner.js';
 
@@ -32,5 +34,15 @@ const getFunctionNameForPart = (part) => {
  */
 export const solve = async (year, day, part, input) => {
   logger.verbose('running solution for year: %s, day: %s, part: %s', year, day, part);
-  return execute(getSolutionFileName(year, day), getFunctionNameForPart(part), input);
+
+  const solutionFileName = getSolutionFileName(year, day);
+
+  // be nice to the solution runner and check to see if the file exists first.
+  if (!await fileExists(solutionFileName)) {
+    throw new SolutionFileNotFoundError(`Failed to load Solution file, ensure file exists: ${solutionFileName}`);
+  }
+
+  // TODO could swap out solution runners dynamically to support different languages..
+
+  return execute(solutionFileName, getFunctionNameForPart(part), input);
 };
