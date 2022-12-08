@@ -3,6 +3,15 @@ import { SolutionFileMissingRequiredFunctionError } from './errors/SolutionFileM
 import { SolutionRaisedError } from './errors/SolutionRaisedError.js';
 import { measureExecutionTime } from './measureExecutionTime.js';
 
+/**
+ * Uses node worker threads to execute the user code in a separate context.
+ * This adds some complexity and increases the performance cost to spin up the user code.
+ * However it yields several benefits. First it's very easy to swallow up the console logs
+ * and direct them to our logger where they can be formatted nicely. Second it keeps our event
+ * loop free and allows the user to hit ctrl+c if their loops are taking too long.
+ */
+
+// this is defined here so it can be a named export.
 let executeFn = async () => { throw new Error('Function is only implemented on main thread!'); };
 
 /**
@@ -33,6 +42,7 @@ if (isMainThread) {
   // if executing from the main thread, then export a function
   // to spawn the worker and handle the results.
 
+  // dynamic imports here to keep running a worker as fast as possible.
   const { fileURLToPath } = await import('url');
   const { Worker } = await import('worker_threads');
   const { logger } = await import('./logger.js');
@@ -41,17 +51,19 @@ if (isMainThread) {
     logger.debug('spawning worker to execute solution');
 
     return new Promise((resolve, reject) => {
+      // spawn a Worker thread to run the user solution.
       const worker = new Worker(fileURLToPath(import.meta.url), {
         workerData: {
           solutionFileName,
           functionToExecute,
           input,
         },
+        // prevent automatic piping of stdout and stderr because we're going to capture it.
         stdout: true,
         stderr: true,
       });
 
-      // listen to messages from the worker, this is how we will get the solution.
+      // listen to messages from the worker.
       worker.on('message', (data) => {
         switch (data.type) {
           // worker just wants to log, pipe it through to our logger.
@@ -68,7 +80,7 @@ if (isMainThread) {
         }
       });
 
-      // handle uncaught exceptions from user code we are executing.
+      // handle uncaught exceptions.
       worker.on('error', (error) => reject(error));
 
       // handle potential edge case where worker does not send a solution message.
