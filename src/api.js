@@ -1,7 +1,7 @@
 import { JSDOM } from 'jsdom';
 import { logger } from './logger.js';
 import { getConfigValue } from './config.js';
-import { sizeOfStringInKb } from './utils.js';
+import { sizeOfStringInKb } from './formatting.js';
 import { LockedOrCompletedPuzzleError } from './errors/LockedOrCompletedPuzzleError.js';
 import { TooManySubmissionsError } from './errors/TooManySubmissionsError.js';
 

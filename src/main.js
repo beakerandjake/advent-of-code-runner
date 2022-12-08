@@ -3,7 +3,7 @@ import { inputFileExits, saveInputToFile, loadInputFile } from './input.js';
 import { getConfigValue } from './config.js';
 import { logger } from './logger.js';
 import { solve } from './solve.js';
-import { humanizeDuration } from './utils.js';
+import { humanizeDuration } from './formatting.js';
 
 const year = getConfigValue('aoc.year');
 const day = 1;
