@@ -3,15 +3,13 @@ import { has, get, range } from 'lodash-es';
 import { join } from 'path';
 import { cwd } from 'process';
 
-const CURRENT_YEAR = getYear(new Date());
-
 const CONFIG = {
   logging: {
     level: process.env.LOG_LEVEL || 'info',
     includeStackTrace: process.env.NODE_ENV !== 'production',
   },
   aoc: {
-    year: process.env.AOC_YEAR || CURRENT_YEAR,
+    year: process.env.AOC_YEAR || getYear(new Date()),
     authenticationToken: process.env.AOC_AUTHENTICATION_TOKEN || null,
     baseUrl: process.env.AOC_BASE_URL || 'https://adventofcode.com',
     userAgent:
@@ -45,7 +43,12 @@ const CONFIG = {
       defaultTimeoutMs: 300000,
     },
     puzzleValidation: {
-      years: range(2015, CURRENT_YEAR + 1),
+      // could dynamically set valid dates here, but keeping this explicit
+      // prevents edge cases where system time has been set maliciously
+      // also allows possibility that aoc doesn't run during a specific year.
+      // also ensures that this package gets updates at least once a year to support
+      // that years aoc and any changes that might be needed.
+      years: [2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022],
       days: range(1, 26),
       parts: [1, 2],
     },
