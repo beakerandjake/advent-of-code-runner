@@ -1,7 +1,7 @@
 import { isMainThread, workerData, parentPort } from 'worker_threads';
-import { hrtime } from 'process';
 import { SolutionFileMissingRequiredFunctionError } from './errors/SolutionFileMissingRequiredFunctionError.js';
 import { SolutionRaisedError } from './errors/SolutionRaisedError.js';
+import { measureExecutionTime } from './measureExecutionTime.js';
 
 let executeFn = async () => { throw new Error('Function is only implemented on main thread!'); };
 
@@ -97,14 +97,11 @@ if (isMainThread) {
   try {
     logFromWorker('debug', 'executing solution function: %s', workerData.functionToExecute);
 
-    const start = hrtime.bigint();
-    const solution = functionToExecute(workerData.input);
-    const end = hrtime.bigint();
-    const executionTimeNs = Number(end - start);
+    const { result, executionTimeNs } = measureExecutionTime(functionToExecute)(workerData.input);
 
     parentPort.postMessage({
       type: WORKER_MESSAGE_TYPES.solution,
-      solution,
+      solution: result,
       executionTimeNs,
     });
   } catch (error) {
