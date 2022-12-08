@@ -1,3 +1,4 @@
+import { Command } from 'commander';
 import { downloadInput, submitSolution } from './api.js';
 import { inputFileExits, saveInputToFile, loadInputFile } from './input.js';
 import { getConfigValue } from './config.js';
@@ -5,38 +6,49 @@ import { logger } from './logger.js';
 import { solve } from './solve.js';
 import { humanizeDuration } from './formatting.js';
 
-const year = getConfigValue('aoc.year');
-const day = 1;
-const part = 1;
+const program = new Command();
 
-// eslint-disable-next-line no-unused-vars
-const main = async () => {
-  let input;
+program
+  .name('advent-of-code-runner')
+  .description('CLI to save Christmas')
+  .version('');
 
-  if (!await inputFileExits(year, day)) {
-    // download and cache input when it doesn't exist.
-    input = await downloadInput(year, day, getConfigValue('aoc.authenticationToken'));
-    await saveInputToFile(year, day, input);
-  } else {
-    // load cached input instead of re-downloading.
-    input = await loadInputFile(year, day);
-  }
+program
+  .command('solve')
+  .description('Solve the puzzle and output the result to the console.')
+  .argument('<day>', 'The day of the puzzle to solve (1-24)', )
+  .option('-y, --year <number>', 'The year of advent-of-code to solve', getConfigValue('aoc.year'))
+  .action((day, options) => {
+    logger.info('hello world: %s %s', day, options);
+  });
 
-  const { solution, executionTimeNs } = await solve(year, day, part, input);
+program.parse();
 
-  logger.info('solution: %s solved in: %s', solution, humanizeDuration(executionTimeNs));
+// const year = getConfigValue('aoc.year');
+// const day = 1;
+// const part = 1;
 
-  const submissionResult = await submitSolution(year, day, part, solution, getConfigValue('aoc.authenticationToken'));
+// // eslint-disable-next-line no-unused-vars
+// const main = async () => {
+//   let input;
 
-  logger.info('submission result: %s', submissionResult);
-};
+//   if (!await inputFileExits(year, day)) {
+//     // download and cache input when it doesn't exist.
+//     input = await downloadInput(year, day, getConfigValue('aoc.authenticationToken'));
+//     await saveInputToFile(year, day, input);
+//   } else {
+//     // load cached input instead of re-downloading.
+//     input = await loadInputFile(year, day);
+//   }
+
+//   const { solution, executionTimeNs } = await solve(year, day, part, input);
+
+//   logger.info('solution: %s solved in: %s', solution, humanizeDuration(executionTimeNs));
+
+//   logger.info('submission result: %s', submissionResult);
+// };
 
 // await main();
-
-const input = await loadInputFile(year, day);
-const solveTwo = await solve(year, day, part, input);
-// const solve1 = await solve(year, day, part, input);
-logger.info('solve2: %s solved in: %s', solveTwo.solution, humanizeDuration(solveTwo.executionTimeNs));
 
 // const input = await loadInputFile(year, day);
 // const { solution, executionTimeMs } = await solve(year, day, part, input);
