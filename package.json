@@ -4,7 +4,7 @@
   "description": "CLI for running and submitting Advent of Code Puzzles",
   "main": "src/main.js",
   "scripts": {
-    "test": "NODE_OPTIONS=--experimental-vm-modules jest",
+    "test": "mocha",
     "start": "node -r dotenv/config src/main.js"
   },
   "repository": {
@@ -31,6 +31,7 @@
     "eslint": "^8.29.0",
     "eslint-config-airbnb-base": "^15.0.0",
     "eslint-plugin-import": "^2.26.0",
-    "jest": "^29.3.1"
+    "jest": "^29.3.1",
+    "mocha": "^10.1.0"
   }
 }
