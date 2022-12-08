@@ -1,4 +1,4 @@
-import { getMonth, getYear } from 'date-fns';
+import { getMonth } from 'date-fns';
 import { getConfigValue } from './config.js';
 
 /**
@@ -17,8 +17,7 @@ export const yearIsValid = (year) => {
   }
 
   const startYear = getConfigValue('aoc.puzzleValidation.minYear');
-  console.log('start year', startYear);
-  const endYear = getYear(new Date());
+  const endYear = getConfigValue('aoc.puzzleValidation.maxYear');
 
   // sanity in case someone changed their clocks.
   if (startYear > endYear) {
@@ -26,7 +25,7 @@ export const yearIsValid = (year) => {
   }
 
   // if it's not christmas time in the current year then the current year isn't valid.
-  if (getMonth(new Date()) !== getConfigValue('aoc.puzzleValidation.month')) {
+  if ((year === endYear || year === startYear) && getMonth(new Date()) !== getConfigValue('aoc.puzzleValidation.month')) {
     return false;
   }
 

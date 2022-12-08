@@ -1,3 +1,4 @@
+import { getYear } from 'date-fns';
 import { has, get } from 'lodash-es';
 import { join } from 'path';
 import { cwd } from 'process';
@@ -43,10 +44,11 @@ const CONFIG = {
     },
     puzzleValidation: {
       minYear: 2015,
+      maxYear: getYear(Date.now()),
       minDay: 1,
       maxDay: 25,
       parts: [1, 2],
-      month: 12,
+      month: 11,
     },
   },
   solutions: {
