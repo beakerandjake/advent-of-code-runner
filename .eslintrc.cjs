@@ -2,12 +2,12 @@ module.exports = {
   env: {
     es2021: true,
     node: true,
-    mocha: true,
+    jest: true,
   },
   extends: 'airbnb-base',
   overrides: [
     {
-      files: ['test/*.test.js'], // Or *.test.js
+      files: ['**/*.test.js'], // Or *.test.js
       rules: {
         'no-console': 'off',
       },

@@ -17,6 +17,7 @@ export const yearIsValid = (year) => {
   }
 
   const startYear = getConfigValue('aoc.puzzleValidation.minYear');
+  console.log('start year', startYear);
   const endYear = getYear(new Date());
 
   // sanity in case someone changed their clocks.
