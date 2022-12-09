@@ -1,5 +1,5 @@
 import { isMainThread, workerData, parentPort } from 'worker_threads';
-import { SolutionRaisedError, SolutionFileMissingRequiredFunctionError } from './errors/index.js';
+import { SolutionRaisedError, SolutionFileMissingRequiredFunctionError, SolutionFileNotFoundError } from './errors/index.js';
 import { measureExecutionTime } from './measureExecutionTime.js';
 
 /**
@@ -37,24 +37,61 @@ const logFromWorker = (level, message, ...args) => {
   });
 };
 
+/**
+ * Imports the module at the specified file name.
+ * @param {String} fileName
+ * @throws {SolutionFileNotFoundError}
+ */
+const importSolutionModule = async (fileName) => {
+  try {
+    return await import(fileName);
+  } catch (error) {
+    logFromWorker('warn', 'failed to load solution module: %s', error);
+    throw new SolutionFileNotFoundError(`Failed to load Solution file, ensure file exists: ${fileName}`);
+  }
+};
+
 if (isMainThread) {
   // if executing from the main thread, then export a function
   // to spawn the worker and handle the results.
 
   // dynamic imports here to keep running a worker as fast as possible.
+  const { join } = await import('path');
   const { fileURLToPath } = await import('url');
   const { Worker } = await import('worker_threads');
   const { logger } = await import('./logger.js');
+  const { getConfigValue } = await import('./config.js');
 
-  executeFn = async (solutionFileName, functionToExecute, input) => {
+  /**
+   * Returns the file name for a solution file for the given year and day.
+   * @param {Number} year
+   * @param {Number} day
+   */
+  const getSolutionFileName = (year, day) => join(getConfigValue('solutions.path'), `${year}`, `day_${day}.js`);
+
+  /**
+   * Returns the name of the function to execute for the puzzles part.
+   * @param {Number} part
+   */
+  const getFunctionNameForPart = (part) => {
+    const functionName = getConfigValue('solutions.partFunctions').find((x) => x.key === part)?.name;
+
+    if (!functionName) {
+      throw new Error(`Unknown solution part: ${part}`);
+    }
+
+    return functionName;
+  };
+
+  executeFn = async (year, day, part, input) => {
     logger.debug('spawning worker to execute solution');
 
     return new Promise((resolve, reject) => {
       // spawn a Worker thread to run the user solution.
       const worker = new Worker(fileURLToPath(import.meta.url), {
         workerData: {
-          solutionFileName,
-          functionToExecute,
+          solutionFileName: getSolutionFileName(year, day),
+          functionToExecute: getFunctionNameForPart(part),
           input,
         },
         // prevent automatic piping of stdout and stderr because we're going to capture it.
@@ -97,7 +134,7 @@ if (isMainThread) {
 
   logFromWorker('debug', 'importing solution module from file: %s', workerData.solutionFileName);
 
-  const importedSolutionModule = await import(workerData.solutionFileName);
+  const importedSolutionModule = await importSolutionModule(workerData.solutionFileName);
   const functionToExecute = importedSolutionModule[workerData.functionToExecute];
 
   // ensure function is present and is actually a function.
@@ -120,4 +157,7 @@ if (isMainThread) {
   }
 }
 
+/**
+ * Execute the solution using a worker thread and returns the result.
+ */
 export const execute = executeFn;

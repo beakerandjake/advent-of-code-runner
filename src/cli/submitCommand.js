@@ -1,7 +1,10 @@
 import { Command } from 'commander';
 import { LockedPuzzleError, PuzzleAlreadySolvedError } from '../errors/index.js';
+import { humanizeDuration } from '../formatting.js';
+import { getInputFileContents } from '../input.js';
 import { logger } from '../logger.js';
 import { puzzleHasBeenSolved } from '../progress.js';
+import { solve } from '../solve.js';
 import { puzzleIsUnlocked } from '../validatePuzzle.js';
 import { dayArgument, partArgument, yearOption } from './arguments.js';
 
@@ -23,6 +26,10 @@ command
     if (await puzzleHasBeenSolved(year, day, part)) {
       throw new PuzzleAlreadySolvedError(`You have already completed puzzle for year: ${year}, day: ${day}, part: ${part}!`);
     }
+
+    const input = await getInputFileContents(year, day);
+    const { solution, executionTimeNs } = await solve(year, day, part, input);
+    logger.info('solution: %s solved in: %s', solution, humanizeDuration(executionTimeNs));
   });
 
 export const submitCommand = command;
