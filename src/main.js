@@ -1,6 +1,6 @@
 import { Command } from 'commander';
 import { exit, argv } from 'process';
-import { solveCommand } from './cli/index.js';
+import { solveCommand, submitCommand } from './cli/index.js';
 import { logger } from './logger.js';
 
 const program = new Command();
@@ -12,7 +12,7 @@ program
   .exitOverride();
 
 program.addCommand(solveCommand);
-// solveCommand.copyInheritedSettings(program);
+program.addCommand(submitCommand);
 
 try {
   await program.parseAsync(argv);

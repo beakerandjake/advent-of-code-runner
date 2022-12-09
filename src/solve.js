@@ -1,6 +1,6 @@
 import { join } from 'path';
 import { getConfigValue } from './config.js';
-import { SolutionFileNotFoundError } from './errors/SolutionFileNotFoundError.js';
+import { SolutionFileNotFoundError } from './errors/index.js';
 import { fileExists } from './io.js';
 import { logger } from './logger.js';
 import { execute } from './solutionRunner.js';

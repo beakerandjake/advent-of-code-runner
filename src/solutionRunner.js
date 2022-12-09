@@ -1,6 +1,5 @@
 import { isMainThread, workerData, parentPort } from 'worker_threads';
-import { SolutionFileMissingRequiredFunctionError } from './errors/SolutionFileMissingRequiredFunctionError.js';
-import { SolutionRaisedError } from './errors/SolutionRaisedError.js';
+import { SolutionRaisedError, SolutionFileMissingRequiredFunctionError } from './errors/index.js';
 import { measureExecutionTime } from './measureExecutionTime.js';
 
 /**

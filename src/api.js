@@ -2,8 +2,7 @@ import { JSDOM } from 'jsdom';
 import { logger } from './logger.js';
 import { getConfigValue } from './config.js';
 import { sizeOfStringInKb } from './formatting.js';
-import { LockedOrCompletedPuzzleError } from './errors/LockedOrCompletedPuzzleError.js';
-import { TooManySubmissionsError } from './errors/TooManySubmissionsError.js';
+import { LockedOrCompletedPuzzleError, TooManySubmissionsError } from './errors/index.js';
 
 /**
  * Creates a headers object which can be passed to fetch.

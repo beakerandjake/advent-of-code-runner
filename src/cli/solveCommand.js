@@ -1,5 +1,5 @@
 import { Command } from 'commander';
-import { LockedOrCompletedPuzzleError } from '../errors/LockedOrCompletedPuzzleError.js';
+import { LockedOrCompletedPuzzleError } from '../errors/index.js';
 import { humanizeDuration } from '../formatting.js';
 import { getInputFileContents } from '../input.js';
 import { logger } from '../logger.js';
