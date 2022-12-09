@@ -52,6 +52,7 @@ const CONFIG = {
       days: range(1, 26),
       parts: [1, 2],
     },
+    useMockApi: !!process.env.AOC_USE_MOCK_API || process.env.NODE_ENV !== 'production',
   },
   solutions: {
     partFunctions: [

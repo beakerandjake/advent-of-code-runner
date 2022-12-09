@@ -1,8 +1,8 @@
 import { JSDOM } from 'jsdom';
-import { logger } from './logger.js';
-import { getConfigValue } from './config.js';
-import { sizeOfStringInKb } from './formatting.js';
-import { LockedOrCompletedPuzzleError, TooManySubmissionsError } from './errors/index.js';
+import { logger } from '../logger.js';
+import { getConfigValue } from '../config.js';
+import { sizeOfStringInKb } from '../formatting.js';
+import { LockedOrCompletedPuzzleError, TooManySubmissionsError } from '../errors/index.js';
 
 /**
  * Creates a headers object which can be passed to fetch.
@@ -108,9 +108,8 @@ const sanitizeMessage = (message = '') => {
 /**
  * Determine if the puzzle was solved or not.
  * @param {String} responseBody - The body of the response
- * @returns
  */
-export const parseSolutionResponse = (responseBody = '') => {
+const parseSolutionResponse = (responseBody = '') => {
   const message = extractMessage(responseBody);
 
   if (!message) {
@@ -122,12 +121,12 @@ export const parseSolutionResponse = (responseBody = '') => {
   // check solution was correct
   if (sanitizedMessage.match(getConfigValue('aoc.responseParsing.correctSolution'))) {
     logger.debug('message indicated solution was correct');
-    return { success: true, message: sanitizeMessage };
+    return { success: true, message: sanitizedMessage };
   }
   // check solution was incorrect
   if (sanitizedMessage.match(getConfigValue('aoc.responseParsing.incorrectSolution'))) {
     logger.debug('message indicated solution was incorrect');
-    return { success: false, message: sanitizeMessage };
+    return { success: false, message: sanitizedMessage };
   }
   // check bad level, indicates user tried to solve locked or already solved part.
   if (sanitizedMessage.match(getConfigValue('aoc.responseParsing.badLevel'))) {
