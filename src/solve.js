@@ -1,4 +1,4 @@
-import { downloadInput } from './api.js';
+import { downloadInput } from './api/index.js';
 import { getConfigValue } from './config.js';
 import { inputIsCached, getCachedInput, cacheInput } from './inputCache.js';
 import { logger } from './logger.js';
