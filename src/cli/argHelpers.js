@@ -1,6 +1,5 @@
 import { InvalidArgumentError } from 'commander';
-import { toNumber, first } from 'lodash-es';
-
+import { toNumber, first, last } from 'lodash-es';
 
 /**
  * Parse the value as an integer, and ensure that it is included in the choices.

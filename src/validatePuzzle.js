@@ -1,4 +1,5 @@
 import { getConfigValue } from './config.js';
+import { logger } from './logger.js';
 
 /**
  * Returns true if the value is an integer.
@@ -40,4 +41,16 @@ export const partIsValid = (part) => {
   }
 
   return getConfigValue('aoc.puzzleValidation.parts').includes(part);
+};
+
+/**
+ * has the puzzle been unlocked by aoc?
+ * not an issue for past years but for current year
+ * it's necessary to ensure we don't attempt puzzles which are in the future
+ * @param {Number} year
+ * @param {Number} day
+ */
+export const puzzleIsUnlocked = (year, day) => {
+  logger.warn('not implemented - puzzleIsUnlocked()');
+  return true;
 };
