@@ -80,7 +80,7 @@ const getSubmitSolutionUrl = (year, day) => `${getConfigValue('aoc.baseUrl')}/${
  * @param {String} responseBody - The html of the response.
  */
 const extractMessage = (responseBody = '') => {
-  logger.verbose('extracting message from api response');
+  logger.debug('extracting message from api response');
 
   const { textContent } = new JSDOM(responseBody)
     .window

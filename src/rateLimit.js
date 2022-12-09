@@ -12,7 +12,7 @@ const LAST_REQUEST_STORE_KEY = 'lastRequestTime';
  * Store the Date of the last request made to the aoc servers.
  * @param {Date} date
  */
-export const onRequestSent = async () => {
+export const setLastRequestTime = async () => {
   const now = new Date().toISOString();
   logger.debug('updating request throttle, setting last request time to: %s', now);
   await setStoreValue(LAST_REQUEST_STORE_KEY, now);
@@ -21,7 +21,7 @@ export const onRequestSent = async () => {
 /**
  * Has enough time passed since the last request that a new request to the aoc server can be sent?
  */
-export const canSendRequest = async () => {
+export const isRateLimited = async () => {
   logger.debug('checking if enough time has passed since last request to send new request');
 
   const lastRequestTime = await getStoreValue(LAST_REQUEST_STORE_KEY);
@@ -35,6 +35,7 @@ export const canSendRequest = async () => {
 
   if (!isValid(parsedDate)) {
     logger.warn('failed to parse date from last request time: %s', lastRequestTime);
+    return true;
   }
 
   const msSinceLastRequest = differenceInMilliseconds(new Date(), parsedDate);

@@ -99,7 +99,7 @@ export const execute = async (year, day, part, input) => {
 
     // forward console.log and console.error messages to the main logger with special category.
     // TODO need special category / formatting for user output.
-    worker.stdout.on('data', (chunk) => logger.info('got chunk from worker: %s', chunk?.toString().trim()));
-    worker.stderr.on('data', (data) => logger.info('got error from worker: %s', data?.toString().trim()));
+    worker.stdout.on('data', (chunk) => logger.info('got chunk from user solution: %s', chunk?.toString().trim()));
+    worker.stderr.on('data', (data) => logger.info('got error from user solution: %s', data?.toString().trim()));
   });
 };
