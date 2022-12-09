@@ -1,8 +1,8 @@
 import { Command } from 'commander';
 import { submitSolution } from '../api/index.js';
 import { getConfigValue } from '../config.js';
-import { LockedPuzzleError, PuzzleAlreadySolvedError, TooManySubmissionsError } from '../errors/index.js';
-import { humanizeDuration, humanizeMinutesDifference } from '../formatting.js';
+import { LockedPuzzleError, PuzzleAlreadySolvedError, RateLimitExceededError } from '../errors/index.js';
+import { humanizeDuration } from '../formatting.js';
 import { logger } from '../logger.js';
 import { puzzleHasBeenSolved } from '../progress.js';
 import {
@@ -36,7 +36,7 @@ const submit = async (day, part, { year }) => {
 
   // prevent submission if user is rate limited.
   if (limited) {
-    throw new TooManySubmissionsError(`Timeout period has not expired. Please wait ${humanizeMinutesDifference(expiration, new Date())} before submitting this solution.`);
+    throw new RateLimitExceededError('Timeout period for submitting a solution has not expired.', expiration);
   }
 
   const { solution, executionTimeNs } = await solve(year, day, part);

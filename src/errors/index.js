@@ -4,7 +4,7 @@ import { PuzzleAlreadySolvedError } from './PuzzleAlreadySolvedError.js';
 import { SolutionFileMissingRequiredFunctionError } from './SolutionFileMissingRequiredFunctionError.js';
 import { SolutionFileNotFoundError } from './SolutionFileNotFoundError.js';
 import { SolutionRaisedError } from './SolutionRaisedError.js';
-import { TooManySubmissionsError } from './TooManySubmissionsError.js';
+import { RateLimitExceededError } from './RateLimitExceededError.js';
 
 export {
   LockedOrCompletedPuzzleError,
@@ -13,5 +13,5 @@ export {
   SolutionFileMissingRequiredFunctionError,
   SolutionFileNotFoundError,
   SolutionRaisedError,
-  TooManySubmissionsError,
+  RateLimitExceededError,
 };
