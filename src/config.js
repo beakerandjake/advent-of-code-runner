@@ -2,10 +2,33 @@ import { getYear } from 'date-fns';
 import { has, get, range } from 'lodash-es';
 import { join } from 'path';
 import { cwd } from 'process';
+import { readPackageUp } from 'read-pkg-up';
+
+/**
+ * Load meta details about this package form the package json
+ */
+const readMetaFromPackageJson = async () => {
+  const { packageJson } = await readPackageUp({ normalize: false }) || {};
+
+  // should never ever happen, but just in case.
+  if (!packageJson) {
+    throw new Error('Could not load package.json!');
+  }
+
+  return {
+    name: packageJson.name,
+    version: packageJson.version,
+    description: packageJson.description,
+  };
+};
 
 const CONFIG = {
+  meta: await readMetaFromPackageJson(),
+  cli: {
+    suppressTitleBox: process.env.AOC_SUPPRESS_TITLE_BOX === 'true' || process.env.AOC_SUPPRESS_TITLE_BOX === '1',
+  },
   logging: {
-    level: process.env.LOG_LEVEL || 'info',
+    level: process.env.AOC_LOG_LEVEL || 'info',
     includeStackTrace: process.env.NODE_ENV !== 'production',
   },
   aoc: {

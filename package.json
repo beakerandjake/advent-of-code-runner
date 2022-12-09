@@ -18,11 +18,14 @@
   },
   "homepage": "https://github.com/beakerandjake/advent-of-code-runner#readme",
   "dependencies": {
+    "boxen": "^7.0.0",
     "commander": "^9.4.1",
     "date-fns": "^2.29.3",
     "dotenv": "^16.0.3",
     "jsdom": "^20.0.3",
     "lodash-es": "^4.17.21",
+    "node-emoji": "^1.11.0",
+    "read-pkg-up": "^9.1.0",
     "winston": "^3.8.2"
   },
   "type": "module",

@@ -1,21 +1,35 @@
 import { Command } from 'commander';
-import { exit, argv } from 'process';
+import { exit } from 'process';
 import { solveCommand, submitCommand } from './cli/index.js';
+import { printTitleBox } from './cli/output.js';
+import { testCommand } from './cli/testCommand.js';
+import { getConfigValue } from './config.js';
 import { logger } from './logger.js';
 
 const program = new Command();
 
 program
-  .name('advent-of-code-runner')
-  .description('CLI to save Christmas')
-  .version('')
-  .exitOverride();
+  .name(getConfigValue('meta.name'))
+  .description(getConfigValue('meta.description'))
+  .version(getConfigValue('meta.version'))
+  .addHelpText('beforeAll', printTitleBox)
+  .hook('preAction', printTitleBox)
+  .exitOverride((error) => {
+    // handle edge case when help is displayed
+    // exit instead of throwing error.
+    if (error.code === 'commander.help' || error.code === 'commander.version') {
+      exit(1);
+    }
+
+    throw error;
+  });
 
 program.addCommand(solveCommand);
 program.addCommand(submitCommand);
+program.addCommand(testCommand);
 
 try {
-  await program.parseAsync(argv);
+  await program.parseAsync();
 } catch (error) {
   logger.error('%s', error);
   exit(1);
