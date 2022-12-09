@@ -2,10 +2,12 @@ import { Command } from 'commander';
 import { submitSolution } from '../api/index.js';
 import { getConfigValue } from '../config.js';
 import { LockedPuzzleError, PuzzleAlreadySolvedError, TooManySubmissionsError } from '../errors/index.js';
-import { humanizeDuration } from '../formatting.js';
+import { humanizeDuration, humanizeMinutesDifference } from '../formatting.js';
 import { logger } from '../logger.js';
 import { puzzleHasBeenSolved } from '../progress.js';
-import { isRateLimited } from '../rateLimit.js';
+import {
+  checkActionRateLimit, rateLimitedActions, updateRateLimit,
+} from '../rateLimit.js';
 import { solve } from '../solve.js';
 import { puzzleIsUnlocked } from '../validatePuzzle.js';
 import { dayArgument, partArgument, yearOption } from './arguments.js';
@@ -30,9 +32,11 @@ const submit = async (day, part, { year }) => {
     throw new PuzzleAlreadySolvedError(`You have already completed puzzle for year: ${year}, day: ${day}, part: ${part}!`);
   }
 
+  const { limited, expiration } = await checkActionRateLimit(rateLimitedActions.submitAnswer);
+
   // prevent submission if user is rate limited.
-  if (!await isRateLimited()) {
-    throw new TooManySubmissionsError('Timeout period has not expired. Please wait before submitting this solution.');
+  if (limited) {
+    throw new TooManySubmissionsError(`Timeout period has not expired. Please wait ${humanizeMinutesDifference(expiration, new Date())} before submitting this solution.`);
   }
 
   const { solution, executionTimeNs } = await solve(year, day, part);
@@ -42,6 +46,8 @@ const submit = async (day, part, { year }) => {
   const { success, message } = await submitSolution(year, day, part, solution, getConfigValue('aoc.authenticationToken'));
 
   logger.info('solution was correct: %s, message: %s', success, message);
+
+  await updateRateLimit(rateLimitedActions.submitAnswer);
 };
 
 /**

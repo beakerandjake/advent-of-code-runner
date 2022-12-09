@@ -33,3 +33,5 @@ try {
 //  skip creation of files that already exist.
 
 // route solution logs to winston with custom log level and color.
+
+// when initing solution file, download puzzle text and add as comment in file.

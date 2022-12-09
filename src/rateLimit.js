@@ -1,47 +1,80 @@
-import { parseISO, differenceInMilliseconds, isValid } from 'date-fns';
+import {
+  parseISO, isValid, addMilliseconds, isFuture,
+} from 'date-fns';
+import { get, includes, set } from 'lodash-es';
 import { getConfigValue } from './config.js';
 import { logger } from './logger.js';
 import { getStoreValue, setStoreValue } from './store.js';
 
-/**
- * The key used in the data store where the last request time value is saved.
- */
-const LAST_REQUEST_STORE_KEY = 'lastRequestTime';
+const RATE_LIMITS_STORE_KEY = 'rateLimits';
 
 /**
- * Store the Date of the last request made to the aoc servers.
- * @param {Date} date
+ * The type of aoc api requests that support rate limiting.
  */
-export const setLastRequestTime = async () => {
-  const now = new Date().toISOString();
-  logger.debug('updating request throttle, setting last request time to: %s', now);
-  await setStoreValue(LAST_REQUEST_STORE_KEY, now);
+export const rateLimitedActions = {
+  downloadInput: 'INPUT',
+  submitAnswer: 'SUBMIT',
 };
 
 /**
- * Has enough time passed since the last request that a new request to the aoc server can be sent?
+ * Returns the stored expiration date of the actions rate limit (if any)
+ * @param {String} action - The key of the action to update (keys defined in rateLimitedActions)
  */
-export const isRateLimited = async () => {
-  logger.debug('checking if enough time has passed since last request to send new request');
+const getActionRateLimitExpiration = async (action) => {
+  const rateLimits = await getStoreValue(RATE_LIMITS_STORE_KEY, {});
+  return get(rateLimits, action);
+};
 
-  const lastRequestTime = await getStoreValue(LAST_REQUEST_STORE_KEY);
+/**
+ * Set the date after which the action can be performed.
+ * @param {String} action - The action to set the rate limit for.
+ * @param {String} expirationDate - The date the rate limit expires (ISO8601 date string)
+ */
+const setActionRateLimitExpiration = async (action, expirationDate) => {
+  const rateLimits = await getStoreValue(RATE_LIMITS_STORE_KEY, {});
+  set(rateLimits, action, expirationDate);
+  await setStoreValue(RATE_LIMITS_STORE_KEY, rateLimits);
+};
 
-  if (!lastRequestTime) {
-    logger.debug('could not find time of last request, new request is allowed.');
-    return true;
+/**
+ * Stores a timeout which can lock out that api action until the timeout expires.
+ * @param {String} action - The key of the action to update (keys defined in rateLimitedActions)
+ * @param {Number} timeoutOverrideMs - If no value is provided the default value will be used.
+ */
+export const updateRateLimit = async (action = '', timeoutOverrideMs = null) => {
+  logger.debug('updating rate limit for action: %s, timeoutOverrideMs: %s', action, timeoutOverrideMs);
+
+  if (!includes(rateLimitedActions, action)) {
+    throw new Error(`Unknown rate limit action: ${action}`);
   }
 
-  const parsedDate = parseISO(lastRequestTime);
+  const timeoutDurationMs = Math.max(getConfigValue('aoc.rateLimiting.defaultTimeoutMs'), timeoutOverrideMs);
 
-  if (!isValid(parsedDate)) {
-    logger.warn('failed to parse date from last request time: %s', lastRequestTime);
-    return true;
+  logger.debug('using timeout duration value of: %s', timeoutDurationMs);
+
+  const rateLimitExpiration = addMilliseconds(new Date(), timeoutDurationMs).toISOString();
+
+  logger.debug('rate limit for action: %s now expires at: %s', action, rateLimitExpiration);
+
+  await setActionRateLimitExpiration(action, rateLimitExpiration);
+};
+
+/**
+ * Is the current action rate limited?
+ * @param {String} action - The key of the action to update (keys defined in rateLimitedActions)
+ */
+export const checkActionRateLimit = async (action = '') => {
+  logger.debug('checking rate limit for action: %s', action);
+
+  if (!includes(rateLimitedActions, action)) {
+    throw new Error(`Unknown rate limit action: ${action}`);
   }
 
-  const msSinceLastRequest = differenceInMilliseconds(new Date(), parsedDate);
-  const toReturn = msSinceLastRequest > getConfigValue('aoc.rateLimiting.defaultTimeoutMs');
+  const parsedDate = parseISO(await getActionRateLimitExpiration(action));
+  const limited = isValid(parsedDate) && isFuture(parsedDate);
+  const expiration = limited ? parsedDate : null;
 
-  logger.debug('number of ms since last request: %s, can send new request: %s', msSinceLastRequest, toReturn);
+  logger.debug('action: %s is rate limited: %s, expiration: %s', action, limited instanceof Date, expiration);
 
-  return toReturn;
+  return { limited, expiration };
 };

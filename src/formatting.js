@@ -1,4 +1,12 @@
 import { first, last } from 'lodash-es';
+import {
+  differenceInMilliseconds,
+  max,
+  millisecondsToMinutes,
+  millisecondsToSeconds,
+  min,
+  minutesToMilliseconds,
+} from 'date-fns';
 
 /**
  * Calculates the number of KB the string takes up.
@@ -31,6 +39,28 @@ export const humanizeDuration = (nanoseconds) => {
   }
 
   return `${nanoseconds}ns`;
+};
+
+/**
+ * Returns a human readable string of the difference in minutes / seconds
+ * of the start date to the end date.
+ * @param {Date} startDate
+ * @param {Date} endDate
+ */
+export const humanizeMinutesDifference = (startDate, endDate) => {
+  const msDifference = differenceInMilliseconds(
+    max([startDate, endDate]),
+    min([startDate, endDate]),
+  );
+
+  const minutes = millisecondsToMinutes(msDifference);
+
+  if (minutes >= 1) {
+    const remainingSeconds = millisecondsToSeconds(msDifference - minutesToMilliseconds(minutes));
+    return `${minutes}m ${remainingSeconds}s`;
+  }
+
+  return `${millisecondsToSeconds(msDifference)}s`;
 };
 
 /**
