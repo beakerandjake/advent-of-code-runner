@@ -1,7 +1,6 @@
 import { Command } from 'commander';
 import { LockedOrCompletedPuzzleError } from '../errors/index.js';
 import { humanizeDuration } from '../formatting.js';
-import { getInputFileContents } from '../input.js';
 import { logger } from '../logger.js';
 import { solve } from '../solve.js';
 import { puzzleIsUnlocked } from '../validatePuzzle.js';
@@ -22,9 +21,7 @@ command
       throw new LockedOrCompletedPuzzleError(`Puzzle for year: ${year}, day: ${day}, part: ${part} is locked!`);
     }
 
-    const input = await getInputFileContents(year, day);
-
-    const { solution, executionTimeNs } = await solve(year, day, part, input);
+    const { solution, executionTimeNs } = await solve(year, day, part);
 
     logger.info('solution: %s solved in: %s', solution, humanizeDuration(executionTimeNs));
   });

@@ -38,7 +38,7 @@ export const puzzleHasBeenSolved = async (year, day, part) => {
   const solvedPuzzles = await getStoreValue(SOLVED_PUZZLES_STORE_KEY, []);
   const hash = generatePuzzleHash(year, day, part);
   const solved = solvedPuzzles.includes(hash);
-  logger.debug('solved puzzles includes year: %s, day: %s, part: %s? %s', year, day, part, solved);
+  logger.debug('puzzle for year: %s, day: %s, part: %s has already been solved: %s', year, day, part, solved);
   return solved;
 };
 

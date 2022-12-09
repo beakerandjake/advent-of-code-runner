@@ -51,7 +51,7 @@ const getWorkerThreadFilePath = () => {
 };
 
 export const execute = async (year, day, part, input) => {
-  logger.debug('spawning worker to execute solution');
+  logger.verbose('spawning worker to execute solution');
 
   const workerThreadFilePath = getWorkerThreadFilePath();
 
