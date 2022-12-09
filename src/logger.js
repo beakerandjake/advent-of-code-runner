@@ -38,7 +38,6 @@ export const logger = createLogger({
           return `${level}: ${message}`;
         }),
       ),
-      handleExceptions: true,
     }),
   ],
 });
