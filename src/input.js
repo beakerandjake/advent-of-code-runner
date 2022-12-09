@@ -54,7 +54,7 @@ export const getInputFileContents = async (year, day) => {
 
   if (!await inputFileExits(year, day)) {
     toReturn = await downloadInput(year, day, getConfigValue('aoc.authenticationToken'));
-    await saveInputToFile(year, day);
+    await saveInputToFile(year, day, toReturn);
   } else {
     toReturn = await loadInputFile(year, day);
   }

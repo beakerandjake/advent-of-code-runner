@@ -1,5 +1,5 @@
 import { InvalidArgumentError } from 'commander';
-import { toNumber, first, last } from 'lodash-es';
+import { toNumber } from 'lodash-es';
 
 /**
  * Parse the value as an integer, and ensure that it is included in the choices.
@@ -35,9 +35,3 @@ export const parseIntArg = (arg) => {
 
   return parseInt(numeric, 10);
 };
-
-/**
- * Given a sorted array, generates a string like 'between $(first) and $(last)'
- * @param {Any[]} choices
- */
-export const betweenMessage = (choices = []) => (`between ${first(choices)} and ${last(choices)}`);

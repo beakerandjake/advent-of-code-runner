@@ -3,14 +3,14 @@ import {
 } from 'commander';
 import { getConfigValue } from '../config.js';
 import { LockedOrCompletedPuzzleError } from '../errors/LockedOrCompletedPuzzleError.js';
-import { humanizeDuration } from '../formatting.js';
+import { humanizeDuration, betweenMessage } from '../formatting.js';
 import { getInputFileContents } from '../input.js';
 import { logger } from '../logger.js';
 import { solve } from '../solve.js';
 import {
   dayIsValid, partIsValid, puzzleIsUnlocked, yearIsValid,
 } from '../validatePuzzle.js';
-import { betweenMessage, parseIntArg } from './argHelpers.js';
+import { parseIntArg } from './argHelpers.js';
 
 const days = getConfigValue('aoc.puzzleValidation.days');
 const parts = getConfigValue('aoc.puzzleValidation.parts');

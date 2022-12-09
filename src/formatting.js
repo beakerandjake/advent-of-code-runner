@@ -1,3 +1,5 @@
+import { first, last } from 'lodash-es';
+
 /**
  * Calculates the number of KB the string takes up.
  * @param {String} value - The value whose size to calculate.
@@ -30,3 +32,9 @@ export const humanizeDuration = (nanoseconds) => {
 
   return `${nanoseconds}ns`;
 };
+
+/**
+ * Given a sorted array, generates a string like 'between $(first) and $(last)'
+ * @param {Any[]} choices
+ */
+export const betweenMessage = (choices = []) => (`between ${first(choices)} and ${last(choices)}`);
