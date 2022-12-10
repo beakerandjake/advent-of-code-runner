@@ -50,7 +50,7 @@ export const puzzleHasBeenSolved = async (year, day, part) => {
    * @param {Number} part
    */
 export const setPuzzleSolved = async (year, day, part) => {
-  logger.debug('marking puzzle year: %s, day: %s, part: %s as solved', year, day, part);
+  logger.festive('Storing the fact that you solved this puzzle');
 
   const solvedPuzzles = await getStoreValue(SOLVED_PUZZLES_STORE_KEY, []);
   const hash = generatePuzzleHash(year, day, part);

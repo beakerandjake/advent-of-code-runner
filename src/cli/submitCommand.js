@@ -1,10 +1,9 @@
 import { Command } from 'commander';
 import { submitSolution } from '../api/index.js';
 import { getConfigValue } from '../config.js';
-import { LockedPuzzleError, PuzzleAlreadySolvedError, RateLimitExceededError } from '../errors/index.js';
-import { humanizeDuration } from '../formatting.js';
+import { LockedPuzzleError, RateLimitExceededError } from '../errors/index.js';
 import { logger } from '../logger.js';
-import { puzzleHasBeenSolved } from '../progress.js';
+import { puzzleHasBeenSolved, setPuzzleSolved } from '../progress.js';
 import {
   checkActionRateLimit, rateLimitedActions, updateRateLimit,
 } from '../rateLimit.js';
@@ -29,7 +28,8 @@ const submit = async (day, part, { year }) => {
 
   // prevent submission if we know user already solved this puzzle.
   if (await puzzleHasBeenSolved(year, day, part)) {
-    throw new PuzzleAlreadySolvedError(`You have already completed puzzle for year: ${year}, day: ${day}, part: ${part}!`);
+    logger.festive('You\'ve already submitted a correct solution to this puzzle!');
+    return;
   }
 
   const { limited, expiration } = await checkActionRateLimit(rateLimitedActions.submitAnswer);
@@ -48,6 +48,10 @@ const submit = async (day, part, { year }) => {
   logger.festive('%s', message);
 
   await updateRateLimit(rateLimitedActions.submitAnswer);
+
+  if (success) {
+    await setPuzzleSolved(year, day, part);
+  }
 };
 
 /**
