@@ -2,7 +2,7 @@ import { JSDOM } from 'jsdom';
 import { logger } from '../logger.js';
 import { getConfigValue } from '../config.js';
 import { sizeOfStringInKb } from '../formatting.js';
-import { LockedOrCompletedPuzzleError, TooManySubmissionsError } from '../errors/index.js';
+import { LockedOrCompletedPuzzleError, RateLimitExceededError } from '../errors/index.js';
 
 /**
  * Creates a headers object which can be passed to fetch.
@@ -102,7 +102,7 @@ const sanitizeMessage = (message = '') => {
   return getConfigValue('aoc.responseParsing.sanitizers').reduce(
     (acc, sanitizer) => acc.replace(sanitizer.pattern, sanitizer.replace),
     message,
-  );
+  ).trim();
 };
 
 /**
@@ -135,7 +135,7 @@ const parseSolutionResponse = (responseBody = '') => {
 
   // check too many requests
   if (sanitizedMessage.match(getConfigValue('aoc.responseParsing.tooManyRequests'))) {
-    throw new TooManySubmissionsError(sanitizedMessage);
+    throw new RateLimitExceededError(sanitizedMessage);
   }
 
   throw new Error(`Unable to parse response message: ${sanitizedMessage}`);
