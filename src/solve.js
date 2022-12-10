@@ -50,7 +50,7 @@ const getInput = async (year, day) => {
 };
 
 /**
- * Runs the solution for the given day.
+ * Runs the answer for the given day.
  * @param {Number} year
  * @param {Number} day
  * @param {Number} part
@@ -62,9 +62,9 @@ export const solve = async (year, day, part) => {
 
   logger.festive('Executing solution function');
 
-  const { solution, executionTimeNs } = await execute(year, day, part, input);
+  const { answer, executionTimeNs } = await execute(year, day, part, input);
 
-  logger.festive('You got: %s (solved in %s)', solution, humanizeDuration(executionTimeNs));
+  logger.festive('You got: %s (solved in %s)', answer, humanizeDuration(executionTimeNs));
 
-  return solution;
+  return answer;
 };
