@@ -2,6 +2,7 @@ import {
   createLogger, format, transports, addColors,
 } from 'winston';
 import { exit } from 'process';
+import chalk from 'chalk';
 import { getConfigValue } from './config.js';
 import { FestiveTransport } from './festive.js';
 
@@ -44,21 +45,25 @@ try {
 export const logger = createLogger({
   levels: customLevels,
   format: format.combine(
-    format.errors({ stack: loggingConfig.printStackTrace }),
     format.splat(),
     format.json(),
+    format.errors({ stack: true }),
   ),
   transports: [
     new transports.Console({
       level: loggingConfig.level,
       format: format.combine(
         format.colorize(),
-        // format.simple would be nice to use, but doesn't print a human readable stack trace.
-        // write a custom printf that mirrors format.simple, but prints a better stack trace.
+        // format.simple would be nice to use but we need more customization
         format.printf(({ level, message, stack }) => {
-          if (loggingConfig.printStackTrace && stack) {
-            return `${level}: ${message} - ${stack}`;
+          if (stack) {
+            // when logging with stack trace, use default coloring (only level colored)
+            // but when in 'production' mode, color the whole message instead.
+            return loggingConfig.includeStackTrace
+              ? `${level}: ${stack}`
+              : chalk.red(`Error: ${message}`);
           }
+
           return `${level}: ${message}`;
         }),
       ),
