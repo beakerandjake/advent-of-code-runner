@@ -5,6 +5,10 @@ import { SolutionFileMissingRequiredFunctionError } from './solutionFileMissingR
 import { SolutionFileNotFoundError } from './solutionFileNotFoundError.js';
 import { SolutionRuntimeError } from './solutionRuntimeError.js';
 import { RateLimitExceededError } from './rateLimitExceededError.js';
+import { UnexpectedSolutionRunnerWorkerError } from './unexpectedSolutionRunnerWorkerError.js';
+import { UnknownSolutionRunnerWorkerMessageTypeError } from './unknownSolutionRunnerWorkerMessageTypeError.js';
+import { SolutionRunnerExitError } from './solutionRunnerExitError.js';
+import { SolutionRunnerAnswerTypeError } from './solutionRunnerAnswerTypeError.js';
 
 export {
   LockedOrCompletedPuzzleError,
@@ -14,4 +18,8 @@ export {
   SolutionFileNotFoundError,
   SolutionRuntimeError,
   RateLimitExceededError,
+  UnexpectedSolutionRunnerWorkerError,
+  UnknownSolutionRunnerWorkerMessageTypeError,
+  SolutionRunnerExitError,
+  SolutionRunnerAnswerTypeError,
 };
