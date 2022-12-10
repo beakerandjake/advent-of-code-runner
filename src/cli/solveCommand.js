@@ -1,6 +1,5 @@
 import { Command } from 'commander';
 import { LockedOrCompletedPuzzleError } from '../errors/index.js';
-import { humanizeDuration } from '../formatting.js';
 import { logger } from '../logger.js';
 import { solve } from '../solve.js';
 import { puzzleIsUnlocked } from '../validatePuzzle.js';
@@ -21,9 +20,7 @@ command
       throw new LockedOrCompletedPuzzleError(`Puzzle for year: ${year}, day: ${day}, part: ${part} is locked!`);
     }
 
-    const { solution, executionTimeNs } = await solve(year, day, part);
-
-    logger.festive('Solution: %s (solved in %s)', solution, humanizeDuration(executionTimeNs));
+    await solve(year, day, part);
   });
 
 export const solveCommand = command;
