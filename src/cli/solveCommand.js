@@ -23,7 +23,7 @@ command
 
     const { solution, executionTimeNs } = await solve(year, day, part);
 
-    logger.info('solution: %s solved in: %s', solution, humanizeDuration(executionTimeNs));
+    logger.festive('Solution: %s (solved in %s)', solution, humanizeDuration(executionTimeNs));
   });
 
 export const solveCommand = command;

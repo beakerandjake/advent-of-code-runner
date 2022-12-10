@@ -30,7 +30,6 @@ program.addCommand(testCommand);
 
 try {
   await program.parseAsync();
-  logger.festive('hello world!');
 } catch (error) {
   logger.error('%s', error);
   exit(1);

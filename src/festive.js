@@ -1,27 +1,15 @@
-import emoji from 'node-emoji';
 import boxen from 'boxen';
 import chalk from 'chalk';
 import Transport from 'winston-transport';
-import { sample, values } from 'lodash-es';
+import { sample } from 'lodash-es';
 import { getConfigValue } from './config.js';
 
-const emojiMap = {
-  santa: emoji.get('santa'),
-  mrsClaus: emoji.get('mrs_claus'),
-  deer: emoji.get('deer'),
-  cookie: emoji.get('cookie'),
-  milk: emoji.get('glass_of_milk'),
-  star: emoji.get('star2'),
-  snowflake: emoji.get('snowflake'),
-  snowing: emoji.get('snow_cloud'),
-  snowman: emoji.get('snowman_without_snow'),
-  christmasTree: emoji.get('christmas_tree'),
-  present: emoji.get('gift'),
-  sled: emoji.get('sled'),
-  bell: emoji.get('bell'),
-};
+const santa = '🎅';
+const mrsClaus = '🤶';
 
-const emojis = values(emojiMap);
+const festiveEmojis = [
+  santa, mrsClaus, '🦌', '🍪', '🥛', '🌟', '❄️', '☃️', '🌨️', '⛄️', '🎄', '🎁', '🛷', '🔔',
+];
 
 /**
  * I spent too much time making this dang tree.
@@ -40,7 +28,7 @@ const christmasTree = `
  */
 const festiveTitle = boxen(christmasTree, {
   borderColor: 'green',
-  title: `${emojiMap.santa} ${getConfigValue('meta.name')} ${emojiMap.mrsClaus}`,
+  title: `${santa} ${getConfigValue('meta.name')} ${mrsClaus}`,
   textAlignment: 'center',
   titleAlignment: 'center',
 });
@@ -65,7 +53,7 @@ const festiveStyle = chalk.bold.hex('#00873E');
 const makeFestive = (message) => (
   getConfigValue('cli.suppressFestive')
     ? message
-    : festiveStyle(`${sample(emojis)} ${message} ${sample(emojis)}`)
+    : festiveStyle(`${sample(festiveEmojis)}\uFE0F${message} ${sample(festiveEmojis)}`)
 );
 
 /**
