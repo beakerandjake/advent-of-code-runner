@@ -31,7 +31,7 @@ program.addCommand(testCommand);
 try {
   await program.parseAsync();
 } catch (error) {
-  logger.error('%s', error);
+  logger.error(error);
   exit(1);
 }
 
