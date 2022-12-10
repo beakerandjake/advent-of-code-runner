@@ -8,7 +8,7 @@ const santa = '🎅';
 const mrsClaus = '🤶';
 
 const festiveEmojis = [
-  santa, mrsClaus, '🦌', '🍪', '🥛', '🌟', '❄️', '☃️', '🌨️', '⛄️', '🎄', '🎁', '🛷', '🔔',
+  santa, mrsClaus, '🦌', '🍪', '🥛', '🌟', '❄️ ', '☃️ ', '🌨️ ', '⛄️', '🎄', '🎁', '🛷', '🔔',
 ];
 
 /**
@@ -53,7 +53,7 @@ const festiveStyle = chalk.bold.hex('#00873E');
 const makeFestive = (message) => (
   getConfigValue('cli.suppressFestive')
     ? message
-    : festiveStyle(`${sample(festiveEmojis)}\uFE0F${message} ${sample(festiveEmojis)}`)
+    : festiveStyle(`${sample(festiveEmojis)} ${message} ${sample(festiveEmojis)}`)
 );
 
 /**
