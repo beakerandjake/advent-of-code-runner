@@ -2,7 +2,10 @@ import { dirname, join } from 'path';
 import { fileURLToPath } from 'url';
 import { logger } from './logger.js';
 import { getConfigValue } from './config.js';
-import { copyFile, ensureDirectoriesExist, fileExists } from './io.js';
+import {
+  appendToFile,
+  copyFile, ensureDirectoriesExist, fileExists, openFile,
+} from './io.js';
 
 /**
  * Copies the template solution file to the destination file.
@@ -52,4 +55,38 @@ export const createSolutionFiles = async (rootDirectory, year) => {
   const creationCount = results.filter(Boolean).length;
 
   logger.festive('Created %s solution files, skipped %s existing files', creationCount, results.length - creationCount);
+};
+
+// line to be added to .gitignore to ensure the user doesn't commit
+// their authentication token to source control
+const ignoreEnv = `
+# dotenv environment variables file
+.env
+`;
+
+/**
+ * Updates the gitignore file to ignore any files used by this which should be ignored.
+ * @param {String} rootDirectory - The directory containing the git ignore file.
+ */
+export const updateGitIgnore = async (rootDirectory) => {
+  logger.festive('Updating .gitignore to ignore .env file');
+
+  const fileName = join(rootDirectory, '.gitignore');
+
+  if (!await fileExists(fileName)) {
+    logger.festive('No .gitnignore found, skipping. If you add a .gitignore in the future be sure to ignore the .env file so you don\'t commit your authentication token!');
+    return;
+  }
+
+  const file = await openFile(fileName);
+  for await (const line of file.readLines()) {
+    if (line === '.env') {
+      logger.festive('Skipping update, .gitignore file already ignores .env!');
+      return;
+    }
+  }
+
+  await appendToFile(fileName, ignoreEnv);
+
+  logger.festive('Successfully updated .gitignore');
 };

@@ -1,7 +1,7 @@
 import { Command } from 'commander';
 import { cwd } from 'process';
 import { join } from 'path';
-import { createSolutionFiles } from '../initialize.js';
+import { createSolutionFiles, updateGitIgnore } from '../initialize.js';
 import { logger } from '../logger.js';
 import { yearOption } from './arguments.js';
 
@@ -23,7 +23,11 @@ command
   .addOption(yearOption)
   .action(async ({ year }) => {
     logger.festive('Initializing Repository for year: %s', year);
-    await createSolutionFiles(join(cwd(), 'init'), year);
+
+    const rootDirectory = join(cwd(), 'init');
+
+    await createSolutionFiles(rootDirectory, year);
+    await updateGitIgnore(rootDirectory);
   });
 
 export const initCommand = command;
