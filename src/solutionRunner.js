@@ -6,8 +6,8 @@ import { getConfigValue } from './config.js';
 import { workerMessageTypes } from './solutionRunnerWorkerThread.js';
 import { fileExists } from './io.js';
 import {
-  SolutionFileMissingRequiredFunctionError,
-  SolutionFileNotFoundError,
+  SolutionMissingFunctionError,
+  SolutionNotFoundError,
   SolutionRunnerAnswerTypeError,
   SolutionRunnerExitError,
   SolutionRuntimeError,
@@ -88,7 +88,7 @@ export const execute = async (year, day, part, input) => {
   // ensure that the solution file actually exists
   // before spawning worker.
   if (!await fileExists(solutionFileName)) {
-    throw new SolutionFileNotFoundError(`Could not find solution file, ensure file exits: ${solutionFileName}`);
+    throw new SolutionNotFoundError(`Could not find solution file, ensure file exits: ${solutionFileName}`);
   }
 
   return new Promise((resolve, reject) => {
@@ -125,7 +125,7 @@ export const execute = async (year, day, part, input) => {
           break;
         // user code missing required function.
         case workerMessageTypes.functionNotFound:
-          reject(new SolutionFileMissingRequiredFunctionError(data.name));
+          reject(new SolutionMissingFunctionError(data.name));
           break;
         default:
           reject(new UnknownSolutionRunnerWorkerMessageTypeError(data.type));
