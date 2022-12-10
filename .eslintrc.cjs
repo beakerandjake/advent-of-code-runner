@@ -21,5 +21,6 @@ module.exports = {
     'import/prefer-default-export': 'off',
     'import/extensions': 'off',
     'no-console': 'off',
+    'no-restricted-syntax': 'off',
   },
 };
