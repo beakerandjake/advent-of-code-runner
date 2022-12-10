@@ -54,6 +54,6 @@ if (!isMainThread) {
       executionTimeNs,
     });
   } catch (error) {
-    throw new SolutionRaisedError('Error raised when running solution', error);
+    throw new SolutionRaisedError('Error raised when running solution', { cause: error });
   }
 }

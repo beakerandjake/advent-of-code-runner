@@ -2,9 +2,9 @@
  * Error that is raised when an error is raised by a solution.
  */
 export class SolutionRaisedError extends Error {
-  constructor(message, originalError) {
-    super(message);
-    this.originalError = originalError;
+  constructor(message, ...args) {
+    super(message, ...args);
     this.name = 'SolutionRaisedError';
+    Object.setPrototypeOf(this, SolutionRaisedError.prototype);
   }
 }
