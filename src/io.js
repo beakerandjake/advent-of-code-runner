@@ -1,17 +1,16 @@
 import {
-  writeFile, mkdir, access, readFile,
+  writeFile, mkdir, access, readFile, copyFile as copy,
 } from 'fs/promises';
-import { dirname } from 'path';
+import { dirname, parse } from 'path';
 import { logger } from './logger.js';
 
 /**
  * Recursively creates all directories which do not exist. Existing directories will be skipped.
- * @param {String} fileName
+ * @param {String} path
  */
-export const ensureDirectoriesExist = async (fileName) => {
-  const directory = dirname(fileName);
-  logger.silly('ensuring directories exists: %s', directory);
-  await mkdir(directory, { recursive: true });
+export const ensureDirectoriesExist = async (path) => {
+  logger.silly('ensuring directories exists: %s', path);
+  await mkdir(path, { recursive: true });
 };
 
 /**
@@ -21,9 +20,19 @@ export const ensureDirectoriesExist = async (fileName) => {
  */
 export const saveFile = async (fileName, data) => {
   logger.silly('writing file: %s', fileName);
-  await ensureDirectoriesExist(fileName);
+  await ensureDirectoriesExist(dirname(fileName));
   await writeFile(fileName, data);
   logger.silly('successfully wrote file: %s', fileName);
+};
+
+/**
+ * Copies a file from source to destination
+ * @param {String} sourcePath
+ * @param {String} destPath
+ */
+export const copyFile = async (sourcePath, destPath) => {
+  logger.silly('copying file: %s to: %s', sourcePath, destPath);
+  await copy(sourcePath, destPath);
 };
 
 /**

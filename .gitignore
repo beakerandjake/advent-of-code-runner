@@ -112,3 +112,6 @@ solutions/
 
 # ignore data store
 aocr-data.json
+
+# ignore temp init directory
+init/
