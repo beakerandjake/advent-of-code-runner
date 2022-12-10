@@ -5,7 +5,15 @@ import { logger } from './logger.js';
 import { getConfigValue } from './config.js';
 import { workerMessageTypes } from './solutionRunnerWorkerThread.js';
 import { fileExists } from './io.js';
-import { SolutionFileMissingRequiredFunctionError, SolutionFileNotFoundError, SolutionRuntimeError } from './errors/index.js';
+import {
+  SolutionFileMissingRequiredFunctionError,
+  SolutionFileNotFoundError,
+  SolutionRunnerAnswerTypeError,
+  SolutionRunnerExitError,
+  SolutionRuntimeError,
+  UnexpectedSolutionRunnerWorkerError,
+  UnknownSolutionRunnerWorkerMessageTypeError,
+} from './errors/index.js';
 
 /**
  * Uses node worker threads to execute the user code in a separate context.
@@ -58,7 +66,12 @@ const getWorkerThreadFilePath = () => {
  * @param {Number} day
  * @param {Number} part
  * @param {String} input
- * @returns {Promise<String|Number>}
+ * @throws {SolutionFileMissingRequiredFunctionError}
+ * @throws {SolutionFileNotFoundError}
+ * @throws {SolutionRunnerExitError}
+ * @throws {SolutionRuntimeError}
+ * @throws {UnexpectedSolutionRunnerWorkerError}
+ * @throws {UnknownSolutionRunnerWorkerMessageTypeError}
  */
 export const execute = async (year, day, part, input) => {
   logger.verbose('spawning worker to execute solution');
@@ -98,27 +111,33 @@ export const execute = async (year, day, part, input) => {
         case workerMessageTypes.log:
           logger.log(data.level, data.message, ...(data.meta || []));
           break;
-          // worker finished executing and has a solution, we can resolve our promise.
-        case workerMessageTypes.solution:
-          resolve({ solution: data.solution, executionTimeNs: data.executionTimeNs });
+        // worker finished executing and has posted an answer
+        case workerMessageTypes.answer:
+          resolve({ answer: data.answer, executionTimeNs: data.executionTimeNs });
           break;
+        // user code provided invalid answer type.
+        case workerMessageTypes.answerTypeInvalid:
+          reject(new SolutionRunnerAnswerTypeError(data.answerType));
+          break;
+        // user code threw error
         case workerMessageTypes.runtimeError:
           reject(new SolutionRuntimeError(data.cause));
           break;
+        // user code missing required function.
         case workerMessageTypes.functionNotFound:
           reject(new SolutionFileMissingRequiredFunctionError(data.name));
           break;
         default:
-          reject(Error(`solution runner worker send unknown message type: ${data.type}`));
+          reject(new UnknownSolutionRunnerWorkerMessageTypeError(data.type));
           break;
       }
     });
 
     // handle uncaught exceptions.
-    worker.on('error', (error) => reject(error));
+    worker.on('error', (error) => reject(new UnexpectedSolutionRunnerWorkerError(error)));
 
     // handle potential edge case where worker does not send a solution message.
-    worker.on('exit', () => reject(new Error('solution runners worker exited without sending a solution message')));
+    worker.on('exit', () => reject(new SolutionRunnerExitError()));
 
     // forward console.log and console.error messages to the main logger with special category.
     // TODO need special category / formatting for user output.
