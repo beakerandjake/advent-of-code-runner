@@ -18,16 +18,20 @@ const customLevels = {
   debug: 4,
   silly: 5,
   festive: 6,
+  festiveError: 7,
 };
 
 addColors({
-  festive: 'black',
   error: 'red',
   warn: 'yellow',
   info: 'green',
   verbose: 'cyan',
   debug: 'blue',
   silly: 'magenta',
+  // festive error colors don't matter
+  // they are handled by the festive transport not colorize.
+  festive: 'black',
+  festiveError: 'black',
 });
 
 let loggerInstance;
@@ -59,7 +63,7 @@ try {
         ),
       }),
       new FestiveTransport({
-        level: 'festive',
+        level: 'festiveError',
       }),
     ],
   });

@@ -1,4 +1,5 @@
 import { exit } from 'process';
+import { UserError } from './errors/index.js';
 import { logger } from './logger.js';
 
 /**
@@ -6,6 +7,12 @@ import { logger } from './logger.js';
  * @param {Error} error
  */
 export const handleError = (error) => {
-  logger.error(error);
+  let errorLog = logger.error;
+
+  if (error instanceof UserError) {
+    errorLog = logger.festiveError;
+  }
+
+  errorLog(error);
   exit(1);
 };
