@@ -90,7 +90,10 @@ const CONFIG = {
       days: range(1, 26),
       parts: [1, 2],
     },
-    useMockApi: yn(process.env.AOC_USE_MOCK_API),
+    mockApi: {
+      enabled: yn(process.env.AOC_MOCK_API_ENABLED),
+      answerCorrect: yn(process.env.AOC_MOCK_API_ANSWER_CORRECT),
+    },
   },
   solutions: {
     partFunctions: [

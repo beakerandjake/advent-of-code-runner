@@ -1,6 +1,6 @@
 import { getConfigValue } from '../config.js';
 
-const useMockApi = getConfigValue('aoc.useMockApi');
+const useMockApi = getConfigValue('aoc.mockApi.enabled');
 
 const { downloadInput, submitSolution } = useMockApi
   ? await import('./mockApi.js')

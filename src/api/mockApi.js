@@ -1,5 +1,6 @@
 /* eslint-disable no-unused-vars */
 import { range } from 'lodash-es';
+import { getConfigValue } from '../config.js';
 import { logger } from '../logger.js';
 
 /**
@@ -28,5 +29,7 @@ export const downloadInput = async (
 export const submitSolution = async (year, day, part, solution, authenticationToken) => {
   logger.verbose('submitting solution to mock api for year: %s, day: %s, part: %s', year, day, part);
 
-  return { success: true, message: 'Great Job!' };
+  const success = getConfigValue('aoc.mockApi.answerCorrect');
+
+  return { success, message: success ? 'Great Job you answered correct!' : 'That\'s the wrong answer!' };
 };
