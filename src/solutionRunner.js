@@ -5,6 +5,7 @@ import { logger } from './logger.js';
 import { getConfigValue } from './config.js';
 import { workerMessageTypes } from './solutionRunnerWorkerThread.js';
 import { fileExists } from './io.js';
+import { SolutionFileNotFoundError } from './errors/SolutionFileNotFoundError.js';
 
 /**
  * Uses node worker threads to execute the user code in a separate context.
@@ -50,10 +51,20 @@ const getWorkerThreadFilePath = () => {
   return pathToWorker;
 };
 
+/**
+ * Spawns a worker thread to import the solution file
+ * executes the solution function and returns the result and performance data.
+ * @param {Number} year
+ * @param {Number} day
+ * @param {Number} part
+ * @param {String} input
+ * @returns {Promise<String|Number>}
+ */
 export const execute = async (year, day, part, input) => {
   logger.verbose('spawning worker to execute solution');
 
   const workerThreadFilePath = getWorkerThreadFilePath();
+  const solutionFileName = getSolutionFileName(year, day);
 
   // before we spawn up a worker, ensure the js file actually exists.
   // it should always, but be safe.
@@ -61,12 +72,18 @@ export const execute = async (year, day, part, input) => {
     throw new Error(`Could not file worker thread file at: ${workerThreadFilePath}`);
   }
 
+  // ensure that the solution file actually exists
+  // before spawning worker.
+  if (!await fileExists(solutionFileName)) {
+    throw new SolutionFileNotFoundError(`Could not find solution file, ensure file exits: ${solutionFileName}`);
+  }
+
   return new Promise((resolve, reject) => {
     // spawn a Worker thread to run the user solution.
     const worker = new Worker(workerThreadFilePath, {
       workerData: {
-        solutionFileName: getSolutionFileName(year, day),
         functionToExecute: getFunctionNameForPart(part),
+        solutionFileName,
         input,
       },
       // prevent automatic piping of stdout and stderr because we're going to capture it.
