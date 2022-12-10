@@ -1,6 +1,5 @@
 import { isMainThread, workerData, parentPort } from 'worker_threads';
-import { SolutionRaisedError, SolutionFileMissingRequiredFunctionError } from './errors/index.js';
-import { measureExecutionTime } from './measureExecutionTime.js';
+import { hrtime } from 'process';
 
 /**
  * Expects to be ran from a Worker. Loads the solution file and tries
@@ -14,6 +13,8 @@ import { measureExecutionTime } from './measureExecutionTime.js';
 export const workerMessageTypes = {
   log: 'LOG',
   result: 'SOLUTION',
+  runtimeError: 'RUNTIME_ERROR',
+  functionNotFound: 'MISSING_FUNCTION_ERROR',
 };
 
 /**
@@ -32,28 +33,44 @@ const logFromWorker = (level, message, ...args) => {
   });
 };
 
+/**
+ * Execute the user solution function, measure the time it takes to execute
+ * then post the result of the execution back to the parent.
+ * @param {Function} userSolutionFn
+ */
+const executeUserSolution = (userSolutionFn, input) => {
+  try {
+    const start = hrtime.bigint();
+    const result = userSolutionFn(input);
+    const end = hrtime.bigint();
+
+    parentPort.postMessage({
+      type: workerMessageTypes.result,
+      solution: result,
+      executionTimeNs: Number(end - start),
+    });
+  } catch (error) {
+    // instead of throwing a SolutionRuntimeError here, post a message to the parent
+    parentPort.postMessage({
+      type: workerMessageTypes.runtimeError,
+      cause: error,
+    });
+  }
+};
+
 if (!isMainThread) {
-  logFromWorker('debug', 'importing solution module from file: %s', workerData.solutionFileName);
+  logFromWorker('debug', 'attempting to execute function: %s on module: %s', workerData.functionName, workerData.solutionFileName);
 
   const importedSolutionModule = await import(workerData.solutionFileName);
   const functionToExecute = importedSolutionModule[workerData.functionToExecute];
 
   // ensure function is present and is actually a function.
   if (!functionToExecute || !(functionToExecute instanceof Function)) {
-    throw new SolutionFileMissingRequiredFunctionError(`Solution file must export function: "${workerData.functionToExecute}" as a named export.`);
-  }
-
-  try {
-    logFromWorker('debug', 'executing solution function: %s', workerData.functionToExecute);
-
-    const { result, executionTimeNs } = measureExecutionTime(functionToExecute)(workerData.input);
-
     parentPort.postMessage({
-      type: workerMessageTypes.result,
-      solution: result,
-      executionTimeNs,
+      type: workerMessageTypes.functionNotFound,
+      name: workerData.functionToExecute,
     });
-  } catch (error) {
-    throw new SolutionRaisedError('Error raised when running solution', { cause: error });
+  } else {
+    executeUserSolution(functionToExecute);
   }
 }

@@ -5,7 +5,7 @@ import { logger } from './logger.js';
 import { getConfigValue } from './config.js';
 import { workerMessageTypes } from './solutionRunnerWorkerThread.js';
 import { fileExists } from './io.js';
-import { SolutionFileNotFoundError } from './errors/index.js';
+import { SolutionFileMissingRequiredFunctionError, SolutionFileNotFoundError, SolutionRuntimeError } from './errors/index.js';
 
 /**
  * Uses node worker threads to execute the user code in a separate context.
@@ -101,6 +101,12 @@ export const execute = async (year, day, part, input) => {
           // worker finished executing and has a solution, we can resolve our promise.
         case workerMessageTypes.solution:
           resolve({ solution: data.solution, executionTimeNs: data.executionTimeNs });
+          break;
+        case workerMessageTypes.runtimeError:
+          reject(new SolutionRuntimeError(data.cause));
+          break;
+        case workerMessageTypes.functionNotFound:
+          reject(new SolutionFileMissingRequiredFunctionError(data.name));
           break;
         default:
           reject(Error(`solution runner worker send unknown message type: ${data.type}`));
