@@ -9,10 +9,7 @@ import {
   SolutionMissingFunctionError,
   SolutionNotFoundError,
   SolutionAnswerInvalidError,
-  SolutionRunnerExitError,
   SolutionRuntimeError,
-  UnexpectedSolutionRunnerWorkerError,
-  UnknownSolutionRunnerWorkerMessageTypeError,
 } from './errors/index.js';
 
 /**
@@ -128,16 +125,16 @@ export const execute = async (year, day, part, input) => {
           reject(new SolutionMissingFunctionError(data.name));
           break;
         default:
-          reject(new UnknownSolutionRunnerWorkerMessageTypeError(data.type));
+          reject(new Error(`Solution Worker provided unknown message type: ${data.type}`));
           break;
       }
     });
 
     // handle uncaught exceptions.
-    worker.on('error', (error) => reject(new UnexpectedSolutionRunnerWorkerError(error)));
+    worker.on('error', (error) => reject(new Error('Solution Worker raised unexpected Error', { cause: error })));
 
     // handle potential edge case where worker does not send a solution message.
-    worker.on('exit', () => reject(new SolutionRunnerExitError()));
+    worker.on('exit', () => reject(new Error('Solution Worker exited without posting answer')));
 
     // forward console.log and console.error messages to the main logger with special category.
     // TODO need special category / formatting for user output.
