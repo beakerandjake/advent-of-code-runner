@@ -97,7 +97,7 @@ const executeUserSolution = (userSolutionFn, input) => {
 };
 
 if (!isMainThread) {
-  logFromWorker('debug', 'attempting to execute function: %s on module: %s', workerData.functionName, workerData.solutionFileName);
+  logFromWorker('debug', 'attempting to execute function: %s on module: %s', workerData.functionToExecute, workerData.solutionFileName);
 
   const importedSolutionModule = await import(workerData.solutionFileName);
   const functionToExecute = importedSolutionModule[workerData.functionToExecute];

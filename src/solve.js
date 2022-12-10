@@ -64,7 +64,7 @@ export const solve = async (year, day, part) => {
 
   const { answer, executionTimeNs } = await execute(year, day, part, input);
 
-  logger.festive('You got: %s (solved in %s)', answer, humanizeDuration(executionTimeNs));
+  logger.festive('You answered: %s (solved in %s)', answer, humanizeDuration(executionTimeNs));
 
   return answer;
 };
