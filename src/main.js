@@ -1,10 +1,13 @@
 import { Command } from 'commander';
-import { exit } from 'process';
-import { solveCommand, submitCommand } from './cli/index.js';
-import { initCommand } from './cli/initCommand.js';
 import { getConfigValue } from './config.js';
 import { printFestiveTitle } from './festive.js';
-import { logger } from './logger.js';
+import { handleError } from './errorHandler.js';
+import {
+  solveCommand,
+  submitCommand,
+  initCommand,
+  exitOverride,
+} from './cli/index.js';
 
 const program = new Command();
 
@@ -14,15 +17,7 @@ program
   .version(getConfigValue('meta.version'))
   .addHelpText('beforeAll', printFestiveTitle)
   .hook('preAction', printFestiveTitle)
-  .exitOverride((error) => {
-    // handle edge case when help is displayed
-    // exit instead of throwing error.
-    if (error.code === 'commander.help' || error.code === 'commander.version') {
-      exit(1);
-    }
-
-    throw error;
-  });
+  .exitOverride(exitOverride);
 
 program.addCommand(solveCommand);
 program.addCommand(submitCommand);
@@ -31,8 +26,7 @@ program.addCommand(initCommand);
 try {
   await program.parseAsync();
 } catch (error) {
-  logger.error(error);
-  exit(1);
+  handleError(error);
 }
 
 // Submit Problem
