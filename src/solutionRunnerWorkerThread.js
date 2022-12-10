@@ -13,7 +13,7 @@ import { measureExecutionTime } from './measureExecutionTime.js';
  */
 export const workerMessageTypes = {
   log: 'LOG',
-  solution: 'SOLUTION',
+  result: 'SOLUTION',
 };
 
 /**
@@ -49,7 +49,7 @@ if (!isMainThread) {
     const { result, executionTimeNs } = measureExecutionTime(functionToExecute)(workerData.input);
 
     parentPort.postMessage({
-      type: workerMessageTypes.solution,
+      type: workerMessageTypes.result,
       solution: result,
       executionTimeNs,
     });

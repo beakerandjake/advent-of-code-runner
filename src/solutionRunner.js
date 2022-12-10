@@ -5,7 +5,7 @@ import { logger } from './logger.js';
 import { getConfigValue } from './config.js';
 import { workerMessageTypes } from './solutionRunnerWorkerThread.js';
 import { fileExists } from './io.js';
-import { SolutionFileNotFoundError } from './errors/SolutionFileNotFoundError.js';
+import { SolutionFileNotFoundError } from './errors/index.js';
 
 /**
  * Uses node worker threads to execute the user code in a separate context.

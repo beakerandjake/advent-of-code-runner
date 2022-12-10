@@ -1,6 +1,6 @@
 import { downloadInput } from './api/index.js';
 import { getConfigValue } from './config.js';
-import { RateLimitExceededError } from './errors/RateLimitExceededError.js';
+import { RateLimitExceededError } from './errors/index.js';
 import { humanizeDuration } from './formatting.js';
 import { inputIsCached, getCachedInput, cacheInput } from './inputCache.js';
 import { logger } from './logger.js';
