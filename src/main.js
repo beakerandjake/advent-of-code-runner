@@ -38,13 +38,9 @@ try {
 // Submit Problem
 
 // provide way to clear local data.
-
-// init command to scaffold solution files for an entire year
-//  create a day_x.js file for each day of that month.
-//  skip creation of files that already exist.
-
 // when initing solution file, download puzzle text and add as comment in file.
 
 // progress command, list unsolved problems
 
-// log level for solution console log and error.
+// solution errors, all in one file. all derived from base solution error type.
+// write custom error handler for program that displays solution errors to the user differently.
