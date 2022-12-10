@@ -25,10 +25,11 @@ const readMetaFromPackageJson = async () => {
 const CONFIG = {
   meta: await readMetaFromPackageJson(),
   cli: {
-    suppressTitleBox: process.env.AOC_SUPPRESS_TITLE_BOX === 'true' || process.env.AOC_SUPPRESS_TITLE_BOX === '1',
+    suppressTitleBox: process.env.AOC_SUPPRESS_TITLE === 'true' || process.env.AOC_SUPPRESS_TITLE === '1',
+    suppressFestive: process.env.AOC_SUPPRESS_FESTIVE === 'true' || process.env.AOC_SUPPRESS_FESTIVE === '1',
   },
   logging: {
-    level: process.env.AOC_LOG_LEVEL || 'info',
+    level: process.env.AOC_LOG_LEVEL || 'error',
     includeStackTrace: process.env.NODE_ENV !== 'production',
   },
   aoc: {
