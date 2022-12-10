@@ -31,45 +31,42 @@ addColors({
   silly: 'magenta',
 });
 
-let loggingConfig;
+let loggerInstance;
 
 try {
-  // If for some reason configuration fails to load while setting up logger
-  // ensure that this failure at least gets logged to the console.
-  loggingConfig = getConfigValue('logging');
+  // If for some reason logger fails to set up fail the program early.
+  const { level, includeStackTrace } = getConfigValue('logging');
+
+  loggerInstance = createLogger({
+    levels: customLevels,
+    format: format.combine(
+      format.splat(),
+      format.json(),
+      format.errors({ stack: includeStackTrace }),
+    ),
+    transports: [
+      new transports.Console({
+        level,
+        format: format.combine(
+          format.colorize({ all: true }),
+          // format.simple would be nice to use but we need more customization
+          format.printf((info) => {
+            if (info.stack) {
+              return `${info.level}: ${chalk.red(info.stack)}`;
+            }
+
+            return `${info.level}: ${info.message}`;
+          }),
+        ),
+      }),
+      new FestiveTransport({
+        level: 'festive',
+      }),
+    ],
+  });
 } catch (error) {
-  console.error('Failed to load logging config!');
+  console.error('Failed to create logger!', error);
   exit(1);
 }
 
-export const logger = createLogger({
-  levels: customLevels,
-  format: format.combine(
-    format.splat(),
-    format.json(),
-    format.errors({ stack: true }),
-  ),
-  transports: [
-    new transports.Console({
-      level: loggingConfig.level,
-      format: format.combine(
-        format.colorize(),
-        // format.simple would be nice to use but we need more customization
-        format.printf(({ level, message, stack }) => {
-          if (stack) {
-            // when logging with stack trace, use default coloring (only level colored)
-            // but when in 'production' mode, color the whole message instead.
-            return loggingConfig.includeStackTrace
-              ? `${level}: ${stack}`
-              : chalk.red(`Error: ${message}`);
-          }
-
-          return `${level}: ${message}`;
-        }),
-      ),
-    }),
-    new FestiveTransport({
-      level: 'festive',
-    }),
-  ],
-});
+export const logger = loggerInstance;

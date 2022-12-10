@@ -20,7 +20,7 @@ import { dayArgument, partArgument, yearOption } from './arguments.js';
  * @param {Number} options.year
  */
 const submit = async (day, part, { year }) => {
-  logger.verbose('executing submit command with args: <day> %s, <part> %s, -y %s', day, part, year);
+  logger.festive('Submitting day: %s, part: %s, year: %s', day, part, year);
 
   // prevent submission if user can't even submit.
   if (!puzzleIsUnlocked(year, day)) {
@@ -39,9 +39,11 @@ const submit = async (day, part, { year }) => {
     throw new RateLimitExceededError('Timeout period for submitting a solution has not expired.', expiration);
   }
 
+  logger.festive('Solving puzzle...');
+
   const { solution, executionTimeNs } = await solve(year, day, part);
 
-  logger.verbose('solution: %s solved in: %s', solution, humanizeDuration(executionTimeNs));
+  logger.festive('Got Solution: %s (solved in %s)', solution, humanizeDuration(executionTimeNs));
 
   const { success, message } = await submitSolution(year, day, part, solution, getConfigValue('aoc.authenticationToken'));
 
