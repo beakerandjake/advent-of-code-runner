@@ -45,7 +45,7 @@ const submit = async (day, part, { year }) => {
 
   const { success, message } = await submitSolution(year, day, part, solution, getConfigValue('aoc.authenticationToken'));
 
-  logger.festive('%s', message);
+  logger[success ? 'festive' : 'festiveError']('%s', message);
 
   await updateRateLimit(rateLimitedActions.submitAnswer);
 
