@@ -46,3 +46,5 @@ try {
 // when initing solution file, download puzzle text and add as comment in file.
 
 // progress command, list unsolved problems
+
+// log level for solution console log and error.
