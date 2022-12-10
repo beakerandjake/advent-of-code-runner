@@ -27,7 +27,8 @@
     "lodash-es": "^4.17.21",
     "read-pkg-up": "^9.1.0",
     "winston": "^3.8.2",
-    "winston-transport": "^4.5.0"
+    "winston-transport": "^4.5.0",
+    "yn": "^5.0.0"
   },
   "type": "module",
   "devDependencies": {
