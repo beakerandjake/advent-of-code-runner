@@ -3,7 +3,7 @@ import { has, get, range } from 'lodash-es';
 import { join } from 'path';
 import { cwd } from 'process';
 import { readPackageUp } from 'read-pkg-up';
-
+import yn from 'yn';
 /**
  * Load meta details about this package form the package json
  */
@@ -25,8 +25,8 @@ const readMetaFromPackageJson = async () => {
 const CONFIG = {
   meta: await readMetaFromPackageJson(),
   cli: {
-    suppressTitleBox: process.env.AOC_SUPPRESS_TITLE === 'true' || process.env.AOC_SUPPRESS_TITLE === '1',
-    suppressFestive: process.env.AOC_SUPPRESS_FESTIVE === 'true' || process.env.AOC_SUPPRESS_FESTIVE === '1',
+    suppressTitleBox: yn(process.env.AOC_SUPPRESS_TITLE),
+    suppressFestive: yn(process.env.AOC_SUPPRESS_FESTIVE),
   },
   logging: {
     level: process.env.AOC_LOG_LEVEL || 'error',
@@ -64,7 +64,7 @@ const CONFIG = {
       ],
     },
     rateLimiting: {
-      defaultTimeoutMs: 300000,
+      defaultTimeoutMs: 1,
     },
     puzzleValidation: {
       // could dynamically set valid dates here, but keeping this explicit
@@ -76,7 +76,7 @@ const CONFIG = {
       days: range(1, 26),
       parts: [1, 2],
     },
-    useMockApi: !!process.env.AOC_USE_MOCK_API || process.env.NODE_ENV !== 'production',
+    useMockApi: yn(process.env.AOC_USE_MOCK_API),
   },
   solutions: {
     partFunctions: [
