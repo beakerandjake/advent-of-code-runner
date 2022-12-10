@@ -4,6 +4,12 @@ import { logger } from './logger.js';
 import { getConfigValue } from './config.js';
 import { copyFile, ensureDirectoriesExist, fileExists } from './io.js';
 
+/**
+ * Copies the template solution file to the destination file.
+ * If the destination file already exists, creation will be skipped.
+ * @param {String} templateSolutionPath
+ * @param {String} destFilePath
+ */
 const createSolutionFile = async (templateSolutionPath, destFilePath) => {
   if (await fileExists(destFilePath)) {
     logger.debug('skipping creation of existing solution file: %s', destFilePath);
