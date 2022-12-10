@@ -4,7 +4,7 @@ import { PuzzleAlreadySolvedError } from './puzzleAlreadySolvedError.js';
 import { RateLimitExceededError } from './rateLimitExceededError.js';
 import { SolutionMissingFunctionError } from './solutionMissingFunctionError.js';
 import { SolutionNotFoundError } from './solutionNotFoundError.js';
-import { SolutionRunnerAnswerTypeError } from './solutionRunnerAnswerTypeError.js';
+import { SolutionAnswerInvalidError } from './solutionAnswerInvalidError.js';
 import { SolutionRunnerExitError } from './solutionRunnerExitError.js';
 import { SolutionRuntimeError } from './solutionRuntimeError.js';
 import { UnexpectedSolutionRunnerWorkerError } from './unexpectedSolutionRunnerWorkerError.js';
@@ -21,5 +21,5 @@ export {
   UnexpectedSolutionRunnerWorkerError,
   UnknownSolutionRunnerWorkerMessageTypeError,
   SolutionRunnerExitError,
-  SolutionRunnerAnswerTypeError,
+  SolutionAnswerInvalidError,
 };

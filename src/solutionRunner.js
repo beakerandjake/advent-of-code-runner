@@ -8,7 +8,7 @@ import { fileExists } from './io.js';
 import {
   SolutionMissingFunctionError,
   SolutionNotFoundError,
-  SolutionRunnerAnswerTypeError,
+  SolutionAnswerInvalidError,
   SolutionRunnerExitError,
   SolutionRuntimeError,
   UnexpectedSolutionRunnerWorkerError,
@@ -117,7 +117,7 @@ export const execute = async (year, day, part, input) => {
           break;
         // user code provided invalid answer type.
         case workerMessageTypes.answerTypeInvalid:
-          reject(new SolutionRunnerAnswerTypeError(data.answerType));
+          reject(new SolutionAnswerInvalidError(data.answerType));
           break;
         // user code threw error
         case workerMessageTypes.runtimeError:

@@ -4,6 +4,6 @@
 export class SolutionNotFoundError extends Error {
   constructor(message) {
     super(message);
-    this.name = 'SolutionFileNotFoundError';
+    this.name = 'SolutionNotFoundError';
   }
 }

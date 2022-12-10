@@ -4,6 +4,6 @@
 export class SolutionMissingFunctionError extends Error {
   constructor(functionName) {
     super(`Solution file must export function "${functionName}" as a named export.`);
-    this.name = 'SolutionFileMissingRequiredFunctionError';
+    this.name = 'SolutionMissingFunctionError';
   }
 }
