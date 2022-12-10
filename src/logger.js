@@ -1,5 +1,28 @@
-import { createLogger, format, transports } from 'winston';
+import {
+  createLogger, format, transports, addColors,
+} from 'winston';
 import { getConfigValue } from './config.js';
+import { FestiveTransport } from './festive.js';
+
+const customLevels = {
+  error: 0,
+  warn: 1,
+  info: 2,
+  verbose: 3,
+  debug: 4,
+  silly: 5,
+  festive: 6,
+};
+
+addColors({
+  festive: 'black',
+  error: 'red',
+  warn: 'yellow',
+  info: 'green',
+  verbose: 'cyan',
+  debug: 'blue',
+  silly: 'magenta',
+});
 
 const loggingConfig = {
   level: 'info',
@@ -19,7 +42,7 @@ try {
 }
 
 export const logger = createLogger({
-  level: loggingConfig.level,
+  levels: customLevels,
   format: format.combine(
     format.errors({ stack: loggingConfig.printStackTrace }),
     format.splat(),
@@ -27,6 +50,7 @@ export const logger = createLogger({
   ),
   transports: [
     new transports.Console({
+      level: loggingConfig.level,
       format: format.combine(
         format.colorize(),
         // format.simple would be nice to use, but doesn't print a human readable stack trace.
@@ -38,6 +62,9 @@ export const logger = createLogger({
           return `${level}: ${message}`;
         }),
       ),
+    }),
+    new FestiveTransport({
+      level: 'festive',
     }),
   ],
 });

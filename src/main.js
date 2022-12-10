@@ -1,9 +1,9 @@
 import { Command } from 'commander';
 import { exit } from 'process';
 import { solveCommand, submitCommand } from './cli/index.js';
-import { printTitleBox } from './cli/output.js';
 import { testCommand } from './cli/testCommand.js';
 import { getConfigValue } from './config.js';
+import { printFestiveTitle } from './festive.js';
 import { logger } from './logger.js';
 
 const program = new Command();
@@ -12,8 +12,8 @@ program
   .name(getConfigValue('meta.name'))
   .description(getConfigValue('meta.description'))
   .version(getConfigValue('meta.version'))
-  .addHelpText('beforeAll', printTitleBox)
-  .hook('preAction', printTitleBox)
+  .addHelpText('beforeAll', printFestiveTitle)
+  .hook('preAction', printFestiveTitle)
   .exitOverride((error) => {
     // handle edge case when help is displayed
     // exit instead of throwing error.
@@ -30,6 +30,7 @@ program.addCommand(testCommand);
 
 try {
   await program.parseAsync();
+  logger.festive('hello world!');
 } catch (error) {
   logger.error('%s', error);
   exit(1);

@@ -15,7 +15,7 @@ command
   .addArgument(partArgument)
   .addOption(yearOption)
   .action(async (day, part, { year }) => {
-    logger.verbose('solving day: %s, part: %s, year: %s', day, part, year);
+    logger.festive('Solving day: %s, part: %s, year: %s', day, part, year);
 
     if (!puzzleIsUnlocked(year, day)) {
       throw new LockedOrCompletedPuzzleError(`Puzzle for year: ${year}, day: ${day}, part: ${part} is locked!`);
