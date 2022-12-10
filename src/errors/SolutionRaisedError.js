@@ -5,6 +5,5 @@ export class SolutionRaisedError extends Error {
   constructor(message, ...args) {
     super(message, ...args);
     this.name = 'SolutionRaisedError';
-    Object.setPrototypeOf(this, SolutionRaisedError.prototype);
   }
 }
