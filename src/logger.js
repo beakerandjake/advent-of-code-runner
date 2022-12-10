@@ -2,7 +2,6 @@ import {
   createLogger, format, transports, addColors,
 } from 'winston';
 import { exit } from 'process';
-import chalk from 'chalk';
 import { getConfigValue } from './config.js';
 import { FestiveTransport } from './festive.js';
 
@@ -52,7 +51,7 @@ try {
           // format.simple would be nice to use but we need more customization
           format.printf((info) => {
             if (info.stack) {
-              return `${info.level}: ${chalk.red(info.stack)}`;
+              return `${info.level}: ${info.stack}`;
             }
 
             return `${info.level}: ${info.message}`;
