@@ -1,6 +1,7 @@
 import { downloadInput } from './api/index.js';
 import { getConfigValue } from './config.js';
 import { RateLimitExceededError } from './errors/RateLimitExceededError.js';
+import { humanizeDuration } from './formatting.js';
 import { inputIsCached, getCachedInput, cacheInput } from './inputCache.js';
 import { logger } from './logger.js';
 import { checkActionRateLimit, rateLimitedActions, updateRateLimit } from './rateLimit.js';
@@ -38,8 +39,10 @@ const getInput = async (year, day) => {
   let toReturn;
 
   if (!await inputIsCached(year, day)) {
+    logger.festive('Downloading and caching input file');
     toReturn = await downloadAndCacheInput(year, day);
   } else {
+    logger.festive('Loading cached input file');
     toReturn = await getCachedInput(year, day);
   }
 
@@ -53,13 +56,15 @@ const getInput = async (year, day) => {
  * @param {Number} part
  */
 export const solve = async (year, day, part) => {
-  logger.verbose('running solution for year: %s, day: %s, part: %s', year, day, part);
+  logger.verbose('solving year: %s, day: %s, part: %s', year, day, part);
 
   const input = await getInput(year, day);
+
+  logger.festive('Executing solution function');
+
   const { solution, executionTimeNs } = await execute(year, day, part, input);
 
-  logger.verbose('finished running solution, result: %s', solution);
-  logger.debug('solution executed in: %sns', executionTimeNs);
+  logger.festive('Solution: %s (solved in %s)', solution, humanizeDuration(executionTimeNs));
 
-  return { solution, executionTimeNs };
+  return solution;
 };
