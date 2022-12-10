@@ -78,7 +78,7 @@ const CONFIG = {
       ],
     },
     rateLimiting: {
-      defaultTimeoutMs: 1,
+      defaultTimeoutMs: process.env.NODE_ENV !== 'production' ? 1 : 300000,
     },
     puzzleValidation: {
       // could dynamically set valid dates here, but keeping this explicit
