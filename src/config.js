@@ -4,6 +4,19 @@ import { join } from 'path';
 import { cwd } from 'process';
 import { readPackageUp } from 'read-pkg-up';
 import yn from 'yn';
+
+/**
+ * Absolute path to the current working directory.
+ * This will be the root folder where this program operates.
+ * User solution files, inputs, data store etc will all exist in this folder.
+ * However when developing this project, use a special folder to simulate
+ * this being ran from the cli in a users repository. This special folder
+ * will be ignored by our .gitignore.
+ */
+const rootDirectory = process.env.NODE_ENV !== 'production'
+  ? join(cwd(), 'dev')
+  : cwd();
+
 /**
  * Load meta details about this package form the package json
  */
@@ -23,6 +36,7 @@ const readMetaFromPackageJson = async () => {
 };
 
 const CONFIG = {
+  rootDirectory,
   meta: await readMetaFromPackageJson(),
   cli: {
     suppressTitleBox: yn(process.env.AOC_SUPPRESS_TITLE),
@@ -83,13 +97,13 @@ const CONFIG = {
       { key: 1, name: 'partOne' },
       { key: 2, name: 'partTwo' },
     ],
-    path: process.env.AOC_SOLUTIONS_FOLDER_PATH || join(cwd(), 'solutions'),
+    path: process.env.AOC_SOLUTIONS_FOLDER_PATH || join(rootDirectory, 'solutions'),
   },
   inputs: {
-    path: (process.env.AOC_INPUTS_FOLDER || join(cwd(), 'inputs')),
+    path: (process.env.AOC_INPUTS_FOLDER || join(rootDirectory, 'inputs')),
   },
   dataStore: {
-    folderPath: process.env.AOC_DATA_FOLDER || cwd(),
+    folderPath: process.env.AOC_DATA_FOLDER || rootDirectory,
     fileName: 'aocr-data.json',
   },
 };

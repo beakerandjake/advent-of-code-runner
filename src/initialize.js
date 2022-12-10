@@ -32,10 +32,10 @@ const createSolutionFile = async (templateSolutionPath, destFilePath) => {
  * @param {String} rootDirectory - The directory to create the files in.
  * @param {Number} year - The year to create solution files for.
  */
-export const createSolutionFiles = async (rootDirectory, year) => {
+export const createSolutionFiles = async (year) => {
   logger.festive('Creating solution files');
 
-  const solutionDirectory = join(rootDirectory, `${year}`);
+  const solutionDirectory = join(getConfigValue('solutions.path'), `${year}`);
 
   await ensureDirectoriesExist(solutionDirectory);
 
@@ -68,10 +68,10 @@ const ignoreEnv = `
  * Updates the gitignore file to ignore any files used by this which should be ignored.
  * @param {String} rootDirectory - The directory containing the git ignore file.
  */
-export const updateGitIgnore = async (rootDirectory) => {
+export const updateGitIgnore = async () => {
   logger.festive('Updating .gitignore to ignore .env file');
 
-  const fileName = join(rootDirectory, '.gitignore');
+  const fileName = join(getConfigValue('rootDirectory'), '.gitignore');
 
   if (!await fileExists(fileName)) {
     logger.festive('No .gitnignore found, skipping. If you add a .gitignore in the future be sure to ignore the .env file so you don\'t commit your authentication token!');

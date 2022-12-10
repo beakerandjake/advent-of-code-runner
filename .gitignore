@@ -106,12 +106,5 @@ dist
 # mac specific
 .DS_Store
 
-# ignore local development folders
-inputs/
-solutions/
-
-# ignore data store
-aocr-data.json
-
-# ignore temp init directory
-init/
+# ignore local development folder
+dev/

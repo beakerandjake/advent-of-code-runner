@@ -24,10 +24,8 @@ command
   .action(async ({ year }) => {
     logger.festive('Initializing Repository for year: %s', year);
 
-    const rootDirectory = join(cwd(), 'init');
-
-    await createSolutionFiles(rootDirectory, year);
-    await updateGitIgnore(rootDirectory);
+    await createSolutionFiles(year);
+    await updateGitIgnore();
   });
 
 export const initCommand = command;
