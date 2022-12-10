@@ -118,7 +118,7 @@ export const execute = async (year, day, part, input) => {
           break;
         // user code threw error
         case workerMessageTypes.runtimeError:
-          reject(new SolutionRuntimeError(data.cause));
+          reject(new SolutionRuntimeError(data.stack));
           break;
         // user code missing required function.
         case workerMessageTypes.functionNotFound:

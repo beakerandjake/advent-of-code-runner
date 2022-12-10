@@ -72,11 +72,15 @@ const executeUserSolution = (userSolutionFn, input) => {
     answer = userSolutionFn(input);
     end = hrtime.bigint();
   } catch (error) {
+    const stack = error instanceof Error
+      ? error.stack
+      : 'Thrown object was not Error';
+
     // Expect that if error is thrown here it's from userSolutionFn (not hrtime).
     // Catch this error and let the parent know the user's code threw an exception.
     parentPort.postMessage({
       type: workerMessageTypes.runtimeError,
-      cause: error,
+      stack,
     });
 
     return;

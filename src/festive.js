@@ -45,6 +45,7 @@ export const printFestiveTitle = () => {
 };
 
 const festiveStyle = chalk.bold.hex('#00873E');
+const userErrorStyle = chalk.red.italic;
 
 /**
  * Turns a normal string into a ~*festive*~ one.
@@ -53,7 +54,7 @@ const festiveStyle = chalk.bold.hex('#00873E');
 const makeFestive = (message) => (
   getConfigValue('cli.suppressFestive')
     ? message
-    : festiveStyle(`${sample(festiveEmojis)} ${message} ${sample(festiveEmojis)}`)
+    : `${sample(festiveEmojis)} ${message} ${sample(festiveEmojis)}`
 );
 
 /**
@@ -68,10 +69,21 @@ export class FestiveTransport extends Transport {
   log(info, callback) {
     setImmediate(() => this.emit('logged', info));
 
-    // transport only cares about festive messages
-    // and ignores all others.
-    if (info.level === 'festive') {
-      console.log(makeFestive(info.message));
+    switch (info.level) {
+      case 'festive':
+        console.log(makeFestive(festiveStyle(info.message)));
+        break;
+      case 'festiveError':
+        if (info.name === 'SolutionRuntimeError') {
+          // Always log the stack trace of user errors.
+          console.log(makeFestive(userErrorStyle('Your code threw an error!')));
+          console.log(userErrorStyle(info.message));
+        } else {
+          console.log(makeFestive(userErrorStyle(`Error: ${info.message}`)));
+        }
+        break;
+      default:
+        break;
     }
 
     callback();
