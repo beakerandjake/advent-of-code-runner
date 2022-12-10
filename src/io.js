@@ -1,7 +1,7 @@
 import {
   writeFile, mkdir, access, readFile, copyFile as copy,
 } from 'fs/promises';
-import { dirname, parse } from 'path';
+import { dirname } from 'path';
 import { logger } from './logger.js';
 
 /**
