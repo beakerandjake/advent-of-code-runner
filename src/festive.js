@@ -79,7 +79,7 @@ export class FestiveTransport extends Transport {
           console.log(makeFestive(userErrorStyle('Your code threw an error!')));
           console.log(userErrorStyle(info.message));
         } else {
-          console.log(makeFestive(userErrorStyle(`Error: ${info.message}`)));
+          console.log(makeFestive(userErrorStyle(`${info.stack ? 'Error: ' : ''}${info.message}`)));
         }
         break;
       default:
