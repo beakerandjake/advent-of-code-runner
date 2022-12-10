@@ -1,9 +1,15 @@
 import {
   createLogger, format, transports, addColors,
 } from 'winston';
+import { exit } from 'process';
 import { getConfigValue } from './config.js';
 import { FestiveTransport } from './festive.js';
 
+/**
+ * custom levels based on npm levels.
+ * adds festive level meant for output
+ * always printed to the user.
+ */
 const customLevels = {
   error: 0,
   warn: 1,
@@ -24,21 +30,15 @@ addColors({
   silly: 'magenta',
 });
 
-const loggingConfig = {
-  level: 'info',
-  printStackTrace: false,
-};
-
-// If for some reason configuration fails to load while setting up logger
-// ensure that this failure at least gets logged to the console.
+let loggingConfig;
 
 try {
-  loggingConfig.level = getConfigValue('logging.level');
-  loggingConfig.printStackTrace = getConfigValue('logging.includeStackTrace');
+  // If for some reason configuration fails to load while setting up logger
+  // ensure that this failure at least gets logged to the console.
+  loggingConfig = getConfigValue('logging');
 } catch (error) {
-  // eslint-disable-next-line no-console
   console.error('Failed to load logging config!');
-  throw error;
+  exit(1);
 }
 
 export const logger = createLogger({
