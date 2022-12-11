@@ -9,10 +9,7 @@ const command = new Command();
 
 /**
  * TODO
- * - use inquirer for customization
- * - ask for filepath (default to cwd)
- * - create .env file
- * - add token to .env file
+ * - use inquirer for customization and user input
  * - update package.json to add run script?
  */
 
