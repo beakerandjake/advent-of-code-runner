@@ -96,7 +96,7 @@ export const puzzleHasBeenSolved = async (year, day, part) => {
  * @param {Number} part
  * @param {String|Number} correctAnswer
  */
-export const addCorrectAnswer = async (
+export const setCorrectAnswer = async (
   year,
   day,
   part,
@@ -166,6 +166,43 @@ export const answerHasBeenSubmitted = async (year, day, part, answer) => {
   return (
     puzzle.correctAnswer === answerToString || puzzle.incorrectAnswers.includes(answerToString)
   );
+};
+
+/**
+ * Returns the stored answer results for this puzzle.
+ * @param {Number} year
+ * @param {Number} day
+ * @param {Number} part
+ * @returns {Promise<String>} The stored correct answer, or null if doesn't exist.
+ */
+export const getCorrectAnswer = async (year, day, part) => (
+  findPuzzle(puzzleId(year, day, part), await getPuzzles())?.correctAnswer || null
+);
+
+/**
+ * Attempt to update the fastest execution time for this puzzle.
+ * The fastest time will only be updated if the puzzle has a correct answer set
+ * and the provided execution time is smaller than the current fastest time.
+ * @param {Number} year
+ * @param {Number} day
+ * @param {Number} part
+ * @param {Number} executionTimeNs
+ */
+export const tryToSetFastestExecutionTime = async (year, day, part, executionTimeNs) => {
+  if (!Number.isFinite(executionTimeNs)) {
+    throw new Error('Attempted to set fastest execution time to non numeric value');
+  }
+
+  const puzzles = await getPuzzles();
+  const puzzle = findPuzzle(puzzleId(year, day, part), puzzles);
+
+  if (!puzzle || !puzzle.correctAnswer || puzzle.fastestExecutionTimeNs <= executionTimeNs) {
+    return;
+  }
+
+  logger.festive('That\'s your fastest execution time ever for this problem!');
+  const changes = { ...puzzle, fastestExecutionTimeNs: executionTimeNs };
+  await setPuzzles(addOrUpdatePuzzle(changes, puzzles));
 };
 
 /**

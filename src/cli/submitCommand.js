@@ -4,7 +4,7 @@ import { getConfigValue } from '../config.js';
 import { LockedPuzzleError, RateLimitExceededError } from '../errors/index.js';
 import { logger } from '../logger.js';
 import {
-  puzzleHasBeenSolved, addCorrectAnswer, addIncorrectAnswer, answerHasBeenSubmitted,
+  puzzleHasBeenSolved, setCorrectAnswer, addIncorrectAnswer, answerHasBeenSubmitted,
 } from '../progress.js';
 import {
   checkActionRateLimit, rateLimitedActions, updateRateLimit,
@@ -57,7 +57,7 @@ const submit = async (day, part, { year }) => {
   await updateRateLimit(rateLimitedActions.submitAnswer);
 
   const progressUpdate = success
-    ? addCorrectAnswer(year, day, part, answer, executionTimeNs)
+    ? setCorrectAnswer(year, day, part, answer, executionTimeNs)
     : addIncorrectAnswer(year, day, part, answer);
 
   await progressUpdate;
