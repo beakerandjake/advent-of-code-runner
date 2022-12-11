@@ -1,6 +1,4 @@
 import { Command } from 'commander';
-import { cwd } from 'process';
-import { join } from 'path';
 import { createSolutionFiles, updateGitIgnore } from '../initialize.js';
 import { logger } from '../logger.js';
 import { yearOption } from './arguments.js';
@@ -13,7 +11,6 @@ const command = new Command();
  * - ask for filepath (default to cwd)
  * - create .env file
  * - add token to .env file
- * - update gitignore to exclude .env
  * - update package.json to add run script?
  */
 
@@ -24,8 +21,10 @@ command
   .action(async ({ year }) => {
     logger.festive('Initializing Repository for year: %s', year);
 
-    await createSolutionFiles(year);
-    await updateGitIgnore();
+    await Promise.all([
+      createSolutionFiles(year),
+      updateGitIgnore(),
+    ]);
   });
 
 export const initCommand = command;
