@@ -121,8 +121,6 @@ const CONFIG = {
   },
 };
 
-// TODO, set from command line too.
-
 /**
  * Returns the configuration value of the specified key.
  * @param {String} key - The key of the config value to access

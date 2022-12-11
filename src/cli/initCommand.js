@@ -7,12 +7,6 @@ import { yearOption } from './arguments.js';
 
 const command = new Command();
 
-/**
- * TODO
- * - use inquirer for customization and user input
- * - update package.json to add run script?
- */
-
 command
   .name('init')
   .description('Initialize a directory so advent-of-code-runner can run solutions.')
