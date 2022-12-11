@@ -29,7 +29,7 @@ try {
   handleError(error);
 }
 
-// Submit Problem
-
-// provide way to clear local data.
 // progress command, list unsolved problems
+// autosolve / autosubmit
+// puzzle is unlocked
+// npm publish
