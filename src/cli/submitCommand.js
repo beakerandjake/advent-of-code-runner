@@ -39,18 +39,18 @@ const submit = async (day, part, { year }) => {
     throw new RateLimitExceededError('Timeout period for submitting a solution has not expired.', expiration);
   }
 
-  const solution = await solve(year, day, part);
+  const { answer, executionTimeNs } = await solve(year, day, part);
 
   logger.festive('Posting solution to adventofcode');
 
-  const { success, message } = await submitSolution(year, day, part, solution, getConfigValue('aoc.authenticationToken'));
+  const { success, message } = await submitSolution(year, day, part, answer, getConfigValue('aoc.authenticationToken'));
 
   logger[success ? 'festive' : 'festiveError']('%s', message);
 
   await updateRateLimit(rateLimitedActions.submitAnswer);
 
   if (success) {
-    await setPuzzleSolved(year, day, part);
+    await setPuzzleSolved(year, day, part, answer, executionTimeNs);
   }
 };
 

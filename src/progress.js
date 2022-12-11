@@ -1,32 +1,79 @@
-import { difference } from 'lodash-es';
-import { getConfigValue } from './config.js';
 import { logger } from './logger.js';
 import { getStoreValue, setStoreValue } from './store.js';
 
 /**
- * The key used in the data store where the last request time value is saved.
+ * The key used in the data store where the puzzles array is stored.
  */
-const SOLVED_PUZZLES_STORE_KEY = 'solvedPuzzles';
+const PUZZLE_DATA_KEY = 'puzzles';
 
 /**
- * Generates a hash from the puzzles specific year/day/part combination.
+ * Generates an id for the year / day / part combination.
+ * Makes some operations easier to just pass around id vs 3 params.
+ * @param {Number} year
+ * @param {Number} day
+ * @param {Number} part
+ * @returns
+ */
+const puzzleId = (year, day, part) => `${year}${day}${part}`;
+
+/**
+ * Creates a new default puzzle object which can be persisted.
  * @param {Number} year
  * @param {Number} day
  * @param {Number} part
  */
-const generatePuzzleHash = (year, day, part) => `${year}.${day}.${part}`;
+const createPuzzle = (year, day, part) => ({
+  id: puzzleId(year, day, part),
+  year,
+  day,
+  part,
+  correctAnswer: null,
+  fastestExecutionTimeNs: null,
+  incorrectAnswers: [],
+});
 
 /**
- * Parses the hash and returns the year / day / part
- * @param {String} hash
+ * Returns the stored puzzles array.
+ * @returns {Promise<Object[]>}
  */
-const parsePuzzleHash = (hash = '') => {
-  const [, year, day, part] = hash.match(/(\d+).(\d+).(\d+)/);
-  const parsedYear = parseInt(year, 10);
-  const parsedDay = parseInt(day, 10);
-  const parsedPart = parseInt(part, 10);
-  return { year: parsedYear, day: parsedDay, part: parsedPart };
+const getPuzzles = async () => getStoreValue(PUZZLE_DATA_KEY, []);
+
+/**
+ * Updates the stored puzzles array.
+ * @param {Object[]} puzzles
+ */
+const setPuzzles = async (puzzles = []) => setStoreValue(PUZZLE_DATA_KEY, puzzles);
+
+/**
+ * If the puzzle exists in the puzzles array
+ * The element is set to the updated puzzle.
+ * Otherwise the updated puzzle is added to the end of the array.
+ * The original array is not modified and a new array is returned.
+ * @param {Object} puzzle
+ * @param {Object[]} puzzles
+ */
+const addOrUpdatePuzzle = (puzzle, puzzles = []) => {
+  let found = false;
+
+  const mapped = puzzles.map((x) => {
+    if (x.id === puzzle.id) {
+      found = true;
+      return puzzle;
+    }
+    return x;
+  });
+
+  return found ? mapped : [...mapped, puzzle];
 };
+
+/**
+ * Returns the stored data for the specified puzzle, if any.
+ * @param {Number} year
+ * @param {Number} day
+ * @param {Number} part
+ * @param {Object[]} puzzles
+ */
+const findPuzzle = (id, puzzles = []) => puzzles.find((puzzle) => puzzle.id === id);
 
 /**
  * Has this puzzle already been solved?
@@ -35,32 +82,30 @@ const parsePuzzleHash = (hash = '') => {
  * @param {Number} part
  */
 export const puzzleHasBeenSolved = async (year, day, part) => {
-  const solvedPuzzles = await getStoreValue(SOLVED_PUZZLES_STORE_KEY, []);
-  const hash = generatePuzzleHash(year, day, part);
-  const solved = solvedPuzzles.includes(hash);
-  logger.debug('puzzle for year: %s, day: %s, part: %s has already been solved: %s', year, day, part, solved);
+  logger.debug('checking if puzzle for year: %s, part:%s, day: %s has been solved', year, day, part);
+  const solved = !!findPuzzle(puzzleId(year, day, part), await getPuzzles())?.correctAnswer;
+  logger.debug('has been solved: %s', solved);
   return solved;
 };
 
 /**
-   * Store the fact that the puzzle has been solved.
-   * Prevents re-submissions of already solved puzzles.
-   * @param {Number} year
-   * @param {Number} day
-   * @param {Number} part
-   */
-export const setPuzzleSolved = async (year, day, part) => {
+ * Store the fact that the puzzle has been solved.
+ * Prevents re-submissions of already solved puzzles.
+ * @param {Number} year
+ * @param {Number} day
+ * @param {Number} part
+ */
+export const setPuzzleSolved = async (year, day, part, correctAnswer, fastestExecutionTimeNs) => {
   logger.festive('Storing the fact that you solved this puzzle');
 
-  const solvedPuzzles = await getStoreValue(SOLVED_PUZZLES_STORE_KEY, []);
-  const hash = generatePuzzleHash(year, day, part);
-
-  if (solvedPuzzles.includes(hash)) {
-    logger.warn('attempted to set already solved puzzle: %s.%s.%s as solved', year, day, part);
-    return;
+  if (!correctAnswer) {
+    throw new Error('Cannot store an empty value for a puzzles correctAnswer field');
   }
 
-  await setStoreValue(SOLVED_PUZZLES_STORE_KEY, [...solvedPuzzles, hash]);
+  const puzzles = await getPuzzles();
+  const puzzle = findPuzzle(puzzleId(year, day, part), puzzles) || createPuzzle(year, day, part);
+  const changes = { ...puzzle, correctAnswer, fastestExecutionTimeNs };
+  await setPuzzles(addOrUpdatePuzzle(changes, puzzles));
 };
 
 /**
@@ -70,23 +115,5 @@ export const setPuzzleSolved = async (year, day, part) => {
  * @param {Number} year
  */
 export const getNextUnsolvedPuzzle = async (year) => {
-  const solvedPuzzles = await getStoreValue(SOLVED_PUZZLES_STORE_KEY, []);
-
-  // generate an array of all possible puzzles for the year.
-  const days = getConfigValue('aoc.puzzleValidation.days');
-  const parts = getConfigValue('aoc.puzzleValidation.parts');
-  const allPuzzles = days.reduce(
-    (acc, day) => [...acc, ...parts.map((part) => generatePuzzleHash(year, day, part))],
-    [],
-  );
-
-  // find the earliest puzzle not already solved.
-  const hash = difference(allPuzzles, solvedPuzzles)[0];
-
-  if (!hash) {
-    return null;
-  }
-
-  const { day, part } = parsePuzzleHash(hash);
-  return { day, part };
+  throw new Error('Not Implemented');
 };
