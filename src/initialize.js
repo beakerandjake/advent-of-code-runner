@@ -2,9 +2,10 @@ import { dirname, join } from 'path';
 import { fileURLToPath } from 'url';
 import { logger } from './logger.js';
 import { getConfigValue } from './config.js';
+import { dataFilePath } from './store.js';
 import {
   appendToFile,
-  copyFile, ensureDirectoriesExist, fileExists, openFile,
+  copyFile, ensureDirectoriesExist, fileExists, openFile, saveFile,
 } from './io.js';
 
 /**
@@ -98,4 +99,16 @@ export const updateGitIgnore = async () => {
 export const addTokenToEnv = async (token) => {
   logger.festive('Adding authentication token to .env file');
   logger.warn('not implemented - addTokenToEnv()');
+};
+
+/**
+ * Creates the Data File if it does not already exist.
+ */
+export const createDataFile = async () => {
+  logger.festive('Creating Data file.');
+  if (!await fileExists(dataFilePath)) {
+    logger.festive('Data file already exists.');
+    return;
+  }
+  await saveFile(dataFilePath, JSON.stringify({}));
 };

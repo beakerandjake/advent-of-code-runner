@@ -8,7 +8,7 @@ import { loadFileContents, saveFile } from './io.js';
 // cache, helps with multiple gets being called, and can potentially remove
 // a read on a write.
 
-const DATA_FILE_PATH = join(
+export const dataFilePath = join(
   getConfigValue('dataStore.folderPath'),
   getConfigValue('dataStore.fileName'),
 );
@@ -18,10 +18,10 @@ const DATA_FILE_PATH = join(
  */
 const getDataFileContents = async () => {
   try {
-    const contents = await loadFileContents(DATA_FILE_PATH);
+    const contents = await loadFileContents(dataFilePath);
     return JSON.parse(contents);
   } catch (error) {
-    logger.silly('failed to load data store file at: %s', DATA_FILE_PATH);
+    logger.silly('failed to load data store file at: %s', dataFilePath);
     return {};
   }
 };
@@ -45,7 +45,7 @@ export const getStoreValue = async (key, defaultValue = undefined) => {
  */
 const saveDataFileContents = async (data) => {
   logger.silly('updating data store file file with new data');
-  return saveFile(DATA_FILE_PATH, JSON.stringify(data));
+  return saveFile(dataFilePath, JSON.stringify(data));
 };
 
 /**

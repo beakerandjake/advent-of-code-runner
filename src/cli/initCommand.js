@@ -1,5 +1,7 @@
 import { Command } from 'commander';
-import { addTokenToEnv, createSolutionFiles, updateGitIgnore } from '../initialize.js';
+import {
+  addTokenToEnv, createDataFile, createSolutionFiles, updateGitIgnore,
+} from '../initialize.js';
 import { logger } from '../logger.js';
 import { yearOption } from './arguments.js';
 
@@ -25,6 +27,7 @@ command
       createSolutionFiles(year),
       updateGitIgnore(),
       addTokenToEnv('need a real token'),
+      createDataFile(),
     ]);
   });
 
