@@ -66,5 +66,5 @@ export const solve = async (year, day, part) => {
 
   logger.festive('You answered: %s (solved in %s)', answer, humanizeDuration(executionTimeNs));
 
-  return answer;
+  return { answer, executionTimeNs };
 };

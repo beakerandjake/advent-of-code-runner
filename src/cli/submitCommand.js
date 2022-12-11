@@ -3,7 +3,9 @@ import { submitSolution } from '../api/index.js';
 import { getConfigValue } from '../config.js';
 import { LockedPuzzleError, RateLimitExceededError } from '../errors/index.js';
 import { logger } from '../logger.js';
-import { puzzleHasBeenSolved, setPuzzleSolved } from '../progress.js';
+import {
+  puzzleHasBeenSolved, setCorrectAnswer, addIncorrectAnswer, answerHasBeenSubmitted,
+} from '../progress.js';
 import {
   checkActionRateLimit, rateLimitedActions, updateRateLimit,
 } from '../rateLimit.js';
@@ -39,19 +41,26 @@ const submit = async (day, part, { year }) => {
     throw new RateLimitExceededError('Timeout period for submitting a solution has not expired.', expiration);
   }
 
-  const solution = await solve(year, day, part);
+  const { answer, executionTimeNs } = await solve(year, day, part);
+
+  if (await answerHasBeenSubmitted(year, day, part, answer)) {
+    logger.festiveError('You\'ve already submitted this incorrect answer to advent of code!');
+    return;
+  }
 
   logger.festive('Posting solution to adventofcode');
 
-  const { success, message } = await submitSolution(year, day, part, solution, getConfigValue('aoc.authenticationToken'));
+  const { success, message } = await submitSolution(year, day, part, answer, getConfigValue('aoc.authenticationToken'));
 
   logger[success ? 'festive' : 'festiveError']('%s', message);
 
   await updateRateLimit(rateLimitedActions.submitAnswer);
 
-  if (success) {
-    await setPuzzleSolved(year, day, part);
-  }
+  const progressUpdate = success
+    ? setCorrectAnswer(year, day, part, answer, executionTimeNs)
+    : addIncorrectAnswer(year, day, part, answer);
+
+  await progressUpdate;
 };
 
 /**
