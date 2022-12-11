@@ -90,3 +90,12 @@ export const updateGitIgnore = async () => {
 
   logger.festive('Successfully updated .gitignore');
 };
+
+/**
+ * Adds the users authentication token to the .env file.
+ * @param {String} token
+ */
+export const addTokenToEnv = async (token) => {
+  logger.festive('Adding authentication token to .env file');
+  logger.warn('not implemented - addTokenToEnv()');
+};

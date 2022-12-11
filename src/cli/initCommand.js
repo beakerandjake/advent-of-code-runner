@@ -1,5 +1,5 @@
 import { Command } from 'commander';
-import { createSolutionFiles, updateGitIgnore } from '../initialize.js';
+import { addTokenToEnv, createSolutionFiles, updateGitIgnore } from '../initialize.js';
 import { logger } from '../logger.js';
 import { yearOption } from './arguments.js';
 
@@ -24,6 +24,7 @@ command
     await Promise.all([
       createSolutionFiles(year),
       updateGitIgnore(),
+      addTokenToEnv('need a real token'),
     ]);
   });
 
