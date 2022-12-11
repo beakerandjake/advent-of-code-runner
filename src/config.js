@@ -100,13 +100,13 @@ const CONFIG = {
       { key: 1, name: 'partOne' },
       { key: 2, name: 'partTwo' },
     ],
-    path: process.env.AOC_SOLUTIONS_FOLDER_PATH || join(rootDirectory, 'solutions'),
+    path: join(rootDirectory, 'solutions'),
   },
   inputs: {
-    path: (process.env.AOC_INPUTS_FOLDER || join(rootDirectory, 'inputs')),
+    path: join(rootDirectory, 'inputs'),
   },
   dataStore: {
-    folderPath: process.env.AOC_DATA_FOLDER || rootDirectory,
+    folderPath: rootDirectory,
     fileName: 'aocr-data.json',
   },
 };
