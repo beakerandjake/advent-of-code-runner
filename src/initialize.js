@@ -1,7 +1,7 @@
 import { dirname, join } from 'path';
 import { fileURLToPath } from 'url';
 import { logger } from './logger.js';
-import { getConfigValue } from './config.js';
+import { envOptions, getConfigValue } from './config.js';
 import { dataFilePath } from './store.js';
 import {
   appendToFile,
@@ -15,16 +15,8 @@ import {
  * @param {String} destFilePath
  */
 const createSolutionFile = async (templateSolutionPath, destFilePath) => {
-  if (await fileExists(destFilePath)) {
-    logger.debug('skipping creation of existing solution file: %s', destFilePath);
-    return false;
-  }
-
   logger.debug('creating solution file: %s', destFilePath);
-
   await copyFile(templateSolutionPath, destFilePath);
-
-  return true;
 };
 
 /**
@@ -53,17 +45,8 @@ export const createSolutionFiles = async (year) => {
     solutionFileNames.map((fileName) => createSolutionFile(templateSolutionPath, fileName)),
   );
 
-  const creationCount = results.filter(Boolean).length;
-
-  logger.festive('Created %s solution files, skipped %s existing files', creationCount, results.length - creationCount);
+  logger.festive('Successfully created %s solution files', results.length);
 };
-
-// line to be added to .gitignore to ensure the user doesn't commit
-// their authentication token to source control
-const ignoreEnv = `
-# dotenv environment variables file
-.env
-`;
 
 /**
  * Updates the gitignore file to ignore any files used by this which should be ignored.
@@ -86,19 +69,26 @@ export const updateGitIgnore = async () => {
       return;
     }
   }
-
-  await appendToFile(fileName, ignoreEnv);
+  await appendToFile(fileName, '# dotenv environment variables file\n.env');
 
   logger.festive('Successfully updated .gitignore');
 };
 
 /**
- * Adds the users authentication token to the .env file.
+ * Creates the .env file which helps configure advent-of-code-runner.
  * @param {String} token
  */
-export const addTokenToEnv = async (token) => {
+export const createEnvFile = async (authenticationToken, year) => {
   logger.festive('Adding authentication token to .env file');
-  logger.warn('not implemented - addTokenToEnv()');
+
+  const fileName = join(getConfigValue('rootDirectory'), '.env');
+  const contents = `
+  ${envOptions.authenticationToken}=${authenticationToken}
+  ${envOptions.year}=${year}
+  `;
+  await saveFile(fileName, contents);
+
+  logger.festive('Successfully created .env file');
 };
 
 /**
@@ -106,9 +96,8 @@ export const addTokenToEnv = async (token) => {
  */
 export const createDataFile = async () => {
   logger.festive('Creating Data file.');
-  if (!await fileExists(dataFilePath)) {
-    logger.festive('Data file already exists.');
-    return;
-  }
+
   await saveFile(dataFilePath, JSON.stringify({}));
+
+  logger.festive('Successfully created Data File');
 };

@@ -1,6 +1,6 @@
 import { Command } from 'commander';
 import {
-  addTokenToEnv, createDataFile, createSolutionFiles, updateGitIgnore,
+  createEnvFile, createDataFile, createSolutionFiles, updateGitIgnore,
 } from '../initialize.js';
 import { logger } from '../logger.js';
 import { yearOption } from './arguments.js';
@@ -26,7 +26,7 @@ command
     await Promise.all([
       createSolutionFiles(year),
       updateGitIgnore(),
-      addTokenToEnv('need a real token'),
+      createEnvFile('need a real token', year),
       createDataFile(),
     ]);
   });

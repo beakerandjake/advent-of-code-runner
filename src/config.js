@@ -5,6 +5,16 @@ import { cwd } from 'process';
 import { readPackageUp } from 'read-pkg-up';
 import yn from 'yn';
 
+export const envOptions = {
+  suppressTitle: 'AOC_SUPPRESS_TITLE',
+  suppressFestive: 'AOC_SUPPRESS_FESTIVE',
+  authenticationToken: 'AOC_AUTHENTICATION_TOKEN',
+  logLevel: 'AOC_LOG_LEVEL',
+  mockApiEnabled: 'AOC_MOCK_API_ENABLED',
+  mockApiAnswerCorrect: 'AOC_MOCK_API_ANSWER_CORRECT',
+  year: 'AOC_YEAR',
+};
+
 /**
  * Absolute path to the current working directory.
  * This will be the root folder where this program operates.
@@ -39,17 +49,17 @@ const CONFIG = {
   rootDirectory,
   meta: await readMetaFromPackageJson(),
   cli: {
-    suppressTitleBox: yn(process.env.AOC_SUPPRESS_TITLE),
-    suppressFestive: yn(process.env.AOC_SUPPRESS_FESTIVE),
+    suppressTitleBox: yn(process.env[envOptions.suppressTitle]),
+    suppressFestive: yn(process.env[envOptions.suppressFestive]),
   },
   logging: {
-    level: process.env.AOC_LOG_LEVEL || 'error',
+    level: process.env[envOptions.logLevel] || 'warn',
     includeStackTrace: process.env.NODE_ENV !== 'production',
   },
   aoc: {
-    year: process.env.AOC_YEAR || getYear(new Date()),
-    authenticationToken: process.env.AOC_AUTHENTICATION_TOKEN || null,
-    baseUrl: process.env.AOC_BASE_URL || 'https://adventofcode.com',
+    year: process.env[envOptions.year] || getYear(new Date()),
+    authenticationToken: process.env[envOptions.authenticationToken] || null,
+    baseUrl: 'https://adventofcode.com',
     userAgent:
       'https://github.com/beakerandjake/advent-of-code-runner by beakerandjake',
     responseParsing: {
@@ -91,8 +101,8 @@ const CONFIG = {
       parts: [1, 2],
     },
     mockApi: {
-      enabled: yn(process.env.AOC_MOCK_API_ENABLED),
-      answerCorrect: yn(process.env.AOC_MOCK_API_ANSWER_CORRECT),
+      enabled: process.env.NODE_ENV === 'production' ? false : yn(process.env[envOptions.mockApiEnabled]),
+      answerCorrect: yn(process.env[envOptions.mockApiAnswerCorrect]),
     },
   },
   solutions: {
