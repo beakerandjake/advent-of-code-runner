@@ -3,7 +3,9 @@ import { submitSolution } from '../api/index.js';
 import { getConfigValue } from '../config.js';
 import { LockedPuzzleError, RateLimitExceededError } from '../errors/index.js';
 import { logger } from '../logger.js';
-import { puzzleHasBeenSolved, addCorrectAnswer, addIncorrectAnswer } from '../progress.js';
+import {
+  puzzleHasBeenSolved, addCorrectAnswer, addIncorrectAnswer, answerHasBeenSubmitted,
+} from '../progress.js';
 import {
   checkActionRateLimit, rateLimitedActions, updateRateLimit,
 } from '../rateLimit.js';
@@ -40,6 +42,11 @@ const submit = async (day, part, { year }) => {
   }
 
   const { answer, executionTimeNs } = await solve(year, day, part);
+
+  if (await answerHasBeenSubmitted(year, day, part, answer)) {
+    logger.festiveError('You\'ve already submitted this incorrect answer to advent of code!');
+    return;
+  }
 
   logger.festive('Posting solution to adventofcode');
 

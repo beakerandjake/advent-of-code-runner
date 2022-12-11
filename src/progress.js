@@ -94,6 +94,7 @@ export const puzzleHasBeenSolved = async (year, day, part) => {
  * @param {Number} year
  * @param {Number} day
  * @param {Number} part
+ * @param {String|Number} correctAnswer
  */
 export const addCorrectAnswer = async (
   year,
@@ -120,7 +121,7 @@ export const addCorrectAnswer = async (
  * @param {Number} year
  * @param {Number} day
  * @param {Number} part
- * @param {String} incorrectAnswer
+ * @param {String|Number} incorrectAnswer
  */
 export const addIncorrectAnswer = async (year, day, part, incorrectAnswer) => {
   logger.festive('Storing incorrect answer so it\'s not re-submitted.');
@@ -144,6 +145,27 @@ export const addIncorrectAnswer = async (year, day, part, incorrectAnswer) => {
   };
 
   await setPuzzles(addOrUpdatePuzzle(changes, puzzles));
+};
+
+/**
+ * Checks to see if the answer has already been submitted to advent of code.
+ * @param {Number} year
+ * @param {Number} day
+ * @param {Number} part
+ * @param {String|Number} answer
+ */
+export const answerHasBeenSubmitted = async (year, day, part, answer) => {
+  const puzzle = findPuzzle(puzzleId(year, day, part), await getPuzzles());
+
+  if (!puzzle) {
+    return false;
+  }
+
+  const answerToString = answer.toString();
+
+  return (
+    puzzle.correctAnswer === answerToString || puzzle.incorrectAnswers.includes(answerToString)
+  );
 };
 
 /**
