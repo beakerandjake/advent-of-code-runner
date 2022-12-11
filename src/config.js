@@ -1,4 +1,3 @@
-import { getYear } from 'date-fns';
 import { has, get, range } from 'lodash-es';
 import { join } from 'path';
 import { cwd } from 'process';
@@ -45,6 +44,14 @@ const readMetaFromPackageJson = async () => {
   };
 };
 
+/**
+ * Returns the year from the .env or the current year if not specified.
+ */
+const parseYear = () => {
+  const envYear = Number.parseInt(process.env[envOptions.year], 10);
+  return Number.isFinite(envYear) ? envYear : new Date().getFullYear();
+};
+
 const CONFIG = {
   rootDirectory,
   meta: await readMetaFromPackageJson(),
@@ -57,7 +64,7 @@ const CONFIG = {
     includeStackTrace: process.env.NODE_ENV !== 'production',
   },
   aoc: {
-    year: process.env[envOptions.year] || getYear(new Date()),
+    year: parseYear(),
     authenticationToken: process.env[envOptions.authenticationToken] || null,
     baseUrl: 'https://adventofcode.com',
     userAgent:
