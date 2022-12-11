@@ -5,7 +5,7 @@ import { UserError } from './userError.js';
  */
 export class SolutionMissingFunctionError extends UserError {
   constructor(functionName) {
-    super(`Solution file must export function "${functionName}" as a named export.`);
+    super(`Your solution file must export function "${functionName}" as a named export.`);
     this.name = 'SolutionMissingFunctionError';
   }
 }

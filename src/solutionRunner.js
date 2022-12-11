@@ -85,7 +85,7 @@ export const execute = async (year, day, part, input) => {
   // ensure that the solution file actually exists
   // before spawning worker.
   if (!await fileExists(solutionFileName)) {
-    throw new SolutionNotFoundError(`Could not find solution file, ensure file exits: ${solutionFileName}`);
+    throw new SolutionNotFoundError(solutionFileName);
   }
 
   return new Promise((resolve, reject) => {

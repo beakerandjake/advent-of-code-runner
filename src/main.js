@@ -33,3 +33,5 @@ try {
 // autosolve / autosubmit
 // puzzle is unlocked
 // npm publish
+// catch solutionfilenotfound / solutionfilemissingfunction errors
+//  and ask if user wants to fix them via cmd, so create the file and add the function.
