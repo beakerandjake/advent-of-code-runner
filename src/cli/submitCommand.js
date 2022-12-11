@@ -3,7 +3,7 @@ import { submitSolution } from '../api/index.js';
 import { getConfigValue } from '../config.js';
 import { LockedPuzzleError, RateLimitExceededError } from '../errors/index.js';
 import { logger } from '../logger.js';
-import { puzzleHasBeenSolved, setPuzzleSolved } from '../progress.js';
+import { puzzleHasBeenSolved, addCorrectAnswer, addIncorrectAnswer } from '../progress.js';
 import {
   checkActionRateLimit, rateLimitedActions, updateRateLimit,
 } from '../rateLimit.js';
@@ -49,9 +49,11 @@ const submit = async (day, part, { year }) => {
 
   await updateRateLimit(rateLimitedActions.submitAnswer);
 
-  if (success) {
-    await setPuzzleSolved(year, day, part, answer, executionTimeNs);
-  }
+  const progressUpdate = success
+    ? addCorrectAnswer(year, day, part, answer, executionTimeNs)
+    : addIncorrectAnswer(year, day, part, answer);
+
+  await progressUpdate;
 };
 
 /**

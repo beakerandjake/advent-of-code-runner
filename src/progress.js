@@ -95,16 +95,54 @@ export const puzzleHasBeenSolved = async (year, day, part) => {
  * @param {Number} day
  * @param {Number} part
  */
-export const setPuzzleSolved = async (year, day, part, correctAnswer, fastestExecutionTimeNs) => {
+export const addCorrectAnswer = async (
+  year,
+  day,
+  part,
+  correctAnswer,
+  fastestExecutionTimeNs,
+) => {
   logger.festive('Storing the fact that you solved this puzzle');
 
   if (!correctAnswer) {
-    throw new Error('Cannot store an empty value for a puzzles correctAnswer field');
+    throw new Error('Cannot store an empty correct answer');
   }
 
   const puzzles = await getPuzzles();
   const puzzle = findPuzzle(puzzleId(year, day, part), puzzles) || createPuzzle(year, day, part);
-  const changes = { ...puzzle, correctAnswer, fastestExecutionTimeNs };
+  const changes = { ...puzzle, correctAnswer: correctAnswer.toString(), fastestExecutionTimeNs };
+  await setPuzzles(addOrUpdatePuzzle(changes, puzzles));
+};
+
+/**
+ * Stores the puzzles incorrect answer.
+ * Prevents re-submissions of wrong answers.
+ * @param {Number} year
+ * @param {Number} day
+ * @param {Number} part
+ * @param {String} incorrectAnswer
+ */
+export const addIncorrectAnswer = async (year, day, part, incorrectAnswer) => {
+  logger.festive('Storing incorrect answer so it\'s not re-submitted.');
+
+  if (!incorrectAnswer) {
+    throw new Error('Cannot store an empty incorrect answer');
+  }
+
+  const puzzles = await getPuzzles();
+  const puzzle = findPuzzle(puzzleId(year, day, part), puzzles) || createPuzzle(year, day, part);
+
+  // prevent duplicate storage.
+  if (puzzle.incorrectAnswers.includes(incorrectAnswer.toString())) {
+    logger.warn('Attempted to store duplicate incorrect answer');
+    return;
+  }
+
+  const changes = {
+    ...puzzle,
+    incorrectAnswers: [...puzzle.incorrectAnswers, incorrectAnswer.toString()],
+  };
+
   await setPuzzles(addOrUpdatePuzzle(changes, puzzles));
 };
 
