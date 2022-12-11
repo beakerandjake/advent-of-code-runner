@@ -96,9 +96,6 @@ export const execute = async (year, day, part, input) => {
         solutionFileName,
         input,
       },
-      // prevent automatic piping of stdout and stderr because we're going to capture it.
-      stdout: true,
-      stderr: true,
     });
 
     // listen to messages from the worker.
@@ -132,13 +129,7 @@ export const execute = async (year, day, part, input) => {
 
     // handle uncaught exceptions.
     worker.on('error', (error) => reject(new Error('Solution Worker raised unexpected Error', { cause: error })));
-
     // handle potential edge case where worker does not send a solution message.
     worker.on('exit', () => reject(new Error('Solution Worker exited without posting answer')));
-
-    // forward console.log and console.error messages to the main logger with special category.
-    // TODO need special category / formatting for user output.
-    worker.stdout.on('data', (chunk) => logger.info('got chunk from user solution: %s', chunk?.toString().trim()));
-    worker.stderr.on('data', (data) => logger.info('got error from user solution: %s', data?.toString().trim()));
   });
 };
