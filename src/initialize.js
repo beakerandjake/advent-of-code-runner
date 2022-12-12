@@ -3,7 +3,7 @@ import { fileURLToPath } from 'url';
 import { EOL } from 'os';
 import { logger } from './logger.js';
 import { envOptions, getConfigValue } from './config.js';
-import { dataFilePath, defaultDataFile } from './store.js';
+import { dataFilePath, defaultDataStoreContents } from './store.js';
 import {
   appendToFile,
   copyFile, ensureDirectoriesExist, fileExists, openFile, saveFile,
@@ -99,7 +99,7 @@ export const createEnvFile = async (authenticationToken, year) => {
 export const createDataFile = async () => {
   logger.festive('Creating Data file.');
 
-  await saveFile(dataFilePath, JSON.stringify(defaultDataFile));
+  await saveFile(dataFilePath, JSON.stringify(defaultDataStoreContents));
 
   logger.festive('Successfully created Data File');
 };
