@@ -23,10 +23,7 @@ command
 
     const { answer, executionTimeNs } = await solve(year, day, part);
 
-    // if answer is correct answer then update fastest runtime.
-    if (await getCorrectAnswer(year, day, part) === answer.toString()) {
-      await tryToSetFastestExecutionTime(year, day, part, executionTimeNs);
-    }
+    await tryToSetFastestExecutionTime(year, day, part, answer, executionTimeNs);
   });
 
 export const solveCommand = command;

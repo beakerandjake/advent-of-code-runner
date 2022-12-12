@@ -188,7 +188,13 @@ export const getCorrectAnswer = async (year, day, part) => (
  * @param {Number} part
  * @param {Number} executionTimeNs
  */
-export const tryToSetFastestExecutionTime = async (year, day, part, executionTimeNs) => {
+export const tryToSetFastestExecutionTime = async (year, day, part, answer, executionTimeNs) => {
+  logger.debug('trying to set fastest execution time for year: %s, day: %s, part: %s', year, day, part);
+
+  if (!answer) {
+    throw new Error('Provided empty answer when trying to set fastest execution time');
+  }
+
   if (!Number.isFinite(executionTimeNs)) {
     throw new Error('Attempted to set fastest execution time to non numeric value');
   }
@@ -196,7 +202,21 @@ export const tryToSetFastestExecutionTime = async (year, day, part, executionTim
   const puzzles = await getPuzzles();
   const puzzle = findPuzzle(puzzleId(year, day, part), puzzles);
 
-  if (!puzzle || !puzzle.correctAnswer || puzzle.fastestExecutionTimeNs <= executionTimeNs) {
+  // bail if puzzle has not been solved
+  if (!puzzle?.correctAnswer) {
+    logger.debug('not setting fastest execution time, puzzle has not been successfully answered.');
+    return;
+  }
+
+  // bail  if answer is not correct.
+  if (answer.toString() !== puzzle.correctAnswer) {
+    logger.debug('not setting fastest execution time, answer: "%s" did not match stored correct answer: "%s"', answer, puzzle.correctAnswer);
+    return;
+  }
+
+  // bail if execution time was too slow
+  if (puzzle.fastestExecutionTimeNs <= executionTimeNs) {
+    logger.debug('not setting fastest execution time, execution time: %s was slower than stored fastest: %s', executionTimeNs, puzzle.fastestExecutionTimeNs);
     return;
   }
 
