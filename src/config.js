@@ -126,7 +126,7 @@ const CONFIG = {
       { key: 1, name: 'partOne' },
       { key: 2, name: 'partTwo' },
     ],
-    path: join(rootDirectory, 'solutions'),
+    path: join(rootDirectory, 'src'),
   },
   inputs: {
     path: join(rootDirectory, 'inputs'),
