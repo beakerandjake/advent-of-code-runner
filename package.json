@@ -10,10 +10,14 @@
     "advent of code cli"
   ],
   "type": "module",
+  "files": [
+    "src/"
+  ],
   "main": "src/main.js",
+  "bin": "src/main.js",
   "scripts": {
     "test": "NODE_OPTIONS=--experimental-vm-modules jest",
-    "start": "node -r dotenv/config src/main.js"
+    "start": "node src/main.js"
   },
   "repository": {
     "type": "git",
