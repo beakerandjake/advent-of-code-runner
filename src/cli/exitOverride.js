@@ -7,7 +7,7 @@ import { exit } from 'process';
 export const exitOverride = (error) => {
   // handle edge case when help is displayed
   // exit instead of throwing error.
-  if (error.code === 'commander.help' || error.code === 'commander.version') {
+  if (error.code === 'commander.help' || error.code === 'commander.version' || error.code === 'commander.helpDisplayed') {
     exit(1);
   }
 

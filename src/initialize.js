@@ -6,7 +6,11 @@ import { envOptions, getConfigValue } from './config.js';
 import { dataFilePath, defaultDataStoreContents } from './store.js';
 import {
   appendToFile,
-  copyFile, ensureDirectoriesExist, fileExists, openFile, saveFile,
+  copyFile,
+  ensureDirectoriesExist,
+  fileExists,
+  openFile,
+  saveFile,
 } from './io.js';
 
 /**
@@ -98,7 +102,7 @@ export const createEnvFile = async (authenticationToken, year) => {
  * Creates the Data File if it does not already exist.
  */
 export const createDataFile = async () => {
-  logger.festive('Creating Data file.');
+  logger.festive('Creating Data file to store your progress');
 
   await saveFile(dataFilePath, JSON.stringify(defaultDataStoreContents));
 

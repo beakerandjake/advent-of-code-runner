@@ -1,3 +1,4 @@
+#!/usr/bin/env node
 import { Command } from 'commander';
 import { getConfigValue } from './config.js';
 import { printFestiveTitle } from './festive.js';
