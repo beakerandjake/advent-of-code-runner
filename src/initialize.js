@@ -6,7 +6,11 @@ import { envOptions, getConfigValue } from './config.js';
 import { dataFilePath, defaultDataStoreContents } from './store.js';
 import {
   appendToFile,
-  copyFile, ensureDirectoriesExist, fileExists, openFile, saveFile,
+  copyFile,
+  ensureDirectoriesExist,
+  fileExists,
+  openFile,
+  saveFile,
 } from './io.js';
 
 /**
