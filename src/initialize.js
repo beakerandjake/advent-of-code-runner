@@ -70,7 +70,8 @@ export const updateGitIgnore = async () => {
       return;
     }
   }
-  await appendToFile(fileName, '# dotenv environment variables file\n.env');
+
+  await appendToFile(fileName, ['', '# dotenv environment variables file', '.env'].join(EOL));
 
   logger.festive('Successfully updated .gitignore');
 };
