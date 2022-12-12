@@ -21,10 +21,13 @@ const downloadAndCacheInput = async (year, day) => {
     throw new RateLimitExceededError('Timeout period for downloading an input file has not expired.', expiration);
   }
 
-  const input = await downloadInput(year, day, getConfigValue('aoc.authenticationToken'));
-  await updateRateLimit(rateLimitedActions.downloadInput);
-  await cacheInput(year, day, input);
-  return input;
+  try {
+    const input = await downloadInput(year, day, getConfigValue('aoc.authenticationToken'));
+    await cacheInput(year, day, input);
+    return input;
+  } finally {
+    await updateRateLimit(rateLimitedActions.downloadInput);
+  }
 };
 
 /**
