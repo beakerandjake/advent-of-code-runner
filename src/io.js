@@ -20,14 +20,14 @@ export const ensureDirectoriesExist = async (path) => {
 
 /**
  * Write the contents to the file specified by fileName
- * @param {String} fileName 
- * @param {String} data 
- * @param {String} flags 
+ * @param {String} fileName
+ * @param {String} data
+ * @param {String} flags
  */
 const writeToFile = async (fileName, data, flags = 'w') => {
   logger.silly('writing file: %s with flags: %s', fileName, flags);
   await ensureDirectoriesExist(dirname(fileName));
-  await writeFile(fileName, data, {flag: flags });
+  await writeFile(fileName, data, { flag: flags });
   logger.silly('successfully wrote file: %s', fileName);
 };
 
@@ -46,7 +46,7 @@ export const saveFile = async (fileName, data) => {
  * @param {String|Stream} data
  */
 export const appendToFile = async (fileName, data) => {
-  await writeToFile(fileName, data, 'w+');
+  await writeToFile(fileName, data, 'a+');
 };
 
 /**
