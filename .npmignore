@@ -1,0 +1,5 @@
+.env
+dev
+.eslintignore
+.eslintrc.cjs
+jest.config.mjs
