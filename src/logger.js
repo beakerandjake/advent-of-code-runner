@@ -38,14 +38,14 @@ let loggerInstance;
 
 try {
   // If for some reason logger fails to set up fail the program early.
-  const { level, includeStackTrace } = getConfigValue('logging');
+  const level = getConfigValue('logging.level');
 
   loggerInstance = createLogger({
     levels: customLevels,
     format: format.combine(
       format.splat(),
       format.json(),
-      format.errors({ stack: includeStackTrace }),
+      format.errors({ stack: true }),
     ),
     transports: [
       new transports.Console({
