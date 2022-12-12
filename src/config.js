@@ -123,6 +123,7 @@ const CONFIG = {
     path: join(rootDirectory, 'inputs'),
   },
   dataStore: {
+    filePath: join(rootDirectory, 'aocr-data.json'),
     folderPath: rootDirectory,
     fileName: 'aocr-data.json',
   },

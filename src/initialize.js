@@ -1,8 +1,9 @@
 import { dirname, join } from 'path';
 import { fileURLToPath } from 'url';
+import { EOL } from 'os';
 import { logger } from './logger.js';
 import { envOptions, getConfigValue } from './config.js';
-import { dataFilePath } from './store.js';
+import { dataFilePath, defaultDataStoreContents } from './store.js';
 import {
   appendToFile,
   copyFile, ensureDirectoriesExist, fileExists, openFile, saveFile,
@@ -82,10 +83,11 @@ export const createEnvFile = async (authenticationToken, year) => {
   logger.festive('Adding authentication token to .env file');
 
   const fileName = join(getConfigValue('rootDirectory'), '.env');
-  const contents = `
-  ${envOptions.authenticationToken}=${authenticationToken}
-  ${envOptions.year}=${year}
-  `;
+  const contents = [
+    `${envOptions.authenticationToken}=${authenticationToken}`,
+    `${envOptions.year}=${year}`,
+  ].join(EOL);
+
   await saveFile(fileName, contents);
 
   logger.festive('Successfully created .env file');
@@ -97,7 +99,7 @@ export const createEnvFile = async (authenticationToken, year) => {
 export const createDataFile = async () => {
   logger.festive('Creating Data file.');
 
-  await saveFile(dataFilePath, JSON.stringify({}));
+  await saveFile(dataFilePath, JSON.stringify(defaultDataStoreContents));
 
   logger.festive('Successfully created Data File');
 };
