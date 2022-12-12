@@ -1,16 +1,26 @@
+/* eslint-disable no-underscore-dangle */
+import dotenv from 'dotenv';
 import { has, get, range } from 'lodash-es';
 import { join } from 'path';
 import { cwd } from 'process';
+import { fileURLToPath, URL } from 'url';
 import { readPackageUp } from 'read-pkg-up';
 import yn from 'yn';
 
+const __dirname = fileURLToPath(new URL('.', import.meta.url));
+
+// ensure dotenv runs before we attempt to read any environment variables.
+dotenv.config();
+
 export const envOptions = {
+  cwdOverride: 'AOC_CWD_OVERRIDE',
   suppressTitle: 'AOC_SUPPRESS_TITLE',
   suppressFestive: 'AOC_SUPPRESS_FESTIVE',
   authenticationToken: 'AOC_AUTHENTICATION_TOKEN',
   logLevel: 'AOC_LOG_LEVEL',
   mockApiEnabled: 'AOC_MOCK_API_ENABLED',
   mockApiAnswerCorrect: 'AOC_MOCK_API_ANSWER_CORRECT',
+  rateLimitDefaultTimeoutMs: 'AOC_RATE_DEFAULT_RATE_LIMIT_MS',
   year: 'AOC_YEAR',
 };
 
@@ -18,19 +28,16 @@ export const envOptions = {
  * Absolute path to the current working directory.
  * This will be the root folder where this program operates.
  * User solution files, inputs, data store etc will all exist in this folder.
- * However when developing this project, use a special folder to simulate
- * this being ran from the cli in a users repository. This special folder
- * will be ignored by our .gitignore.
  */
-const rootDirectory = process.env.NODE_ENV !== 'production'
-  ? join(cwd(), 'dev')
-  : cwd();
+const rootDirectory = process.env[envOptions.cwdOverride] || cwd();
 
 /**
  * Load meta details about this package form the package json
  */
 const readMetaFromPackageJson = async () => {
-  const { packageJson } = await readPackageUp({ normalize: false }) || {};
+  const { packageJson } = await readPackageUp(
+    { cwd: __dirname, normalize: false },
+  ) || {};
 
   // should never ever happen, but just in case.
   if (!packageJson) {
@@ -45,11 +52,14 @@ const readMetaFromPackageJson = async () => {
 };
 
 /**
- * Returns the year from the .env or the current year if not specified.
+ * Attempts to parse and return an integer from the given value.
+ * If the integer does not parse or is not positive then default value is returned.
+ * @param {String} value
+ * @param {Any} defaultValue
  */
-const parseYear = () => {
-  const envYear = Number.parseInt(process.env[envOptions.year], 10);
-  return Number.isFinite(envYear) ? envYear : new Date().getFullYear();
+const parsePositiveInt = (value, defaultValue = null) => {
+  const parsed = Number.parseInt(value, 10);
+  return Number.isFinite(parsed) && parsed > 0 ? parsed : defaultValue;
 };
 
 const CONFIG = {
@@ -61,10 +71,9 @@ const CONFIG = {
   },
   logging: {
     level: process.env[envOptions.logLevel] || 'warn',
-    includeStackTrace: process.env.NODE_ENV !== 'production',
   },
   aoc: {
-    year: parseYear(),
+    year: parsePositiveInt(process.env[envOptions.year], new Date().getFullYear()),
     authenticationToken: process.env[envOptions.authenticationToken] || null,
     baseUrl: 'https://adventofcode.com',
     userAgent:
@@ -95,7 +104,7 @@ const CONFIG = {
       ],
     },
     rateLimiting: {
-      defaultTimeoutMs: process.env.NODE_ENV !== 'production' ? 1 : 300000,
+      defaultTimeoutMs: parsePositiveInt(process.env[envOptions.rateLimitDefaultTimeoutMs], 300000),
     },
     puzzleValidation: {
       // could dynamically set valid dates here, but keeping this explicit
@@ -108,7 +117,7 @@ const CONFIG = {
       parts: [1, 2],
     },
     mockApi: {
-      enabled: process.env.NODE_ENV === 'production' ? false : yn(process.env[envOptions.mockApiEnabled]),
+      enabled: yn(process.env[envOptions.mockApiEnabled]),
       answerCorrect: yn(process.env[envOptions.mockApiAnswerCorrect]),
     },
   },
