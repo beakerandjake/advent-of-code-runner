@@ -31,7 +31,7 @@ const questions = [
   },
   {
     // in future if list of years becomes too large the change to raw input.
-    type: 'input',
+    type: 'password',
     name: 'token',
     message: festiveStyle('Enter your advent of code authentication token (see README for help)'),
     prefix: festiveEmoji(),
