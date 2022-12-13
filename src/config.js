@@ -48,6 +48,7 @@ const readMetaFromPackageJson = async () => {
     name: packageJson.name,
     version: packageJson.version,
     description: packageJson.description,
+    homepage: packageJson.homepage,
   };
 };
 

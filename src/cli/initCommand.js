@@ -1,7 +1,7 @@
 import { Command } from 'commander';
 import inquirer from 'inquirer';
 import { getConfigValue } from '../config.js';
-import { festiveEmoji, festiveStyle } from '../festive.js';
+import { festiveEmoji, festiveErrorStyle, festiveStyle } from '../festive.js';
 import {
   createEnvFile, createDataFile, createSolutionFiles, updateGitIgnore,
 } from '../initialize.js';
@@ -30,17 +30,14 @@ const questions = [
     // in future if list of years becomes too large the change to raw input.
     type: 'input',
     name: 'token',
-    message: festiveStyle('Enter your advent of code authentication token'),
+    message: festiveStyle(
+      `Enter your advent of code authentication token, see README for help (${getConfigValue('meta.homepage')})`,
+    ),
     prefix: festiveEmoji(),
     choices: getConfigValue('aoc.puzzleValidation.years'),
     loop: false,
-    validate: (input) => {
-      if (input === 'cats') {
-        return 'NOT ALLOWED';
-      }
-
-      return true;
-    },
+    validate: (input) => (input ? true : festiveErrorStyle('Token cannot be empty!')),
+    filter: (input) => input.trim(),
   },
 ];
 
