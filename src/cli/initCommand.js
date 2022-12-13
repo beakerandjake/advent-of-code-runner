@@ -12,7 +12,9 @@ import { yearOption } from './arguments.js';
 const confirmOperation = {
   type: 'confirm',
   name: 'confirmed',
-  message: 'This action should only be performed in an empty repository. It can overwrite files that already exist (such as README, .gitignore, .env). Do you want to continue?',
+  message: festiveStyle(
+    'This action should only be performed in a new repository. It can overwrite files that might already exist (such as README, .gitignore, .env). Do you want to continue?',
+  ),
   default: true,
   prefix: festiveEmoji(),
 };
@@ -31,9 +33,7 @@ const questions = [
     // in future if list of years becomes too large the change to raw input.
     type: 'input',
     name: 'token',
-    message: festiveStyle(
-      `Enter your advent of code authentication token, see README for help (${getConfigValue('meta.homepage')})`,
-    ),
+    message: festiveStyle('Enter your advent of code authentication token (see README for help)'),
     prefix: festiveEmoji(),
     choices: getConfigValue('aoc.puzzleValidation.years'),
     loop: false,
@@ -47,22 +47,27 @@ const command = new Command();
 command
   .name('init')
   .description('Initialize a directory so advent-of-code-runner can run solutions.')
-  .addOption(yearOption)
-  .action(async ({ year }) => {
+  .action(async () => {
     logger.festive('Performing first time setup');
+    logger.festive(`For help see README (${getConfigValue('meta.homepage')})`);
 
     // most important thing is user has a package.json file.
     if (!await packageJsonExists()) {
       throw new PackageJsonNotFoundError();
     }
 
-    // const { confirmed } = await inquirer.prompt(confirmOperation);
+    // confirm with the user first.
+    const { confirmed } = await inquirer.prompt(confirmOperation);
 
-    // if (!confirmed) {
-    //   return;
-    // }
-    const results = await inquirer.prompt(questions);
-    logger.festive('results: %s', results);
+    // bail if user did't confirm.
+    if (!confirmed) {
+      return;
+    }
+
+    // get the required input from the user.
+    const answers = await inquirer.prompt(questions);
+
+    logger.festive('results: %s', answers);
 
     // logger.festive('Initializing Repository for year: %s', year);
 
