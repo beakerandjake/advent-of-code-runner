@@ -49,8 +49,8 @@ export const printFestiveTitle = () => {
  */
 export const festiveEmoji = () => sample(festiveEmojis);
 
-const festiveStyle = chalk.bold.hex('#00873E');
-const festiveErrorStyle = chalk.red.italic;
+export const festiveStyle = chalk.bold.hex('#00873E');
+export const festiveErrorStyle = chalk.red.italic;
 
 /**
  * Turns a normal string into a ~*festive*~ one.

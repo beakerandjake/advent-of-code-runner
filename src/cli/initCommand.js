@@ -1,12 +1,11 @@
 import { Command } from 'commander';
 import inquirer from 'inquirer';
 import { getConfigValue } from '../config.js';
-import { festiveEmoji } from '../festive.js';
+import { festiveEmoji, festiveStyle } from '../festive.js';
 import {
   createEnvFile, createDataFile, createSolutionFiles, updateGitIgnore,
 } from '../initialize.js';
 import { logger } from '../logger.js';
-import { yearIsValid } from '../validatePuzzle.js';
 import { yearOption } from './arguments.js';
 
 const confirmOperation = {
@@ -22,11 +21,26 @@ const questions = [
     // in future if list of years becomes too large the change to raw input.
     type: 'list',
     name: 'year',
-    message: 'What year of advent of code are you doing?',
-    default: 2022,
+    message: festiveStyle('What year of advent of code are you doing?'),
+    prefix: festiveEmoji(),
+    choices: getConfigValue('aoc.puzzleValidation.years').reverse(),
+    loop: false,
+  },
+  {
+    // in future if list of years becomes too large the change to raw input.
+    type: 'input',
+    name: 'token',
+    message: festiveStyle('Enter your advent of code authentication token'),
     prefix: festiveEmoji(),
     choices: getConfigValue('aoc.puzzleValidation.years'),
     loop: false,
+    validate: (input) => {
+      if (input === 'cats') {
+        return 'NOT ALLOWED';
+      }
+
+      return true;
+    },
   },
 ];
 
@@ -44,12 +58,8 @@ command
     // if (!confirmed) {
     //   return;
     // }
-    try {
-      const results = await inquirer.prompt(questions);
-      logger.festive('results: %s', results);
-    } catch (error) {
-      logger.error('FUCK', error);
-    }
+    const results = await inquirer.prompt(questions);
+    logger.festive('results: %s', results);
 
     // logger.festive('Initializing Repository for year: %s', year);
 
