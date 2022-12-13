@@ -1,9 +1,10 @@
 import { Command } from 'commander';
 import inquirer from 'inquirer';
 import { getConfigValue } from '../config.js';
+import { PackageJsonNotFoundError } from '../errors/index.js';
 import { festiveEmoji, festiveErrorStyle, festiveStyle } from '../festive.js';
 import {
-  createEnvFile, createDataFile, createSolutionFiles, updateGitIgnore,
+  createEnvFile, createDataFile, createSolutionFiles, updateGitIgnore, packageJsonExists,
 } from '../initialize.js';
 import { logger } from '../logger.js';
 import { yearOption } from './arguments.js';
@@ -49,6 +50,11 @@ command
   .addOption(yearOption)
   .action(async ({ year }) => {
     logger.festive('Performing first time setup');
+
+    // most important thing is user has a package.json file.
+    if (!await packageJsonExists()) {
+      throw new PackageJsonNotFoundError();
+    }
 
     // const { confirmed } = await inquirer.prompt(confirmOperation);
 

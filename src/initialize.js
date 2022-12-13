@@ -55,7 +55,6 @@ export const createSolutionFiles = async (year) => {
 
 /**
  * Updates the gitignore file to ignore any files used by this which should be ignored.
- * @param {String} rootDirectory - The directory containing the git ignore file.
  */
 export const updateGitIgnore = async () => {
   logger.festive('Updating .gitignore to ignore .env file');
@@ -107,4 +106,15 @@ export const createDataFile = async () => {
   await saveFile(dataFilePath, JSON.stringify(defaultDataStoreContents));
 
   logger.festive('Successfully created Data File');
+};
+
+/**
+ * Checks to see if a package.json file exists in the cwd.
+ */
+export const packageJsonExists = async () => {
+  const filePath = join(getConfigValue('rootDirectory'), 'package.json');
+  logger.debug('checking if package.json file exists at: %s', filePath);
+  const toReturn = await fileExists(filePath);
+  logger.debug('found package.json? %s', toReturn);
+  return toReturn;
 };
