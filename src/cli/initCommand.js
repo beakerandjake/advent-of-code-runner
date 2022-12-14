@@ -4,7 +4,7 @@ import { getConfigValue } from '../config.js';
 import { PackageJsonNotFoundError } from '../errors/index.js';
 import { festiveEmoji, festiveErrorStyle, festiveStyle } from '../festive.js';
 import { packageJsonExists } from '../initialize.js';
-import { createGitIgnore } from '../initialize/createGitIgnore.js';
+import { createGitIgnore, createReadme } from '../initialize/index.js';
 import { logger } from '../logger.js';
 
 const confirmOperation = {
@@ -68,6 +68,7 @@ command
     // logger.festive('results: %s', answers);
 
     await createGitIgnore();
+    await createReadme();
 
     // initialize folder, break up into separate files.
     // have text files where possible to just do a straight copy (git ignore, readme)

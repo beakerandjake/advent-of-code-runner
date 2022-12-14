@@ -143,7 +143,7 @@ const CONFIG = {
       },
       readme: {
         source: join(__dirname, '..', 'templates', 'template-readme.md'),
-        dest: join(cwd, 'README.MD'),
+        dest: join(cwd, 'README.md'),
       },
       solution: join(__dirname, '..', 'templates', 'template-solution.js'),
     },
