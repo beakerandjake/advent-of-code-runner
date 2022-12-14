@@ -1,5 +1,4 @@
-import { fileURLToPath } from 'url';
-import { join, dirname } from 'path';
+import { join } from 'path';
 import { Worker } from 'worker_threads';
 import { logger } from './logger.js';
 import { getConfigValue } from './config.js';
@@ -42,21 +41,6 @@ const getFunctionNameForPart = (part) => {
 };
 
 /**
- * Returns an absolute path to the solution worker file.
- */
-const getWorkerThreadFilePath = () => {
-  // expect file exists in same directory as this.
-  const pathToWorker = join(
-    dirname(fileURLToPath(import.meta.url)),
-    'solutionRunnerWorkerThread.js',
-  );
-
-  logger.debug('path to worker thread file: %s', pathToWorker);
-
-  return pathToWorker;
-};
-
-/**
  * Spawns a worker thread to import the solution file
  * executes the solution function and returns the result and performance data.
  * @param {Number} year
@@ -73,7 +57,7 @@ const getWorkerThreadFilePath = () => {
 export const execute = async (year, day, part, input) => {
   logger.verbose('spawning worker to execute solution');
 
-  const workerThreadFilePath = getWorkerThreadFilePath();
+  const workerThreadFilePath = getConfigValue('paths.solutionRunnerWorkerFile');
   const solutionFileName = getSolutionFileName(year, day);
 
   // before we spawn up a worker, ensure the js file actually exists.
