@@ -1,15 +1,17 @@
 {
-  "name": "{{name}}",
+  "name": "{{theirPackageName}}",
   "version": "1.0.0",
   "description": "Solutions to Advent of Code for year {{year}}",
   "type": "module",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "solve": "advent-of-code-runner solve",
+    "submit": "advent-of-code-runner submit",
+    "help": "advent-of-code-runner help"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "advent-of-code-runner": "^{{version}}"
+    "{{ourPackageName}}": "^{{version}}"
   }
 }

@@ -8,7 +8,8 @@ import { replaceTokens } from './replaceTokens.js';
  * Maps tokens strings in the template project json file to fields of the args.
  */
 const envFileTokens = [
-  { match: '{{name}}', key: 'name' },
+  { match: '{{theirPackageName}}', key: 'theirPackageName' },
+  { match: '{{ourPackageName}}', key: 'ourPackageName' },
   { match: '{{year}}', key: 'year' },
   { match: '{{version}}', key: 'version' },
 ];
@@ -26,7 +27,8 @@ export const createPackageJson = async (year) => {
   const args = {
     year,
     version: getConfigValue('meta.version'),
-    name: basename(getConfigValue('cwd')),
+    theirPackageName: basename(getConfigValue('cwd')),
+    ourPackageName: basename(getConfigValue('meta.name')),
   };
 
   const { source, dest } = getConfigValue('paths.templates.packageJson');
