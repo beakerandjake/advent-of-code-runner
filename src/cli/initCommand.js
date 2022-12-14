@@ -1,13 +1,15 @@
 import { Command } from 'commander';
 import inquirer from 'inquirer';
 import { getConfigValue } from '../config.js';
-import { PackageJsonNotFoundError } from '../errors/index.js';
-import { festiveEmoji, festiveErrorStyle, festiveStyle } from '../festive.js';
-import { packageJsonExists } from '../initialize.js';
-import {
-  createDotEnv, createGitIgnore, createPackageJson, createReadme, createSolutionFiles,
-} from '../initialize/index.js';
 import { logger } from '../logger.js';
+import { festiveEmoji, festiveErrorStyle, festiveStyle } from '../festive.js';
+import {
+  createDotEnv,
+  createGitIgnore,
+  createPackageJson,
+  createReadme,
+  createSolutionFiles,
+} from '../initialize/index.js';
 
 const confirmOperation = {
   type: 'confirm',
@@ -76,6 +78,7 @@ command
     // // get the required input from the user.
     // const answers = await inquirer.prompt(questions);
 
+    const answers = { year: 2022, authToken: 'asdf' };
     await createFiles(answers);
 
     // initialize folder, break up into separate files.
