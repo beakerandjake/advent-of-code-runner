@@ -79,7 +79,7 @@ const CONFIG = {
   aoc: {
     year: parsePositiveInt(process.env[envOptions.year], new Date().getFullYear()),
     authenticationToken: process.env[envOptions.authenticationToken] || null,
-    baseUrl: 'https://adventofcode.com',
+    baseUrl: 'http://192.168.0.1', // 'https://adventofcode.com',
     userAgent:
       'https://github.com/beakerandjake/advent-of-code-runner by beakerandjake',
     responseParsing: {
