@@ -1,5 +1,7 @@
 import { Command } from 'commander';
 import inquirer from 'inquirer';
+import chalk from 'chalk';
+import ora from 'ora';
 import { getConfigValue } from '../config.js';
 import { logger } from '../logger.js';
 import { festiveEmoji, festiveErrorStyle, festiveStyle } from '../festive.js';
@@ -51,13 +53,29 @@ const questions = [
  * @param {Object} answers - The answers object provided by inquirer.
  */
 const createFiles = async (answers) => Promise.all([
-  await createPackageJson(answers.year),
-  await createGitIgnore(),
-  await createReadme(),
-  await createSolutionFiles(),
-  await createDotEnv(answers),
-  await createDataFile(),
+  createPackageJson(answers.year),
+  createGitIgnore(),
+  createReadme(),
+  createSolutionFiles(),
+  createDotEnv(answers),
+  createDataFile(),
+  new Promise((resolve) => setTimeout(resolve, 5000)),
 ]);
+
+const reportStatus = async (promise, spinner, startText, successText, failText = undefined) => {
+  spinner.start(festiveStyle(startText));
+
+  try {
+    await promise;
+    spinner.stopAndPersist({
+      text: festiveStyle(successText),
+      symbol: festiveEmoji(),
+    });
+  } catch (error) {
+    spinner.fail(failText ? festiveErrorStyle(failText) : festiveErrorStyle(startText));
+    throw error;
+  }
+};
 
 const command = new Command();
 
@@ -65,40 +83,29 @@ command
   .name('init')
   .description('Initialize a directory so advent-of-code-runner can run solutions.')
   .action(async () => {
-    logger.festive('Performing first time setup');
-    logger.festive(`For help see README (${getConfigValue('meta.homepage')})`);
+    // get the required input from the user.
+    const answers = await inquirer.prompt(questions);
 
-    // TODO instead of confirm, just bail if cwd is not empty (allow .git folder only).
+    const spinner = ora({ text: festiveStyle('Initializing'), spinner: 'christmas' }).start();
 
-    // // confirm with the user first.
-    // const { confirmed } = await inquirer.prompt(confirmOperation);
+    await reportStatus(
+      createFiles(answers),
+      spinner,
+      'Creating files',
+      'Created files',
+    );
 
-    // // bail if user did't confirm.
-    // if (!confirmed) {
-    //   return;
-    // }
+    await reportStatus(
+      installPackages(),
+      spinner,
+      'Installing npm packages',
+      'Installed npm packages',
+    );
 
-    // // get the required input from the user.
-    // const answers = await inquirer.prompt(questions);
-
-    const answers = { year: 2022, authToken: 'asdf' };
-
-    await createFiles(answers);
-
-    // wait to install the packages after all files are created (including package.json)
-    await installPackages();
-
-    // initialize folder, break up into separate files.
-    // have text files where possible to just do a straight copy (git ignore, readme)
-
-    // logger.festive('Initializing Repository for year: %s', year);
-
-    // await Promise.all([
-    //   createSolutionFiles(year),
-    //   updateGitIgnore(),
-    //   createEnvFile('need a real token', year),
-    //   createDataFile(),
-    // ]);
+    spinner.stopAndPersist({
+      text: festiveStyle('Successfully initialized your repository, have fun!'),
+      symbol: festiveEmoji(),
+    });
   });
 
 export const initCommand = command;

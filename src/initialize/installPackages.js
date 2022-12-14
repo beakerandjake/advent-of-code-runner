@@ -1,9 +1,5 @@
 import { spawn } from 'node:child_process';
-import { stderr } from 'node:process';
-import ora from 'ora';
 import { getConfigValue } from '../config.js';
-import { PackageInstallFailedError } from '../errors/packageInstallFailedError.js';
-import { festiveEmoji, festiveErrorStyle, festiveStyle } from '../festive.js';
 import { logger } from '../logger.js';
 
 /**
@@ -12,11 +8,7 @@ import { logger } from '../logger.js';
 export const installPackages = async () => {
   // TODO test multiplatform support
   // TODO can probably support yarn install too.
-
-  const spinner = ora({
-    text: festiveStyle('Installing npm packages'),
-    spinner: 'christmas',
-  }).start();
+  logger.debug('installing npm packages');
 
   return new Promise((resolve, reject) => {
     const childProcess = spawn(
@@ -39,24 +31,14 @@ export const installPackages = async () => {
 
     // handle error related to spawning / communicating with the process
     childProcess.once('error', (error) => {
-      spinner.fail(
-        festiveErrorStyle('Failed to start npm install command'),
-      );
       reject(error);
     });
 
     // handle exit (success or failure of command)
     childProcess.once('exit', (code) => {
       if (code === 0) {
-        // no exit code? success!
-        spinner.stopAndPersist({
-          symbol: festiveEmoji(),
-          text: festiveStyle(`Installed packages ${festiveEmoji()}`),
-        });
         resolve();
       } else {
-        spinner.fail();
-        // exit code? error!
         reject(new Error(`Failed to install npm packages\n${errBuffer}`));
       }
     });
