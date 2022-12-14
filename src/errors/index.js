@@ -1,3 +1,4 @@
+import { DataFileNotFoundError } from './dataFileNotFoundError.js';
 import { LockedOrCompletedPuzzleError } from './lockedOrCompletedPuzzleError.js';
 import { LockedPuzzleError } from './lockedPuzzleError.js';
 import { PuzzleAlreadySolvedError } from './puzzleAlreadySolvedError.js';
@@ -10,6 +11,7 @@ import { PackageInstallFailedError } from './packageInstallFailedError.js';
 import { UserError } from './userError.js';
 
 export {
+  DataFileNotFoundError,
   LockedOrCompletedPuzzleError,
   LockedPuzzleError,
   PuzzleAlreadySolvedError,
