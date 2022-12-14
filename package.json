@@ -11,7 +11,8 @@
   ],
   "type": "module",
   "files": [
-    "src/"
+    "src/",
+    "templates"
   ],
   "main": "src/main.js",
   "bin": "src/main.js",
