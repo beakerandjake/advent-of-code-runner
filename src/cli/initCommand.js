@@ -4,6 +4,7 @@ import { getConfigValue } from '../config.js';
 import { logger } from '../logger.js';
 import { festiveEmoji, festiveErrorStyle, festiveStyle } from '../festive.js';
 import {
+  createDataFile,
   createDotEnv,
   createGitIgnore,
   createPackageJson,
@@ -54,6 +55,7 @@ const createFiles = async (answers) => Promise.all([
   await createReadme(),
   await createSolutionFiles(),
   await createDotEnv(answers),
+  await createDataFile(),
 ]);
 
 const command = new Command();
