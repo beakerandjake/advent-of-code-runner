@@ -10,6 +10,7 @@ import {
   createPackageJson,
   createReadme,
   createSolutionFiles,
+  installPackages,
 } from '../initialize/index.js';
 
 const confirmOperation = {
@@ -81,7 +82,11 @@ command
     // const answers = await inquirer.prompt(questions);
 
     const answers = { year: 2022, authToken: 'asdf' };
+
     await createFiles(answers);
+
+    // wait to install the packages after all files are created (including package.json)
+    await installPackages();
 
     // initialize folder, break up into separate files.
     // have text files where possible to just do a straight copy (git ignore, readme)
