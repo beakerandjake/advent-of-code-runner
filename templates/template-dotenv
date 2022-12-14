@@ -1,2 +1,2 @@
-AOC_AUTHENTICATION_TOKEN={authToken}
-AOC_YEAR={year}
+AOC_AUTHENTICATION_TOKEN={{authToken}}
+AOC_YEAR={{year}}
