@@ -25,14 +25,14 @@ import {
  * @param {Number} year
  * @param {Number} day
  */
-const getSolutionFileName = (year, day) => join(getConfigValue('solutions.path'), `${year}`, `day_${day}.js`);
+const getSolutionFileName = (year, day) => join(getConfigValue('paths.solutionsDir'), `${year}`, `day_${day}.js`);
 
 /**
  * Returns the name of the function to execute for the puzzles part.
  * @param {Number} part
  */
 const getFunctionNameForPart = (part) => {
-  const functionName = getConfigValue('solutions.partFunctions').find((x) => x.key === part)?.name;
+  const functionName = getConfigValue('solutionRunner.partFunctions').find((x) => x.key === part)?.name;
 
   if (!functionName) {
     throw new Error(`Unknown solution part: ${part}`);

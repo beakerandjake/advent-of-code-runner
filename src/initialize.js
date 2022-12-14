@@ -27,13 +27,12 @@ const createSolutionFile = async (templateSolutionPath, destFilePath) => {
 /**
  * Creates solution files for each day of the years advent of code.
  * Existing files will be skipped and not overwritten.
- * @param {String} rootDirectory - The directory to create the files in.
  * @param {Number} year - The year to create solution files for.
  */
 export const createSolutionFiles = async (year) => {
   logger.festive('Creating solution files');
 
-  const solutionDirectory = join(getConfigValue('solutions.path'), `${year}`);
+  const solutionDirectory = join(getConfigValue('paths.solutionsDir'), `${year}`);
 
   await ensureDirectoriesExist(solutionDirectory);
 
@@ -59,7 +58,7 @@ export const createSolutionFiles = async (year) => {
 export const updateGitIgnore = async () => {
   logger.festive('Updating .gitignore to ignore .env file');
 
-  const fileName = join(getConfigValue('rootDirectory'), '.gitignore');
+  const fileName = join(getConfigValue('cwd'), '.gitignore');
 
   if (!await fileExists(fileName)) {
     logger.festive('No .gitnignore found, skipping. If you add a .gitignore in the future be sure to ignore the .env file so you don\'t commit your authentication token!');
@@ -86,7 +85,7 @@ export const updateGitIgnore = async () => {
 export const createEnvFile = async (authenticationToken, year) => {
   logger.festive('Adding authentication token to .env file');
 
-  const fileName = join(getConfigValue('rootDirectory'), '.env');
+  const fileName = join(getConfigValue('cwd'), '.env');
   const contents = [
     `${envOptions.authenticationToken}=${authenticationToken}`,
     `${envOptions.year}=${year}`,
@@ -112,7 +111,7 @@ export const createDataFile = async () => {
  * Checks to see if a package.json file exists in the cwd.
  */
 export const packageJsonExists = async () => {
-  const filePath = join(getConfigValue('rootDirectory'), 'package.json');
+  const filePath = join(getConfigValue('cwd'), 'package.json');
   logger.debug('checking if package.json file exists at: %s', filePath);
   const toReturn = await fileExists(filePath);
   logger.debug('found package.json? %s', toReturn);

@@ -8,7 +8,7 @@ import { fileExists, loadFileContents, saveFile } from './io.js';
  * @param {Number} year
  * @param {Number} day
  */
-const getInputFileName = (year, day) => join(getConfigValue('inputs.path'), `${year}_${day}.txt`);
+const getInputFileName = (year, day) => join(getConfigValue('paths.inputsDir'), `${year}_${day}.txt`);
 
 /**
  * Caches the input so it can be re-used without re-downloading

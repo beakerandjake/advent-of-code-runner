@@ -2,11 +2,14 @@
 import dotenv from 'dotenv';
 import { has, get, range } from 'lodash-es';
 import { join } from 'path';
-import { cwd } from 'process';
+import { cwd as getCwd } from 'process';
 import { fileURLToPath, URL } from 'url';
 import { readPackageUp } from 'read-pkg-up';
 import yn from 'yn';
 
+/**
+ * The directory this source file resides in
+ */
 const __dirname = fileURLToPath(new URL('.', import.meta.url));
 
 // ensure dotenv runs before we attempt to read any environment variables.
@@ -29,7 +32,7 @@ export const envOptions = {
  * This will be the root folder where this program operates.
  * User solution files, inputs, data store etc will all exist in this folder.
  */
-const rootDirectory = process.env[envOptions.cwdOverride] || cwd();
+const cwd = process.env[envOptions.cwdOverride] || getCwd();
 
 /**
  * Load meta details about this package form the package json
@@ -64,7 +67,7 @@ const parsePositiveInt = (value, defaultValue = null) => {
 };
 
 const CONFIG = {
-  rootDirectory,
+  cwd,
   meta: await readMetaFromPackageJson(),
   cli: {
     suppressTitleBox: yn(process.env[envOptions.suppressTitle]),
@@ -122,20 +125,27 @@ const CONFIG = {
       answerCorrect: yn(process.env[envOptions.mockApiAnswerCorrect]),
     },
   },
-  solutions: {
+  solutionRunner: {
     partFunctions: [
       { key: 1, name: 'partOne' },
       { key: 2, name: 'partTwo' },
     ],
-    path: join(rootDirectory, 'src'),
   },
-  inputs: {
-    path: join(rootDirectory, 'inputs'),
-  },
-  dataStore: {
-    filePath: join(rootDirectory, 'aocr-data.json'),
-    folderPath: rootDirectory,
-    fileName: 'aocr-data.json',
+  paths: {
+    dataStoreFile: join(cwd, 'aocr-data.json'),
+    inputsDir: join(cwd, 'inputs'),
+    solutionsDir: join(cwd, 'src'),
+    templates: {
+      gitignore: {
+        source: join(__dirname, '..', 'templates', 'template-gitignore'),
+        dest: join(cwd, '.gitignore'),
+      },
+      readme: {
+        source: join(__dirname, '..', 'templates', 'template-readme.md'),
+        dest: join(cwd, 'README.MD'),
+      },
+      solution: join(__dirname, '..', 'templates', 'template-solution.js'),
+    },
   },
 };
 
