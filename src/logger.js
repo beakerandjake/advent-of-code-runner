@@ -1,7 +1,7 @@
 import {
   createLogger, format, transports, addColors,
 } from 'winston';
-import { exit } from 'process';
+import { exit } from 'node:process';
 import { getConfigValue } from './config.js';
 import { FestiveTransport } from './festive.js';
 

@@ -1,4 +1,4 @@
-import { join } from 'path';
+import { join } from 'node:path';
 import { logger } from './logger.js';
 import { getConfigValue } from './config.js';
 import { fileExists, loadFileContents, saveFile } from './io.js';

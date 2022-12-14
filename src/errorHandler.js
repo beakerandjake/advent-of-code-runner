@@ -1,4 +1,4 @@
-import { exit } from 'process';
+import { exit } from 'node:process';
 import { UserError } from './errors/index.js';
 import { logger } from './logger.js';
 

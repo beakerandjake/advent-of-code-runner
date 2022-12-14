@@ -5,8 +5,8 @@ import {
   readFile,
   copyFile as copy,
   open,
-} from 'fs/promises';
-import { dirname } from 'path';
+} from 'node:fs/promises';
+import { dirname } from 'node:path';
 import { logger } from './logger.js';
 
 /**

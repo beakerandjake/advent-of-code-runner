@@ -1,4 +1,4 @@
-import { basename } from 'path';
+import { basename } from 'node:path';
 import { getConfigValue } from '../config.js';
 import { loadFileContents, saveFile } from '../io.js';
 import { logger } from '../logger.js';

@@ -1,9 +1,9 @@
 /* eslint-disable no-underscore-dangle */
 import dotenv from 'dotenv';
-import { has, get, range } from 'lodash-es';
-import { join } from 'path';
-import { cwd as getCwd } from 'process';
-import { fileURLToPath, URL } from 'url';
+import { get, has, range } from 'lodash-es';
+import { join } from 'node:path';
+import { cwd as getCwd } from 'node:process';
+import { fileURLToPath, URL } from 'node:url';
 import { readPackageUp } from 'read-pkg-up';
 import yn from 'yn';
 
