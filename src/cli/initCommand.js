@@ -3,11 +3,9 @@ import inquirer from 'inquirer';
 import { getConfigValue } from '../config.js';
 import { PackageJsonNotFoundError } from '../errors/index.js';
 import { festiveEmoji, festiveErrorStyle, festiveStyle } from '../festive.js';
-import {
-  createEnvFile, createDataFile, createSolutionFiles, updateGitIgnore, packageJsonExists,
-} from '../initialize.js';
+import { packageJsonExists } from '../initialize.js';
+import { createGitIgnore } from '../initialize/createGitIgnore.js';
 import { logger } from '../logger.js';
-import { yearOption } from './arguments.js';
 
 const confirmOperation = {
   type: 'confirm',
@@ -51,23 +49,25 @@ command
     logger.festive('Performing first time setup');
     logger.festive(`For help see README (${getConfigValue('meta.homepage')})`);
 
-    // most important thing is user has a package.json file.
-    if (!await packageJsonExists()) {
-      throw new PackageJsonNotFoundError();
-    }
+    // // most important thing is user has a package.json file.
+    // if (!await packageJsonExists()) {
+    //   throw new PackageJsonNotFoundError();
+    // }
 
-    // confirm with the user first.
-    const { confirmed } = await inquirer.prompt(confirmOperation);
+    // // confirm with the user first.
+    // const { confirmed } = await inquirer.prompt(confirmOperation);
 
-    // bail if user did't confirm.
-    if (!confirmed) {
-      return;
-    }
+    // // bail if user did't confirm.
+    // if (!confirmed) {
+    //   return;
+    // }
 
-    // get the required input from the user.
-    const answers = await inquirer.prompt(questions);
+    // // get the required input from the user.
+    // const answers = await inquirer.prompt(questions);
 
-    logger.festive('results: %s', answers);
+    // logger.festive('results: %s', answers);
+
+    await createGitIgnore();
 
     // initialize folder, break up into separate files.
     // have text files where possible to just do a straight copy (git ignore, readme)
