@@ -24,7 +24,7 @@ import {
  * @param {Number} year
  * @param {Number} day
  */
-const getSolutionFileName = (year, day) => join(getConfigValue('paths.solutionsDir'), `${year}`, `day_${day}.js`);
+const getSolutionFileName = (day) => join(getConfigValue('paths.solutionsDir'), `day_${day}.js`);
 
 /**
  * Returns the name of the function to execute for the puzzles part.
@@ -58,7 +58,7 @@ export const execute = async (year, day, part, input) => {
   logger.verbose('spawning worker to execute solution');
 
   const workerThreadFilePath = getConfigValue('paths.solutionRunnerWorkerFile');
-  const solutionFileName = getSolutionFileName(year, day);
+  const solutionFileName = getSolutionFileName(day);
 
   // before we spawn up a worker, ensure the js file actually exists.
   // it should always, but be safe.
