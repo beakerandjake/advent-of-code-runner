@@ -46,19 +46,6 @@ const questions = [
   },
 ];
 
-/**
- * Creates all template files in the CWD
- * @param {Object} answers - The answers object provided by inquirer.
- */
-const createFiles = async (answers) => Promise.all([
-  createPackageJson(answers.year),
-  createGitIgnore(),
-  createReadme(),
-  createSolutionFiles(),
-  createDotEnv(answers),
-  createDataFile(),
-]);
-
 const command = new Command();
 
 command
@@ -72,9 +59,17 @@ command
     const spinner = ora({ text: festiveStyle('Creating files'), spinner: 'christmas' }).start();
 
     try {
-      await createFiles(answers);
+      // create the files in the users cwd
+      await Promise.all([
+        createPackageJson(answers.year),
+        createGitIgnore(),
+        createReadme(),
+        createSolutionFiles(),
+        createDotEnv(answers),
+        createDataFile(),
+      ]);
 
-      // now that files (including package.json) are there, install their npm packages.
+      // now that files (including package.json) are present, install the users npm packages.
       spinner.text = festiveStyle('Installing packages');
       await installPackages();
 
@@ -83,7 +78,7 @@ command
         symbol: festiveEmoji(),
       });
     } catch (error) {
-      spinner.fail(festiveErrorStyle(spinner.text));
+      spinner.fail();
       throw error;
     }
   });
