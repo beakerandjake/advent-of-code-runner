@@ -32,7 +32,7 @@ const questions = [
   {
     // in future if list of years becomes too large the change to raw input.
     type: 'password',
-    name: 'token',
+    name: 'authToken',
     message: festiveStyle('Enter your advent of code authentication token'),
     prefix: festiveEmoji(),
     choices: getConfigValue('aoc.puzzleValidation.years'),
@@ -41,6 +41,17 @@ const questions = [
     filter: (input) => input.trim(),
   },
 ];
+
+/**
+ * Creates all template files in the CWD
+ * @param {Object} answers - The answers object provided by inquirer.
+ */
+const createFiles = async (answers) => Promise.all([
+  await createGitIgnore(),
+  await createReadme(),
+  await createSolutionFiles(),
+  await createDotEnv(answers),
+]);
 
 const command = new Command();
 
@@ -69,10 +80,9 @@ command
 
     // logger.festive('results: %s', answers);
 
-    await createGitIgnore();
-    await createReadme();
-    await createSolutionFiles();
-    await createDotEnv(2022, 'asdf');
+    const answers = { year: 2022, authToken: 'asdf' };
+
+    await createFiles(answers);
 
     // initialize folder, break up into separate files.
     // have text files where possible to just do a straight copy (git ignore, readme)
