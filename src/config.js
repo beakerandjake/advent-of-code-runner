@@ -149,6 +149,10 @@ const CONFIG = {
         source: join(__dirname, '..', 'templates', 'template-dotenv'),
         dest: join(cwd, '.env'),
       },
+      packageJson: {
+        source: join(__dirname, '..', 'templates', 'template-package.json'),
+        dest: join(cwd, 'package.json'),
+      },
       solution: join(__dirname, '..', 'templates', 'template-solution.js'),
     },
   },

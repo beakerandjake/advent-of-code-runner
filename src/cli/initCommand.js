@@ -5,7 +5,7 @@ import { PackageJsonNotFoundError } from '../errors/index.js';
 import { festiveEmoji, festiveErrorStyle, festiveStyle } from '../festive.js';
 import { packageJsonExists } from '../initialize.js';
 import {
-  createDotEnv, createGitIgnore, createReadme, createSolutionFiles,
+  createDotEnv, createGitIgnore, createPackageJson, createReadme, createSolutionFiles,
 } from '../initialize/index.js';
 import { logger } from '../logger.js';
 
@@ -47,6 +47,7 @@ const questions = [
  * @param {Object} answers - The answers object provided by inquirer.
  */
 const createFiles = async (answers) => Promise.all([
+  await createPackageJson(answers.year),
   await createGitIgnore(),
   await createReadme(),
   await createSolutionFiles(),

@@ -1,0 +1,14 @@
+{
+  "name": "{{name}}",
+  "version": "1.0.0",
+  "description": "Solutions to Advent of Code for year {{year}}",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "advent-of-code-runner": "^{{version}}"
+  }
+}
