@@ -1,4 +1,5 @@
 import { spawn } from 'node:child_process';
+import { PackageInstallFailedError } from '../errors/index.js';
 import { getConfigValue } from '../config.js';
 import { logger } from '../logger.js';
 
@@ -8,9 +9,11 @@ import { logger } from '../logger.js';
 export const installPackages = async () => {
   // TODO test multiplatform support
   // TODO can probably support yarn install too.
+
   logger.debug('installing npm packages');
 
   return new Promise((resolve, reject) => {
+    // run npm install command
     const childProcess = spawn(
       'npm',
       ['i'],
@@ -39,7 +42,7 @@ export const installPackages = async () => {
       if (code === 0) {
         resolve();
       } else {
-        reject(new Error(`Failed to install npm packages\n${errBuffer}`));
+        reject(new PackageInstallFailedError(errBuffer));
       }
     });
   });
