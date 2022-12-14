@@ -1,5 +1,4 @@
-import { fileURLToPath } from 'url';
-import { join, dirname } from 'path';
+import { join } from 'path';
 import { Worker } from 'worker_threads';
 import { logger } from './logger.js';
 import { getConfigValue } from './config.js';
@@ -25,35 +24,20 @@ import {
  * @param {Number} year
  * @param {Number} day
  */
-const getSolutionFileName = (year, day) => join(getConfigValue('solutions.path'), `${year}`, `day_${day}.js`);
+const getSolutionFileName = (day) => join(getConfigValue('paths.solutionsDir'), `day_${day}.js`);
 
 /**
  * Returns the name of the function to execute for the puzzles part.
  * @param {Number} part
  */
 const getFunctionNameForPart = (part) => {
-  const functionName = getConfigValue('solutions.partFunctions').find((x) => x.key === part)?.name;
+  const functionName = getConfigValue('solutionRunner.partFunctions').find((x) => x.key === part)?.name;
 
   if (!functionName) {
     throw new Error(`Unknown solution part: ${part}`);
   }
 
   return functionName;
-};
-
-/**
- * Returns an absolute path to the solution worker file.
- */
-const getWorkerThreadFilePath = () => {
-  // expect file exists in same directory as this.
-  const pathToWorker = join(
-    dirname(fileURLToPath(import.meta.url)),
-    'solutionRunnerWorkerThread.js',
-  );
-
-  logger.debug('path to worker thread file: %s', pathToWorker);
-
-  return pathToWorker;
 };
 
 /**
@@ -73,8 +57,8 @@ const getWorkerThreadFilePath = () => {
 export const execute = async (year, day, part, input) => {
   logger.verbose('spawning worker to execute solution');
 
-  const workerThreadFilePath = getWorkerThreadFilePath();
-  const solutionFileName = getSolutionFileName(year, day);
+  const workerThreadFilePath = getConfigValue('paths.solutionRunnerWorkerFile');
+  const solutionFileName = getSolutionFileName(day);
 
   // before we spawn up a worker, ensure the js file actually exists.
   // it should always, but be safe.

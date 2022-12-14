@@ -44,8 +44,13 @@ export const printFestiveTitle = () => {
   console.log(festiveTitle);
 };
 
-const festiveStyle = chalk.bold.hex('#00873E');
-const festiveErrorStyle = chalk.red.italic;
+/**
+ * Returns a random ~*festive*~ emoji.
+ */
+export const festiveEmoji = () => sample(festiveEmojis);
+
+export const festiveStyle = chalk.bold.hex('#00873E');
+export const festiveErrorStyle = chalk.red.italic;
 
 /**
  * Turns a normal string into a ~*festive*~ one.
@@ -54,7 +59,7 @@ const festiveErrorStyle = chalk.red.italic;
 const makeFestive = (message) => (
   getConfigValue('cli.suppressFestive')
     ? message
-    : `${sample(festiveEmojis)} ${message} ${sample(festiveEmojis)}`
+    : `${festiveEmoji()} ${message} ${festiveEmoji()}`
 );
 
 /**

@@ -3,7 +3,7 @@ import { getConfigValue } from './config.js';
 import { logger } from './logger.js';
 import { loadFileContents, saveFile } from './io.js';
 
-export const dataFilePath = getConfigValue('dataStore.filePath');
+export const dataFilePath = getConfigValue('paths.dataStoreFile');
 
 // Default contents of data file when data file is not present.
 export const defaultDataStoreContents = {
