@@ -1,9 +1,7 @@
 import { Command } from 'commander';
 import inquirer from 'inquirer';
-import chalk from 'chalk';
 import ora from 'ora';
 import { getConfigValue } from '../config.js';
-import { logger } from '../logger.js';
 import { festiveEmoji, festiveErrorStyle, festiveStyle } from '../festive.js';
 import {
   createDataFile,
@@ -59,23 +57,7 @@ const createFiles = async (answers) => Promise.all([
   createSolutionFiles(),
   createDotEnv(answers),
   createDataFile(),
-  new Promise((resolve) => setTimeout(resolve, 5000)),
 ]);
-
-const reportStatus = async (promise, spinner, startText, successText, failText = undefined) => {
-  spinner.start(festiveStyle(startText));
-
-  try {
-    await promise;
-    spinner.stopAndPersist({
-      text: festiveStyle(successText),
-      symbol: festiveEmoji(),
-    });
-  } catch (error) {
-    spinner.fail(failText ? festiveErrorStyle(failText) : festiveErrorStyle(startText));
-    throw error;
-  }
-};
 
 const command = new Command();
 
@@ -86,26 +68,24 @@ command
     // get the required input from the user.
     const answers = await inquirer.prompt(questions);
 
-    const spinner = ora({ text: festiveStyle('Initializing'), spinner: 'christmas' }).start();
+    // now that we have everything we need from the user we can initialize.
+    const spinner = ora({ text: festiveStyle('Creating files'), spinner: 'christmas' }).start();
 
-    await reportStatus(
-      createFiles(answers),
-      spinner,
-      'Creating files',
-      'Created files',
-    );
+    try {
+      await createFiles(answers);
 
-    await reportStatus(
-      installPackages(),
-      spinner,
-      'Installing npm packages',
-      'Installed npm packages',
-    );
+      // now that files (including package.json) are there, install their npm packages.
+      spinner.text = festiveStyle('Installing packages');
+      await installPackages();
 
-    spinner.stopAndPersist({
-      text: festiveStyle('Successfully initialized your repository, have fun!'),
-      symbol: festiveEmoji(),
-    });
+      spinner.stopAndPersist({
+        text: festiveStyle('Successfully initialized your repository, have fun!'),
+        symbol: festiveEmoji(),
+      });
+    } catch (error) {
+      spinner.fail(festiveErrorStyle(spinner.text));
+      throw error;
+    }
   });
 
 export const initCommand = command;
