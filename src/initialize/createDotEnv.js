@@ -22,7 +22,7 @@ const replacements = [
  * @param {String} authToken
  */
 export const createDotEnv = async (args) => {
-  logger.debug('creating .env file');
+  logger.festive('Creating .env file');
 
   if (!args) {
     throw new Error('Attempted to create .env file with empty args');
