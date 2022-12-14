@@ -1,5 +1,5 @@
-import { isMainThread, workerData, parentPort } from 'worker_threads';
-import { hrtime } from 'process';
+import { isMainThread, workerData, parentPort } from 'node:worker_threads';
+import { hrtime } from 'node:process';
 
 /**
  * Expects to be ran from a Worker. Loads the solution file and tries

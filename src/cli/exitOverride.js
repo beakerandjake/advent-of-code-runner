@@ -1,4 +1,4 @@
-import { exit } from 'process';
+import { exit } from 'node:process';
 
 /**
  * Exit override function which can be passed to commanders exitOverride.

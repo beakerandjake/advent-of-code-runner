@@ -1,5 +1,3 @@
-import { UserError } from './userError.js';
-
 /**
  * Error that is raised if running npm install on the users behalf fails.
  */

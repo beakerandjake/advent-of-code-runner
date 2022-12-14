@@ -1,5 +1,5 @@
-import { join } from 'path';
-import { Worker } from 'worker_threads';
+import { join } from 'node:path';
+import { Worker } from 'node:worker_threads';
 import { logger } from './logger.js';
 import { getConfigValue } from './config.js';
 import { workerMessageTypes } from './solutionRunnerWorkerThread.js';
