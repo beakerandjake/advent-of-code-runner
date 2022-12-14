@@ -10,19 +10,27 @@ import {
   createPackageJson,
   createReadme,
   createSolutionFiles,
+  cwdIsEmpty,
   installPackages,
 } from '../initialize/index.js';
 
-const confirmOperation = {
+/**
+ * Inquirer question which makes the user confirm the initialize operation.
+ */
+const confirmInitializeQuestion = {
   type: 'confirm',
   name: 'confirmed',
   message: festiveStyle(
-    'This action should only be performed in a new repository. It can overwrite files that might already exist (such as README, .gitignore, .env). Do you want to continue?',
+    'This directory is not empty! This operation will overwrite files, do you want to continue?',
   ),
-  default: true,
+  default: false,
   prefix: festiveEmoji(),
 };
 
+/**
+ * Array of inquirer questions which will be asked in order.
+ * The answers will provide us all of the information we need to initialize.
+ */
 const questions = [
   {
     // in future if list of years becomes too large the change to raw input.
@@ -52,6 +60,11 @@ command
   .name('init')
   .description('Initialize a directory so advent-of-code-runner can run solutions.')
   .action(async () => {
+    // if directory is not empty, confirm with the user to continue.
+    if (!await cwdIsEmpty() && !(await inquirer.prompt(confirmInitializeQuestion)).confirmed) {
+      return;
+    }
+
     // get the required input from the user.
     const answers = await inquirer.prompt(questions);
 
