@@ -17,7 +17,7 @@ const envFileTokens = [
  * @param {String} authToken
  */
 export const createDotEnv = async (args) => {
-  logger.festive('Creating .env file');
+  logger.debug('creating .env file');
 
   if (!args) {
     throw new Error('Attempted to create .env file with empty args');

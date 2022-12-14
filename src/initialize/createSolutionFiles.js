@@ -7,7 +7,7 @@ import { logger } from '../logger.js';
  * Creates the solution files in the cwd.
  */
 export const createSolutionFiles = async () => {
-  logger.festive('Creating Solution files');
+  logger.debug('creating Solution files');
 
   const solutionsDir = getConfigValue('paths.solutionsDir');
 

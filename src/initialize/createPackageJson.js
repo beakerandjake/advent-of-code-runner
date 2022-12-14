@@ -19,7 +19,7 @@ const envFileTokens = [
  * @param {Number} year
  */
 export const createPackageJson = async (year) => {
-  logger.festive('Creating package.json file');
+  logger.debug('creating package.json file');
 
   // might be better to run npm init in a child_process
   // but to keep it simple just copy the template
