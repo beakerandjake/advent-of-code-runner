@@ -63,10 +63,7 @@ command
     logger.festive('Performing first time setup');
     logger.festive(`For help see README (${getConfigValue('meta.homepage')})`);
 
-    // // most important thing is user has a package.json file.
-    // if (!await packageJsonExists()) {
-    //   throw new PackageJsonNotFoundError();
-    // }
+    // TODO instead of confirm, just bail if cwd is not empty (allow .git folder only).
 
     // // confirm with the user first.
     // const { confirmed } = await inquirer.prompt(confirmOperation);
@@ -78,10 +75,6 @@ command
 
     // // get the required input from the user.
     // const answers = await inquirer.prompt(questions);
-
-    // logger.festive('results: %s', answers);
-
-    const answers = { year: 2022, authToken: 'asdf' };
 
     await createFiles(answers);
 
