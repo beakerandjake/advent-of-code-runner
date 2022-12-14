@@ -1,10 +1,10 @@
 /* eslint-disable no-underscore-dangle */
 import dotenv from 'dotenv';
 import { get, has, range } from 'lodash-es';
+import { readFile } from 'node:fs/promises';
 import { join } from 'node:path';
 import { cwd as getCwd } from 'node:process';
 import { fileURLToPath, URL } from 'node:url';
-import { readPackageUp } from 'read-pkg-up';
 import yn from 'yn';
 
 /**
@@ -38,14 +38,9 @@ const cwd = process.env[envOptions.cwdOverride] || getCwd();
  * Load meta details about this package form the package json
  */
 const readMetaFromPackageJson = async () => {
-  const { packageJson } = await readPackageUp(
-    { cwd: __dirname, normalize: false },
-  ) || {};
-
-  // should never ever happen, but just in case.
-  if (!packageJson) {
-    throw new Error('Could not load package.json!');
-  }
+  const packageJson = JSON.parse(
+    await readFile(join(__dirname, '..', 'package.json'), { encoding: 'utf8' }),
+  );
 
   return {
     name: packageJson.name,
