@@ -33,7 +33,7 @@ const questions = [
     // in future if list of years becomes too large the change to raw input.
     type: 'password',
     name: 'token',
-    message: festiveStyle('Enter your advent of code authentication token (see README for help)'),
+    message: festiveStyle('Enter your advent of code authentication token'),
     prefix: festiveEmoji(),
     choices: getConfigValue('aoc.puzzleValidation.years'),
     loop: false,
@@ -68,6 +68,9 @@ command
     const answers = await inquirer.prompt(questions);
 
     logger.festive('results: %s', answers);
+
+    // initialize folder, break up into separate files.
+    // have text files where possible to just do a straight copy (git ignore, readme)
 
     // logger.festive('Initializing Repository for year: %s', year);
 
