@@ -145,6 +145,10 @@ const CONFIG = {
         source: join(__dirname, '..', 'templates', 'template-readme.md'),
         dest: join(cwd, 'README.md'),
       },
+      dotenv: {
+        source: join(__dirname, '..', 'templates', 'template-dotenv'),
+        dest: join(cwd, '.env'),
+      },
       solution: join(__dirname, '..', 'templates', 'template-solution.js'),
     },
   },

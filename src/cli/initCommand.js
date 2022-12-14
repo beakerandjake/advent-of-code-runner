@@ -4,7 +4,9 @@ import { getConfigValue } from '../config.js';
 import { PackageJsonNotFoundError } from '../errors/index.js';
 import { festiveEmoji, festiveErrorStyle, festiveStyle } from '../festive.js';
 import { packageJsonExists } from '../initialize.js';
-import { createGitIgnore, createReadme, createSolutionFiles } from '../initialize/index.js';
+import {
+  createDotEnv, createGitIgnore, createReadme, createSolutionFiles,
+} from '../initialize/index.js';
 import { logger } from '../logger.js';
 
 const confirmOperation = {
@@ -70,6 +72,7 @@ command
     await createGitIgnore();
     await createReadme();
     await createSolutionFiles();
+    await createDotEnv(2022, 'asdf');
 
     // initialize folder, break up into separate files.
     // have text files where possible to just do a straight copy (git ignore, readme)
