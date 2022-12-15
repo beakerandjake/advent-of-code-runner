@@ -11,6 +11,6 @@ export const replaceTokens = (tokens, args, target) => (
       throw new Error(`Missing args: ${token.key}`);
     }
 
-    return acc.replace(token.match, args[token.key]);
+    return acc.replaceAll(token.match, args[token.key]);
   }, target)
 );
