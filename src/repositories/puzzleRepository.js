@@ -145,6 +145,7 @@ export const findPuzzle = async (year, day, part) => {
 
 /**
  * Updates matching puzzle with the new value.
+ * If a matching puzzle does not exist, it is inserted.
  * Puzzles are matched by id.
  * @param {Object} puzzle
  */
@@ -153,11 +154,14 @@ export const editPuzzle = async (puzzle) => {
     throw new Error('Cannot update a null puzzle');
   }
 
-  // could check to see whether or not updated is actually different than puzzles
-  // to prevent a unnecessary write, but keeping it simple, if notice performance impact
-  // of extra write, can easily add this feature
+  // could speed this up, but keeping it simple.
 
   const puzzles = await getStoreValue(PUZZLE_DATA_KEY, []);
-  const updated = puzzles.map((x) => (x.id === puzzle.id ? translateToDataFromPuzzle(puzzle) : x));
+
+  // edit if exists, add if doesn't
+  const updated = puzzles.some((x) => x.id === puzzle.id)
+    ? puzzles.map((x) => (x.id === puzzle.id ? translateToDataFromPuzzle(puzzle) : x))
+    : [...puzzles, translateToDataFromPuzzle(puzzle)];
+
   await setStoreValue(PUZZLE_DATA_KEY, updated);
 };

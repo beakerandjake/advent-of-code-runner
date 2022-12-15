@@ -577,7 +577,7 @@ describe('puzzleRepository', () => {
   });
 
   describe('editPuzzles()', () => {
-    test('does not change puzzles if not found', async () => {
+    test('adds puzzle doesn\'t exist', async () => {
       const doesNotExist = {
         id: '20221301',
         correctAnswer: null,
@@ -588,7 +588,7 @@ describe('puzzleRepository', () => {
         part: 1,
       };
 
-      const puzzles = [
+      const orig = [
         {
           id: '20221202',
           correctAnswer: 'ASDF',
@@ -603,11 +603,18 @@ describe('puzzleRepository', () => {
         },
       ];
 
-      getStoreValue.mockReturnValueOnce(puzzles);
+      getStoreValue.mockReturnValueOnce(orig);
 
       await editPuzzle(doesNotExist);
 
-      expect(setStoreValue.mock.lastCall[1]).toStrictEqual(puzzles);
+      const expected = [...orig, {
+        id: doesNotExist.id,
+        correctAnswer: doesNotExist.correctAnswer,
+        fastestExecutionTimeNs: doesNotExist.fastestExecutionTimeNs,
+        incorrectAnswers: doesNotExist.incorrectAnswers,
+      }];
+
+      expect(setStoreValue.mock.lastCall[1]).toStrictEqual(expected);
     });
 
     test('edits correct answer', async () => {
