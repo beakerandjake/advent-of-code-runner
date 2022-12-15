@@ -8,7 +8,7 @@ jest.unstable_mockModule('../src/user-data/jsonFileStore.js', () => ({
 }));
 
 // import after setting up the mock so the modules import the mocked version
-const { translateToPuzzleFromData, translateToDataFromPuzzle } = await import('../src/user-data/puzzleRepository.js');
+const { translateToPuzzleFromData, translateToDataFromPuzzle, getId } = await import('../src/user-data/puzzleRepository.js');
 
 describe('puzzleRepository', () => {
   describe('translateToPuzzleFromData()', () => {
@@ -330,5 +330,86 @@ describe('puzzleRepository', () => {
 
       expect(translateToDataFromPuzzle(puzzle)).toMatchObject(expected);
     });
+  });
+
+  describe('getId()', () => {
+    test('day is padded', () => {
+      const id = getId(2022, 1, 2);
+      expect(id.substring(4, 6)).toEqual('01');
+    });
+
+    test('part is padded', () => {
+      const id = getId(2022, 1, 2);
+      expect(id.substring(6)).toEqual('02');
+    });
+
+    test('year in correct position', () => {
+      const id = getId(2022, 1, 2);
+      expect(id.substring(0, 4)).toEqual('2022');
+    });
+
+    test('day in correct position', () => {
+      const id = getId(2022, 12, 2);
+      expect(id.substring(4, 6)).toEqual('12');
+    });
+
+    test('part in correct position', () => {
+      const id = getId(2022, 5, 1);
+      expect(id.substring(6)).toEqual('01');
+    });
+
+    test('throws when year is null', () => {
+      expect(() => getId(null, 1, 2)).toThrow(UserDataTranslationError);
+    });
+
+    test('throws when year length < 4', () => {
+      expect(() => getId(222, 1, 2)).toThrow(UserDataTranslationError);
+    });
+
+    test('throws when year length > 4', () => {
+      expect(() => getId(50000, 1, 2)).toThrow(UserDataTranslationError);
+    });
+
+    test('throws when year is negative', () => {
+      expect(() => getId(-2022, 1, 2)).toThrow(UserDataTranslationError);
+    });
+
+    test('throws when year is non-numeric', () => {
+      expect(() => getId('202R', 1, 2)).toThrow(UserDataTranslationError);
+    });
+
+    test('throws when day is null', () => {
+      expect(() => getId(2022, null, 2)).toThrow(UserDataTranslationError);
+    });
+
+    test('throws when day is negative', () => {
+      expect(() => getId(2022, -2, 2)).toThrow(UserDataTranslationError);
+    });
+
+    test('throws when day length > 2', () => {
+      expect(() => getId(2022, 100, 2)).toThrow(UserDataTranslationError);
+    });
+
+    test('throws when day is non-numeric', () => {
+      expect(() => getId(2022, 'Y', 2)).toThrow(UserDataTranslationError);
+    });
+
+    test('throws when part is null', () => {
+      expect(() => getId(2022, null, 2)).toThrow(UserDataTranslationError);
+    });
+
+    test('throws when part length > 2', () => {
+      expect(() => getId(2022, 1, 111)).toThrow(UserDataTranslationError);
+    });
+
+    test('throws when part is negative', () => {
+      expect(() => getId(2022, 2, -2)).toThrow(UserDataTranslationError);
+    });
+
+    test('throws when part is non-numeric', () => {
+      expect(() => getId(2022, 1, 'H')).toThrow(UserDataTranslationError);
+    });
+
+
   });
 });

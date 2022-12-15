@@ -23,8 +23,8 @@ const idRegex = /^\d{8}$/;
  * This puzzle object contains additional data which makes coding easier, but would be redundant
  * to store to disk. Therefore we must transform this object. If our persistence layer changes
  * this function would either become obsolete, or would have to change.
- * @param {Object} puzzle - The raw puzzle returned from the json.
  * @private
+ * @param {Object} puzzle - The raw puzzle returned from the json.
  */
 export const translateToPuzzleFromData = (data) => {
   if (!data || typeof data !== 'object') {
@@ -64,8 +64,8 @@ export const translateToPuzzleFromData = (data) => {
 /**
  * Converts the application puzzle object to the format stored to json file.
  * Removes calculated properties that would be redundant to store to disk.
- * @param {Object} puzzle - The raw puzzle returned from the json.
  * @private
+ * @param {Object} puzzle - The raw puzzle returned from the json.
  */
 export const translateToDataFromPuzzle = (puzzle) => {
   if (!puzzle || typeof puzzle !== 'object') {
@@ -97,6 +97,22 @@ export const translateToDataFromPuzzle = (puzzle) => {
     incorrectAnswers: incorrectAnswers.map((x) => (x ? x.toString() : '')),
     correctAnswer: correctAnswer?.toString() || null,
   };
+};
+
+/**
+ * Generates an id for the puzzle which will be persisted to json.
+ * @private
+ * @param {Number} year
+ * @param {Number} day
+ * @param {Number} part
+ */
+export const getId = (year, day, part) => {
+  const toReturn = `${year?.toString().padStart(4)}${day?.toString().padStart(2, '0')}${part?.toString().padStart(2, '0')}`;
+
+  if (!idRegex.test(toReturn)) {
+    throw new UserDataTranslationError(`Could not generate valid id from year: "${year}", day: "${day}", part: "${part}"`);
+  }
+  return toReturn;
 };
 
 /**
