@@ -8,7 +8,10 @@ jest.unstable_mockModule('../src/user-data/jsonFileStore.js', () => ({
 }));
 
 // import after setting up the mock so the modules import the mocked version
-const { translateToPuzzleFromData, translateToDataFromPuzzle, getId } = await import('../src/user-data/puzzleRepository.js');
+const { getStoreValue } = await import('../src/user-data/jsonFileStore.js');
+const {
+  translateToPuzzleFromData, translateToDataFromPuzzle, getId, findPuzzle,
+} = await import('../src/user-data/puzzleRepository.js');
 
 describe('puzzleRepository', () => {
   describe('translateToPuzzleFromData()', () => {
@@ -409,7 +412,57 @@ describe('puzzleRepository', () => {
     test('throws when part is non-numeric', () => {
       expect(() => getId(2022, 1, 'H')).toThrow(UserDataTranslationError);
     });
+  });
 
+  describe('findPuzzle()', () => {
+    test('returns puzzle when exists', async () => {
+      const matchingPuzzleId = '20221201';
 
+      getStoreValue.mockReturnValueOnce([
+        {
+          id: '20221202',
+          correctAnswer: 'ASDF',
+          fastestExecutionTimeNs: 1234653,
+          incorrectAnswers: ['WRONG', 'WRONG AGAIN!'],
+        },
+        {
+          id: matchingPuzzleId,
+          correctAnswer: null,
+          fastestExecutionTimeNs: null,
+          incorrectAnswers: ['NOPE', 'NOPE AGAIN!'],
+        },
+      ]);
+
+      const expected = {
+        id: matchingPuzzleId,
+        correctAnswer: null,
+        fastestExecutionTimeNs: null,
+        incorrectAnswers: ['NOPE', 'NOPE AGAIN!'],
+        year: 2022,
+        day: 12,
+        part: 1,
+      };
+
+      expect(await findPuzzle(2022, 12, 1)).toEqual(expected);
+    });
+
+    test('returns null when puzzle does not exist', async () => {
+      getStoreValue.mockReturnValueOnce([
+        {
+          id: '20221202',
+          correctAnswer: 'ASDF',
+          fastestExecutionTimeNs: 1234653,
+          incorrectAnswers: ['WRONG', 'WRONG AGAIN!'],
+        },
+        {
+          id: '20221201',
+          correctAnswer: null,
+          fastestExecutionTimeNs: null,
+          incorrectAnswers: ['NOPE', 'NOPE AGAIN!'],
+        },
+      ]);
+
+      expect(await findPuzzle(1996, 4, 1)).toBeNull();
+    });
   });
 });

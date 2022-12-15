@@ -130,3 +130,15 @@ export const getPuzzles = async () => (
 export const setPuzzles = async (puzzles = []) => (
   setStoreValue(PUZZLE_DATA_KEY, puzzles.map(translateToDataFromPuzzle))
 );
+
+/**
+ * Returns the specified puzzle data. If not found, returns null.
+ * @param {Number} year
+ * @param {Number} day
+ * @param {Number} part
+ */
+export const findPuzzle = async (year, day, part) => {
+  const puzzles = await getPuzzles();
+  const puzzleId = getId(year, day, part);
+  return puzzles.find((x) => x.id === puzzleId) || null;
+};
