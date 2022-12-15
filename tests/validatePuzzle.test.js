@@ -12,7 +12,6 @@ jest.unstable_mockModule('../src/logger.js', () => ({
 }));
 
 // import after setting up the mock so the modules import the mocked version
-// const { logger } = await import('../src/logger.js');
 const { getConfigValue } = await import('../src/config.js');
 const { yearIsValid, dayIsValid, partIsValid } = await import('../src/validatePuzzle.js');
 
