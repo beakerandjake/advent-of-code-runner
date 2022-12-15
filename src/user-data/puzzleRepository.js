@@ -13,6 +13,12 @@ import { getStoreValue, setStoreValue } from './jsonFileStore';
 const PUZZLE_DATA_KEY = 'puzzles';
 
 /**
+ * Expect the id field of puzzle stored in json is exactly 8 digits.
+ * YYYYDDPP (year day part)
+ */
+const idRegex = /^\d{8}$/;
+
+/**
  * Converts the raw puzzle object loaded from json into a puzzle object expected by the application.
  * This puzzle object contains additional data which makes coding easier, but would be redundant
  * to store to disk. Therefore we must transform this object. If our persistence layer changes
@@ -20,35 +26,35 @@ const PUZZLE_DATA_KEY = 'puzzles';
  * @param {Object} puzzle - The raw puzzle returned from the json.
  * @private
  */
-export const translateToPuzzle = (data) => {
-  if (!data) {
-    throw new UserDataTranslationError('Puzzle data was null');
+export const translateToPuzzleFromData = (data) => {
+  if (!data || typeof data !== 'object') {
+    throw new UserDataTranslationError('Puzzle data invalid, expected a non null object');
   }
 
   const {
     id,
-    correctAnswer,
-    fastestExecutionTimeNs,
-    incorrectAnswers,
+    correctAnswer = null,
+    fastestExecutionTimeNs = null,
+    incorrectAnswers = [],
   } = data;
 
-  if (!id || id.length !== 8 || !Number.parseInt(id, 10)) {
-    throw new UserDataTranslationError('Puzzle "id" did not expected format of YYYYDDPP (year day part)');
-  }
-
-  if (fastestExecutionTimeNs && !Number.isInteger(fastestExecutionTimeNs)) {
-    throw new UserDataTranslationError('Puzzle "fastestExecutionTimeNs" expected to be number');
+  if (!id || (typeof id !== 'string') || !idRegex.test(id)) {
+    throw new UserDataTranslationError(`Puzzle ${id} did not expected format of YYYYDDPP (year day part)`);
   }
 
   if (!Array.isArray(incorrectAnswers)) {
     throw new UserDataTranslationError('Puzzle "incorrectAnswers" expected to be array');
   }
 
+  if (fastestExecutionTimeNs && !Number.isFinite(fastestExecutionTimeNs)) {
+    throw new UserDataTranslationError('Puzzle "fastestExecutionTimeNs" expected to be number');
+  }
+
   return {
     id,
-    fastestExecutionTimeNs,
+    fastestExecutionTimeNs: fastestExecutionTimeNs && Number.parseInt(fastestExecutionTimeNs, 10),
     incorrectAnswers: incorrectAnswers.map((x) => (x ? x.toString() : '')),
-    correctAnswer: correctAnswer?.toString(),
+    correctAnswer: correctAnswer?.toString() || null,
     year: Number.parseInt(id.substring(0, 4), 10),
     day: Number.parseInt(id.substring(4, 6), 10),
     part: Number.parseInt(id.substring(6), 10),
@@ -56,13 +62,55 @@ export const translateToPuzzle = (data) => {
 };
 
 /**
+ * Converts the application puzzle object to the format stored to json file.
+ * Removes calculated properties that would be redundant to store to disk.
+ * @param {Object} puzzle - The raw puzzle returned from the json.
+ * @private
+ */
+export const translateToDataFromPuzzle = (puzzle) => {
+  if (!puzzle || typeof puzzle !== 'object') {
+    throw new UserDataTranslationError('Puzzle invalid, expected a non null object');
+  }
+
+  const {
+    id,
+    correctAnswer = null,
+    fastestExecutionTimeNs = null,
+    incorrectAnswers = [],
+  } = puzzle;
+
+  if (!id || typeof id !== 'string' || !idRegex.test(id)) {
+    throw new UserDataTranslationError('Puzzle "id" did not expected format of YYYYDDPP (year day part)');
+  }
+
+  if (!Array.isArray(incorrectAnswers)) {
+    throw new UserDataTranslationError('Puzzle "incorrectAnswers" expected to be array');
+  }
+
+  if (fastestExecutionTimeNs && !Number.isFinite(fastestExecutionTimeNs)) {
+    throw new UserDataTranslationError('Puzzle "fastestExecutionTimeNs" expected to be number');
+  }
+
+  return {
+    id,
+    fastestExecutionTimeNs: fastestExecutionTimeNs && Number.parseInt(fastestExecutionTimeNs, 10),
+    incorrectAnswers: incorrectAnswers.map((x) => (x ? x.toString() : '')),
+    correctAnswer: correctAnswer?.toString() || null,
+  };
+};
+
+/**
  * Returns the stored puzzles array.
  * @returns {Promise<Object[]>}
  */
-export const getPuzzles = async () => getStoreValue(PUZZLE_DATA_KEY, []);
+export const getPuzzles = async () => (
+  getStoreValue(PUZZLE_DATA_KEY, []).map(translateToPuzzleFromData)
+);
 
 /**
  * Updates the stored puzzles array.
  * @param {Object[]} puzzles
  */
-export const setPuzzles = async (puzzles = []) => setStoreValue(PUZZLE_DATA_KEY, puzzles);
+export const setPuzzles = async (puzzles = []) => (
+  setStoreValue(PUZZLE_DATA_KEY, puzzles.map(translateToDataFromPuzzle))
+);
