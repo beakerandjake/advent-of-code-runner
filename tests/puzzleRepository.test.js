@@ -2,13 +2,13 @@ import { describe, jest, test } from '@jest/globals';
 import { UserDataTranslationError } from '../src/errors/index.js';
 
 // setup getConfigValue so it can be mocked.
-jest.unstable_mockModule('../src/user-data/jsonFileStore.js', () => ({
+jest.unstable_mockModule('../src/repositories/jsonFileStore.js', () => ({
   getStoreValue: jest.fn(),
   setStoreValue: jest.fn(),
 }));
 
 // import after setting up the mock so the modules import the mocked version
-const { getStoreValue, setStoreValue } = await import('../src/user-data/jsonFileStore.js');
+const { getStoreValue, setStoreValue } = await import('../src/repositories/jsonFileStore.js');
 const {
   translateToPuzzleFromData,
   translateToDataFromPuzzle,
@@ -17,7 +17,7 @@ const {
   getPuzzles,
   setPuzzles,
   editPuzzle,
-} = await import('../src/user-data/puzzleRepository.js');
+} = await import('../src/repositories/puzzleRepository.js');
 
 describe('puzzleRepository', () => {
   describe('translateToPuzzleFromData()', () => {
