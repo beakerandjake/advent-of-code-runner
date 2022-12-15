@@ -16,6 +16,21 @@ export const puzzleHasBeenSolved = async (year, day, part) => {
 
 /**
  * Store the fact that the puzzle has been solved.
+ * @param {Number} year
+ * @param {Number} day
+ * @param {Number} part
+ * @param {String|Number} correctAnswer
+ */
+export const setPuzzleSolved = async (year, day, part, answer, executionTimeNs) => {
+  logger.festive('Storing the fact that you solved this puzzle');
+
+  if (!answer) {
+    throw new Error('Cannot store an empty correct answer');
+  }
+};
+
+/**
+ * Store the fact that the puzzle has been solved.
  * Prevents re-submissions of already solved puzzles.
  * @param {Number} year
  * @param {Number} day

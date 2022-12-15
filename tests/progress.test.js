@@ -22,14 +22,14 @@ describe('progress', () => {
       expect(await puzzleHasBeenSolved(2022, 1, 1)).toBe(false);
     });
 
-    test('returns true if puzzle has correctAnswer', async () => {
+    test('returns true if puzzle has correctAnswer set', async () => {
       findPuzzle.mockReturnValueOnce({
         correctAnswer: 'bobcat',
       });
       expect(await puzzleHasBeenSolved(2022, 12, 1)).toBe(true);
     });
 
-    test('returns true if puzzle does not correctAnswer', async () => {
+    test('returns false if puzzle does not have correctAnswer set', async () => {
       findPuzzle.mockReturnValueOnce({
         correctAnswer: null,
       });
