@@ -1,7 +1,7 @@
 import { describe, jest, test } from '@jest/globals';
 import { UserDataTranslationError } from '../src/errors/index.js';
 
-// setup jsonFileStor so it can be mocked.
+// setup jsonFileStore so it can be mocked.
 jest.unstable_mockModule('../src/repositories/jsonFileStore.js', () => ({
   getStoreValue: jest.fn(),
   setStoreValue: jest.fn(),
