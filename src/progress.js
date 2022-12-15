@@ -1,79 +1,5 @@
 import { logger } from './logger.js';
-import { getStoreValue, setStoreValue } from './user-data/jsonFileStore.js';
-
-/**
- * The key used in the data store where the puzzles array is stored.
- */
-const PUZZLE_DATA_KEY = 'puzzles';
-
-/**
- * Generates an id for the year / day / part combination.
- * Makes some operations easier to just pass around id vs 3 params.
- * @param {Number} year
- * @param {Number} day
- * @param {Number} part
- * @returns
- */
-const puzzleId = (year, day, part) => `${year}${day}${part}`;
-
-/**
- * Creates a new default puzzle object which can be persisted.
- * @param {Number} year
- * @param {Number} day
- * @param {Number} part
- */
-const createPuzzle = (year, day, part) => ({
-  id: puzzleId(year, day, part),
-  year,
-  day,
-  part,
-  correctAnswer: null,
-  fastestExecutionTimeNs: null,
-  incorrectAnswers: [],
-});
-
-/**
- * Returns the stored puzzles array.
- * @returns {Promise<Object[]>}
- */
-const getPuzzles = async () => getStoreValue(PUZZLE_DATA_KEY, []);
-
-/**
- * Updates the stored puzzles array.
- * @param {Object[]} puzzles
- */
-const setPuzzles = async (puzzles = []) => setStoreValue(PUZZLE_DATA_KEY, puzzles);
-
-/**
- * If the puzzle exists in the puzzles array
- * The element is set to the updated puzzle.
- * Otherwise the updated puzzle is added to the end of the array.
- * The original array is not modified and a new array is returned.
- * @param {Object} puzzle
- * @param {Object[]} puzzles
- */
-const addOrUpdatePuzzle = (puzzle, puzzles = []) => {
-  let found = false;
-
-  const mapped = puzzles.map((x) => {
-    if (x.id === puzzle.id) {
-      found = true;
-      return puzzle;
-    }
-    return x;
-  });
-
-  return found ? mapped : [...mapped, puzzle];
-};
-
-/**
- * Returns the stored data for the specified puzzle, if any.
- * @param {Number} year
- * @param {Number} day
- * @param {Number} part
- * @param {Object[]} puzzles
- */
-const findPuzzle = (id, puzzles = []) => puzzles.find((puzzle) => puzzle.id === id);
+import { findPuzzle } from './repositories/puzzleRepository.js';
 
 /**
  * Has this puzzle already been solved?
@@ -83,7 +9,7 @@ const findPuzzle = (id, puzzles = []) => puzzles.find((puzzle) => puzzle.id === 
  */
 export const puzzleHasBeenSolved = async (year, day, part) => {
   logger.debug('checking if puzzle for year: %s, part:%s, day: %s has been solved', year, day, part);
-  const solved = !!findPuzzle(puzzleId(year, day, part), await getPuzzles())?.correctAnswer;
+  const solved = !!(await findPuzzle(year, day, part))?.correctAnswer;
   logger.debug('has been solved: %s', solved);
   return solved;
 };
