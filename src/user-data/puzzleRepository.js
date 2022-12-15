@@ -143,3 +143,21 @@ export const findPuzzle = async (year, day, part) => {
   return puzzles.find((x) => x.id === puzzleId) || null;
 };
 
+/**
+ * Updates matching puzzle with the new value.
+ * Puzzles are matched by id.
+ * @param {Object} puzzle
+ */
+export const editPuzzle = async (puzzle) => {
+  if (!puzzle) {
+    throw new Error('Cannot update a null puzzle');
+  }
+
+  // could check to see whether or not updated is actually different than puzzles
+  // to prevent a unnecessary write, but keeping it simple, if notice performance impact
+  // of extra write, can easily add this feature
+
+  const puzzles = await getStoreValue(PUZZLE_DATA_KEY, []);
+  const updated = puzzles.map((x) => (x.id === puzzle.id ? translateToDataFromPuzzle(puzzle) : x));
+  await setStoreValue(PUZZLE_DATA_KEY, updated);
+};

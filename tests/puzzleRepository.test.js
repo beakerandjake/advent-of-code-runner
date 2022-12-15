@@ -16,6 +16,7 @@ const {
   findPuzzle,
   getPuzzles,
   setPuzzles,
+  editPuzzle,
 } = await import('../src/user-data/puzzleRepository.js');
 
 describe('puzzleRepository', () => {
@@ -572,6 +573,134 @@ describe('puzzleRepository', () => {
       const valuePassedToStore = setStoreValue.mock.lastCall[1];
 
       expect(valuePassedToStore).toStrictEqual([]);
+    });
+  });
+
+  describe('editPuzzles()', () => {
+    test('does not change puzzles if not found', async () => {
+      const doesNotExist = {
+        id: '20221301',
+        correctAnswer: null,
+        fastestExecutionTimeNs: null,
+        incorrectAnswers: [],
+        year: 2022,
+        day: 13,
+        part: 1,
+      };
+
+      const puzzles = [
+        {
+          id: '20221202',
+          correctAnswer: 'ASDF',
+          fastestExecutionTimeNs: 1234653,
+          incorrectAnswers: ['WRONG', 'WRONG AGAIN!'],
+        },
+        {
+          id: '20221201',
+          correctAnswer: null,
+          fastestExecutionTimeNs: null,
+          incorrectAnswers: ['NOPE', 'NOPE AGAIN!'],
+        },
+      ];
+
+      getStoreValue.mockReturnValueOnce(puzzles);
+
+      await editPuzzle(doesNotExist);
+
+      expect(setStoreValue.mock.lastCall[1]).toStrictEqual(puzzles);
+    });
+
+    test('edits correct answer', async () => {
+      const newAnswer = 'NEW ANSWER!';
+
+      getStoreValue.mockReturnValueOnce([
+        { id: '20221202' },
+        { id: '20221201' },
+        { id: '20221301', correctAnswer: 'OLD ANSWER' },
+      ]);
+
+      await editPuzzle({
+        id: '20221301',
+        correctAnswer: newAnswer,
+        fastestExecutionTimeNs: null,
+        incorrectAnswers: [],
+        year: 2022,
+        day: 13,
+        part: 1,
+      });
+
+      expect(setStoreValue.mock.lastCall[1]).toStrictEqual([
+        { id: '20221202' },
+        { id: '20221201' },
+        {
+          id: '20221301',
+          correctAnswer: newAnswer,
+          fastestExecutionTimeNs: null,
+          incorrectAnswers: [],
+        },
+      ]);
+    });
+
+    test('edits correct fastestExecutionTimeNs', async () => {
+      const newValue = 4567;
+
+      getStoreValue.mockReturnValueOnce([
+        { id: '20221202' },
+        { id: '20221201' },
+        { id: '20221301', fastestExecutionTimeNs: 1234 },
+      ]);
+
+      await editPuzzle({
+        id: '20221301',
+        correctAnswer: 'ASDF',
+        fastestExecutionTimeNs: newValue,
+        incorrectAnswers: [],
+        year: 2022,
+        day: 13,
+        part: 1,
+      });
+
+      expect(setStoreValue.mock.lastCall[1]).toStrictEqual([
+        { id: '20221202' },
+        { id: '20221201' },
+        {
+          id: '20221301',
+          correctAnswer: 'ASDF',
+          fastestExecutionTimeNs: newValue,
+          incorrectAnswers: [],
+        },
+      ]);
+    });
+
+    test('edits incorrectAnswers', async () => {
+      const newValue = ['ASDF', 'QWERTY'];
+
+      getStoreValue.mockReturnValueOnce([
+        { id: '20221202' },
+        { id: '20221201' },
+        { id: '20221301', incorrectAnswers: ['ASDF'] },
+      ]);
+
+      await editPuzzle({
+        id: '20221301',
+        correctAnswer: null,
+        fastestExecutionTimeNs: null,
+        incorrectAnswers: newValue,
+        year: 2022,
+        day: 13,
+        part: 1,
+      });
+
+      expect(setStoreValue.mock.lastCall[1]).toStrictEqual([
+        { id: '20221202' },
+        { id: '20221201' },
+        {
+          id: '20221301',
+          correctAnswer: null,
+          fastestExecutionTimeNs: null,
+          incorrectAnswers: newValue,
+        },
+      ]);
     });
   });
 });
