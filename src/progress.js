@@ -1,5 +1,5 @@
 import { logger } from './logger.js';
-import { getStoreValue, setStoreValue } from './store.js';
+import { getStoreValue, setStoreValue } from './user-data/jsonFileStore.js';
 
 /**
  * The key used in the data store where the puzzles array is stored.

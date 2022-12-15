@@ -4,7 +4,7 @@ import {
 import { get, includes, set } from 'lodash-es';
 import { getConfigValue } from './config.js';
 import { logger } from './logger.js';
-import { getStoreValue, setStoreValue } from './store.js';
+import { getStoreValue, setStoreValue } from './user-data/jsonFileStore.js';
 
 const RATE_LIMITS_STORE_KEY = 'rateLimits';
 
