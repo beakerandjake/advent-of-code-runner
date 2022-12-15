@@ -8,6 +8,7 @@ import { SolutionMissingFunctionError } from './solutionMissingFunctionError.js'
 import { SolutionNotFoundError } from './solutionNotFoundError.js';
 import { SolutionRuntimeError } from './solutionRuntimeError.js';
 import { PackageInstallFailedError } from './packageInstallFailedError.js';
+import { UserDataTranslationError } from './userDataTranslationError.js';
 import { UserError } from './userError.js';
 
 export {
@@ -21,5 +22,6 @@ export {
   RateLimitExceededError,
   SolutionAnswerInvalidError,
   PackageInstallFailedError,
+  UserDataTranslationError,
   UserError,
 };
