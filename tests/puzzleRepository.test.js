@@ -16,7 +16,7 @@ const {
   findPuzzle,
   getPuzzles,
   setPuzzles,
-  editPuzzle,
+  addOrEditPuzzle,
 } = await import('../src/repositories/puzzleRepository.js');
 
 describe('puzzleRepository', () => {
@@ -576,7 +576,7 @@ describe('puzzleRepository', () => {
     });
   });
 
-  describe('editPuzzles()', () => {
+  describe('addOrEditPuzzle()', () => {
     test('adds puzzle doesn\'t exist', async () => {
       const doesNotExist = {
         id: '20221301',
@@ -605,7 +605,7 @@ describe('puzzleRepository', () => {
 
       getStoreValue.mockReturnValueOnce(orig);
 
-      await editPuzzle(doesNotExist);
+      await addOrEditPuzzle(doesNotExist);
 
       const expected = [...orig, {
         id: doesNotExist.id,
@@ -626,7 +626,7 @@ describe('puzzleRepository', () => {
         { id: '20221301', correctAnswer: 'OLD ANSWER' },
       ]);
 
-      await editPuzzle({
+      await addOrEditPuzzle({
         id: '20221301',
         correctAnswer: newAnswer,
         fastestExecutionTimeNs: null,
@@ -657,7 +657,7 @@ describe('puzzleRepository', () => {
         { id: '20221301', fastestExecutionTimeNs: 1234 },
       ]);
 
-      await editPuzzle({
+      await addOrEditPuzzle({
         id: '20221301',
         correctAnswer: 'ASDF',
         fastestExecutionTimeNs: newValue,
@@ -688,7 +688,7 @@ describe('puzzleRepository', () => {
         { id: '20221301', incorrectAnswers: ['ASDF'] },
       ]);
 
-      await editPuzzle({
+      await addOrEditPuzzle({
         id: '20221301',
         correctAnswer: null,
         fastestExecutionTimeNs: null,

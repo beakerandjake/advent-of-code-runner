@@ -149,9 +149,9 @@ export const findPuzzle = async (year, day, part) => {
  * Puzzles are matched by id.
  * @param {Object} puzzle
  */
-export const editPuzzle = async (puzzle) => {
+export const addOrEditPuzzle = async (puzzle) => {
   if (!puzzle) {
-    throw new Error('Cannot update a null puzzle');
+    throw new Error('Cannot add or edit a null puzzle');
   }
 
   // could speed this up, but keeping it simple.
