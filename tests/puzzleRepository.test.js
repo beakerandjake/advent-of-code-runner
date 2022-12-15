@@ -8,9 +8,14 @@ jest.unstable_mockModule('../src/user-data/jsonFileStore.js', () => ({
 }));
 
 // import after setting up the mock so the modules import the mocked version
-const { getStoreValue } = await import('../src/user-data/jsonFileStore.js');
+const { getStoreValue, setStoreValue } = await import('../src/user-data/jsonFileStore.js');
 const {
-  translateToPuzzleFromData, translateToDataFromPuzzle, getId, findPuzzle,
+  translateToPuzzleFromData,
+  translateToDataFromPuzzle,
+  getId,
+  findPuzzle,
+  getPuzzles,
+  setPuzzles,
 } = await import('../src/user-data/puzzleRepository.js');
 
 describe('puzzleRepository', () => {
@@ -373,10 +378,6 @@ describe('puzzleRepository', () => {
       expect(() => getId(50000, 1, 2)).toThrow(UserDataTranslationError);
     });
 
-    test('throws when year is negative', () => {
-      expect(() => getId(-2022, 1, 2)).toThrow(UserDataTranslationError);
-    });
-
     test('throws when year is non-numeric', () => {
       expect(() => getId('202R', 1, 2)).toThrow(UserDataTranslationError);
     });
@@ -463,6 +464,114 @@ describe('puzzleRepository', () => {
       ]);
 
       expect(await findPuzzle(1996, 4, 1)).toBeNull();
+    });
+
+    test('returns null on empty array', async () => {
+      getStoreValue.mockReturnValueOnce([]);
+      expect(await findPuzzle(2022, 1, 1)).toBeNull();
+    });
+  });
+
+  describe('getPuzzles()', () => {
+    test('returns expected values', async () => {
+      getStoreValue.mockReturnValueOnce([
+        {
+          id: '20221202',
+          correctAnswer: 'ASDF',
+          fastestExecutionTimeNs: 1234653,
+          incorrectAnswers: ['WRONG', 'WRONG AGAIN!'],
+        },
+        {
+          id: '20221201',
+          correctAnswer: null,
+          fastestExecutionTimeNs: null,
+          incorrectAnswers: ['NOPE', 'NOPE AGAIN!'],
+        },
+      ]);
+
+      const expected = [
+        {
+          id: '20221202',
+          correctAnswer: 'ASDF',
+          fastestExecutionTimeNs: 1234653,
+          incorrectAnswers: ['WRONG', 'WRONG AGAIN!'],
+          year: 2022,
+          day: 12,
+          part: 2,
+        },
+        {
+          id: '20221201',
+          correctAnswer: null,
+          fastestExecutionTimeNs: null,
+          incorrectAnswers: ['NOPE', 'NOPE AGAIN!'],
+          year: 2022,
+          day: 12,
+          part: 1,
+        },
+      ];
+
+      expect(await getPuzzles()).toStrictEqual(expected);
+    });
+
+    test('returns empty array as default', async () => {
+      getStoreValue.mockReturnValueOnce([]);
+      expect(await getPuzzles()).toEqual([]);
+    });
+  });
+
+  describe('setPuzzles()', () => {
+    test('maps values before setting', async () => {
+      const input = [
+        {
+          id: '20221202',
+          correctAnswer: 'ASDF',
+          fastestExecutionTimeNs: 1234653,
+          incorrectAnswers: ['WRONG', 'WRONG AGAIN!'],
+          year: 2022,
+          day: 12,
+          part: 2,
+        },
+        {
+          id: '20221201',
+          correctAnswer: null,
+          fastestExecutionTimeNs: null,
+          incorrectAnswers: ['NOPE', 'NOPE AGAIN!'],
+          year: 2022,
+          day: 12,
+          part: 1,
+        },
+      ];
+
+      const expected = [
+        {
+          id: '20221202',
+          correctAnswer: 'ASDF',
+          fastestExecutionTimeNs: 1234653,
+          incorrectAnswers: ['WRONG', 'WRONG AGAIN!'],
+        },
+        {
+          id: '20221201',
+          correctAnswer: null,
+          fastestExecutionTimeNs: null,
+          incorrectAnswers: ['NOPE', 'NOPE AGAIN!'],
+        },
+      ];
+
+      await setPuzzles(input);
+
+      // get the value of the puzzle array that was pass to the store by set puzzles
+      const valuePassedToStore = setStoreValue.mock.lastCall[1];
+
+      expect(valuePassedToStore).toStrictEqual(expected);
+    });
+
+    test('handles empty array', async () => {
+      await setPuzzles([]);
+
+      // get the value of the puzzle array that was pass to the store by set puzzles
+      const valuePassedToStore = setStoreValue.mock.lastCall[1];
+
+      expect(valuePassedToStore).toStrictEqual([]);
     });
   });
 });

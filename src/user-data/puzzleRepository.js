@@ -142,3 +142,4 @@ export const findPuzzle = async (year, day, part) => {
   const puzzleId = getId(year, day, part);
   return puzzles.find((x) => x.id === puzzleId) || null;
 };
+
