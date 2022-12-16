@@ -36,6 +36,15 @@ export const parseAnswer = (answer) => {
 };
 
 /**
+ * Performs case insensitive comparison of answers.
+ * @param {String|Number} lhs
+ * @param {String|Number} rhs
+ */
+export const answersEqual = (lhs, rhs) => (
+  lhs?.toString().toLowerCase() === rhs?.toString().toLowerCase()
+);
+
+/**
  * Has this puzzle already been solved?
  * @param {Number} year
  * @param {Number} day
@@ -90,7 +99,7 @@ export const addIncorrectAnswer = async (year, day, part, incorrectAnswer) => {
   const puzzle = await findPuzzle(year, day, part) || createPuzzle(year, day, part);
 
   // bail if incorrect answer is already stored
-  if (puzzle.incorrectAnswers.some((x) => x?.toLowerCase() === incorrectAnswer.toLowerCase())) {
+  if (puzzle.incorrectAnswers.some((x) => answersEqual(x, parsedAnswer))) {
     logger.warn('Attempted to save incorrect answer: "%s" which was already stored', incorrectAnswer, { year, day, part });
     return;
   }
@@ -116,9 +125,8 @@ export const answerHasBeenSubmitted = async (year, day, part, answer) => {
     return false;
   }
 
-  const answerToLower = answer?.toLowerCase();
-  const toReturn = (correctAnswer && correctAnswer.toLowerCase() === answerToLower)
-    || incorrectAnswers.some((x) => x.toLowerCase() === answerToLower);
+  const toReturn = (correctAnswer && answersEqual(correctAnswer, answer))
+    || incorrectAnswers.some((x) => answersEqual(x, answer));
 
   logger.debug('answer has been submitted: %s', answer, { year, day, part });
 

@@ -36,6 +36,7 @@ const {
   addIncorrectAnswer,
   answerHasBeenSubmitted,
   getNextUnansweredPuzzle,
+  answersEqual,
 } = await import('../src/answers.js');
 
 afterEach(() => {
@@ -120,6 +121,36 @@ describe('answers', () => {
       const answer = 123412341234;
       const expected = answer.toString();
       expect(parseAnswer(answer)).toEqual(expected);
+    });
+  });
+
+  describe('answersEqual()', () => {
+    test('true on strings match (exact)', () => {
+      expect(answersEqual('1234', '1234')).toBe(true);
+    });
+
+    test('true on strings match (case difference)', () => {
+      expect(answersEqual('ASDF', 'AsDf')).toBe(true);
+    });
+
+    test('true on number and string match', () => {
+      expect(answersEqual('1234', 1234)).toBe(true);
+    });
+
+    test('true on number and number match', () => {
+      expect(answersEqual(1234, 1234)).toBe(true);
+    });
+
+    test('false on strings not match', () => {
+      expect(answersEqual('asdf', '1234')).toBe(false);
+    });
+
+    test('false on number and string not match', () => {
+      expect(answersEqual('1234', 4321)).toBe(false);
+    });
+
+    test('false on number and number not match', () => {
+      expect(answersEqual(1234, 4321)).toBe(false);
     });
   });
 
