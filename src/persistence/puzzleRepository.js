@@ -128,7 +128,7 @@ export const getId = (year, day, part) => {
  * @returns {Promise<Object[]>}
  */
 export const getPuzzles = async () => (
-  getStoreValue(PUZZLE_DATA_KEY, []).map(translateToPuzzleFromData)
+  (await getStoreValue(PUZZLE_DATA_KEY, [])).map(translateToPuzzleFromData)
 );
 
 /**
