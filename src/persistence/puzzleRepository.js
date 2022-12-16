@@ -1,5 +1,5 @@
 import { UserDataTranslationError } from '../errors/index.js';
-import { getStoreValue, setStoreValue } from './jsonFileStore';
+import { getStoreValue, setStoreValue } from './jsonFileStore.js';
 
 /**
  * This repository serves as an abstraction between how the data is stored
