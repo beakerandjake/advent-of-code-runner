@@ -1,4 +1,6 @@
-import { describe, jest, test } from '@jest/globals';
+import {
+  describe, jest, test, afterEach,
+} from '@jest/globals';
 import { UserDataTranslationError } from '../src/errors/index.js';
 
 // setup jsonFileStore so it can be mocked.
@@ -19,6 +21,10 @@ const {
   addOrEditPuzzle,
   createPuzzle,
 } = await import('../src/persistence/puzzleRepository.js');
+
+afterEach(() => {
+  jest.clearAllMocks();
+});
 
 describe('puzzleRepository', () => {
   describe('translateToPuzzleFromData()', () => {
