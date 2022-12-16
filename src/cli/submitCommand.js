@@ -44,7 +44,7 @@ const submit = async (day, part, { year }) => {
   const { answer, executionTimeNs } = await solve(year, day, part);
 
   if (await answerHasBeenSubmitted(year, day, part, answer)) {
-    logger.festiveError('You\'ve already submitted this incorrect answer to advent of code!');
+    logger.error('You\'ve already submitted this incorrect answer to advent of code!');
     return;
   }
 
@@ -52,7 +52,7 @@ const submit = async (day, part, { year }) => {
 
   const { success, message } = await submitSolution(year, day, part, answer, getConfigValue('aoc.authenticationToken'));
 
-  logger[success ? 'festive' : 'festiveError']('%s', message);
+  logger[success ? 'festive' : 'error']('%s', message);
 
   await updateRateLimit(rateLimitedActions.submitAnswer);
 

@@ -7,12 +7,11 @@ import { logger } from './logger.js';
  * @param {Error} error
  */
 export const handleError = (error) => {
-  let errorLog = logger.error;
-
   if (error instanceof UserError) {
-    errorLog = logger.festiveError;
+    logger.error(error, { useDefaultFormat: true });
+  } else {
+    logger.error(error);
   }
 
-  errorLog(error);
   exit(1);
 };

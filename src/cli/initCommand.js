@@ -1,8 +1,9 @@
 import { Command } from 'commander';
 import inquirer from 'inquirer';
 import ora from 'ora';
+import chalk from 'chalk';
 import { getConfigValue } from '../config.js';
-import { festiveEmoji, festiveErrorStyle, festiveStyle } from '../festive.js';
+import { festiveEmoji, festiveStyle } from '../festive.js';
 import {
   createDataFile,
   createDotEnv,
@@ -49,7 +50,7 @@ const questions = [
     prefix: festiveEmoji(),
     choices: getConfigValue('aoc.puzzleValidation.years'),
     loop: false,
-    validate: (input) => (input ? true : festiveErrorStyle('Token cannot be empty!')),
+    validate: (input) => (input ? true : chalk.bold.italic.red('Token cannot be empty!')),
     filter: (input) => input.trim(),
   },
 ];
