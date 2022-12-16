@@ -14,7 +14,7 @@ jest.unstable_mockModule('../src/logger.js', () => ({
 // import after setting up the mock so the modules import the mocked version
 const { getConfigValue } = await import('../src/config.js');
 const {
-  yearIsValid, dayIsValid, partIsValid, getAllPuzzles,
+  yearIsValid, dayIsValid, partIsValid, getAllPuzzlesForYear,
 } = await import('../src/validatePuzzle.js');
 
 // since some tests override the mock implementation, we have to reset it before each test.
@@ -189,7 +189,7 @@ describe('validatePuzzle', () => {
         { year, day: 5, part: 3 },
       ];
 
-      expect(getAllPuzzles(year)).toStrictEqual(expected);
+      expect(getAllPuzzlesForYear(year)).toStrictEqual(expected);
     });
   });
 });
