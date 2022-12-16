@@ -3,15 +3,20 @@ import { submitSolution } from '../api/index.js';
 import { getConfigValue } from '../config.js';
 import { LockedPuzzleError, RateLimitExceededError } from '../errors/index.js';
 import { logger } from '../logger.js';
-import {
-  puzzleHasBeenSolved, setCorrectAnswer, addIncorrectAnswer, answerHasBeenSubmitted,
-} from '../progress.js';
-import {
-  checkActionRateLimit, rateLimitedActions, updateRateLimit,
-} from '../rateLimit.js';
 import { solve } from '../solve.js';
 import { puzzleIsUnlocked } from '../validatePuzzle.js';
 import { dayArgument, partArgument, yearOption } from './arguments.js';
+import {
+  puzzleHasBeenSolved,
+  setCorrectAnswer,
+  addIncorrectAnswer,
+  answerHasBeenSubmitted,
+} from '../answers.js';
+import {
+  checkActionRateLimit,
+  rateLimitedActions,
+  updateRateLimit,
+} from '../rateLimit.js';
 
 /**
  * Solve the puzzle and submit the solution to advent of code.
