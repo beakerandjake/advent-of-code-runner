@@ -25,6 +25,7 @@ const {
   setCorrectAnswer,
   parseAnswer,
   addIncorrectAnswer,
+  answerHasBeenSubmitted,
 } = await import('../src/answers.js');
 
 afterEach(() => {
@@ -196,6 +197,49 @@ describe('answers', () => {
         ...originalData,
         incorrectAnswers: [...originalData.incorrectAnswers, toAdd],
       });
+    });
+  });
+
+  describe('answerHasBeenSubmitted()', () => {
+    test('returns false if puzzle does not exist', async () => {
+      findPuzzle.mockReturnValueOnce(null);
+      expect(await answerHasBeenSubmitted(2022, 1, 1, 'asdf')).toEqual(false);
+    });
+
+    test('returns false if no answers submitted', async () => {
+      const answer = 'asdf';
+      findPuzzle.mockReturnValueOnce({ correctAnswer: null, incorrectAnswers: [] });
+      expect(await answerHasBeenSubmitted(2022, 1, 1, answer)).toEqual(false);
+    });
+
+    test('returns false if not not submitted', async () => {
+      const answer = 'asdf';
+      findPuzzle.mockReturnValueOnce({ correctAnswer: 'cool guy', incorrectAnswers: ['1234', 'zxcv', 'qwer'] });
+      expect(await answerHasBeenSubmitted(2022, 1, 1, answer)).toEqual(false);
+    });
+
+    test('returns true if answer is correct answer', async () => {
+      const answer = 'asdf';
+      findPuzzle.mockReturnValueOnce({ correctAnswer: answer });
+      expect(await answerHasBeenSubmitted(2022, 1, 1, answer)).toEqual(true);
+    });
+
+    test('returns true if answer is correct answer (ignores case)', async () => {
+      const answer = 'ANSWER';
+      findPuzzle.mockReturnValueOnce({ correctAnswer: answer.toLowerCase() });
+      expect(await answerHasBeenSubmitted(2022, 1, 1, answer)).toEqual(true);
+    });
+
+    test('returns true if answer is an incorrect answer', async () => {
+      const answer = 'asdf';
+      findPuzzle.mockReturnValueOnce({ incorrectAnswers: ['1234', 'zxcv', 'qwer', answer] });
+      expect(await answerHasBeenSubmitted(2022, 1, 1, answer)).toEqual(true);
+    });
+
+    test('returns true if answer is an incorrect answer (ignores case)', async () => {
+      const answer = 'asdf';
+      findPuzzle.mockReturnValueOnce({ incorrectAnswers: ['1234', 'zxcv', 'qwer', answer.toUpperCase()] });
+      expect(await answerHasBeenSubmitted(2022, 1, 1, answer)).toEqual(true);
     });
   });
 });

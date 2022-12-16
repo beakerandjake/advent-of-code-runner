@@ -101,11 +101,26 @@ export const addIncorrectAnswer = async (year, day, part, incorrectAnswer) => {
  * @param {Number} part
  * @param {String} incorrectAnswer
  */
-export const answerHasBeenSubmitted = async (year, day, part, answer) => null;
+export const answerHasBeenSubmitted = async (year, day, part, answer) => {
+  const { correctAnswer = null, incorrectAnswers = [] } = await findPuzzle(year, day, part) || {};
+
+  if (!correctAnswer && incorrectAnswers.length === 0) {
+    logger.debug('answer has not been submitted because puzzle has not been saved', { year, day, part });
+    return false;
+  }
+
+  const answerToLower = answer?.toLowerCase();
+  const toReturn = (correctAnswer && correctAnswer.toLowerCase() === answerToLower)
+    || incorrectAnswers.some((x) => x.toLowerCase() === answerToLower);
+
+  logger.debug('answer has been submitted: %s', answer, { year, day, part });
+
+  return toReturn;
+};
 
 /**
  * Returns the earliest puzzle for which the user has not successfully solved.
  * If the user has solved all puzzles then null is returned.
  * @param {Number} year
  */
-export const getNextUnansweredPuzzle = async (year) => null;
+export const getNextUnansweredPuzzle = async (year) => {};
