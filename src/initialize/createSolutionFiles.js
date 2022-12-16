@@ -1,6 +1,6 @@
 import { join } from 'node:path';
 import { getConfigValue } from '../config.js';
-import { copyFile, ensureDirectoriesExist } from '../io.js';
+import { copyFile, ensureDirectoriesExist } from '../persistence/io.js';
 import { logger } from '../logger.js';
 
 /**

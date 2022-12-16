@@ -1,7 +1,7 @@
 import { get, set } from 'lodash-es';
 import { getConfigValue } from '../config.js';
 import { logger } from '../logger.js';
-import { loadFileContents, saveFile } from '../io.js';
+import { loadFileContents, saveFile } from './io.js';
 import { DataFileNotFoundError } from '../errors/index.js';
 
 const dataFilePath = getConfigValue('paths.dataStoreFile');

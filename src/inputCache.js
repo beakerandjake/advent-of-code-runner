@@ -1,7 +1,7 @@
 import { join } from 'node:path';
 import { logger } from './logger.js';
 import { getConfigValue } from './config.js';
-import { fileExists, loadFileContents, saveFile } from './io.js';
+import { fileExists, loadFileContents, saveFile } from './persistence/io.js';
 
 /**
  * Returns the file name for the input file for the given year and day

@@ -3,7 +3,7 @@ import { Worker } from 'node:worker_threads';
 import { logger } from './logger.js';
 import { getConfigValue } from './config.js';
 import { workerMessageTypes } from './solutionRunnerWorkerThread.js';
-import { fileExists } from './io.js';
+import { fileExists } from './persistence/io.js';
 import {
   SolutionMissingFunctionError,
   SolutionNotFoundError,

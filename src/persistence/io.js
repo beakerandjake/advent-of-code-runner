@@ -7,7 +7,7 @@ import {
   open,
 } from 'node:fs/promises';
 import { dirname } from 'node:path';
-import { logger } from './logger.js';
+import { logger } from '../logger.js';
 
 /**
  * Recursively creates all directories which do not exist. Existing directories will be skipped.

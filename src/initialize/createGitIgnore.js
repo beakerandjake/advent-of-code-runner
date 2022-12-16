@@ -1,5 +1,5 @@
 import { getConfigValue } from '../config.js';
-import { copyFile } from '../io.js';
+import { copyFile } from '../persistence/io.js';
 import { logger } from '../logger.js';
 
 /**
