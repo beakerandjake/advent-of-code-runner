@@ -17,6 +17,7 @@ const {
   getPuzzles,
   setPuzzles,
   addOrEditPuzzle,
+  getNewPuzzle,
 } = await import('../src/persistence/puzzleRepository.js');
 
 describe('puzzleRepository', () => {
@@ -708,6 +709,22 @@ describe('puzzleRepository', () => {
           incorrectAnswers: newValue,
         },
       ]);
+    });
+  });
+
+  describe('getNewPuzzle()', () => {
+    test('returns expected object', () => {
+      const expected = {
+        id: '20220101',
+        fastestExecutionTimeNs: null,
+        incorrectAnswers: [],
+        correctAnswer: null,
+        year: 2022,
+        day: 1,
+        part: 1,
+      };
+
+      expect(getNewPuzzle(expected.year, expected.day, expected.part)).toStrictEqual(expected);
     });
   });
 });
