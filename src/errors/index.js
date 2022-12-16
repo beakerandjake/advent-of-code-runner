@@ -9,6 +9,7 @@ import { SolutionNotFoundError } from './solutionNotFoundError.js';
 import { SolutionRuntimeError } from './solutionRuntimeError.js';
 import { PackageInstallFailedError } from './packageInstallFailedError.js';
 import { UserDataTranslationError } from './userDataTranslationError.js';
+import { UserPuzzleDataMissingError } from './userPuzzleDataMissingError.js';
 import { UserError } from './userError.js';
 
 export {
@@ -23,5 +24,6 @@ export {
   SolutionAnswerInvalidError,
   PackageInstallFailedError,
   UserDataTranslationError,
+  UserPuzzleDataMissingError,
   UserError,
 };
