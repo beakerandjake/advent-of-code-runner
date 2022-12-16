@@ -2,7 +2,7 @@ import {
   createLogger, format, transports, addColors,
 } from 'winston';
 import { exit } from 'node:process';
-import { LEVEL } from 'triple-beam';
+import { LEVEL, MESSAGE } from 'triple-beam';
 import { getConfigValue } from './config.js';
 import { FestiveTransport } from './festive.js';
 
@@ -33,6 +33,8 @@ addColors({
   festive: 'black',
 });
 
+const simpleFormat = format.simple();
+
 let loggerInstance;
 
 try {
@@ -55,7 +57,8 @@ try {
             if (info[LEVEL] === 'error' && !info.useDefaultFormat) {
               return `${info.level}: ${info.stack ? info.stack : info.message}`;
             }
-            return `${info.level}: ${info.message}`;
+
+            return simpleFormat.transform(info)[MESSAGE];
           }),
           format.colorize({ all: true }),
         ),
