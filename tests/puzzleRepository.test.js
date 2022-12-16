@@ -17,7 +17,7 @@ const {
   getPuzzles,
   setPuzzles,
   addOrEditPuzzle,
-  getNewPuzzle,
+  createPuzzle,
 } = await import('../src/persistence/puzzleRepository.js');
 
 describe('puzzleRepository', () => {
@@ -712,7 +712,7 @@ describe('puzzleRepository', () => {
     });
   });
 
-  describe('getNewPuzzle()', () => {
+  describe('createPuzzle()', () => {
     test('returns expected object', () => {
       const expected = {
         id: '20220101',
@@ -724,7 +724,7 @@ describe('puzzleRepository', () => {
         part: 1,
       };
 
-      expect(getNewPuzzle(expected.year, expected.day, expected.part)).toStrictEqual(expected);
+      expect(createPuzzle(expected.year, expected.day, expected.part)).toStrictEqual(expected);
     });
   });
 });

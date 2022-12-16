@@ -158,7 +158,7 @@ export const findPuzzle = async (year, day, part) => {
  * @param {Number} day
  * @param {Number} part
  */
-export const getNewPuzzle = (year, day, part) => {
+export const createPuzzle = (year, day, part) => {
   const id = getId(year, day, part);
 
   return {
