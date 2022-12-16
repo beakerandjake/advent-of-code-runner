@@ -82,5 +82,11 @@ describe('statistics', () => {
       await tryToSetFastestExecutionTime(2022, 1, 1, 22);
       expect(addOrEditPuzzle).toBeCalled();
     });
+
+    test('updates if record time is null', async () => {
+      findPuzzle.mockReturnValueOnce({ fastestExecutionTimeNs: null });
+      await tryToSetFastestExecutionTime(2022, 1, 1, 22);
+      expect(addOrEditPuzzle).toBeCalled();
+    });
   });
 });

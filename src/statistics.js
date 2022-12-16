@@ -20,7 +20,7 @@ export const tryToSetFastestExecutionTime = async (year, day, part, timeNs) => {
     return;
   }
 
-  if (timeNs >= puzzle.fastestExecutionTimeNs) {
+  if (puzzle.fastestExecutionTimeNs && (timeNs >= puzzle.fastestExecutionTimeNs)) {
     logger.debug('not setting fastest execution time, execution time: %s was slower than stored fastest: %s', timeNs, puzzle.fastestExecutionTimeNs);
     return;
   }
