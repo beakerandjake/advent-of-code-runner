@@ -138,7 +138,6 @@ describe('answers', () => {
       };
       findPuzzle.mockReturnValueOnce(originalData);
       await setCorrectAnswer(2022, 1, 1, correctAnswer);
-      console.log(addOrEditPuzzle.mock);
       expect(addOrEditPuzzle).toHaveBeenCalledWith({ ...originalData, correctAnswer });
     });
   });
