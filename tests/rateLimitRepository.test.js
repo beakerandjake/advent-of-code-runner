@@ -8,13 +8,7 @@ jest.unstable_mockModule('../src/persistence/jsonFileStore.js', () => ({
   setStoreValue: jest.fn(),
 }));
 
-// jest.unstable_mockModule('date-fns', () => ({
-//   isValid: jest.fn(),
-//   parseISO: jest.fn(),
-// }));
-
 // import after setting up the mock so the modules import the mocked version
-// const { isValid, parseISO } = await import('date-fns');
 const { getStoreValue, setStoreValue } = await import('../src/persistence/jsonFileStore.js');
 const { getRateLimit, setRateLimit } = await import('../src/persistence/rateLimitRepository.js');
 
