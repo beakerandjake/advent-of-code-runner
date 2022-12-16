@@ -1,4 +1,6 @@
-import { describe, jest, test } from '@jest/globals';
+import {
+  describe, jest, test, afterEach,
+} from '@jest/globals';
 import { AnswerTypeInvalidError, AnswerEmptyError } from '../src/errors/index.js';
 
 // setup mocks.
@@ -11,14 +13,23 @@ jest.unstable_mockModule('../src/persistence/puzzleRepository.js', () => ({
 jest.unstable_mockModule('../src/logger.js', () => ({
   logger: {
     debug: jest.fn(),
+    warn: jest.fn(),
   },
 }));
 
 // import after setting up the mock so the modules import the mocked version
 const { findPuzzle, createPuzzle, addOrEditPuzzle } = await import('../src/persistence/puzzleRepository.js');
 const {
-  puzzleHasBeenSolved, getCorrectAnswer, setCorrectAnswer, parseAnswer,
+  puzzleHasBeenSolved,
+  getCorrectAnswer,
+  setCorrectAnswer,
+  parseAnswer,
+  addIncorrectAnswer,
 } = await import('../src/answers.js');
+
+afterEach(() => {
+  jest.clearAllMocks();
+});
 
 describe('answers', () => {
   describe('puzzleHasBeenSolved()', () => {
@@ -114,7 +125,7 @@ describe('answers', () => {
       const correctAnswer = 'asdf';
       findPuzzle.mockReturnValueOnce({ correctAnswer: null });
       await setCorrectAnswer(2022, 1, 1, correctAnswer);
-      expect(addOrEditPuzzle.mock.lastCall[0]).toEqual({ correctAnswer });
+      expect(addOrEditPuzzle).toHaveBeenCalledWith({ correctAnswer });
     });
 
     test('only changes correctAnswer field', async () => {
@@ -127,7 +138,64 @@ describe('answers', () => {
       };
       findPuzzle.mockReturnValueOnce(originalData);
       await setCorrectAnswer(2022, 1, 1, correctAnswer);
-      expect(addOrEditPuzzle.mock.lastCall[0]).toEqual({ ...originalData, correctAnswer });
+      console.log(addOrEditPuzzle.mock);
+      expect(addOrEditPuzzle).toHaveBeenCalledWith({ ...originalData, correctAnswer });
+    });
+  });
+
+  describe('addIncorrectAnswer()', () => {
+    test('creates puzzle called if puzzle not found', async () => {
+      findPuzzle.mockReturnValueOnce(null);
+      createPuzzle.mockReturnValueOnce({ incorrectAnswers: [] });
+      await addIncorrectAnswer(2022, 1, 1, 'asdf');
+      expect(createPuzzle).toBeCalled();
+    });
+
+    test('pushes to empty incorrectAnswers array', async () => {
+      const toAdd = 'ASDF';
+      findPuzzle.mockReturnValueOnce({ incorrectAnswers: [] });
+      await addIncorrectAnswer(2022, 1, 1, toAdd);
+      expect(addOrEditPuzzle).toHaveBeenCalledWith({ incorrectAnswers: [toAdd] });
+    });
+
+    test('pushes to non-empty incorrectAnswers array', async () => {
+      const orig = ['cool', 'guy', 'present'];
+      const toAdd = 'ASDF';
+      findPuzzle.mockReturnValueOnce({ incorrectAnswers: orig });
+      await addIncorrectAnswer(2022, 1, 1, toAdd);
+      expect(addOrEditPuzzle).toHaveBeenCalledWith({ incorrectAnswers: [...orig, toAdd] });
+    });
+
+    test('handles duplicate incorrect answer (exact match)', async () => {
+      const orig = ['cool', 'guy'];
+      const toAdd = orig[0];
+      findPuzzle.mockReturnValueOnce({ incorrectAnswers: orig });
+      await addIncorrectAnswer(2022, 1, 1, toAdd);
+      expect(addOrEditPuzzle).not.toHaveBeenCalled();
+    });
+
+    test('handles duplicate incorrect answer (case insensitive)', async () => {
+      const orig = ['COOL', 'guy'];
+      const toAdd = orig[0].toLowerCase();
+      findPuzzle.mockReturnValueOnce({ incorrectAnswers: orig });
+      await addIncorrectAnswer(2022, 1, 1, toAdd);
+      expect(addOrEditPuzzle).not.toHaveBeenCalled();
+    });
+
+    test('only changes incorrectAnswer field', async () => {
+      const toAdd = 'NEW ANSWER';
+      const originalData = {
+        id: '20220101',
+        correctAnswer: 'GOOD JOB',
+        incorrectAnswers: ['adsf', 'qwer'],
+        fastestExecutionTimeNs: 12341234,
+      };
+      findPuzzle.mockReturnValueOnce(originalData);
+      await addIncorrectAnswer(2022, 1, 1, toAdd);
+      expect(addOrEditPuzzle).toHaveBeenCalledWith({
+        ...originalData,
+        incorrectAnswers: [...originalData.incorrectAnswers, toAdd],
+      });
     });
   });
 });
