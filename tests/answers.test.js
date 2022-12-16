@@ -8,6 +8,7 @@ jest.unstable_mockModule('../src/persistence/puzzleRepository.js', () => ({
   findPuzzle: jest.fn(),
   createPuzzle: jest.fn(),
   addOrEditPuzzle: jest.fn(),
+  getPuzzles: jest.fn(),
 }));
 
 jest.unstable_mockModule('../src/logger.js', () => ({
@@ -17,8 +18,16 @@ jest.unstable_mockModule('../src/logger.js', () => ({
   },
 }));
 
+jest.unstable_mockModule('../src/validatePuzzle.js', () => ({
+  getAllPuzzlesForYear: jest.fn(),
+}));
+
 // import after setting up the mock so the modules import the mocked version
-const { findPuzzle, createPuzzle, addOrEditPuzzle } = await import('../src/persistence/puzzleRepository.js');
+
+const { getAllPuzzlesForYear } = await import('../src/validatePuzzle.js');
+const {
+  findPuzzle, createPuzzle, addOrEditPuzzle, getPuzzles,
+} = await import('../src/persistence/puzzleRepository.js');
 const {
   puzzleHasBeenSolved,
   getCorrectAnswer,
@@ -26,6 +35,7 @@ const {
   parseAnswer,
   addIncorrectAnswer,
   answerHasBeenSubmitted,
+  getNextUnansweredPuzzle,
 } = await import('../src/answers.js');
 
 afterEach(() => {
@@ -238,6 +248,104 @@ describe('answers', () => {
       const answer = 'asdf';
       findPuzzle.mockReturnValueOnce({ incorrectAnswers: ['1234', 'zxcv', 'qwer', answer.toUpperCase()] });
       expect(await answerHasBeenSubmitted(2022, 1, 1, answer)).toEqual(true);
+    });
+  });
+
+  describe('getNextUnansweredPuzzle()', () => {
+    test('returns first if none answered', async () => {
+      const year = 1950;
+      const puzzlesForYear = [
+        { year, day: 1, part: 1 },
+        { year, day: 2, part: 1 },
+        { year, day: 3, part: 1 },
+        { year, day: 4, part: 1 },
+      ];
+      getAllPuzzlesForYear.mockReturnValueOnce(puzzlesForYear);
+      getPuzzles.mockReturnValueOnce([]);
+      expect(await getNextUnansweredPuzzle(year)).toStrictEqual({ day: 1, part: 1 });
+    });
+
+    test('returns null if all answered', async () => {
+      const year = 1950;
+      const puzzlesForYear = [
+        { year, day: 1, part: 1 },
+        { year, day: 2, part: 1 },
+        { year, day: 3, part: 1 },
+        { year, day: 4, part: 1 },
+      ];
+      getAllPuzzlesForYear.mockReturnValueOnce(puzzlesForYear);
+      getPuzzles.mockReturnValueOnce(puzzlesForYear.map((x) => ({ ...x, correctAnswer: '1234' })));
+      expect(await getNextUnansweredPuzzle(year)).toStrictEqual(null);
+    });
+
+    test('returns next (no gaps)', async () => {
+      const year = 1950;
+      getAllPuzzlesForYear.mockReturnValueOnce([
+        { year, day: 1, part: 1 },
+        { year, day: 1, part: 2 },
+        { year, day: 2, part: 1 },
+        { year, day: 2, part: 2 },
+        { year, day: 3, part: 1 },
+        { year, day: 3, part: 2 },
+        { year, day: 4, part: 1 },
+        { year, day: 4, part: 2 },
+        { year, day: 5, part: 1 },
+        { year, day: 5, part: 2 },
+      ]);
+      getPuzzles.mockReturnValueOnce([
+        {
+          year, day: 1, part: 1, correctAnswer: 'asdf',
+        },
+        {
+          year, day: 1, part: 2, correctAnswer: 'asdf',
+        },
+        {
+          year, day: 2, part: 1, correctAnswer: 'asdf',
+        },
+        {
+          year, day: 2, part: 2, correctAnswer: 'asdf',
+        },
+        {
+          year, day: 3, part: 1, correctAnswer: 'asdf',
+        },
+        {
+          year, day: 3, part: 2, correctAnswer: 'asdf',
+        },
+        {
+          year, day: 4, part: 1, correctAnswer: 'asdf',
+        },
+      ]);
+      expect(await getNextUnansweredPuzzle(year)).toStrictEqual({ day: 4, part: 2 });
+    });
+
+    test('returns next (gaps)', async () => {
+      const year = 1950;
+      getAllPuzzlesForYear.mockReturnValueOnce([
+        { year, day: 1, part: 1 },
+        { year, day: 1, part: 2 },
+        { year, day: 2, part: 1 },
+        { year, day: 2, part: 2 },
+        { year, day: 3, part: 1 },
+        { year, day: 3, part: 2 },
+      ]);
+      getPuzzles.mockReturnValueOnce([
+        {
+          year, day: 1, part: 1, correctAnswer: 'asdf',
+        },
+        {
+          year, day: 1, part: 2, correctAnswer: 'asdf',
+        },
+        {
+          year, day: 2, part: 1, correctAnswer: 'asdf',
+        },
+        {
+          year, day: 2, part: 2, correctAnswer: 'asdf',
+        },
+        {
+          year, day: 3, part: 2, correctAnswer: 'asdf',
+        },
+      ]);
+      expect(await getNextUnansweredPuzzle(year)).toStrictEqual({ day: 3, part: 1 });
     });
   });
 });

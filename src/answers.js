@@ -1,6 +1,12 @@
 import { AnswerTypeInvalidError, AnswerEmptyError } from './errors/index.js';
 import { logger } from './logger.js';
-import { addOrEditPuzzle, createPuzzle, findPuzzle } from './persistence/puzzleRepository.js';
+import { getAllPuzzlesForYear } from './validatePuzzle.js';
+import {
+  addOrEditPuzzle,
+  createPuzzle,
+  findPuzzle,
+  getPuzzles,
+} from './persistence/puzzleRepository.js';
 
 /**
  * Validates and normalizes a user provided answer.
@@ -94,6 +100,7 @@ export const addIncorrectAnswer = async (year, day, part, incorrectAnswer) => {
     incorrectAnswers: [...puzzle.incorrectAnswers, parsedAnswer],
   });
 };
+
 /**
  * Has the user previously submitted this answer to advent of code?
  * @param {Number} year
@@ -123,4 +130,14 @@ export const answerHasBeenSubmitted = async (year, day, part, answer) => {
  * If the user has solved all puzzles then null is returned.
  * @param {Number} year
  */
-export const getNextUnansweredPuzzle = async (year) => {};
+export const getNextUnansweredPuzzle = async (year) => {
+  const allPuzzles = getAllPuzzlesForYear(year);
+  const answeredPuzzles = (await getPuzzles()).filter((x) => !!x.correctAnswer);
+  const toReturn = allPuzzles.find((x) => !answeredPuzzles.some(
+    (puzzle) => puzzle.year === x.year && puzzle.day === x.day && puzzle.part === x.part,
+  ));
+
+  logger.debug('found earliest unanswered puzzle', toReturn);
+
+  return toReturn ? { day: toReturn.day, part: toReturn.part } : null;
+};
