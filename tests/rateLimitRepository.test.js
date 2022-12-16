@@ -56,12 +56,45 @@ describe('rateLimitRepository', () => {
   });
 
   describe('setRateLimit()', () => {
-    test('adds if doesn\'t exist', async () => {
-
+    test('throws on null/undefined expiration', () => {
+      expect(async () => setRateLimit('asdf', null)).rejects.toThrow();
+      expect(async () => setRateLimit('asdf', undefined)).rejects.toThrow();
     });
 
-    test('updates if exists', async () => {
+    test('throws on expiration is not a date ', () => {
+      expect(async () => setRateLimit('asdf', Promise.resolve(new Date()))).rejects.toThrow();
+      expect(async () => setRateLimit('asdf', true)).rejects.toThrow();
+      expect(async () => setRateLimit('asdf', 1234234)).rejects.toThrow();
+      expect(async () => setRateLimit('asdf', '12/01/2022')).rejects.toThrow();
+      expect(async () => setRateLimit('asdf', {})).rejects.toThrow();
+    });
 
+    test('throws on expiration is invalid date', () => {
+      expect(async () => setRateLimit('asdf', new Date(Infinity))).rejects.toThrow();
+    });
+
+    test('adds if didn\'t exist', async () => {
+      const key = 'cool';
+      const value = new Date(2022, 11, 4);
+      const orig = { notCool: new Date().toISOString() };
+      getStoreValue.mockReturnValueOnce({ notCool: new Date().toISOString() });
+      await setRateLimit(key, value);
+      expect(setStoreValue).toHaveBeenCalledWith(
+        expect.any(String),
+        { ...orig, [key]: value.toISOString() },
+      );
+    });
+
+    test('updates if already exists', async () => {
+      const key = 'cool';
+      const value = new Date(2022, 11, 4);
+      const orig = { notCool: new Date().toISOString(), [key]: value.toISOString() };
+      getStoreValue.mockReturnValueOnce({ notCool: new Date().toISOString() });
+      await setRateLimit(key, value);
+      expect(setStoreValue).toHaveBeenCalledWith(
+        expect.any(String),
+        { ...orig, [key]: value.toISOString() },
+      );
     });
   });
 });

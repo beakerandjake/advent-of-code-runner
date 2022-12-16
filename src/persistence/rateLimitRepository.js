@@ -1,4 +1,4 @@
-import { isValid, parseISO } from 'date-fns';
+import { isDate, isValid, parseISO } from 'date-fns';
 import { UserDataTranslationError } from '../errors/userDataTranslationError.js';
 import { getStoreValue, setStoreValue } from './jsonFileStore.js';
 
@@ -39,5 +39,11 @@ export const getRateLimit = async (actionType) => {
  * @param {Date} expiration - The time when the rate limit expires
  */
 export const setRateLimit = async (actionType, expiration) => {
+  if (!isDate(expiration) || !isValid(expiration)) {
+    throw new UserDataTranslationError(`Attempted to set rate limit expiration to invalid date: "${expiration}"`);
+  }
 
+  const rateLimits = await getStoreValue(RATE_LIMITS_STORE_KEY, {});
+  const updated = { ...rateLimits, [actionType]: expiration.toISOString() };
+  await setStoreValue(RATE_LIMITS_STORE_KEY, updated);
 };
