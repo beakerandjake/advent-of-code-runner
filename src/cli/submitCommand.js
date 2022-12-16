@@ -16,7 +16,7 @@ import {
   checkActionRateLimit,
   rateLimitedActions,
   updateRateLimit,
-} from '../rateLimit.js';
+} from '../api/rateLimit.js';
 
 /**
  * Solve the puzzle and submit the solution to advent of code.

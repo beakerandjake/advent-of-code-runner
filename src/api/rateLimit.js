@@ -2,9 +2,9 @@ import {
   parseISO, isValid, addMilliseconds, isFuture,
 } from 'date-fns';
 import { get, includes, set } from 'lodash-es';
-import { getConfigValue } from './config.js';
-import { logger } from './logger.js';
-import { getStoreValue, setStoreValue } from './repositoriesuser-data/jsonFileStore.js';
+import { getConfigValue } from '../config.js';
+import { logger } from '../logger.js';
+import { getStoreValue, setStoreValue } from '../persistence/jsonFileStore.js';
 
 const RATE_LIMITS_STORE_KEY = 'rateLimits';
 

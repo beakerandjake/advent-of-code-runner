@@ -4,7 +4,7 @@ import { RateLimitExceededError } from './errors/index.js';
 import { humanizeDuration } from './formatting.js';
 import { inputIsCached, getCachedInput, cacheInput } from './inputCache.js';
 import { logger } from './logger.js';
-import { checkActionRateLimit, rateLimitedActions, updateRateLimit } from './rateLimit.js';
+import { checkActionRateLimit, rateLimitedActions, updateRateLimit } from './api/rateLimit.js';
 import { execute } from './solutionRunner.js';
 
 /**
