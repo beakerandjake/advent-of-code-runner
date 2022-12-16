@@ -90,7 +90,6 @@ describe('answers', () => {
     });
 
     test('throws on whitespace', () => {
-      console.log('typeof', typeof '\t\t\t\t\t');
       expect(() => parseAnswer('\t\t\t\t\t')).toThrow(AnswerEmptyError);
       expect(() => parseAnswer('\r\n')).toThrow(AnswerEmptyError);
       expect(() => parseAnswer('     ')).toThrow(AnswerEmptyError);
