@@ -4,7 +4,7 @@ import { RateLimitExceededError } from './errors/index.js';
 import { humanizeDuration } from './formatting.js';
 import { inputIsCached, getCachedInput, cacheInput } from './inputCache.js';
 import { logger } from './logger.js';
-import { checkActionRateLimit, rateLimitedActions, updateRateLimit } from './api/rateLimit.js';
+import { isRateLimited, rateLimitedActions, updateRateLimit } from './api/rateLimit.js';
 import { execute } from './solutionRunner.js';
 
 /**
@@ -14,7 +14,7 @@ import { execute } from './solutionRunner.js';
  * @throws {RateLimitExceededError} The user has not waited long enough to download the input file.
  */
 const downloadAndCacheInput = async (year, day) => {
-  const { limited, expiration } = await checkActionRateLimit(rateLimitedActions.downloadInput);
+  const { limited, expiration } = await isRateLimited(rateLimitedActions.downloadInput);
 
   // prevent submission if user is rate limited.
   if (limited) {

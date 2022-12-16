@@ -13,7 +13,7 @@ import {
   answerHasBeenSubmitted,
 } from '../answers.js';
 import {
-  checkActionRateLimit,
+  isRateLimited,
   rateLimitedActions,
   updateRateLimit,
 } from '../api/rateLimit.js';
@@ -39,7 +39,7 @@ const submit = async (day, part, { year }) => {
     return;
   }
 
-  const { limited, expiration } = await checkActionRateLimit(rateLimitedActions.submitAnswer);
+  const { limited, expiration } = await isRateLimited(rateLimitedActions.submitAnswer);
 
   // prevent submission if user is rate limited.
   if (limited) {
