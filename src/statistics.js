@@ -9,7 +9,7 @@ import { addOrEditPuzzle, findPuzzle } from './persistence/puzzleRepository.js';
  * @param {Number} timeNs
  */
 export const tryToSetFastestExecutionTime = async (year, day, part, timeNs) => {
-  if (!Number.isFinite(timeNs) || timeNs < 0) {
+  if (!Number.isFinite(timeNs) || timeNs <= 0) {
     throw new Error('Attempted to set fastest execution time to non numeric or negative value');
   }
 
@@ -17,6 +17,7 @@ export const tryToSetFastestExecutionTime = async (year, day, part, timeNs) => {
 
   if (!puzzle) {
     logger.warn('attempted to set fasted execution time on puzzle which was not saved');
+    return;
   }
 
   if (timeNs >= puzzle.fastestExecutionTimeNs) {
