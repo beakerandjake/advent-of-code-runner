@@ -3,6 +3,7 @@
 // } from 'date-fns';
 // import { get, includes, set } from 'lodash-es';
 // import { getConfigValue } from '../config.js';
+import { isFuture, isValid } from 'date-fns';
 import { logger } from '../logger.js';
 import { getRateLimit, setRateLimit } from '../persistence/rateLimitRepository.js';
 
@@ -15,18 +16,41 @@ export const rateLimitedActions = {
 };
 
 /**
+ * Is the action type a known value?
+ * @param {String} actionType
+ */
+const actionIsValid = (actionType) => Object.values(rateLimitedActions).includes(actionType);
+
+/**
  * Updates the expiration date of the actions rate limit.
  * @param {String} actionType
  * @param {Date} expiration
  */
 export const setRateLimitExpiration = async (actionType, expiration) => {
-  if (!Object.values(rateLimitedActions).includes(actionType)) {
+  if (!actionIsValid(actionType)) {
     throw new Error(`Unknown rate limit action type: ${actionType}`);
   }
 
   logger.debug('setting rate limit expiration for: "%s" to: "%s"', actionType, expiration);
 
   await setRateLimit(actionType, expiration);
+};
+
+/**
+ * Is the action rate limited?
+ * @param {String} actionType
+ */
+export const isRateLimited = async (actionType) => {
+  if (!actionIsValid(actionType)) {
+    throw new Error(`Unknown rate limit action type: ${actionType}`);
+  }
+
+  const expiration = await getRateLimit(actionType);
+  const limited = !!(expiration && isValid(expiration) && isFuture(expiration));
+
+  logger.debug('action: %s is rate limited: %s, expires: %s', actionType, limited, expiration);
+
+  return { limited, expiration: isValid(expiration) ? expiration : null };
 };
 
 // /**
