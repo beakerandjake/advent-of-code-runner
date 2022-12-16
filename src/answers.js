@@ -63,20 +63,10 @@ export const getCorrectAnswer = async (year, day, part) => {
  * @param {String} correctAnswer
  */
 export const setCorrectAnswer = async (year, day, part, correctAnswer) => {
-  // Only support string or numer
-  if (correctAnswer == null || typeof correctAnswer !== 'string' || typeof correctAnswer !== 'number') {
-    throw new AnswerTypeInvalidError(typeof correctAnswer);
-  }
-
-  const trimmedAnswer = correctAnswer.toString().trim();
-
-  if (!trimmedAnswer) {
-    throw new AnswerEmptyError();
-  }
-
   logger.debug('saving correct answer: "%s"', correctAnswer, { year, day, part });
+  const parsedAnswer = parseAnswer(correctAnswer);
   const puzzle = await findPuzzle(year, day, part) || createPuzzle(year, day, part);
-  const updatedPuzzle = { ...puzzle, correctAnswer: trimmedAnswer };
+  const updatedPuzzle = { ...puzzle, correctAnswer: parsedAnswer };
   await addOrEditPuzzle(updatedPuzzle);
 };
 

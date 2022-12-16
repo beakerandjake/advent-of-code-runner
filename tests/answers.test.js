@@ -101,4 +101,33 @@ describe('answers', () => {
       expect(parseAnswer(answer)).toEqual(expected);
     });
   });
+
+  describe('setCorrectAnswer()', () => {
+    test('creates puzzle called if puzzle not found', async () => {
+      findPuzzle.mockReturnValueOnce(null);
+      createPuzzle.mockReturnValueOnce({});
+      await setCorrectAnswer(2022, 1, 1, 'asdf');
+      expect(createPuzzle).toBeCalled();
+    });
+
+    test('sets correct answer', async () => {
+      const correctAnswer = 'asdf';
+      findPuzzle.mockReturnValueOnce({ correctAnswer: null });
+      await setCorrectAnswer(2022, 1, 1, correctAnswer);
+      expect(addOrEditPuzzle.mock.lastCall[0]).toEqual({ correctAnswer });
+    });
+
+    test('only changes correctAnswer field', async () => {
+      const correctAnswer = 'NEW ANSWER';
+      const originalData = {
+        id: '20220101',
+        correctAnswer: null,
+        incorrectAnswers: ['asdf', '1234'],
+        fastestExecutionTimeNs: null,
+      };
+      findPuzzle.mockReturnValueOnce(originalData);
+      await setCorrectAnswer(2022, 1, 1, correctAnswer);
+      expect(addOrEditPuzzle.mock.lastCall[0]).toEqual({ ...originalData, correctAnswer });
+    });
+  });
 });
