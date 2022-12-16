@@ -19,6 +19,16 @@ const PUZZLE_DATA_KEY = 'puzzles';
 const idRegex = /^\d{8}$/;
 
 /**
+ * Parses the year, day, part from a valid id.
+ * @param {String} id
+ */
+const parseValidId = (id) => ({
+  year: Number.parseInt(id.substring(0, 4), 10),
+  day: Number.parseInt(id.substring(4, 6), 10),
+  part: Number.parseInt(id.substring(6), 10),
+});
+
+/**
  * Converts the raw puzzle object loaded from json into a puzzle object expected by the application.
  * This puzzle object contains additional data which makes coding easier, but would be redundant
  * to store to disk. Therefore we must transform this object. If our persistence layer changes
@@ -55,9 +65,7 @@ export const translateToPuzzleFromData = (data) => {
     fastestExecutionTimeNs: fastestExecutionTimeNs && Number.parseInt(fastestExecutionTimeNs, 10),
     incorrectAnswers: incorrectAnswers.map((x) => (x ? x.toString() : '')),
     correctAnswer: correctAnswer?.toString() || null,
-    year: Number.parseInt(id.substring(0, 4), 10),
-    day: Number.parseInt(id.substring(4, 6), 10),
-    part: Number.parseInt(id.substring(6), 10),
+    ...parseValidId(id),
   };
 };
 
@@ -141,6 +149,25 @@ export const findPuzzle = async (year, day, part) => {
   const puzzles = await getPuzzles();
   const puzzleId = getId(year, day, part);
   return puzzles.find((x) => x.id === puzzleId) || null;
+};
+
+/**
+ * Returns a new puzzle instance for the given puzzle.
+ * This does not persist the instance, it just returns a new one.
+ * @param {Number} year
+ * @param {Number} day
+ * @param {Number} part
+ */
+export const getNewPuzzle = async (year, day, part) => {
+  const id = getId(year, day, part);
+
+  return {
+    id,
+    fastestExecutionTimeNs: null,
+    incorrectAnswers: [],
+    correctAnswer: null,
+    ...parseValidId(id),
+  };
 };
 
 /**
