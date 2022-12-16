@@ -35,7 +35,7 @@ export const puzzleHasBeenSolved = async (year, day, part) => {
       -userRateLimitRepository.js
 
     answers/
-      -puzzleHasBeenSolved.js
+        -puzzleHasBeenSolved.js
       -getCorrectAnswer.js
       -setCorrectAnswer.js
       -answerHasBeenSubmitted.js
