@@ -8,6 +8,10 @@ jest.unstable_mockModule('../src/persistence/rateLimitRepository.js', () => ({
   setRateLimit: jest.fn(),
 }));
 
+jest.unstable_mockModule('../src/config.js', () => ({
+  getConfigValue: jest.fn(),
+}));
+
 jest.unstable_mockModule('../src/logger.js', () => ({
   logger: {
     debug: jest.fn(),
@@ -15,7 +19,8 @@ jest.unstable_mockModule('../src/logger.js', () => ({
 }));
 
 // import after setting up the mock so the modules import the mocked version
-const { setRateLimitExpiration, isRateLimited, rateLimitedActions } = await import('../src/api/rateLimit.js');
+const { getConfigValue } = await import('../src/config.js');
+const { updateRateLimit, isRateLimited, rateLimitedActions } = await import('../src/api/rateLimit.js');
 const { getRateLimit, setRateLimit } = await import('../src/persistence/rateLimitRepository.js');
 
 afterEach(() => {
@@ -23,16 +28,37 @@ afterEach(() => {
 });
 
 describe('rateLimit', () => {
-  describe('setRateLimitExpiration()', () => {
+  describe('updateRateLimit()', () => {
     test('throws on invalid action type', async () => {
-      expect(async () => setRateLimitExpiration('THIS ACTION TYPE DOES NOT EXIST', new Date()))
+      expect(async () => updateRateLimit('THIS ACTION TYPE DOES NOT EXIST', new Date()))
         .rejects
         .toThrow();
     });
 
-    test('succeeds on valid action type', async () => {
-      await setRateLimit(rateLimitedActions.submitAnswer, new Date());
-      expect(setRateLimit).toHaveBeenCalled();
+    test('sets expected expiration date', async () => {
+      const now = new Date(2022, 11, 3);
+      const msToAdd = 1000 * 50;
+
+      const DateOrig = global.Date;
+
+      // for this test we pretty strict control of Date constructor
+      // use spy to force and exact value for now.
+      const spy = jest
+        .spyOn(global, 'Date')
+        .mockImplementationOnce(() => now)
+        .mockImplementation((...args) => new DateOrig(...args));
+
+      getConfigValue.mockReturnValueOnce(msToAdd);
+
+      await updateRateLimit(rateLimitedActions.downloadInput);
+
+      // reset date for everyone else.
+      spy.mockRestore();
+
+      expect(setRateLimit).toHaveBeenCalledWith(
+        rateLimitedActions.downloadInput,
+        new Date(now.getTime() + msToAdd),
+      );
     });
   });
 
