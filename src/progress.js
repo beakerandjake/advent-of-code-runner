@@ -1,5 +1,5 @@
 import { logger } from './logger.js';
-import { findPuzzle } from './repositories/puzzleRepository.js';
+import { findPuzzle } from './persistence/puzzleRepository.js';
 
 /**
  * Has this puzzle already been solved?
