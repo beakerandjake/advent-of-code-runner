@@ -2,6 +2,7 @@ import { get, set } from 'lodash-es';
 import { getConfigValue } from '../config.js';
 import { logger } from '../logger.js';
 import { loadFileContents, saveFile } from './io.js';
+import { CachedValue } from './cachedValue.js';
 import { DataFileIOError, DataFileParsingError } from '../errors/index.js';
 
 const dataFilePath = getConfigValue('paths.dataStoreFile');
@@ -12,21 +13,20 @@ const dataFilePath = getConfigValue('paths.dataStoreFile');
 // But this is a single threaded application which is manually invoked via command line
 // So we don't expect anyone else to change the data file while the program is running
 // If the user does that then thats their fault and they can deal with cache being stale.
-let cachedData;
+const cachedData = new CachedValue();
 
 /**
  * Hit the file system and return the contents of the data file.
  */
 const loadDataFromFile = async () => {
   try {
-    logger.silly('loading data store from file!');
+    logger.silly('loading data store from file: %s', dataFilePath);
     const contents = await loadFileContents(dataFilePath);
-    return JSON.parse(contents || {});
+    return contents ? JSON.parse(contents) : {};
   } catch (error) {
     if (error instanceof SyntaxError) {
       throw new DataFileParsingError(dataFilePath, { cause: error });
     }
-
     throw new DataFileIOError(dataFilePath, { cause: error });
   }
 };
@@ -37,16 +37,12 @@ const loadDataFromFile = async () => {
  * After first load the in-memory cached version is returned.
  */
 const getData = async () => {
-  // if we've already loaded the data from disk then return the in-memory version.
-  if (cachedData) {
-    logger.silly('using cached data store');
-    return cachedData;
+  if (!cachedData.hasValue()) {
+    logger.silly('setting data store cache for first time');
+    cachedData.setValue(await loadDataFromFile());
   }
 
-  // this is first query, load the data from disk and set the in-memory version.
-  const contents = await loadDataFromFile();
-  cachedData = contents;
-  return contents;
+  return cachedData.value;
 };
 
 /**
@@ -57,7 +53,7 @@ const getData = async () => {
 const setData = async (data) => {
   logger.silly('update data store cache and writing to file!');
   // ensure the in-memory cache has the latest values.
-  cachedData = data;
+  cachedData.setValue(data);
   // write the data to disk
   return saveFile(dataFilePath, JSON.stringify(data));
 };
@@ -70,7 +66,9 @@ const setData = async (data) => {
  */
 export const getStoreValue = async (key, defaultValue = undefined) => {
   logger.silly('loading store value with key: "%s"', key);
+  console.log('HELLO WORLD, loading', key, 'cache', cachedData.value);
   const data = await getData();
+  console.log('got data', data);
   const toReturn = get(data, key, defaultValue);
   logger.silly('loaded value from store: %s', toReturn);
   return toReturn;
