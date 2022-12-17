@@ -1,7 +1,7 @@
 import { AnswerTypeInvalidError } from './answerTypeInvalidError.js';
 import { AnswerEmptyError } from './answerEmptyError.js';
 import { DataFileIOError } from './dataFileIOError.js';
-import { DataFileParsingError } from './dataFileParsingError';
+import { DataFileParsingError } from './dataFileParsingError.js';
 import { LockedOrCompletedPuzzleError } from './lockedOrCompletedPuzzleError.js';
 import { LockedPuzzleError } from './lockedPuzzleError.js';
 import { PuzzleAlreadySolvedError } from './puzzleAlreadySolvedError.js';
