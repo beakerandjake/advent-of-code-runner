@@ -2,7 +2,7 @@ import { get, set } from 'lodash-es';
 import { getConfigValue } from '../config.js';
 import { logger } from '../logger.js';
 import { loadFileContents, saveFile } from './io.js';
-import { DataFileIOError } from '../errors/index.js';
+import { DataFileIOError, DataFileParsingError } from '../errors/index.js';
 
 const dataFilePath = getConfigValue('paths.dataStoreFile');
 
@@ -23,6 +23,10 @@ const loadDataFromFile = async () => {
     const contents = await loadFileContents(dataFilePath);
     return JSON.parse(contents || {});
   } catch (error) {
+    if (error instanceof SyntaxError) {
+      throw new DataFileParsingError(dataFilePath, { cause: error });
+    }
+
     throw new DataFileIOError(dataFilePath, { cause: error });
   }
 };
