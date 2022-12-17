@@ -1,6 +1,6 @@
 import { AnswerTypeInvalidError } from './answerTypeInvalidError.js';
 import { AnswerEmptyError } from './answerEmptyError.js';
-import { DataFileNotFoundError } from './dataFileNotFoundError.js';
+import { DataFileIOError } from './dataFileIOError.js';
 import { LockedOrCompletedPuzzleError } from './lockedOrCompletedPuzzleError.js';
 import { LockedPuzzleError } from './lockedPuzzleError.js';
 import { PuzzleAlreadySolvedError } from './puzzleAlreadySolvedError.js';
@@ -17,7 +17,7 @@ import { UserError } from './userError.js';
 export {
   AnswerTypeInvalidError,
   AnswerEmptyError,
-  DataFileNotFoundError,
+  DataFileIOError,
   LockedOrCompletedPuzzleError,
   LockedPuzzleError,
   PuzzleAlreadySolvedError,

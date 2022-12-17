@@ -2,7 +2,7 @@ import { get, set } from 'lodash-es';
 import { getConfigValue } from '../config.js';
 import { logger } from '../logger.js';
 import { loadFileContents, saveFile } from './io.js';
-import { DataFileNotFoundError } from '../errors/index.js';
+import { DataFileIOError } from '../errors/index.js';
 
 const dataFilePath = getConfigValue('paths.dataStoreFile');
 
@@ -23,7 +23,7 @@ const loadDataFromFile = async () => {
     const contents = await loadFileContents(dataFilePath);
     return JSON.parse(contents || {});
   } catch (error) {
-    throw new DataFileNotFoundError(dataFilePath, { cause: error });
+    throw new DataFileIOError(dataFilePath, { cause: error });
   }
 };
 
