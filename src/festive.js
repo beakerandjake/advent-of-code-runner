@@ -2,7 +2,6 @@ import boxen from 'boxen';
 import chalk from 'chalk';
 import Transport from 'winston-transport';
 import { LEVEL } from 'triple-beam';
-import { sample } from 'lodash-es';
 import { getConfigValue } from './config.js';
 
 const santa = '🎅';
@@ -48,7 +47,7 @@ export const printFestiveTitle = () => {
 /**
  * Returns a random ~*festive*~ emoji.
  */
-export const festiveEmoji = () => sample(festiveEmojis);
+export const festiveEmoji = () => festiveEmojis[Math.floor(Math.random() * festiveEmojis.length)];
 
 export const festiveStyle = chalk.bold.green;
 /**

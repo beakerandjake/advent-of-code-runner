@@ -1,5 +1,4 @@
 /* eslint-disable no-unused-vars */
-import { range } from 'lodash-es';
 import { getConfigValue } from '../config.js';
 import { logger } from '../logger.js';
 
@@ -15,7 +14,7 @@ export const downloadInput = async (
   authenticationToken,
 ) => {
   logger.verbose('downloading mock input file for year: %s, day: %s', year, day);
-  return range(1, 100).join('\n');
+  return [...Array(100).keys()].map((x) => x + 1).join('\n');
 };
 
 /**
