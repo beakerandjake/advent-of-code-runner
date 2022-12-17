@@ -1,6 +1,7 @@
-import { get, set } from 'lodash-es';
+import { set } from 'lodash-es';
 import { getConfigValue } from '../config.js';
 import { logger } from '../logger.js';
+import { get } from '../util.js';
 import { loadFileContents, saveFile } from './io.js';
 import { CachedValue } from './cachedValue.js';
 import { DataFileIOError, DataFileParsingError } from '../errors/index.js';
