@@ -1,4 +1,3 @@
-import { getConfigValue } from '../config.js';
 import { UserError } from './userError.js';
 
 /**
@@ -6,8 +5,8 @@ import { UserError } from './userError.js';
  * which is locked to them, or is one they have already solved
  */
 export class DataFileNotFoundError extends UserError {
-  constructor() {
-    super(`Could not find data file at: "${getConfigValue('paths.dataStoreFile')}". This file should have been created during the "init" command.`);
+  constructor(fileName, ...args) {
+    super(`Could not find data file at: "${fileName}". This file should have been created during the "init" command.`, ...args);
     this.name = 'LockedOrCompletedPuzzleError';
   }
 }

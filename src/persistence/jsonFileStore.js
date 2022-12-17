@@ -23,7 +23,7 @@ const loadDataFromFile = async () => {
     const contents = await loadFileContents(dataFilePath);
     return JSON.parse(contents || {});
   } catch (error) {
-    throw new DataFileNotFoundError();
+    throw new DataFileNotFoundError(dataFilePath, { cause: error });
   }
 };
 
