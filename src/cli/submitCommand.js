@@ -5,7 +5,7 @@ import { LockedPuzzleError, RateLimitExceededError } from '../errors/index.js';
 import { logger } from '../logger.js';
 import { solve } from '../solve.js';
 import { puzzleIsUnlocked } from '../validatePuzzle.js';
-import { dayArgument, partArgument, yearOption } from './arguments.js';
+import { dayArgument, partArgument } from './arguments.js';
 import {
   puzzleHasBeenSolved,
   setCorrectAnswer,
@@ -25,7 +25,9 @@ import {
  * @param {Object} options
  * @param {Number} options.year
  */
-const submit = async (day, part, { year }) => {
+const submit = async (day, part) => {
+  const year = getConfigValue('aoc.year');
+
   logger.festive('Submitting day: %s, part: %s, year: %s', day, part, year);
 
   // prevent submission if user can't even submit.
@@ -76,5 +78,4 @@ export const submitCommand = new Command()
   .description('Run the solution for the puzzle, then submit the result.')
   .addArgument(dayArgument)
   .addArgument(partArgument)
-  .addOption(yearOption)
   .action(submit);

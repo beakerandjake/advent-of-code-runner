@@ -1,19 +1,21 @@
 import { Command } from 'commander';
 import { answersEqual, getCorrectAnswer } from '../answers.js';
+import { getConfigValue } from '../config.js';
 import { LockedOrCompletedPuzzleError } from '../errors/index.js';
 import { logger } from '../logger.js';
 import { solve } from '../solve.js';
 import { tryToSetFastestExecutionTime } from '../statistics.js';
 import { puzzleIsUnlocked } from '../validatePuzzle.js';
-import { dayArgument, partArgument, yearOption } from './arguments.js';
+import { dayArgument, partArgument } from './arguments.js';
 
 export const solveCommand = new Command()
   .name('solve')
   .description('Solve the puzzle, benchmark the execution time, and output the result.')
   .addArgument(dayArgument)
   .addArgument(partArgument)
-  .addOption(yearOption)
-  .action(async (day, part, { year }) => {
+  .action(async (day, part) => {
+    const year = getConfigValue('aoc.year');
+
     logger.festive('Solving day: %s, part: %s, year: %s', day, part, year);
 
     if (!puzzleIsUnlocked(year, day)) {
