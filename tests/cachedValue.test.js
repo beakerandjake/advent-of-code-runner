@@ -1,6 +1,4 @@
-import {
-  describe, jest, test, beforeEach,
-} from '@jest/globals';
+import { describe, test } from '@jest/globals';
 import { CachedValue } from '../src/persistence/cachedValue.js';
 
 describe('cachedValue', () => {
