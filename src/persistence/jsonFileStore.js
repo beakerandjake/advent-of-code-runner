@@ -66,9 +66,7 @@ const setData = async (data) => {
  */
 export const getStoreValue = async (key, defaultValue = undefined) => {
   logger.silly('loading store value with key: "%s"', key);
-  console.log('HELLO WORLD, loading', key, 'cache', cachedData.value);
   const data = await getData();
-  console.log('got data', data);
   const toReturn = get(data, key, defaultValue);
   logger.silly('loaded value from store: %s', toReturn);
   return toReturn;
@@ -84,5 +82,4 @@ export const setStoreValue = async (key, value) => {
   const data = await getData();
   set(data, key, value);
   await setData(data);
-  logger.silly('set store value with key: "%s"', key);
 };

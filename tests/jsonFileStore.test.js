@@ -23,15 +23,21 @@ jest.unstable_mockModule('../src/logger.js', () => ({
   },
 }));
 
+// jest.unstable_mockModule('../src/persistence/cachedValue.js', () => ({
+//   CachedValue: jest.fn(() => ({
+//     value: jest.fn(),
+//     setValue: jest.fn(),
+//     hasValue: jest.fn(),
+//   })),
+// }));
+const mockCache = {
+  value: null,
+  setValue: jest.fn(),
+  hasValue: jest.fn(),
+};
 jest.unstable_mockModule('../src/persistence/cachedValue.js', () => ({
-  CachedValue: jest.fn(() => ({
-    value: jest.fn(),
-    setValue: jest.fn(),
-    hasValue: jest.fn(),
-  })),
+  CachedValue: jest.fn(() => mockCache),
 }));
-
-// jest.spyOn('../src/persistence/cachedValue.js');
 
 // import after setting up the mock so the modules import the mocked version
 const { CachedValue } = await import('../src/persistence/cachedValue.js');
@@ -40,70 +46,61 @@ const { getStoreValue, setStoreValue } = await import('../src/persistence/jsonFi
 
 afterEach(() => {
   jest.clearAllMocks();
-  jest.restoreAllMocks();
 });
 
 describe('jsonFileStore', () => {
-  beforeEach(() => {
-    jest.clearAllMocks();
-  });
-
   describe('getStoreValue() - cache is empty', () => {
-    test('asdf', async () => {
-      const z = new CachedValue();
-      console.log(z.hasValue);
+    // mock empty cache for each test in this block.
+    beforeEach(() => {
+      mockCache.value = null;
+      mockCache.hasValue.mockReturnValue(false);
+      // empty cache should set set value correctly.
+      mockCache.setValue.mockImplementation((x) => {
+        mockCache.value = x;
+      });
     });
 
-    // test('throws if loadFileContents throws', async () => {
-    //   const { getStoreValue } = await import('../src/persistence/jsonFileStore.js');
+    test('loadFileContents is called', async () => {
+      await getStoreValue('1234');
+      expect(loadFileContents).toBeCalled();
+    });
 
-    //   loadFileContents.mockImplementationOnce(async () => {
-    //     throw new Error('Could not load file!');
-    //   });
-    //   expect(async () => getStoreValue('2134'))
-    //     .rejects
-    //     .toThrow(DataFileIOError);
-    // });
+    test('throws if loadFileContents throws', async () => {
+      loadFileContents.mockImplementationOnce(async () => {
+        throw new Error('Could not load file!');
+      });
+      expect(async () => getStoreValue('2134'))
+        .rejects
+        .toThrow(DataFileIOError);
+    });
 
-    // test('throws if data file is invalid json', async () => {
-    //   const { getStoreValue } = await import('../src/persistence/jsonFileStore.js');
+    test('throws if data file is invalid json', async () => {
+      loadFileContents.mockReturnValueOnce('{COOL:1234,}');
+      expect(async () => getStoreValue('2134'))
+        .rejects
+        .toThrow(DataFileParsingError);
+    });
 
-    //   loadFileContents.mockReturnValueOnce('{COOL:1234,}');
-    //   expect(async () => getStoreValue('2134'))
-    //     .rejects
-    //     .toThrow(DataFileParsingError);
-    // });
+    test('returns default value if user data file has no contents', async () => {
+      const defaultValue = 45;
+      loadFileContents.mockReturnValueOnce('');
+      expect(await getStoreValue('1234', defaultValue)).toEqual(defaultValue);
+    });
 
-    // test('returns default value if user data file has no contents', async () => {
-    //   const { getStoreValue } = await import('../src/persistence/jsonFileStore.js');
+    test('returns default value if key not found', async () => {
+      const defaultValue = 45;
+      loadFileContents.mockReturnValueOnce(JSON.stringify({ one: 1, two: 2, three: 3 }));
+      expect(await getStoreValue('four', defaultValue)).toEqual(defaultValue);
+    });
 
-    //   const defaultValue = 45;
-    //   loadFileContents.mockReturnValueOnce('');
-    //   expect(await getStoreValue('1234', defaultValue)).toEqual(defaultValue);
-    // });
-
-    // test('returns default value if key not found', async () => {
-    //   const { getStoreValue } = await import('../src/persistence/jsonFileStore.js');
-
-    //   const defaultValue = 45;
-    //   loadFileContents.mockReturnValueOnce(JSON.stringify({ one: 1, two: 2, three: 3 }));
-    //   expect(await getStoreValue('four', defaultValue)).toEqual(defaultValue);
-    // });
-
-    // test('returns value if key found', async () => {
-    //   const expected = 4;
-    //   const key = 'four';
-    //   console.log('JSON.stringify', JSON.stringify({
-    //     one: 1, two: 2, three: 3, [key]: expected,
-    //   }));
-    //   loadFileContents.mockReturnValueOnce(JSON.stringify({
-    //     one: 1, two: 2, three: 3, [key]: expected,
-    //   }));
-
-    //   const { getStoreValue } = await import('../src/persistence/jsonFileStore.js');
-
-    //   expect(await getStoreValue(key, 66)).toEqual(expected);
-    // });
+    test('returns value if key found', async () => {
+      const expected = 4;
+      const key = 'four';
+      loadFileContents.mockReturnValueOnce(
+        JSON.stringify({ one: 1, [key]: expected }),
+      );
+      expect(await getStoreValue(key, 66)).toEqual(expected);
+    });
 
     // test('noop on puzzle not found', async () => {
     //   findPuzzle.mockReturnValueOnce(null);
