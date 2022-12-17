@@ -44,10 +44,6 @@ jest.unstable_mockModule('../src/persistence/cachedValue.js', () => ({
 const { loadFileContents, saveFile } = await import('../src/persistence/io.js');
 const { getStoreValue, setStoreValue } = await import('../src/persistence/jsonFileStore.js');
 
-beforeEach(() => {
-  jest.clearAllMocks();
-});
-
 describe('jsonFileStore', () => {
   describe('getStoreValue() - cache is empty', () => {
     // mock empty cache for each test in this block.
@@ -62,6 +58,7 @@ describe('jsonFileStore', () => {
 
     afterEach(() => {
       expect(loadFileContents).toHaveBeenCalled();
+      jest.clearAllMocks();
     });
 
     test('loadFileContents is called', async () => {
@@ -97,6 +94,11 @@ describe('jsonFileStore', () => {
       expect(await getStoreValue('four', defaultValue)).toEqual(defaultValue);
     });
 
+    test('returns undefined if key not found and no default provided', async () => {
+      loadFileContents.mockReturnValueOnce(JSON.stringify({ one: 1, two: 2, three: 3 }));
+      expect(await getStoreValue('four')).toEqual(undefined);
+    });
+
     test('returns value if key found', async () => {
       const expected = 4;
       const key = 'four';
@@ -107,7 +109,38 @@ describe('jsonFileStore', () => {
     });
   });
 
-  describe('setStoreValue()', () => {
-    test.todo('todo');
+  describe('getStoreValue() - cache is not empty', () => {
+    // mock cache having been set for this whole block.
+    beforeEach(() => {
+      mockCache.value = {};
+      mockCache.hasValue.mockReturnValue(true);
+      // empty cache should set set value correctly.
+      mockCache.setValue.mockImplementation((x) => {
+        mockCache.value = x;
+      });
+    });
+
+    afterEach(() => {
+      expect(loadFileContents).not.toHaveBeenCalled();
+      jest.clearAllMocks();
+    });
+
+    test('returns value if key found', async () => {
+      const key = 'test';
+      const value = 'ASDF';
+      mockCache.value = { [key]: value };
+      expect(await getStoreValue(key)).toBe(value);
+    });
+
+    test('returns default value if key not found', async () => {
+      const expected = 'default';
+      mockCache.value = { 'not key': '1234' };
+      expect(await getStoreValue('key', 'default')).toBe(expected);
+    });
+
+    test('returns undefined if key not found and no default provided', async () => {
+      mockCache.value = { 'not key': '1234' };
+      expect(await getStoreValue('key')).toBe(undefined);
+    });
   });
 });
