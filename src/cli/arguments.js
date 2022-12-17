@@ -1,5 +1,4 @@
 import { Argument, InvalidArgumentError } from 'commander';
-import { toNumber } from 'lodash-es';
 import { getConfigValue } from '../config.js';
 import { betweenMessage } from '../formatting.js';
 import { dayIsValid, partIsValid } from '../validatePuzzle.js';
@@ -10,13 +9,13 @@ import { dayIsValid, partIsValid } from '../validatePuzzle.js';
  * @throws {InvalidArgumentError} Thrown if parsing fails.
  */
 const parseIntArg = (arg) => {
-  const numeric = toNumber(arg);
+  const numeric = Number.parseInt(arg, 10);
 
   if (!Number.isFinite(numeric)) {
     throw new InvalidArgumentError('Must be a number.');
   }
 
-  return parseInt(numeric, 10);
+  return numeric;
 };
 
 const daysRange = betweenMessage(getConfigValue('aoc.puzzleValidation.days'));
