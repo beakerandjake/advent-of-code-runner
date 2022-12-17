@@ -35,7 +35,7 @@ const loadDataFromFile = async () => {
  * If this is the first query then the data store file is loaded from disk.
  * After first load the in-memory cached version is returned.
  */
-const getData = async () => {
+const loadData = async () => {
   if (!cachedData.hasValue()) {
     logger.silly('setting data store cache for first time');
     cachedData.setValue(await loadDataFromFile());
@@ -49,12 +49,17 @@ const getData = async () => {
  * This will write the data contents to disk.
  * It will also update the in-memory cache with the new data.
  */
-const setData = async (data) => {
+const saveData = async (data) => {
   logger.silly('update data store cache and writing to file!');
+
   // ensure the in-memory cache has the latest values.
   cachedData.setValue(data);
-  // write the data to disk
-  return saveFile(dataFilePath, JSON.stringify(data));
+
+  try {
+    await saveFile(dataFilePath, JSON.stringify(data));
+  } catch (error) {
+    throw new DataFileIOError(dataFilePath, { cause: error });
+  }
 };
 
 /**
@@ -65,7 +70,7 @@ const setData = async (data) => {
  */
 export const getStoreValue = async (key, defaultValue = undefined) => {
   logger.silly('loading store value with key: "%s"', key);
-  const data = await getData();
+  const data = await loadData();
   const toReturn = Object.prototype.hasOwnProperty.call(data, key) ? data[key] : defaultValue;
   logger.silly('loaded value from store: %s', toReturn);
   return toReturn;
@@ -78,7 +83,7 @@ export const getStoreValue = async (key, defaultValue = undefined) => {
  */
 export const setStoreValue = async (key, value) => {
   logger.silly('setting store value with key: "%s" to: %s', key, value);
-  const data = await getData();
-  data[key] = value;
-  await setData(data);
+  const data = await loadData();
+  const updated = { ...data, [key]: value };
+  await saveData(updated);
 };

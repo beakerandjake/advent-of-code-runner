@@ -143,4 +143,60 @@ describe('jsonFileStore', () => {
       expect(await getStoreValue('key')).toBe(undefined);
     });
   });
+
+  describe('setStoreValue() - cache is empty', () => {
+    // mock empty cache for each test in this block.
+    beforeEach(() => {
+      mockCache.value = null;
+      mockCache.hasValue.mockReturnValue(false);
+      // empty cache should set set value correctly.
+      mockCache.setValue.mockImplementation((x) => {
+        mockCache.value = x;
+      });
+    });
+
+    afterEach(() => {
+      // expect(loadFileContents).toHaveBeenCalled();
+      // expect(saveFile).toHaveBeenCalled();
+      // expect(mockCache.setValue).toHaveBeenCalled();
+      jest.clearAllMocks();
+    });
+
+    test('value is added when key does not exist', async () => {
+      const orig = { asdf: true };
+      const key = 'cool';
+      const value = false;
+      loadFileContents.mockReturnValueOnce(JSON.stringify(orig));
+
+      await setStoreValue(key, value);
+
+      expect(saveFile).toHaveBeenCalledWith(
+        undefined,
+        JSON.stringify({ ...orig, [key]: value }),
+      );
+    });
+
+    test('value is updated when key exists', async () => {
+      const key = 'cool';
+      const value = false;
+      const orig = { asdf: true, [key]: 'original' };
+      loadFileContents.mockReturnValueOnce(JSON.stringify(orig));
+
+      await setStoreValue(key, value);
+
+      expect(saveFile).toHaveBeenCalledWith(
+        undefined,
+        JSON.stringify({ ...orig, [key]: value }),
+      );
+    });
+
+    test('throws if could not save file', async () => {
+      saveFile.mockImplementationOnce(async () => {
+        throw new Error('Could not save file!');
+      });
+      expect(async () => setStoreValue('1234', false))
+        .rejects
+        .toThrow(DataFileIOError);
+    });
+  });
 });
