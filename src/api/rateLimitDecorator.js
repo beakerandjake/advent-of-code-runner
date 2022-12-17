@@ -1,5 +1,6 @@
 import { RateLimitExceededError } from '../errors/rateLimitExceededError.js';
 import { isRateLimited, updateRateLimit } from './rateLimit.js';
+import { logger } from '../logger.js';
 
 /**
  * Decorates a function with rate limiting.
@@ -13,6 +14,8 @@ export const rateLimitDecorator = (
   actionType,
   exceededMessage = 'Rate limit exceeded.',
 ) => async (...args) => {
+  logger.debug('checking rate limit before performing action: %s', actionType);
+
   const { limited, expiration } = await isRateLimited(actionType);
 
   if (limited) {
@@ -20,8 +23,10 @@ export const rateLimitDecorator = (
   }
 
   try {
+    logger.debug('action: %s is not rate limit, executing', actionType);
     return fn(...args);
   } finally {
+    logger.debug('updating rate limit after executing action: %s', actionType);
     await updateRateLimit(actionType);
   }
 };

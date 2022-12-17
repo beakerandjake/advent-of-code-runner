@@ -9,6 +9,14 @@ jest.unstable_mockModule('../src/api/rateLimit.js', () => ({
   updateRateLimit: jest.fn(),
 }));
 
+jest.unstable_mockModule('../src/logger.js', () => ({
+  logger: {
+    debug: jest.fn(),
+    warn: jest.fn(),
+  },
+}));
+
+// const { logger } = await import('../src/logger.js');
 const { isRateLimited, updateRateLimit } = await import('../src/api/rateLimit.js');
 const { rateLimitDecorator } = await import('../src/api/rateLimitDecorator.js');
 
