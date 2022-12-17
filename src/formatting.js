@@ -1,4 +1,3 @@
-import { first, last } from 'lodash-es';
 import {
   differenceInMilliseconds,
   max,
@@ -67,4 +66,4 @@ export const humanizeMinutesDifference = (startDate, endDate) => {
  * Given a sorted array, generates a string like 'between $(first) and $(last)'
  * @param {Any[]} choices
  */
-export const betweenMessage = (choices = []) => (`between ${first(choices)} and ${last(choices)}`);
+export const betweenMessage = (choices = []) => (`between ${choices[0]} and ${choices[choices.length - 1]}`);
