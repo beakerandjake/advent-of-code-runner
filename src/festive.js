@@ -1,6 +1,7 @@
 import boxen from 'boxen';
 import chalk from 'chalk';
 import Transport from 'winston-transport';
+import { LEVEL } from 'triple-beam';
 import { sample } from 'lodash-es';
 import { getConfigValue } from './config.js';
 
@@ -49,9 +50,7 @@ export const printFestiveTitle = () => {
  */
 export const festiveEmoji = () => sample(festiveEmojis);
 
-export const festiveStyle = chalk.bold.hex('#00873E');
-export const festiveErrorStyle = chalk.red.italic;
-
+export const festiveStyle = chalk.bold.green;
 /**
  * Turns a normal string into a ~*festive*~ one.
  * @param {String} message
@@ -74,21 +73,8 @@ export class FestiveTransport extends Transport {
   log(info, callback) {
     setImmediate(() => this.emit('logged', info));
 
-    switch (info.level) {
-      case 'festive':
-        console.log(makeFestive(festiveStyle(info.message)));
-        break;
-      case 'festiveError':
-        if (info.name === 'SolutionRuntimeError') {
-          // Always log the stack trace of user errors.
-          console.log(makeFestive(festiveErrorStyle('Your code threw an error!')));
-          console.log(festiveErrorStyle(info.message));
-        } else {
-          console.log(makeFestive(festiveErrorStyle(`${info.stack ? 'Error: ' : ''}${info.message}`)));
-        }
-        break;
-      default:
-        break;
+    if (info[LEVEL] === 'festive') {
+      console.log(makeFestive(festiveStyle(info.message)));
     }
 
     callback();

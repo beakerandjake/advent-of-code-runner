@@ -54,3 +54,14 @@ export const puzzleIsUnlocked = (year, day) => {
   logger.warn('not implemented - puzzleIsUnlocked()');
   return true;
 };
+
+/**
+ * Returns a collection of all puzzles available for the year.
+ * Collection is sorted from earliest puzzle to latest puzzle.
+ * @param {Number} year
+ */
+export const getAllPuzzlesForYear = (year) => {
+  const days = getConfigValue('aoc.puzzleValidation.days');
+  const parts = getConfigValue('aoc.puzzleValidation.parts');
+  return days.reduce((acc, day) => [...acc, ...parts.map((part) => ({ year, day, part }))], []);
+};

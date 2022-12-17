@@ -2,6 +2,7 @@ import {
   createLogger, format, transports, addColors,
 } from 'winston';
 import { exit } from 'node:process';
+import { LEVEL, MESSAGE } from 'triple-beam';
 import { getConfigValue } from './config.js';
 import { FestiveTransport } from './festive.js';
 
@@ -18,7 +19,6 @@ const customLevels = {
   debug: 4,
   silly: 5,
   festive: 6,
-  festiveError: 7,
 };
 
 addColors({
@@ -31,8 +31,9 @@ addColors({
   // festive error colors don't matter
   // they are handled by the festive transport not colorize.
   festive: 'black',
-  festiveError: 'black',
 });
+
+const simpleFormat = format.simple();
 
 let loggerInstance;
 
@@ -43,27 +44,27 @@ try {
   loggerInstance = createLogger({
     levels: customLevels,
     format: format.combine(
+      format.errors({ stack: true }),
       format.splat(),
       format.json(),
-      format.errors({ stack: true }),
     ),
     transports: [
       new transports.Console({
         level,
         format: format.combine(
-          format.colorize({ all: true }),
           // format.simple would be nice to use but we need more customization
           format.printf((info) => {
-            if (info.stack) {
-              return `${info.level}: ${info.stack}`;
+            if (info[LEVEL] === 'error' && !info.useDefaultFormat) {
+              return `${info.level}: ${info.stack ? info.stack : info.message}`;
             }
 
-            return `${info.level}: ${info.message}`;
+            return simpleFormat.transform(info)[MESSAGE];
           }),
+          format.colorize({ all: true }),
         ),
       }),
       new FestiveTransport({
-        level: 'festiveError',
+        level: 'festive',
       }),
     ],
   });

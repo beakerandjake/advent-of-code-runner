@@ -1,5 +1,5 @@
 import { getConfigValue } from '../config.js';
-import { loadFileContents, saveFile } from '../io.js';
+import { loadFileContents, saveFile } from '../persistence/io.js';
 import { logger } from '../logger.js';
 import { replaceTokens } from './replaceTokens.js';
 

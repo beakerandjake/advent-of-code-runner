@@ -1,14 +1,13 @@
 import { Command } from 'commander';
+import { answersEqual, getCorrectAnswer } from '../answers.js';
 import { LockedOrCompletedPuzzleError } from '../errors/index.js';
 import { logger } from '../logger.js';
-import { getCorrectAnswer, tryToSetFastestExecutionTime } from '../progress.js';
 import { solve } from '../solve.js';
+import { tryToSetFastestExecutionTime } from '../statistics.js';
 import { puzzleIsUnlocked } from '../validatePuzzle.js';
 import { dayArgument, partArgument, yearOption } from './arguments.js';
 
-const command = new Command();
-
-command
+export const solveCommand = new Command()
   .name('solve')
   .description('Solve the puzzle, benchmark the execution time, and output the result.')
   .addArgument(dayArgument)
@@ -18,7 +17,7 @@ command
     logger.festive('Solving day: %s, part: %s, year: %s', day, part, year);
 
     if (!puzzleIsUnlocked(year, day)) {
-      throw new LockedOrCompletedPuzzleError(`Puzzle for year: ${year}, day: ${day}, part: ${part} is locked!`);
+      throw new LockedOrCompletedPuzzleError();
     }
 
     const { answer, executionTimeNs } = await solve(year, day, part);
@@ -34,8 +33,8 @@ command
 
     // the current answer is not the correct answer.
     // the user could have changed code and broke something.
-    if (answer.toString() !== correctAnswer) {
-      logger.festiveError('You have already correctly answered this puzzle, but answer: "%s" doesn\'t match correct answer: "%s"', answer, correctAnswer);
+    if (!answersEqual(answer, correctAnswer)) {
+      logger.error('You have already correctly answered this puzzle, but answer: "%s" doesn\'t match correct answer: "%s"', answer, correctAnswer);
       return;
     }
 
@@ -43,5 +42,3 @@ command
     logger.festive('You have already correctly answered this puzzle');
     await tryToSetFastestExecutionTime(year, day, part, executionTimeNs);
   });
-
-export const solveCommand = command;

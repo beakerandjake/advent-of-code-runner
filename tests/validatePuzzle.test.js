@@ -6,9 +6,16 @@ jest.unstable_mockModule('../src/config.js', () => ({
   getConfigValue: jest.fn(),
 }));
 
+// mock the logger
+jest.unstable_mockModule('../src/logger.js', () => ({
+  logger: jest.fn(),
+}));
+
 // import after setting up the mock so the modules import the mocked version
 const { getConfigValue } = await import('../src/config.js');
-const { yearIsValid, dayIsValid, partIsValid } = await import('../src/validatePuzzle.js');
+const {
+  yearIsValid, dayIsValid, partIsValid, getAllPuzzlesForYear,
+} = await import('../src/validatePuzzle.js');
 
 // since some tests override the mock implementation, we have to reset it before each test.
 beforeEach(() => getConfigValue.mockImplementation(originalGetConfigValue));
@@ -158,54 +165,31 @@ describe('validatePuzzle', () => {
       expect(partIsValid(8)).toBe(true);
     });
   });
+
+  describe('getAllPuzzles()', () => {
+    test('returns expected value', () => {
+      const year = 2022;
+      getConfigValue.mockReturnValueOnce([1, 2, 3, 4, 5]);
+      getConfigValue.mockReturnValueOnce([1, 2, 3]);
+      const expected = [
+        { year, day: 1, part: 1 },
+        { year, day: 1, part: 2 },
+        { year, day: 1, part: 3 },
+        { year, day: 2, part: 1 },
+        { year, day: 2, part: 2 },
+        { year, day: 2, part: 3 },
+        { year, day: 3, part: 1 },
+        { year, day: 3, part: 2 },
+        { year, day: 3, part: 3 },
+        { year, day: 4, part: 1 },
+        { year, day: 4, part: 2 },
+        { year, day: 4, part: 3 },
+        { year, day: 5, part: 1 },
+        { year, day: 5, part: 2 },
+        { year, day: 5, part: 3 },
+      ];
+
+      expect(getAllPuzzlesForYear(year)).toStrictEqual(expected);
+    });
+  });
 });
-
-// test('false when current year is max year and not currently december', () => {
-//   const maxYear = 1967;
-
-//   jest.useFakeTimers().setSystemTime(new Date(1967, 4, 3));
-
-//   overrideConfigValues([
-//     ['aoc.puzzleValidation.minYear', 1945],
-//     ['aoc.puzzleValidation.maxYear', maxYear],
-//   ]);
-//   expect(yearIsValid(maxYear)).toBe(false);
-
-//   jest.useRealTimers();
-// });
-
-// test.each(commonFailCases)('yearIsValid - false on: %p', (value) => {
-//   expect(yearIsValid(value)).toBe(false);
-// });
-
-// test('yearIsValid - false on before start year', () => {
-//   const z = getConfigValue('logging');
-//   console.log('z', z);
-//   getConfigValue.mockImplementation(() => 'asdf');
-
-//   const q = getConfigValue('logging');
-//   console.log('q', q);
-
-//   expect(yearIsValid(2003)).toBe(false);
-// });
-
-// test.todo('yearIsValid - RangeError on end year before start year');
-// test.todo('yearIsValid - false in future');
-// test.todo('yearIsValid - false in this year not december');
-// test.todo('yearIsValid - true between min year and last year');
-// test.todo('yearIsValid - true in this year and its december');
-
-// test.each(commonFailCases)('dayIsValid - false on: %p', (value) => {
-//   expect(dayIsValid(value)).toBe(false);
-// });
-
-// test.todo('dayIsValid - false on above max day');
-// test.todo('dayIsValid - false on below min day');
-// test.todo('dayIsValid - true when between min and max');
-
-// test.each(commonFailCases)('partIsValid - false on: %p', (value) => {
-//   expect(partIsValid(value)).toBe(false);
-// });
-
-// test.todo('partIsValid - false when below min part');
-// test.todo('partIsValid - false when above max part');

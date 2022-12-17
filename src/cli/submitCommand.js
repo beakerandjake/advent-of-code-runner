@@ -3,15 +3,20 @@ import { submitSolution } from '../api/index.js';
 import { getConfigValue } from '../config.js';
 import { LockedPuzzleError, RateLimitExceededError } from '../errors/index.js';
 import { logger } from '../logger.js';
-import {
-  puzzleHasBeenSolved, setCorrectAnswer, addIncorrectAnswer, answerHasBeenSubmitted,
-} from '../progress.js';
-import {
-  checkActionRateLimit, rateLimitedActions, updateRateLimit,
-} from '../rateLimit.js';
 import { solve } from '../solve.js';
 import { puzzleIsUnlocked } from '../validatePuzzle.js';
 import { dayArgument, partArgument, yearOption } from './arguments.js';
+import {
+  puzzleHasBeenSolved,
+  setCorrectAnswer,
+  addIncorrectAnswer,
+  answerHasBeenSubmitted,
+} from '../answers.js';
+import {
+  isRateLimited,
+  rateLimitedActions,
+  updateRateLimit,
+} from '../api/rateLimit.js';
 
 /**
  * Solve the puzzle and submit the solution to advent of code.
@@ -34,7 +39,7 @@ const submit = async (day, part, { year }) => {
     return;
   }
 
-  const { limited, expiration } = await checkActionRateLimit(rateLimitedActions.submitAnswer);
+  const { limited, expiration } = await isRateLimited(rateLimitedActions.submitAnswer);
 
   // prevent submission if user is rate limited.
   if (limited) {
@@ -44,7 +49,7 @@ const submit = async (day, part, { year }) => {
   const { answer, executionTimeNs } = await solve(year, day, part);
 
   if (await answerHasBeenSubmitted(year, day, part, answer)) {
-    logger.festiveError('You\'ve already submitted this incorrect answer to advent of code!');
+    logger.error('You\'ve already submitted this incorrect answer to advent of code!');
     return;
   }
 
@@ -52,7 +57,7 @@ const submit = async (day, part, { year }) => {
 
   const { success, message } = await submitSolution(year, day, part, answer, getConfigValue('aoc.authenticationToken'));
 
-  logger[success ? 'festive' : 'festiveError']('%s', message);
+  logger[success ? 'festive' : 'error']('%s', message);
 
   await updateRateLimit(rateLimitedActions.submitAnswer);
 
