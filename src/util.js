@@ -13,3 +13,19 @@ export const get = (target, path, defaultValue = undefined) => {
     .reduce((res, key) => (res !== null && res !== undefined ? res[key] : res), target);
   return result === undefined || result === target ? defaultValue : result;
 };
+
+/**
+ * Checks to see if the target object contains a property with the given key
+ * Works like lodash has but only supports '.' syntax.
+ * @param {Object} target
+ * @param {String} key
+ */
+export const has = (target, key) => {
+  const keyParts = String.prototype.split.call(key || '', '.');
+
+  return !!target && (
+    keyParts.length > 1
+      ? has(target[key.split('.')[0]], keyParts.slice(1).join('.'))
+      : hasOwnProperty.call(target, key)
+  );
+};

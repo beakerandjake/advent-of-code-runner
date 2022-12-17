@@ -1,5 +1,5 @@
 import { describe, test } from '@jest/globals';
-import { get } from '../src/util';
+import { get, has } from '../src/util';
 
 describe('util', () => {
   describe('get()', () => {
@@ -41,6 +41,47 @@ describe('util', () => {
     test('returns value if key is found (nested)', () => {
       const expected = 22;
       expect(get({ one: { two: { three: { four: expected } } } }, 'one.two.three.four')).toBe(expected);
+    });
+  });
+
+  describe('has()', () => {
+    test('returns false if no target', () => {
+      expect(has(null, 'asdf')).toBe(false);
+      expect(has(undefined, 'asdf')).toBe(false);
+    });
+
+    test('returns false if not object', () => {
+      expect(has([], 'asdf')).toBe(false);
+      expect(has(Promise.resolve(true), 'asdf')).toBe(false);
+      expect(has(() => {}, 'asdf')).toBe(false);
+    });
+
+    test('returns false if no key', () => {
+      expect(has({ cool: false }, '')).toBe(false);
+      expect(has({ cool: false }, null)).toBe(false);
+      expect(has({ cool: false }, undefined)).toBe(false);
+    });
+
+    test('returns false if key not string', () => {
+      expect(has({ cool: false }, false)).toBe(false);
+      expect(has({ cool: false }, {})).toBe(false);
+      expect(has({ cool: false }, [])).toBe(false);
+    });
+
+    test('returns false if target does not have key (top level)', () => {
+      expect(has({ cool: false }, 'cats')).toBe(false);
+    });
+
+    test('returns false if target does not have key (nested)', () => {
+      expect(has({ cool: { cats: { only: true } } }, 'cats')).toBe(false);
+    });
+
+    test('returns true if target has key (top level)', () => {
+      expect(has({ cool: { cats: { only: true } } }, 'cool')).toBe(true);
+    });
+
+    test('returns true if target has key (nested)', () => {
+      expect(has({ cool: { cats: { only: true } } }, 'cool.cats')).toBe(true);
     });
   });
 });
