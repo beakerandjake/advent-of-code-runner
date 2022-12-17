@@ -1,11 +1,11 @@
 /* eslint-disable no-underscore-dangle */
 import dotenv from 'dotenv';
-import { get, has, range } from 'lodash-es';
 import { readFile } from 'node:fs/promises';
 import { join } from 'node:path';
 import { cwd as getCwd } from 'node:process';
 import { fileURLToPath, URL } from 'node:url';
 import yn from 'yn';
+import { get, has } from './util.js';
 
 /**
  * The directory this source file resides in
@@ -111,8 +111,8 @@ const CONFIG = {
       // also allows possibility that aoc doesn't run during a specific year.
       // also ensures that this package gets updates at least once a year to support
       // that years aoc and any changes that might be needed.
-      years: range(2015, 2023),
-      days: range(1, 26),
+      years: [2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022],
+      days: [...Array(25).keys()].map((x) => x + 1), // 1-25 expected to always be advent calendar..
       parts: [1, 2],
     },
     mockApi: {
