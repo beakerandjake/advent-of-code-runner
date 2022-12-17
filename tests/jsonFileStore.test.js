@@ -40,11 +40,11 @@ jest.unstable_mockModule('../src/persistence/cachedValue.js', () => ({
 }));
 
 // import after setting up the mock so the modules import the mocked version
-const { CachedValue } = await import('../src/persistence/cachedValue.js');
+// const { CachedValue } = await import('../src/persistence/cachedValue.js');
 const { loadFileContents, saveFile } = await import('../src/persistence/io.js');
 const { getStoreValue, setStoreValue } = await import('../src/persistence/jsonFileStore.js');
 
-afterEach(() => {
+beforeEach(() => {
   jest.clearAllMocks();
 });
 
@@ -58,6 +58,10 @@ describe('jsonFileStore', () => {
       mockCache.setValue.mockImplementation((x) => {
         mockCache.value = x;
       });
+    });
+
+    afterEach(() => {
+      expect(loadFileContents).toHaveBeenCalled();
     });
 
     test('loadFileContents is called', async () => {
@@ -101,12 +105,6 @@ describe('jsonFileStore', () => {
       );
       expect(await getStoreValue(key, 66)).toEqual(expected);
     });
-
-    // test('noop on puzzle not found', async () => {
-    //   findPuzzle.mockReturnValueOnce(null);
-    //   await tryToSetFastestExecutionTime(2022, 1, 1, 12341234);
-    //   expect(addOrEditPuzzle).not.toBeCalled();
-    // });
   });
 
   describe('setStoreValue()', () => {
