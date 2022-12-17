@@ -146,7 +146,7 @@ describe('jsonFileStore', () => {
     });
   });
 
-  describe('setStoreValue() - cache is empty', () => {
+  describe('setStoreValue()', () => {
     describe('cache is empty', () => {
       // mock empty cache for each test in this block.
       beforeEach(() => {
@@ -159,9 +159,9 @@ describe('jsonFileStore', () => {
       });
 
       afterEach(() => {
-        // expect(loadFileContents).toHaveBeenCalled();
-        // expect(saveFile).toHaveBeenCalled();
-        // expect(mockCache.setValue).toHaveBeenCalled();
+        expect(loadFileContents).toHaveBeenCalled();
+        expect(saveFile).toHaveBeenCalled();
+        expect(mockCache.setValue).toHaveBeenCalled();
         jest.clearAllMocks();
       });
 
@@ -191,6 +191,58 @@ describe('jsonFileStore', () => {
           undefined,
           JSON.stringify({ ...orig, [key]: value }),
         );
+      });
+
+      test('throws if could not save file', async () => {
+        saveFile.mockImplementationOnce(async () => {
+          throw new Error('Could not save file!');
+        });
+        expect(async () => setStoreValue('1234', false))
+          .rejects
+          .toThrow(DataFileIOError);
+      });
+    });
+
+    describe('cache is not empty', () => {
+      // mock cache having been set for this whole block.
+      beforeEach(() => {
+        mockCache.value = {};
+        mockCache.hasValue.mockReturnValue(true);
+        // empty cache should set set value correctly.
+        mockCache.setValue.mockImplementation((x) => {
+          mockCache.value = x;
+        });
+      });
+
+      afterEach(() => {
+        expect(saveFile).toHaveBeenCalled();
+        expect(loadFileContents).not.toHaveBeenCalled();
+        expect(mockCache.setValue).toHaveBeenCalled();
+        jest.clearAllMocks();
+      });
+
+      test('value is added when key does not exist', async () => {
+        const orig = { cool: false };
+        const key = 'asdf';
+        const value = true;
+        const expected = { ...orig, [key]: value };
+        mockCache.value = { ...orig };
+
+        await setStoreValue(key, value);
+        expect(saveFile).toHaveBeenCalledWith(undefined, JSON.stringify(expected));
+        expect(mockCache.setValue).toHaveBeenCalledWith(expected);
+      });
+
+      test('value is updated when key exist', async () => {
+        const key = 'asdf';
+        const value = 'new';
+        const orig = { cool: false, [key]: 'old' };
+        const expected = { ...orig, [key]: value };
+        mockCache.value = { ...orig };
+
+        await setStoreValue(key, value);
+        expect(saveFile).toHaveBeenCalledWith(undefined, JSON.stringify(expected));
+        expect(mockCache.setValue).toHaveBeenCalledWith(expected);
       });
 
       test('throws if could not save file', async () => {
