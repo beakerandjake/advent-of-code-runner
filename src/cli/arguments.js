@@ -1,8 +1,8 @@
-import { Argument, InvalidArgumentError, Option } from 'commander';
+import { Argument, InvalidArgumentError } from 'commander';
 import { toNumber } from 'lodash-es';
 import { getConfigValue } from '../config.js';
 import { betweenMessage } from '../formatting.js';
-import { dayIsValid, partIsValid, yearIsValid } from '../validatePuzzle.js';
+import { dayIsValid, partIsValid } from '../validatePuzzle.js';
 
 /**
  * Parse the value as an integer.
@@ -48,19 +48,3 @@ export const partArgument = new Argument('<part>', `The part of the day to solve
     }
     return parsed;
   });
-
-const yearsRange = betweenMessage(getConfigValue('aoc.puzzleValidation.years'));
-
-/**
- * Argument for the puzzles year, returns an integer.
- * @throws {InvalidArgumentError} The year was invalid
- */
-export const yearOption = new Option('-y, --year <number>', `The year of advent of code to solve (${yearsRange}).`)
-  .argParser((value) => {
-    const parsed = parseIntArg(value);
-    if (!yearIsValid(parsed)) {
-      throw new InvalidArgumentError(`Allowed Years ${yearsRange}.`);
-    }
-    return parsed;
-  })
-  .default(getConfigValue('aoc.year'));
