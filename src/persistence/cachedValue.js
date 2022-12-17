@@ -13,7 +13,7 @@ export class CachedValue {
     return this.#cached;
   }
 
-  get hasValue() {
+  hasValue() {
     return !!this.#cached;
   }
 
