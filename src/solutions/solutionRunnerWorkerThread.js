@@ -1,22 +1,12 @@
 import { isMainThread, workerData, parentPort } from 'node:worker_threads';
 import { hrtime } from 'node:process';
+import { workerMessageTypes } from './workerMessageTypes.js';
 
 /**
  * Expects to be ran from a Worker. Loads the solution file and tries
  * to execute the solution within it. Communicates with parent process
  * via messages. When the solution is finished the results will be posted
  */
-
-/**
- * Defines the type of messages that a Worker can send back to the main thread.
- */
-export const workerMessageTypes = {
-  log: 'LOG',
-  answer: 'ANSWER',
-  answerTypeInvalid: 'ANSWER_TYPE_INVALID',
-  runtimeError: 'RUNTIME_ERROR',
-  functionNotFound: 'MISSING_FUNCTION_ERROR',
-};
 
 /**
  * Sends a message from the Worker to the main thread asking the main thread

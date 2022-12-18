@@ -2,7 +2,6 @@ import { join } from 'node:path';
 import { Worker } from 'node:worker_threads';
 import { logger } from '../logger.js';
 import { getConfigValue } from '../config.js';
-import { workerMessageTypes } from './solutionRunnerWorkerThread.js';
 import { fileExists } from '../persistence/io.js';
 import {
   SolutionMissingFunctionError,
@@ -13,6 +12,7 @@ import {
   SolutionWorkerUnexpectedError,
   SolutionWorkerExitWithoutAnswerError,
 } from '../errors/index.js';
+import { workerMessageTypes } from './workerMessageTypes.js';
 
 /**
  * Uses node worker threads to execute the user code in a separate context.
