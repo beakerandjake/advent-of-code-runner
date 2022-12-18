@@ -7,6 +7,7 @@ import { solve } from '../solve.js';
 import { tryToSetFastestExecutionTime } from '../statistics.js';
 import { puzzleIsUnlocked } from '../validatePuzzle.js';
 import { dayArgument, partArgument } from './arguments.js';
+import { getInput } from '../inputs/index.js';
 
 export const solveCommand = new Command()
   .name('solve')
@@ -22,7 +23,9 @@ export const solveCommand = new Command()
       throw new LockedOrCompletedPuzzleError();
     }
 
-    const { answer, executionTimeNs } = await solve(year, day, part);
+    const { answer, executionTimeNs } = (
+      await solve(year, day, part, await getInput(year, day))
+    );
 
     // the user might have already submitted the correct answer to this problem
     // but are re-executing their solution because they made code or performance improvements.
