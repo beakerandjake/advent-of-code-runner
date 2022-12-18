@@ -27,8 +27,10 @@ const decorateApiWithRateLimiting = ({ downloadInput, submitSolution }) => {
   };
 };
 
-const { downloadInput, submitSolution } = useMockApi
-  ? await import('./mockApi.js')
-  : decorateApiWithRateLimiting(await import('./api.js'));
+const { downloadInput, submitSolution } = decorateApiWithRateLimiting(
+  useMockApi
+    ? await import('./mockApi.js')
+    : await import('./api.js'),
+);
 
 export { downloadInput, submitSolution };
