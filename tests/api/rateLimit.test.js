@@ -3,25 +3,25 @@ import {
 } from '@jest/globals';
 
 // setup mocks.
-jest.unstable_mockModule('../src/persistence/rateLimitRepository.js', () => ({
+jest.unstable_mockModule('../../src/persistence/rateLimitRepository.js', () => ({
   getRateLimit: jest.fn(),
   setRateLimit: jest.fn(),
 }));
 
-jest.unstable_mockModule('../src/config.js', () => ({
+jest.unstable_mockModule('../../src/config.js', () => ({
   getConfigValue: jest.fn(),
 }));
 
-jest.unstable_mockModule('../src/logger.js', () => ({
+jest.unstable_mockModule('../../src/logger.js', () => ({
   logger: {
     debug: jest.fn(),
   },
 }));
 
 // import after setting up the mock so the modules import the mocked version
-const { getConfigValue } = await import('../src/config.js');
-const { updateRateLimit, isRateLimited, rateLimitedActions } = await import('../src/api/rateLimit.js');
-const { getRateLimit, setRateLimit } = await import('../src/persistence/rateLimitRepository.js');
+const { getConfigValue } = await import('../../src/config.js');
+const { updateRateLimit, isRateLimited, rateLimitedActions } = await import('../../src/api/rateLimit.js');
+const { getRateLimit, setRateLimit } = await import('../../src/persistence/rateLimitRepository.js');
 
 afterEach(() => {
   jest.clearAllMocks();

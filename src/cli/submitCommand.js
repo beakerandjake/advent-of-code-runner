@@ -1,7 +1,7 @@
 import { Command } from 'commander';
 import { submitSolution } from '../api/index.js';
 import { getConfigValue } from '../config.js';
-import { LockedPuzzleError, RateLimitExceededError } from '../errors/index.js';
+import { LockedPuzzleError } from '../errors/index.js';
 import { logger } from '../logger.js';
 import { solve } from '../solve.js';
 import { puzzleIsUnlocked } from '../validatePuzzle.js';
@@ -12,11 +12,6 @@ import {
   addIncorrectAnswer,
   answerHasBeenSubmitted,
 } from '../answers.js';
-import {
-  isRateLimited,
-  rateLimitedActions,
-  updateRateLimit,
-} from '../api/rateLimit.js';
 
 /**
  * Solve the puzzle and submit the solution to advent of code.
@@ -41,13 +36,6 @@ const submit = async (day, part) => {
     return;
   }
 
-  const { limited, expiration } = await isRateLimited(rateLimitedActions.submitAnswer);
-
-  // prevent submission if user is rate limited.
-  if (limited) {
-    throw new RateLimitExceededError('Timeout period for submitting a solution has not expired.', expiration);
-  }
-
   const { answer, executionTimeNs } = await solve(year, day, part);
 
   if (await answerHasBeenSubmitted(year, day, part, answer)) {
@@ -60,8 +48,6 @@ const submit = async (day, part) => {
   const { success, message } = await submitSolution(year, day, part, answer, getConfigValue('aoc.authenticationToken'));
 
   logger[success ? 'festive' : 'error']('%s', message);
-
-  await updateRateLimit(rateLimitedActions.submitAnswer);
 
   const progressUpdate = success
     ? setCorrectAnswer(year, day, part, answer, executionTimeNs)

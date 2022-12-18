@@ -26,6 +26,10 @@
   cli specifies args and such but calls separate action functions that's easier tested
   break out function in solutionRunnerWorkerThread & export for testing.
   need to test api, pull out response parsing into own files?
+
+  need one interface for input that downloads and caches if not found.. 
+
+  testing... when mocking async fns, am i returning async fn/promise???
  *
  *
  */
