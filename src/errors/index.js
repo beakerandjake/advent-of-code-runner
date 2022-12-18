@@ -15,6 +15,7 @@ import { PackageInstallFailedError } from './packageInstallFailedError.js';
 import { UserDataTranslationError } from './userDataTranslationError.js';
 import { UserPuzzleDataMissingError } from './userPuzzleDataMissingError.js';
 import { UserError } from './userError.js';
+import { SolutionWorkerUnexpectedError } from './solutionWorkerErrors.js';
 
 export {
   AnswerTypeInvalidError,
@@ -28,6 +29,7 @@ export {
   SolutionMissingFunctionError,
   SolutionNotFoundError,
   SolutionRuntimeError,
+  SolutionWorkerUnexpectedError,
   RateLimitExceededError,
   SolutionAnswerInvalidError,
   PackageInstallFailedError,
