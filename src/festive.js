@@ -1,37 +1,31 @@
-import boxen from 'boxen';
+import { EOL } from 'node:os';
 import chalk from 'chalk';
 import Transport from 'winston-transport';
 import { LEVEL } from 'triple-beam';
 import { getConfigValue } from './config.js';
 
-const santa = '🎅';
-const mrsClaus = '🤶';
+export const festiveStyle = chalk.bold.green;
 
 const festiveEmojis = [
-  santa, mrsClaus, '🦌', '🍪', '🥛', '🌟', '❄️ ', '☃️ ', '🌨️ ', '⛄️', '🎄', '🎁', '🛷', '🔔',
+  '🎅', '🤶', '🦌', '🍪', '🥛', '🌟', '❄️ ', '☃️ ', '🌨️ ', '⛄️', '🎄', '🎁', '🛷', '🔔',
 ];
 
 /**
- * I spent too much time making this dang tree.
+ * Title box originally created using https://www.npmjs.com/package/boxen
+ * I spent too much time making the dang tree..
  */
-const christmasTree = `
-          🌟        
-          🎄        
-         🎄🎄       
-        🎄🎄🎄      
-       🎄🎄🎄🎄     
-         🎁🎁       
-  `;
-
-/**
- * A nice title box surrounding the christmas tree
- */
-const festiveTitle = boxen(christmasTree, {
-  borderColor: 'green',
-  title: `${santa} ${getConfigValue('meta.name')} ${mrsClaus}`,
-  textAlignment: 'center',
-  titleAlignment: 'center',
-});
+const festiveTitle = festiveStyle([
+  '┌ 🎅 advent-of-code-runner 🤶 ┐',
+  '│                             │',
+  '│              🌟             │',
+  '│              🎄             │',
+  '│             🎄🎄            │',
+  '│            🎄🎄🎄           │',
+  '│           🎄🎄🎄🎄          │',
+  '│             🎁🎁            │',
+  '│                             │',
+  '└─────────────────────────────┘',
+].join(EOL));
 
 /**
  * Prints the title box to the console, unless configured to suppress.
@@ -45,13 +39,12 @@ export const printFestiveTitle = () => {
 };
 
 /**
- * Returns a random ~*festive*~ emoji.
+ * Returns a random *festive* emoji.
  */
 export const festiveEmoji = () => festiveEmojis[Math.floor(Math.random() * festiveEmojis.length)];
 
-export const festiveStyle = chalk.bold.green;
 /**
- * Turns a normal string into a ~*festive*~ one.
+ * Turns a normal string into a *festive* one.
  * @param {String} message
  */
 const makeFestive = (message) => (
