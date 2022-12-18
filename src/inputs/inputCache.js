@@ -7,6 +7,7 @@ import { fileExists, loadFileContents, saveFile } from '../persistence/io.js';
  * Returns the file name for the input file for the given year and day
  * @param {Number} year
  * @param {Number} day
+ * @private
  */
 const getInputFileName = (year, day) => join(getConfigValue('paths.inputsDir'), `${year}_${day}.txt`);
 
@@ -16,7 +17,7 @@ const getInputFileName = (year, day) => join(getConfigValue('paths.inputsDir'), 
  * @param {Number} day
  */
 export const cacheInput = async (year, day, input) => {
-  logger.verbose('caching input for year: %s, day: %s', year, day);
+  logger.verbose('caching input', { year, day });
   return saveFile(getInputFileName(year, day), input);
 };
 
@@ -26,7 +27,7 @@ export const cacheInput = async (year, day, input) => {
  * @param {Number} day
  */
 export const inputIsCached = async (year, day) => {
-  logger.debug('checking if input is cached for year: %s, day: %s', year, day);
+  logger.debug('checking if input is cached', { year, day });
   return fileExists(getInputFileName(year, day));
 };
 
@@ -36,6 +37,6 @@ export const inputIsCached = async (year, day) => {
  * @param {Number} day
  */
 export const getCachedInput = async (year, day) => {
-  logger.verbose('loading cached input for year: %s, day: %s', year, day);
+  logger.verbose('loading cached input', { year, day });
   return loadFileContents(getInputFileName(year, day));
 };
