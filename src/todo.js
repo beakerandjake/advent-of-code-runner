@@ -21,10 +21,6 @@
         solutionRunner
         solutionRunnerWorkerThread
 
-      inputs/
-        inputCache.js
-        getInput.js
-
       where to put getAllPuzzlesForYear?? need a better name
 
   cli specifies args and such but calls separate action functions that's easier tested
@@ -32,6 +28,11 @@
   need to test api, pull out response parsing into own files?
 
   need one interface for input that downloads and caches if not found..
+
+  actions vs commands
+    commands are responsible for cli taking input / validation and invoking actions
+    actions are responsible for coordinating multiple modules to achieve action
+    commands can use one or more actions.
 
   testing... when mocking async fns, am i returning async fn/promise???
  *
