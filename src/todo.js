@@ -29,6 +29,10 @@
 
   need one interface for input that downloads and caches if not found..
 
+  solutionWorker
+    - pass in worker thread file contents as eval (load manually)
+    - put worker thread message types in separate file
+
   actions vs commands
     commands are responsible for cli taking input / validation and invoking actions
     actions are responsible for coordinating multiple modules to achieve action
