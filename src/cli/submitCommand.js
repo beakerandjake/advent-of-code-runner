@@ -12,6 +12,7 @@ import {
   addIncorrectAnswer,
   answerHasBeenSubmitted,
 } from '../answers.js';
+import { getInput } from '../inputs/getInput.js';
 
 /**
  * Solve the puzzle and submit the solution to advent of code.
@@ -36,7 +37,9 @@ const submit = async (day, part) => {
     return;
   }
 
-  const { answer, executionTimeNs } = await solve(year, day, part);
+  const { answer, executionTimeNs } = (
+    await solve(year, day, part, await getInput(year, day))
+  );
 
   if (await answerHasBeenSubmitted(year, day, part, answer)) {
     logger.error('You\'ve already submitted this incorrect answer to advent of code!');
