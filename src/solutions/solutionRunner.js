@@ -3,7 +3,7 @@ import { Worker } from 'node:worker_threads';
 import { logger } from '../logger.js';
 import { getConfigValue } from '../config.js';
 import { workerMessageTypes } from './solutionRunnerWorkerThread.js';
-import { fileExists } from '../persistence/io.js';
+import { fileExists, loadFileContents } from '../persistence/io.js';
 import {
   SolutionMissingFunctionError,
   SolutionNotFoundError,
@@ -63,26 +63,24 @@ export const execute = async (day, part, input) => {
     throw new EmptyInputError();
   }
 
-  const workerThreadFilePath = getConfigValue('paths.solutionRunnerWorkerFile');
+  // grab values which could fail before spawning the worker thread.
+  // makes debugging the worker easier, reduces the amount of things that can fail
+
+  const functionToExecute = getFunctionNameForPart(part);
+  const workerThreadScript = await loadFileContents(getConfigValue('paths.solutionRunnerWorkerFile'));
   const solutionFileName = getSolutionFileName(day);
 
-  // before we spawn up a worker, ensure the js file actually exists.
-  // it should always since it's part of the package, but be extra safe.
-  if (!await fileExists(workerThreadFilePath)) {
-    throw new Error(`Could not file worker thread file at: ${workerThreadFilePath}`);
-  }
-
-  // ensure that the solution file actually exists
-  // before spawning worker.
+  // ensure the user actually has the file we're trying to execute.
   if (!await fileExists(solutionFileName)) {
     throw new SolutionNotFoundError(solutionFileName);
   }
 
   return new Promise((resolve, reject) => {
     // spawn a Worker thread to run the user solution.
-    const worker = new Worker(workerThreadFilePath, {
+    const worker = new Worker(workerThreadScript, {
+      eval: true,
       workerData: {
-        functionToExecute: getFunctionNameForPart(part),
+        functionToExecute,
         solutionFileName,
         input,
       },
