@@ -24,7 +24,7 @@ export const solveCommand = new Command()
     }
 
     const { answer, executionTimeNs } = (
-      await solve(year, day, part, await getInput(year, day))
+      await solve(day, part, await getInput(year, day))
     );
 
     // the user might have already submitted the correct answer to this problem

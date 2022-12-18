@@ -38,7 +38,7 @@ const submit = async (day, part) => {
   }
 
   const { answer, executionTimeNs } = (
-    await solve(year, day, part, await getInput(year, day))
+    await solve(day, part, await getInput(year, day))
   );
 
   if (await answerHasBeenSubmitted(year, day, part, answer)) {
