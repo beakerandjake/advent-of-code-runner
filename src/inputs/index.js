@@ -1,3 +1,3 @@
-import { getInput } from './getInput';
+import { getInput } from './getInput.js';
 
 export { getInput };
