@@ -1,7 +1,7 @@
 import { downloadInput } from './api/index.js';
 import { getConfigValue } from './config.js';
 import { humanizeDuration } from './formatting.js';
-import { inputIsCached, getCachedInput, cacheInput } from './inputCache.js';
+import { inputIsCached, getCachedInput, cacheInput } from './inputs/inputCache.js';
 import { logger } from './logger.js';
 import { execute } from './solutionRunner.js';
 
