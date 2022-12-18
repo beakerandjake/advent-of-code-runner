@@ -43,7 +43,6 @@ const getFunctionNameForPart = (part) => {
 /**
  * Spawns a worker thread to import the solution file
  * executes the solution function and returns the result and performance data.
- * @param {Number} year
  * @param {Number} day
  * @param {Number} part
  * @param {String} input
@@ -54,7 +53,7 @@ const getFunctionNameForPart = (part) => {
  * @throws {UnexpectedSolutionRunnerWorkerError}
  * @throws {UnknownSolutionRunnerWorkerMessageTypeError}
  */
-export const execute = async (year, day, part, input) => {
+export const execute = async (day, part, input) => {
   logger.verbose('spawning worker to execute solution');
 
   const workerThreadFilePath = getConfigValue('paths.solutionRunnerWorkerFile');
