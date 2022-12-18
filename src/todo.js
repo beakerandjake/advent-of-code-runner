@@ -18,8 +18,8 @@
 
       solutions
         solve.js
-        solutionRunner
-        solutionRunnerWorkerThread
+        solutionRunner.js
+        solutionRunnerWorkerThread.js
 
       where to put getAllPuzzlesForYear?? need a better name
 

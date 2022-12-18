@@ -3,7 +3,7 @@ import { answersEqual, getCorrectAnswer } from '../answers.js';
 import { getConfigValue } from '../config.js';
 import { LockedOrCompletedPuzzleError } from '../errors/index.js';
 import { logger } from '../logger.js';
-import { solve } from '../solve.js';
+import { solve } from '../solutions/index.js';
 import { tryToSetFastestExecutionTime } from '../statistics.js';
 import { puzzleIsUnlocked } from '../validatePuzzle.js';
 import { dayArgument, partArgument } from './arguments.js';

@@ -3,7 +3,7 @@ import { submitSolution } from '../api/index.js';
 import { getConfigValue } from '../config.js';
 import { LockedPuzzleError } from '../errors/index.js';
 import { logger } from '../logger.js';
-import { solve } from '../solve.js';
+import { solve } from '../solutions/index.js';
 import { puzzleIsUnlocked } from '../validatePuzzle.js';
 import { dayArgument, partArgument } from './arguments.js';
 import {

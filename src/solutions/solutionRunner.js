@@ -1,15 +1,15 @@
 import { join } from 'node:path';
 import { Worker } from 'node:worker_threads';
-import { logger } from './logger.js';
-import { getConfigValue } from './config.js';
+import { logger } from '../logger.js';
+import { getConfigValue } from '../config.js';
 import { workerMessageTypes } from './solutionRunnerWorkerThread.js';
-import { fileExists } from './persistence/io.js';
+import { fileExists } from '../persistence/io.js';
 import {
   SolutionMissingFunctionError,
   SolutionNotFoundError,
   SolutionAnswerInvalidError,
   SolutionRuntimeError,
-} from './errors/index.js';
+} from '../errors/index.js';
 
 /**
  * Uses node worker threads to execute the user code in a separate context.
