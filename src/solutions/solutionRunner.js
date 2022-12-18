@@ -65,10 +65,9 @@ export const execute = async (day, part, input) => {
 
   // grab values which could fail before spawning the worker thread.
   // makes debugging the worker easier, reduces the amount of things that can fail
-
-  const functionToExecute = getFunctionNameForPart(part);
-  const workerThreadScript = await loadFileContents(getConfigValue('paths.solutionRunnerWorkerFile'));
   const solutionFileName = getSolutionFileName(day);
+  const functionToExecute = getFunctionNameForPart(part);
+  const workerThreadFileName = getConfigValue('paths.solutionRunnerWorkerFile');
 
   // ensure the user actually has the file we're trying to execute.
   if (!await fileExists(solutionFileName)) {
@@ -77,8 +76,7 @@ export const execute = async (day, part, input) => {
 
   return new Promise((resolve, reject) => {
     // spawn a Worker thread to run the user solution.
-    const worker = new Worker(workerThreadScript, {
-      eval: true,
+    const worker = new Worker(workerThreadFileName, {
       workerData: {
         functionToExecute,
         solutionFileName,
@@ -116,7 +114,9 @@ export const execute = async (day, part, input) => {
     });
 
     // handle uncaught exceptions.
-    worker.on('error', (error) => reject(new Error('Solution Worker raised unexpected Error', { cause: error })));
+    worker.on('error', (error) => {
+      reject(new Error(`Solution Worker raised unexpected Error: ${error.message}`, { cause: error }));
+    });
     // handle potential edge case where worker does not send a solution message.
     worker.on('exit', () => reject(new Error('Solution Worker exited without posting answer')));
   });
