@@ -22,5 +22,6 @@ module.exports = {
     'import/extensions': 'off',
     'no-console': 'off',
     'no-restricted-syntax': 'off',
+    'max-classes-per-file': 'off',
   },
 };
