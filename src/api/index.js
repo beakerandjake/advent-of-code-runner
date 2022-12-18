@@ -11,7 +11,7 @@ logger.debug('api is loading mock: %s', useMockApi);
  * Decorates the api methods with rate limiting.
  * @param {Object} module - The imported api to decorate.
  */
-const decorateWithRateLimiting = ({ downloadInput, submitSolution }) => {
+const decorateApiWithRateLimiting = ({ downloadInput, submitSolution }) => {
   logger.debug('decorating api with rate limiting');
   return {
     downloadInput: rateLimitDecorator(
@@ -29,6 +29,6 @@ const decorateWithRateLimiting = ({ downloadInput, submitSolution }) => {
 
 const { downloadInput, submitSolution } = useMockApi
   ? await import('./mockApi.js')
-  : decorateWithRateLimiting(await import('./api.js'));
+  : decorateApiWithRateLimiting(await import('./api.js'));
 
 export { downloadInput, submitSolution };
