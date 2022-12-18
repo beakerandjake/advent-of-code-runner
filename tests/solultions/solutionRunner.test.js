@@ -1,14 +1,11 @@
 import {
   describe, jest, test, beforeEach,
 } from '@jest/globals';
-import { mockLogger } from '../mockLogger.js';
+import { mockConfig, mockLogger } from '../mocks.js';
 
 // setup mocks.
 mockLogger();
-
-// jest.unstable_mockModule('../../src/config.js', () => ({
-//   getConfigValue: jest.fn(),
-// }));
+mockConfig();
 
 // jest.unstable_mockModule('../../src/api/index.js', () => ({
 //   downloadInput: jest.fn(),
@@ -22,12 +19,16 @@ mockLogger();
 
 // const { downloadInput } = await import('../../src/api/index.js');
 // const { inputIsCached, getCachedInput, cacheInput } = await import('../../src/inputs/inputCache.js');
-const { executeUserSolution } = await import('../../src/solutions/executeUserSolution');
+
+const { Worker } = await import('node:worker_threads');
+const { getConfigValue } = await import('../../src/config.js');
+const { fileExists } = await import('../../src/persistence/io.js');
+const { execute } = await import('../../src/solutions/solutionRunner.js');
 
 beforeEach(() => {
   jest.clearAllMocks();
 });
 
 describe('executeUserSolution', () => {
-  describe('')
+  test.todo('lots to do');
 });
