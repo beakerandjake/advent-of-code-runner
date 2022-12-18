@@ -11,6 +11,7 @@ import {
   SolutionRuntimeError,
   EmptyInputError,
   SolutionWorkerUnexpectedError,
+  SolutionWorkerExitWithoutAnswerError,
 } from '../errors/index.js';
 
 /**
@@ -119,6 +120,6 @@ export const execute = async (day, part, input) => {
       reject(new SolutionWorkerUnexpectedError(`Solution Worker raised unexpected Error: ${error.message}`, { cause: error }));
     });
     // handle potential edge case where worker does not send a solution message.
-    worker.on('exit', () => reject(new Error('Solution Worker exited without posting answer')));
+    worker.on('exit', () => reject(new SolutionWorkerExitWithoutAnswerError()));
   });
 };

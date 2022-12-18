@@ -165,5 +165,25 @@ describe('solutionRunner', () => {
 
       expect(async () => promise).rejects.toThrow(SolutionWorkerUnexpectedError);
     });
+
+    test('throws error on worker "exit" event', async () => {
+      const part = 1;
+      setConfigMocks(part);
+      loadFileContents.mockResolvedValue(true);
+      let exitCallback;
+      workerOnMock.mockImplementation((key, callback) => {
+        if (key === 'exit') {
+          exitCallback = callback;
+        }
+      });
+
+      // execute and ensure that mock the worker raising its error event.
+      const promise = execute(1, part, 'ASDF');
+      await Promise.resolve(123);
+      expect(exitCallback).toBeDefined();
+      exitCallback();
+
+      expect(async () => promise).rejects.toThrow();
+    });
   });
 });
