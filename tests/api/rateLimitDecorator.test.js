@@ -1,15 +1,15 @@
 import {
   describe, jest, test, afterEach,
 } from '@jest/globals';
-import { RateLimitExceededError } from '../src/errors/index.js';
+import { RateLimitExceededError } from '../../src/errors/index.js';
 
 // setup mocks.
-jest.unstable_mockModule('../src/api/rateLimit.js', () => ({
+jest.unstable_mockModule('../../src/api/rateLimit.js', () => ({
   isRateLimited: jest.fn(),
   updateRateLimit: jest.fn(),
 }));
 
-jest.unstable_mockModule('../src/logger.js', () => ({
+jest.unstable_mockModule('../../src/logger.js', () => ({
   logger: {
     debug: jest.fn(),
     warn: jest.fn(),
@@ -17,8 +17,8 @@ jest.unstable_mockModule('../src/logger.js', () => ({
 }));
 
 // const { logger } = await import('../src/logger.js');
-const { isRateLimited, updateRateLimit } = await import('../src/api/rateLimit.js');
-const { rateLimitDecorator } = await import('../src/api/rateLimitDecorator.js');
+const { isRateLimited, updateRateLimit } = await import('../../src/api/rateLimit.js');
+const { rateLimitDecorator } = await import('../../src/api/rateLimitDecorator.js');
 
 afterEach(() => {
   jest.clearAllMocks();

@@ -3,14 +3,14 @@ import {
 } from '@jest/globals';
 
 // setup mocks.
-jest.unstable_mockModule('../src/persistence/jsonFileStore.js', () => ({
+jest.unstable_mockModule('../../src/persistence/jsonFileStore.js', () => ({
   getStoreValue: jest.fn(),
   setStoreValue: jest.fn(),
 }));
 
 // import after setting up the mock so the modules import the mocked version
-const { getStoreValue, setStoreValue } = await import('../src/persistence/jsonFileStore.js');
-const { getRateLimit, setRateLimit } = await import('../src/persistence/rateLimitRepository.js');
+const { getStoreValue, setStoreValue } = await import('../../src/persistence/jsonFileStore.js');
+const { getRateLimit, setRateLimit } = await import('../../src/persistence/rateLimitRepository.js');
 
 afterEach(() => {
   jest.clearAllMocks();
