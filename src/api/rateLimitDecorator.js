@@ -23,10 +23,8 @@ export const rateLimitDecorator = (
   }
 
   try {
-    logger.debug('action: %s is not rate limit, executing', actionType);
     return fn(...args);
   } finally {
-    logger.debug('updating rate limit after executing action: %s', actionType);
     await updateRateLimit(actionType);
   }
 };

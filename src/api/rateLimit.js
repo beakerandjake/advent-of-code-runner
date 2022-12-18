@@ -44,6 +44,6 @@ export const updateRateLimit = async (actionType) => {
   }
 
   const expiration = addMilliseconds(new Date(), getConfigValue('aoc.rateLimiting.defaultTimeoutMs'));
-  logger.debug('rate limit for action: %s now expires at: %s', actionType, expiration);
+  logger.debug('updated rate limit for action: %s, now expires at: %s', actionType, expiration);
   await setRateLimit(actionType, expiration);
 };
