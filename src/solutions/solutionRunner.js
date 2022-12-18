@@ -9,6 +9,7 @@ import {
   SolutionNotFoundError,
   SolutionAnswerInvalidError,
   SolutionRuntimeError,
+  EmptyInputError,
 } from '../errors/index.js';
 
 /**
@@ -21,16 +22,18 @@ import {
 
 /**
  * Returns the file name for a solution file for the given year and day.
+ * @private
  * @param {Number} year
  * @param {Number} day
  */
-const getSolutionFileName = (day) => join(getConfigValue('paths.solutionsDir'), `day_${day}.js`);
+export const getSolutionFileName = (day) => join(getConfigValue('paths.solutionsDir'), `day_${day}.js`);
 
 /**
  * Returns the name of the function to execute for the puzzles part.
+ * @private
  * @param {Number} part
  */
-const getFunctionNameForPart = (part) => {
+export const getFunctionNameForPart = (part) => {
   const functionName = getConfigValue('solutionRunner.partFunctions').find((x) => x.key === part)?.name;
 
   if (!functionName) {
@@ -54,13 +57,17 @@ const getFunctionNameForPart = (part) => {
  * @throws {UnknownSolutionRunnerWorkerMessageTypeError}
  */
 export const execute = async (day, part, input) => {
-  logger.verbose('spawning worker to execute solution');
+  logger.verbose('spawning worker to execute solution', { day, part });
+
+  if (!input) {
+    throw new EmptyInputError();
+  }
 
   const workerThreadFilePath = getConfigValue('paths.solutionRunnerWorkerFile');
   const solutionFileName = getSolutionFileName(day);
 
   // before we spawn up a worker, ensure the js file actually exists.
-  // it should always, but be safe.
+  // it should always since it's part of the package, but be extra safe.
   if (!await fileExists(workerThreadFilePath)) {
     throw new Error(`Could not file worker thread file at: ${workerThreadFilePath}`);
   }
