@@ -2,7 +2,7 @@ import {
   describe, jest, test, beforeEach,
 } from '@jest/globals';
 import { join as realJoin } from 'node:path';
-import { EmptyInputError, SolutionNotFoundError } from '../../src/errors/index.js';
+import { EmptyInputError, SolutionNotFoundError, SolutionWorkerUnexpectedError } from '../../src/errors/index.js';
 import { mockConfig, mockLogger } from '../mocks.js';
 
 // setup mocks.
@@ -14,8 +14,11 @@ jest.unstable_mockModule('../../src/persistence/io.js', () => ({
   loadFileContents: jest.fn(),
 }));
 
+const workerOnMock = jest.fn();
 jest.unstable_mockModule('node:worker_threads', () => ({
-  Worker: jest.fn(),
+  Worker: jest.fn(() => ({
+    on: workerOnMock,
+  })),
 }));
 
 jest.unstable_mockModule('../../src/solutions/solutionRunnerWorkerThread.js', () => ({
@@ -34,6 +37,7 @@ const { execute, getSolutionFileName, getFunctionNameForPart } = await import('.
 
 beforeEach(() => {
   jest.clearAllMocks();
+  workerOnMock.mockClear();
 });
 
 /**
@@ -41,7 +45,6 @@ beforeEach(() => {
  */
 const setConfigMocks = (part, { solutionsDir = '.', partFunctions = [{ key: part, name: 'cats' }], workerFileName = '.' } = {}) => {
   getConfigValue.mockImplementation((key) => {
-    console.log('key', partFunctions);
     switch (key) {
       case 'paths.solutionsDir':
         return solutionsDir;
@@ -121,12 +124,46 @@ describe('solutionRunner', () => {
       expect(async () => execute(1, 1, 'asdf')).rejects.toThrow();
     });
 
-  //   // test('throws if worker file not found', async () => {
-  //   //   // setup so file exists returns false
-  //   //   const fileName = 'coolguy.txt';
-  //   //   getConfigValue.mockImplementation((x) => (x === 'paths.solutionRunnerWorkerFile' ? fileName : ''));
-  //   //   loadFileContents.mockImplementation(() => Promise.reject(new Error('File not found')));
-  //   //   expect(async () => execute(1, 1, 'ASDF')).rejects.toThrow(fileName);
-  //   // });
+    test('passes required data to worker', async () => {
+      const part = 1;
+      const expected = {
+        functionToExecute: 'partOne',
+        solutionFileName: 'day_1.js',
+        input: 'ASDFASDFASDFASDF',
+      };
+      setConfigMocks(part, { partFunctions: [{ key: part, name: expected.functionToExecute }] });
+      fileExists.mockResolvedValue(true);
+
+      // hacky way to ensure worker constructor is called.
+      // cant await execute cause that promise never resolves.
+      // so await a different promise to ensure constructor is called
+      execute(1, part, expected.input);
+      await Promise.resolve(123);
+
+      expect(Worker).toHaveBeenCalledWith(
+        expect.any(String),
+        expect.objectContaining({ workerData: expected }),
+      );
+    });
+
+    test('throws error on worker "error" event', async () => {
+      const part = 1;
+      setConfigMocks(part);
+      loadFileContents.mockResolvedValue(true);
+      let errorCallback;
+      workerOnMock.mockImplementation((key, callback) => {
+        if (key === 'error') {
+          errorCallback = callback;
+        }
+      });
+
+      // execute and ensure that mock the worker raising its error event.
+      const promise = execute(1, part, 'ASDF');
+      await Promise.resolve(123);
+      expect(errorCallback).toBeDefined();
+      errorCallback(new Error('FAILED!'));
+
+      expect(async () => promise).rejects.toThrow(SolutionWorkerUnexpectedError);
+    });
   });
 });

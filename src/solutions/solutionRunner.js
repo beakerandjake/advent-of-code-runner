@@ -3,13 +3,14 @@ import { Worker } from 'node:worker_threads';
 import { logger } from '../logger.js';
 import { getConfigValue } from '../config.js';
 import { workerMessageTypes } from './solutionRunnerWorkerThread.js';
-import { fileExists, loadFileContents } from '../persistence/io.js';
+import { fileExists } from '../persistence/io.js';
 import {
   SolutionMissingFunctionError,
   SolutionNotFoundError,
   SolutionAnswerInvalidError,
   SolutionRuntimeError,
   EmptyInputError,
+  SolutionWorkerUnexpectedError,
 } from '../errors/index.js';
 
 /**
@@ -115,7 +116,7 @@ export const execute = async (day, part, input) => {
 
     // handle uncaught exceptions.
     worker.on('error', (error) => {
-      reject(new Error(`Solution Worker raised unexpected Error: ${error.message}`, { cause: error }));
+      reject(new SolutionWorkerUnexpectedError(`Solution Worker raised unexpected Error: ${error.message}`, { cause: error }));
     });
     // handle potential edge case where worker does not send a solution message.
     worker.on('exit', () => reject(new Error('Solution Worker exited without posting answer')));
