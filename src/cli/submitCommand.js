@@ -3,7 +3,7 @@ import { submitSolution } from '../api/index.js';
 import { getConfigValue } from '../config.js';
 import { LockedPuzzleError } from '../errors/index.js';
 import { logger } from '../logger.js';
-import { solve } from '../solve.js';
+import { solve } from '../solutions/index.js';
 import { puzzleIsUnlocked } from '../validatePuzzle.js';
 import { dayArgument, partArgument } from './arguments.js';
 import {
@@ -38,7 +38,7 @@ const submit = async (day, part) => {
   }
 
   const { answer, executionTimeNs } = (
-    await solve(year, day, part, await getInput(year, day))
+    await solve(day, part, await getInput(year, day))
   );
 
   if (await answerHasBeenSubmitted(year, day, part, answer)) {

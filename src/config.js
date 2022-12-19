@@ -130,7 +130,7 @@ const CONFIG = {
     dataStoreFile: join(cwd, 'aocr-data.json'),
     inputsDir: join(cwd, 'inputs'),
     solutionsDir: join(cwd, 'src'),
-    solutionRunnerWorkerFile: join(__dirname, 'solutionRunnerWorkerThread.js'),
+    solutionRunnerWorkerFile: join(__dirname, 'solutions', 'solutionRunnerWorkerThread.js'),
     templates: {
       gitignore: {
         source: join(__dirname, '..', 'templates', 'template-gitignore'),

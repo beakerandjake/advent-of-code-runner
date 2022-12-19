@@ -16,18 +16,11 @@
       puzzle.js (could move to puzzle.js if rename userArgs)
         isUnlocked
 
-      solutions
-        solve.js
-        solutionRunner
-        solutionRunnerWorkerThread
-
       where to put getAllPuzzlesForYear?? need a better name
 
   cli specifies args and such but calls separate action functions that's easier tested
   break out function in solutionRunnerWorkerThread & export for testing.
   need to test api, pull out response parsing into own files?
-
-  need one interface for input that downloads and caches if not found..
 
   actions vs commands
     commands are responsible for cli taking input / validation and invoking actions

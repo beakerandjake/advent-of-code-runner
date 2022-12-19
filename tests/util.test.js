@@ -1,5 +1,5 @@
 import { describe, test } from '@jest/globals';
-import { get, has } from '../src/util';
+import { get, has, getType } from '../src/util.js';
 
 describe('util', () => {
   describe('get()', () => {
@@ -82,6 +82,28 @@ describe('util', () => {
 
     test('returns true if target has key (nested)', () => {
       expect(has({ cool: { cats: { only: true } } }, 'cool.cats')).toBe(true);
+    });
+  });
+
+  describe('getType()', () => {
+    test.each([
+      [null, 'null'],
+      [undefined, 'undefined'],
+      ['ASDF', 'String'],
+      [1234, 'Number'],
+      [1234.324, 'Number'],
+      [Infinity, 'Infinity'],
+      [BigInt(22), 'BigInt'],
+      [NaN, 'Nan'],
+      [false, 'Boolean'],
+      [true, 'Boolean'],
+      [{}, 'Object'],
+      [[], 'Array'],
+      [() => {}, 'Function'],
+      [new class Cats {}(), 'Cats'],
+      [Promise.resolve(true), 'Promise'],
+    ])('"%s" returns "%s"', (value, expected) => {
+      expect(getType(value).toLowerCase()).toBe(expected.toLocaleLowerCase());
     });
   });
 });
