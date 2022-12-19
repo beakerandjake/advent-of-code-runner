@@ -7,7 +7,7 @@ import {
   UserSolutionAnswerInvalidError,
   SolutionMissingFunctionError,
   UserSolutionFileNotFoundError,
-  SolutionRuntimeError,
+  UserSolutionThrewError,
   SolutionWorkerUnexpectedError,
 } from '../../src/errors/index.js';
 import { workerMessageTypes } from '../../src/solutions/workerMessageTypes.js';
@@ -241,7 +241,7 @@ describe('solutionRunner', () => {
           await Promise.resolve(123);
           expect(messageCallback).toBeDefined();
           messageCallback({ type: workerMessageTypes.runtimeError });
-          expect(async () => executePromise).rejects.toThrow(SolutionRuntimeError);
+          expect(async () => executePromise).rejects.toThrow(UserSolutionThrewError);
         });
 
         test('functionNotFound - throws', async () => {

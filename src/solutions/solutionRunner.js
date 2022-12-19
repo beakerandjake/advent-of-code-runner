@@ -6,7 +6,7 @@ import { fileExists } from '../persistence/io.js';
 import {
   SolutionMissingFunctionError,
   UserSolutionAnswerInvalidError,
-  SolutionRuntimeError,
+  UserSolutionThrewError,
   SolutionWorkerEmptyInputError,
   SolutionWorkerUnexpectedError,
   SolutionWorkerExitWithoutAnswerError,
@@ -54,7 +54,7 @@ export const getFunctionNameForPart = (part) => {
  * @throws {SolutionFileMissingRequiredFunctionError}
  * @throws {SolutionFileNotFoundError}
  * @throws {SolutionRunnerExitError}
- * @throws {SolutionRuntimeError}
+ * @throws {UserSolutionThrewError}
  * @throws {UnexpectedSolutionRunnerWorkerError}
  * @throws {UnknownSolutionRunnerWorkerMessageTypeError}
  */
@@ -103,7 +103,7 @@ export const execute = async (day, part, input) => {
           break;
         // user code threw error
         case workerMessageTypes.runtimeError:
-          reject(new SolutionRuntimeError(data.stack));
+          reject(new UserSolutionThrewError(data.stack));
           break;
         // user code missing required function.
         case workerMessageTypes.functionNotFound:

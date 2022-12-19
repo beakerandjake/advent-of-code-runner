@@ -7,7 +7,6 @@ import { LockedPuzzleError } from './lockedPuzzleError.js';
 import { PuzzleAlreadySolvedError } from './puzzleAlreadySolvedError.js';
 import { RateLimitExceededError } from './rateLimitExceededError.js';
 import { SolutionMissingFunctionError } from './solutionMissingFunctionError.js';
-import { SolutionRuntimeError } from './solutionRuntimeError.js';
 import { PackageInstallFailedError } from './packageInstallFailedError.js';
 import { UserDataTranslationError } from './userDataTranslationError.js';
 import { UserPuzzleDataMissingError } from './userPuzzleDataMissingError.js';
@@ -18,6 +17,7 @@ import {
   SolutionWorkerUnexpectedError,
   UserSolutionAnswerInvalidError,
   UserSolutionFileNotFoundError,
+  UserSolutionThrewError,
 } from './solutionWorkerErrors.js';
 
 export {
@@ -29,7 +29,6 @@ export {
   LockedPuzzleError,
   PuzzleAlreadySolvedError,
   SolutionMissingFunctionError,
-  SolutionRuntimeError,
   RateLimitExceededError,
   PackageInstallFailedError,
   UserDataTranslationError,
@@ -41,4 +40,5 @@ export {
   SolutionWorkerExitWithoutAnswerError,
   UserSolutionAnswerInvalidError,
   UserSolutionFileNotFoundError,
+  UserSolutionThrewError,
 };

@@ -49,3 +49,14 @@ export class UserSolutionFileNotFoundError extends UserError {
     this.name = 'UserSolutionFileNotFoundError';
   }
 }
+
+/**
+ * Error that is raised when a users solution function raises an error.
+ */
+export class UserSolutionThrewError extends UserError {
+  constructor(stack) {
+    super('Your code threw an error!');
+    this.stack = stack;
+    this.name = 'UserSolutionThrewError';
+  }
+}
