@@ -21,6 +21,16 @@ export class SolutionWorkerExitWithoutAnswerError extends UserError {
 }
 
 /**
+ * Error that is raised if Solution Worker is provided empty input.
+ */
+export class SolutionWorkerEmptyInputError extends Error {
+  constructor() {
+    super('Provided puzzle input was empty');
+    this.name = 'SolutionWorkerEmptyInputError';
+  }
+}
+
+/**
  * Error raised if the users solution file cannot be found.
  */
 export class UserSolutionFileNotFoundError extends UserError {

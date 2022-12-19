@@ -2,7 +2,6 @@ import { AnswerTypeInvalidError } from './answerTypeInvalidError.js';
 import { AnswerEmptyError } from './answerEmptyError.js';
 import { DataFileIOError } from './dataFileIOError.js';
 import { DataFileParsingError } from './dataFileParsingError.js';
-import { EmptyInputError } from './emptyInputError.js';
 import { LockedOrCompletedPuzzleError } from './lockedOrCompletedPuzzleError.js';
 import { LockedPuzzleError } from './lockedPuzzleError.js';
 import { PuzzleAlreadySolvedError } from './puzzleAlreadySolvedError.js';
@@ -15,6 +14,7 @@ import { UserDataTranslationError } from './userDataTranslationError.js';
 import { UserPuzzleDataMissingError } from './userPuzzleDataMissingError.js';
 import { UserError } from './userError.js';
 import {
+  SolutionWorkerEmptyInputError,
   SolutionWorkerExitWithoutAnswerError,
   SolutionWorkerUnexpectedError,
   UserSolutionFileNotFoundError,
@@ -25,7 +25,6 @@ export {
   AnswerEmptyError,
   DataFileIOError,
   DataFileParsingError,
-  EmptyInputError,
   LockedOrCompletedPuzzleError,
   LockedPuzzleError,
   PuzzleAlreadySolvedError,
@@ -38,6 +37,7 @@ export {
   UserPuzzleDataMissingError,
   UserError,
 
+  SolutionWorkerEmptyInputError,
   SolutionWorkerUnexpectedError,
   SolutionWorkerExitWithoutAnswerError,
   UserSolutionFileNotFoundError,

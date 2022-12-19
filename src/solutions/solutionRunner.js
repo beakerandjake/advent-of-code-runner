@@ -7,7 +7,7 @@ import {
   SolutionMissingFunctionError,
   SolutionAnswerInvalidError,
   SolutionRuntimeError,
-  EmptyInputError,
+  SolutionWorkerEmptyInputError,
   SolutionWorkerUnexpectedError,
   SolutionWorkerExitWithoutAnswerError,
   UserSolutionFileNotFoundError,
@@ -62,7 +62,7 @@ export const execute = async (day, part, input) => {
   logger.verbose('spawning worker to execute solution', { day, part });
 
   if (!input) {
-    throw new EmptyInputError();
+    throw new SolutionWorkerEmptyInputError();
   }
 
   // grab values which could fail before spawning the worker thread.

@@ -3,7 +3,7 @@ import {
 } from '@jest/globals';
 import { join as realJoin } from 'node:path';
 import {
-  EmptyInputError,
+  SolutionWorkerEmptyInputError,
   SolutionAnswerInvalidError,
   SolutionMissingFunctionError,
   UserSolutionFileNotFoundError,
@@ -112,9 +112,9 @@ describe('solutionRunner', () => {
 
   describe('execute()', () => {
     test('throws if input is empty', async () => {
-      expect(async () => execute(1, 1, null)).rejects.toThrow(EmptyInputError);
-      expect(async () => execute(1, 1, undefined)).rejects.toThrow(EmptyInputError);
-      expect(async () => execute(1, 1, '')).rejects.toThrow(EmptyInputError);
+      expect(async () => execute(1, 1, null)).rejects.toThrow(SolutionWorkerEmptyInputError);
+      expect(async () => execute(1, 1, undefined)).rejects.toThrow(SolutionWorkerEmptyInputError);
+      expect(async () => execute(1, 1, '')).rejects.toThrow(SolutionWorkerEmptyInputError);
     });
 
     test('throws if user solution file not found', async () => {
