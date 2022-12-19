@@ -1,7 +1,6 @@
 import {
   describe, jest, test, afterEach,
 } from '@jest/globals';
-import { AnswerTypeInvalidError, AnswerEmptyError } from '../src/errors/index.js';
 
 // setup mocks.
 jest.unstable_mockModule('../src/persistence/puzzleRepository.js', () => ({
@@ -80,30 +79,30 @@ describe('answers', () => {
 
   describe('parseAnswer()', () => {
     test('throws on null', () => {
-      expect(() => parseAnswer(null)).toThrow(AnswerEmptyError);
+      expect(() => parseAnswer(null)).toThrow(TypeError);
     });
 
     test('throws on undefined', () => {
-      expect(() => parseAnswer(null)).toThrow(AnswerEmptyError);
+      expect(() => parseAnswer(null)).toThrow(TypeError);
     });
 
     test('throws on invalid type', () => {
-      expect(() => parseAnswer([])).toThrow(AnswerTypeInvalidError);
-      expect(() => parseAnswer(false)).toThrow(AnswerTypeInvalidError);
-      expect(() => parseAnswer({})).toThrow(AnswerTypeInvalidError);
-      expect(() => parseAnswer(Promise.resolve('ASDF'))).toThrow(AnswerTypeInvalidError);
-      expect(() => parseAnswer(() => {})).toThrow(AnswerTypeInvalidError);
-      expect(() => parseAnswer(new Error('WRONG'))).toThrow(AnswerTypeInvalidError);
+      expect(() => parseAnswer([])).toThrow(TypeError);
+      expect(() => parseAnswer(false)).toThrow(TypeError);
+      expect(() => parseAnswer({})).toThrow(TypeError);
+      expect(() => parseAnswer(Promise.resolve('ASDF'))).toThrow(TypeError);
+      expect(() => parseAnswer(() => {})).toThrow(TypeError);
+      expect(() => parseAnswer(new Error('WRONG'))).toThrow(TypeError);
     });
 
     test('throws on empty string', () => {
-      expect(() => parseAnswer('')).toThrow(AnswerEmptyError);
+      expect(() => parseAnswer('')).toThrow(RangeError);
     });
 
     test('throws on whitespace', () => {
-      expect(() => parseAnswer('\t\t\t\t\t')).toThrow(AnswerEmptyError);
-      expect(() => parseAnswer('\r\n')).toThrow(AnswerEmptyError);
-      expect(() => parseAnswer('     ')).toThrow(AnswerEmptyError);
+      expect(() => parseAnswer('\t\t\t\t\t')).toThrow(RangeError);
+      expect(() => parseAnswer('\r\n')).toThrow(RangeError);
+      expect(() => parseAnswer('     ')).toThrow(RangeError);
     });
 
     test('trims a string answer', () => {
