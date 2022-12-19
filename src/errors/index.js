@@ -11,7 +11,6 @@ import {
   SolutionWorkerEmptyInputError,
   SolutionWorkerExitWithoutAnswerError,
   SolutionWorkerMissingDataError,
-  SolutionWorkerUnexpectedError,
   UserSolutionAnswerInvalidError,
   UserSolutionFileNotFoundError,
   UserSolutionMissingFunctionError,
@@ -37,7 +36,6 @@ export {
 
   SolutionWorkerEmptyInputError,
   SolutionWorkerExitWithoutAnswerError,
-  SolutionWorkerUnexpectedError,
   SolutionWorkerMissingDataError,
   UserSolutionAnswerInvalidError,
   UserSolutionFileNotFoundError,
