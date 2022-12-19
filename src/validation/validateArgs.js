@@ -1,4 +1,5 @@
 import { getConfigValue } from '../config.js';
+import { InvalidYearError } from '../errors/index.js';
 
 /**
  * Does the year match one where advent of code was held?
@@ -17,3 +18,18 @@ export const dayIsValid = (day) => getConfigValue('aoc.validation.days').include
  * @param {Number} part
  */
 export const partIsValid = (part) => getConfigValue('aoc.validation.parts').includes(part);
+
+/**
+ * Grabs the year value from the config, validates and returns it.
+ * @throws {YearIsInvalidError}
+ * @returns {Number}
+ */
+export const getYear = () => {
+  const year = getConfigValue('aoc.year');
+
+  if (!yearIsValid(year)) {
+    throw new InvalidYearError();
+  }
+
+  return year;
+};
