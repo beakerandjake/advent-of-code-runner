@@ -31,6 +31,16 @@ export class SolutionWorkerEmptyInputError extends Error {
 }
 
 /**
+ * Error raised if the Solution Worker gets invoked without required worker data
+ */
+export class SolutionWorkerMissingDataError extends Error {
+  constructor() {
+    super('Provided worker data is missing required fields');
+    this.name = 'SolutionWorkerMissingDataError';
+  }
+}
+
+/**
  * Error raised if users solution returns an answer of the wrong type.
  */
 export class UserSolutionAnswerInvalidError extends Error {

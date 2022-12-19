@@ -5,10 +5,11 @@ import { workerMessageTypes } from './workerMessageTypes.js';
 import { userAnswerTypeIsValid } from './userAnswerTypeIsValid.js';
 import { importUserSolutionFile } from './importUserSolutionFile.js';
 import {
+  SolutionWorkerMissingDataError,
   UserSolutionAnswerInvalidError,
   UserSolutionMissingFunctionError,
   UserSolutionThrewError,
-} from '../errors/index.js';
+} from '../errors/solutionWorkerErrors.js';
 
 /**
  * Expects to be ran from a Worker. Loads the solution file and tries
@@ -67,7 +68,12 @@ export const executeUserSolution = (userSolutionFn, input) => {
  * The "main" method of this worker, only executed if this isn't the main thread.
  * @private
  */
-export const runWorker = async ({ solutionFileName, functionToExecute, input }) => {
+export const runWorker = async ({ solutionFileName, functionToExecute, input } = {}) => {
+  // expect worker data to have required fields
+  if (!solutionFileName || !functionToExecute || !input) {
+    throw new SolutionWorkerMissingDataError();
+  }
+
   logFromWorker('debug', 'worker loading user module: %s', solutionFileName);
   const userSolutionModule = await importUserSolutionFile(solutionFileName);
   const userSolutionFunction = get(userSolutionModule, functionToExecute);

@@ -1,22 +1,20 @@
-import {
-  beforeEach, describe, jest, test,
-} from '@jest/globals';
-import { workerData } from 'node:worker_threads';
-import {
-  UserSolutionAnswerInvalidError, UserSolutionFileNotFoundError, UserSolutionMissingFunctionError, UserSolutionThrewError,
-} from '../../src/errors/index.js';
+import { describe, jest, test } from '@jest/globals';
 import { workerMessageTypes } from '../../src/solutions/workerMessageTypes';
+import {
+  SolutionWorkerMissingDataError,
+  UserSolutionAnswerInvalidError,
+  UserSolutionFileNotFoundError,
+  UserSolutionMissingFunctionError,
+  UserSolutionThrewError,
+} from '../../src/errors/index.js';
 
-// setup mocks
-const workerThreadMock = {
+jest.unstable_mockModule('node:worker_threads', () => ({
   isMainThread: true,
   workerData: {},
   parentPort: {
     postMessage: jest.fn(),
   },
-};
-
-jest.unstable_mockModule('node:worker_threads', () => workerThreadMock);
+}));
 
 jest.unstable_mockModule('node:process', () => ({
   hrtime: {
@@ -38,6 +36,7 @@ jest.unstable_mockModule('../../src/solutions/userAnswerTypeIsValid.js', () => (
 }));
 
 const { hrtime } = await import('node:process');
+const { parentPort } = await import('node:worker_threads');
 const { get } = await import('../../src/util.js');
 const { userAnswerTypeIsValid } = await import('../../src/solutions/userAnswerTypeIsValid.js');
 const { importUserSolutionFile } = await import('../../src/solutions/importUserSolutionFile.js');
@@ -61,8 +60,8 @@ describe('solutionRunnerWorkerThread', () => {
       };
       logFromWorker(expected.level, message, ...args);
 
-      expect(workerThreadMock.parentPort.postMessage).toHaveBeenCalledTimes(1);
-      expect(workerThreadMock.parentPort.postMessage).toHaveBeenCalledWith(expected);
+      expect(parentPort.postMessage).toHaveBeenCalledTimes(1);
+      expect(parentPort.postMessage).toHaveBeenCalledWith(expected);
     });
 
     test('posts expected data (without args)', async () => {
@@ -76,8 +75,8 @@ describe('solutionRunnerWorkerThread', () => {
       };
       logFromWorker(expected.level, message);
 
-      expect(workerThreadMock.parentPort.postMessage).toHaveBeenCalledTimes(1);
-      expect(workerThreadMock.parentPort.postMessage).toHaveBeenCalledWith(expected);
+      expect(parentPort.postMessage).toHaveBeenCalledTimes(1);
+      expect(parentPort.postMessage).toHaveBeenCalledWith(expected);
     });
   });
 
@@ -123,8 +122,8 @@ describe('solutionRunnerWorkerThread', () => {
 
       executeUserSolution(userSolutionFn, 'ASDF');
 
-      expect(workerThreadMock.parentPort.postMessage).toHaveBeenCalledTimes(1);
-      expect(workerThreadMock.parentPort.postMessage).toHaveBeenCalledWith(
+      expect(parentPort.postMessage).toHaveBeenCalledTimes(1);
+      expect(parentPort.postMessage).toHaveBeenCalledWith(
         expect.objectContaining({ type: workerMessageTypes.answer, answer }),
       );
     });
@@ -138,17 +137,37 @@ describe('solutionRunnerWorkerThread', () => {
 
       executeUserSolution(jest.fn(), 'ASDF');
 
-      expect(workerThreadMock.parentPort.postMessage).toHaveBeenCalledTimes(1);
-      expect(workerThreadMock.parentPort.postMessage).toHaveBeenCalledWith(
+      expect(parentPort.postMessage).toHaveBeenCalledTimes(1);
+      expect(parentPort.postMessage).toHaveBeenCalledWith(
         expect.objectContaining({ executionTimeNs: endTime - startTime }),
       );
     });
   });
 
   describe('runWorker()', () => {
+    test('throws if user data missing "solutionName"', async () => {
+      await expect(
+        async () => runWorker({ functionToExecute: 'asdf', input: 'asdf' }),
+      ).rejects.toThrow(SolutionWorkerMissingDataError);
+    });
+
+    test('throws if user data missing "functionToExecute"', async () => {
+      await expect(
+        async () => runWorker({ solutionFileName: 'asdf', input: 'asdf' }),
+      ).rejects.toThrow(SolutionWorkerMissingDataError);
+    });
+
+    test('throws if user data missing "input"', async () => {
+      await expect(
+        async () => runWorker({ functionToExecute: 'asdf', solutionFileName: 'asdf' }),
+      ).rejects.toThrow(SolutionWorkerMissingDataError);
+    });
+
     test('throws if user solution file not found', async () => {
       importUserSolutionFile.mockRejectedValue(new UserSolutionFileNotFoundError('NOT FOUND'));
-      await expect(async () => runWorker({ solutionFileName: 'asdf' })).rejects.toThrow(UserSolutionFileNotFoundError);
+      await expect(
+        async () => runWorker({ solutionFileName: 'asdf', functionToExecute: 'asdf', input: 'asdf' }),
+      ).rejects.toThrow(UserSolutionFileNotFoundError);
     });
 
     test.each([
@@ -165,27 +184,9 @@ describe('solutionRunnerWorkerThread', () => {
     ])('throws if user function returns non function value - %s', async (fn) => {
       importUserSolutionFile.mockResolvedValue({});
       get.mockReturnValue(fn);
-      await expect(async () => runWorker({})).rejects.toThrow(UserSolutionMissingFunctionError);
+      await expect(
+        async () => runWorker({ solutionFileName: 'asdf', functionToExecute: 'asdf', input: 'asdf' }),
+      ).rejects.toThrow(UserSolutionMissingFunctionError);
     });
-
-    // test('throws if user solution file missing function', async () => {
-    //   const userModule = {
-    //     cats: () => {},
-    //   };
-
-    //   importUserSolutionFile.mockResolvedValue(userModule);
-    //   await expect(
-    //     async () => runWorker({ solutionFileName: 'asdf', functionToExecute: 'dogs' }),
-    //   ).rejects.toThrow(UserSolutionFileNotFoundError);
-    // });
-
-    // test('throws if exported value is not a function', async () => {
-    //   const userModule = {
-    //     cats: () => {},
-    //   };
-
-    //   importUserSolutionFile.mockRejectedValue(new UserSolutionFileNotFoundError('NOT FOUND'));
-    //   await expect(async () => runWorker({ solutionFileName: 'asdf' })).rejects.toThrow(UserSolutionFileNotFoundError);
-    // });
   });
 });

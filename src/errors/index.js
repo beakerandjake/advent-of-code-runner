@@ -10,6 +10,7 @@ import { RateLimitExceededError } from './rateLimitExceededError.js';
 import {
   SolutionWorkerEmptyInputError,
   SolutionWorkerExitWithoutAnswerError,
+  SolutionWorkerMissingDataError,
   SolutionWorkerUnexpectedError,
   UserSolutionAnswerInvalidError,
   UserSolutionFileNotFoundError,
@@ -35,8 +36,9 @@ export {
   UserError,
 
   SolutionWorkerEmptyInputError,
-  SolutionWorkerUnexpectedError,
   SolutionWorkerExitWithoutAnswerError,
+  SolutionWorkerUnexpectedError,
+  SolutionWorkerMissingDataError,
   UserSolutionAnswerInvalidError,
   UserSolutionFileNotFoundError,
   UserSolutionMissingFunctionError,
