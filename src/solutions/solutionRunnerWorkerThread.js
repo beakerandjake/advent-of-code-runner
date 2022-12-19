@@ -29,7 +29,7 @@ export const logFromWorker = (level, message, ...args) => {
   parentPort.postMessage({
     type: workerMessageTypes.log,
     level,
-    message: `worker - ${message}`,
+    message,
     meta: args,
   });
 };

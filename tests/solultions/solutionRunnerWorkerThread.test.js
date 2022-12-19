@@ -55,7 +55,7 @@ describe('solutionRunnerWorkerThread', () => {
       const expected = {
         type: workerMessageTypes.log,
         level: 'cats',
-        message: `worker - ${message}`,
+        message,
         meta: [...args],
       };
       logFromWorker(expected.level, message, ...args);
@@ -70,7 +70,7 @@ describe('solutionRunnerWorkerThread', () => {
       const expected = {
         type: workerMessageTypes.log,
         level: 'cats',
-        message: `worker - ${message}`,
+        message,
         meta: [],
       };
       logFromWorker(expected.level, message);
