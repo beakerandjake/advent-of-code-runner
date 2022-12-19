@@ -1,7 +1,8 @@
 import { isMainThread, workerData, parentPort } from 'node:worker_threads';
 import { hrtime } from 'node:process';
-import { workerMessageTypes } from './workerMessageTypes.js';
 import { getType } from '../util.js';
+import { importUserSolutionFile } from './importUserSolutionFile.js';
+import { workerMessageTypes } from './workerMessageTypes.js';
 import { userAnswerTypeIsValid } from './userAnswerTypeIsValid.js';
 
 /**
@@ -70,11 +71,15 @@ export const executeUserSolution = (userSolutionFn, input) => {
     });
   }
 };
-
 if (!isMainThread) {
+  console.log('hello from worker', workerData);
+  console.log('the thing is', await importUserSolutionFile('asdf'));
+
   logFromWorker('debug', 'attempting to execute function: %s on module: %s', workerData.functionToExecute, workerData.solutionFileName);
 
-  const importedSolutionModule = await import(workerData.solutionFileName);
+  const importedSolutionModule = await importUserSolutionFile(workerData.solutionFileName);
+  console.log('module is ', importedSolutionModule);
+
   const functionToExecute = importedSolutionModule[workerData.functionToExecute];
 
   // ensure function is present and is actually a function.

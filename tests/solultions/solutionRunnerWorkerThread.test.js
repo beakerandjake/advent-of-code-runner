@@ -1,16 +1,19 @@
 import {
   beforeEach, describe, jest, test,
 } from '@jest/globals';
+import { UserSolutionFileNotFoundError } from '../../src/errors/index.js';
 import { workerMessageTypes } from '../../src/solutions/workerMessageTypes';
 
 // setup mocks
-jest.unstable_mockModule('node:worker_threads', () => ({
-  isMainThread: jest.fn(),
-  workerData: jest.fn(),
+const workerThreadMock = {
+  isMainThread: true,
+  workerData: {},
   parentPort: {
     postMessage: jest.fn(),
   },
-}));
+};
+
+jest.unstable_mockModule('node:worker_threads', () => workerThreadMock);
 
 jest.unstable_mockModule('node:process', () => ({
   hrtime: {
@@ -18,16 +21,20 @@ jest.unstable_mockModule('node:process', () => ({
   },
 }));
 
+jest.unstable_mockModule('../../src/solutions/importUserSolutionFile.js', () => ({
+  importUserSolutionFile: jest.fn(),
+}));
+
 jest.unstable_mockModule('../../src/solutions/userAnswerTypeIsValid.js', () => ({
   userAnswerTypeIsValid: jest.fn(),
 }));
 
-const { isMainThread, workerData, parentPort } = await import('node:worker_threads');
 const { hrtime } = await import('node:process');
 const { userAnswerTypeIsValid } = await import('../../src/solutions/userAnswerTypeIsValid.js');
+const { importUserSolutionFile } = await import('../../src/solutions/importUserSolutionFile');
 const { logFromWorker, executeUserSolution } = await import('../../src/solutions/solutionRunnerWorkerThread.js');
 
-beforeEach(() => {
+afterEach(() => {
   jest.clearAllMocks();
 });
 
@@ -45,8 +52,8 @@ describe('solutionRunnerWorkerThread', () => {
       };
       logFromWorker(expected.level, message, ...args);
 
-      expect(parentPort.postMessage).toHaveBeenCalledTimes(1);
-      expect(parentPort.postMessage).toHaveBeenCalledWith(expected);
+      expect(workerThreadMock.parentPort.postMessage).toHaveBeenCalledTimes(1);
+      expect(workerThreadMock.parentPort.postMessage).toHaveBeenCalledWith(expected);
     });
 
     test('posts expected data (without args)', async () => {
@@ -60,8 +67,8 @@ describe('solutionRunnerWorkerThread', () => {
       };
       logFromWorker(expected.level, message);
 
-      expect(parentPort.postMessage).toHaveBeenCalledTimes(1);
-      expect(parentPort.postMessage).toHaveBeenCalledWith(expected);
+      expect(workerThreadMock.parentPort.postMessage).toHaveBeenCalledTimes(1);
+      expect(workerThreadMock.parentPort.postMessage).toHaveBeenCalledWith(expected);
     });
   });
 
@@ -95,8 +102,8 @@ describe('solutionRunnerWorkerThread', () => {
 
         executeUserSolution(userSolutionFn, 'ASDF');
 
-        expect(parentPort.postMessage).toHaveBeenCalledTimes(1);
-        expect(parentPort.postMessage).toHaveBeenCalledWith({
+        expect(workerThreadMock.parentPort.postMessage).toHaveBeenCalledTimes(1);
+        expect(workerThreadMock.parentPort.postMessage).toHaveBeenCalledWith({
           type: workerMessageTypes.answer,
           answer,
           executionTimeNs: endTime - startTime,
@@ -109,8 +116,8 @@ describe('solutionRunnerWorkerThread', () => {
 
         executeUserSolution(userSolutionFn, 'QWERTY');
 
-        expect(parentPort.postMessage).toHaveBeenCalledTimes(1);
-        expect(parentPort.postMessage).toHaveBeenCalledWith(
+        expect(workerThreadMock.parentPort.postMessage).toHaveBeenCalledTimes(1);
+        expect(workerThreadMock.parentPort.postMessage).toHaveBeenCalledWith(
           expect.objectContaining({ type: workerMessageTypes.answerTypeInvalid }),
         );
       });
@@ -121,11 +128,26 @@ describe('solutionRunnerWorkerThread', () => {
 
         executeUserSolution(userSolutionFn, 'QWERTY');
 
-        expect(parentPort.postMessage).toHaveBeenCalledTimes(1);
-        expect(parentPort.postMessage).toHaveBeenCalledWith(
+        expect(workerThreadMock.parentPort.postMessage).toHaveBeenCalledTimes(1);
+        expect(workerThreadMock.parentPort.postMessage).toHaveBeenCalledWith(
           expect.objectContaining({ type: workerMessageTypes.runtimeError }),
         );
       });
+    });
+  });
+
+  describe('thread execution', () => {
+    beforeEach(async () => {
+      workerThreadMock.isMainThread = false;
+      workerThreadMock.workerData = {};
+      jest.resetModules();
+    });
+
+    test('throws on dynamic import fails', async () => {
+      importUserSolutionFile.mockRejectedValue(new UserSolutionFileNotFoundError());
+      expect(
+        async () => import('../../src/solutions/solutionRunnerWorkerThread.js'),
+      ).rejects.toThrow(UserSolutionFileNotFoundError);
     });
   });
 });
