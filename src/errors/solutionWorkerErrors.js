@@ -21,7 +21,7 @@ export class SolutionWorkerExitWithoutAnswerError extends UserError {
 }
 
 /**
- * Error that is raised if Solution Worker is provided empty input.
+ * Error raised if Solution Worker is provided empty input.
  */
 export class SolutionWorkerEmptyInputError extends Error {
   constructor() {
@@ -31,7 +31,17 @@ export class SolutionWorkerEmptyInputError extends Error {
 }
 
 /**
- * Error raised if the users solution file cannot be found.
+ * Error raised if users solution returns an answer of the wrong type.
+ */
+export class UserSolutionAnswerInvalidError extends Error {
+  constructor(answerType) {
+    super(`Unsupported answer type, answer must be a string or number. You provided: "${answerType}".`);
+    this.name = 'UserSolutionAnswerInvalidError';
+  }
+}
+
+/**
+ * Error raised if users solution file cannot be found.
  */
 export class UserSolutionFileNotFoundError extends UserError {
   constructor(fileName) {

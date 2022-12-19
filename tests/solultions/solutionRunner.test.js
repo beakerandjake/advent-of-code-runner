@@ -4,7 +4,7 @@ import {
 import { join as realJoin } from 'node:path';
 import {
   SolutionWorkerEmptyInputError,
-  SolutionAnswerInvalidError,
+  UserSolutionAnswerInvalidError,
   SolutionMissingFunctionError,
   UserSolutionFileNotFoundError,
   SolutionRuntimeError,
@@ -233,7 +233,7 @@ describe('solutionRunner', () => {
           await Promise.resolve(123);
           expect(messageCallback).toBeDefined();
           messageCallback({ type: workerMessageTypes.answerTypeInvalid });
-          expect(async () => executePromise).rejects.toThrow(SolutionAnswerInvalidError);
+          expect(async () => executePromise).rejects.toThrow(UserSolutionAnswerInvalidError);
         });
 
         test('runtimeError - throws', async () => {

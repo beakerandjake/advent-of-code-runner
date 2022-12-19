@@ -5,7 +5,7 @@ import { getConfigValue } from '../config.js';
 import { fileExists } from '../persistence/io.js';
 import {
   SolutionMissingFunctionError,
-  SolutionAnswerInvalidError,
+  UserSolutionAnswerInvalidError,
   SolutionRuntimeError,
   SolutionWorkerEmptyInputError,
   SolutionWorkerUnexpectedError,
@@ -99,7 +99,7 @@ export const execute = async (day, part, input) => {
           break;
         // user code provided invalid answer type.
         case workerMessageTypes.answerTypeInvalid:
-          reject(new SolutionAnswerInvalidError(data.answerType));
+          reject(new UserSolutionAnswerInvalidError(data.answerType));
           break;
         // user code threw error
         case workerMessageTypes.runtimeError:
