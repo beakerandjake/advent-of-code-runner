@@ -1,6 +1,7 @@
 import { isMainThread, workerData, parentPort } from 'node:worker_threads';
 import { hrtime } from 'node:process';
 import { workerMessageTypes } from './workerMessageTypes.js';
+import { getType } from '../util.js';
 
 /**
  * Expects to be ran from a Worker. Loads the solution file and tries
@@ -29,23 +30,6 @@ const logFromWorker = (level, message, ...args) => {
  * @param {Any} answer
  */
 const answerIsValidType = (answer) => Number.isFinite(answer) || (typeof answer === 'string' || answer instanceof String);
-
-/**
- * Tries to return the name of the answers type.
- * @param {Any} answer
- */
-const getAnswerType = (answer) => {
-  if (typeof answer === 'number') {
-    if (Number.isNaN(answer)) {
-      return 'NaN';
-    }
-    if (!Number.isFinite(answer)) {
-      return 'Infinity';
-    }
-  }
-
-  return {}.toString.call(answer).split(' ')[1].slice(0, -1).toLowerCase();
-};
 
 /**
  * Execute the user solution function, measure the time it takes to execute
@@ -85,7 +69,7 @@ const executeUserSolution = (userSolutionFn, input) => {
   } else {
     parentPort.postMessage({
       type: workerMessageTypes.answerTypeInvalid,
-      answerType: getAnswerType(answer),
+      answerType: getType(answer),
     });
   }
 };

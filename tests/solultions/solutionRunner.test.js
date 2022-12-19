@@ -193,7 +193,7 @@ describe('solutionRunner', () => {
         expect(exitCallback).toBeDefined();
         exitCallback();
 
-        expect(async () => promise).rejects.toThrow();
+        expect(async () => promise).rejects.toThrow(SolutionWorkerExitWithoutAnswerError);
       });
 
       describe('message event', () => {
@@ -258,7 +258,7 @@ describe('solutionRunner', () => {
           await Promise.resolve(123);
           expect(messageCallback).toBeDefined();
           messageCallback({ type: 'DOESNOTEXIST' });
-          expect(async () => executePromise).rejects.toThrow(SolutionWorkerExitWithoutAnswerError);
+          expect(async () => executePromise).rejects.toThrow();
         });
       });
     });
