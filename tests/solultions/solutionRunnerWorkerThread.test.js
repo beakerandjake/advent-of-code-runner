@@ -2,7 +2,9 @@ import {
   beforeEach, describe, jest, test,
 } from '@jest/globals';
 import { workerData } from 'node:worker_threads';
-import { UserSolutionFileNotFoundError, UserSolutionMissingFunctionError, UserSolutionThrewError } from '../../src/errors/index.js';
+import {
+  UserSolutionAnswerInvalidError, UserSolutionFileNotFoundError, UserSolutionMissingFunctionError, UserSolutionThrewError,
+} from '../../src/errors/index.js';
 import { workerMessageTypes } from '../../src/solutions/workerMessageTypes';
 
 // setup mocks
@@ -96,63 +98,50 @@ describe('solutionRunnerWorkerThread', () => {
       expect(userSolutionFn).toBeCalledWith(input);
     });
 
-    test('throws error if user function throws error', () => {
+    test('throws if user function throws error', () => {
       const userSolutionFn = jest.fn(() => { throw new RangeError('Invalid Index'); });
       userAnswerTypeIsValid.mockReturnValue(true);
       expect(() => executeUserSolution(userSolutionFn, 'asdf')).toThrow(UserSolutionThrewError);
     });
 
-    test('throws error if user function throws literal', () => {
+    test('throws if user function throws literal', () => {
       // eslint-disable-next-line no-throw-literal
       const userSolutionFn = jest.fn(() => { throw 'Thrown non error object'; });
       userAnswerTypeIsValid.mockReturnValue(true);
       expect(() => executeUserSolution(userSolutionFn, 'asdf')).toThrow(UserSolutionThrewError);
     });
 
-    describe('parentPort.postMessage()', () => {
-      test('workerMessageTypes.answer - when answer is valid type', () => {
-        const startTime = 4567;
-        const endTime = 6789;
-        const answer = 'ASDF';
-        const userSolutionFn = () => answer;
+    test('throws if answer type is invalid', () => {
+      userAnswerTypeIsValid.mockReturnValue(false);
+      expect(() => executeUserSolution(() => {}, 'asdf')).toThrow(UserSolutionAnswerInvalidError);
+    });
 
-        userAnswerTypeIsValid.mockReturnValueOnce(true);
-        hrtime.bigint.mockReturnValueOnce(startTime);
-        hrtime.bigint.mockReturnValueOnce(endTime);
+    test('posts answer to parent thread on success', () => {
+      const answer = 'ASDF';
+      const userSolutionFn = () => answer;
+      userAnswerTypeIsValid.mockReturnValueOnce(true);
 
-        executeUserSolution(userSolutionFn, 'ASDF');
+      executeUserSolution(userSolutionFn, 'ASDF');
 
-        expect(workerThreadMock.parentPort.postMessage).toHaveBeenCalledTimes(1);
-        expect(workerThreadMock.parentPort.postMessage).toHaveBeenCalledWith({
-          type: workerMessageTypes.answer,
-          answer,
-          executionTimeNs: endTime - startTime,
-        });
-      });
+      expect(workerThreadMock.parentPort.postMessage).toHaveBeenCalledTimes(1);
+      expect(workerThreadMock.parentPort.postMessage).toHaveBeenCalledWith(
+        expect.objectContaining({ type: workerMessageTypes.answer, answer }),
+      );
+    });
 
-      test('workerMessageTypes.answerTypeInvalid - when answer is invalid type', () => {
-        const userSolutionFn = jest.fn(() => 'ASDF');
-        userAnswerTypeIsValid.mockReturnValueOnce(false);
+    test('correctly calculates execution time on success', () => {
+      const startTime = 4567;
+      const endTime = 6789;
+      userAnswerTypeIsValid.mockReturnValueOnce(true);
+      hrtime.bigint.mockReturnValueOnce(startTime);
+      hrtime.bigint.mockReturnValueOnce(endTime);
 
-        executeUserSolution(userSolutionFn, 'QWERTY');
+      executeUserSolution(jest.fn(), 'ASDF');
 
-        expect(workerThreadMock.parentPort.postMessage).toHaveBeenCalledTimes(1);
-        expect(workerThreadMock.parentPort.postMessage).toHaveBeenCalledWith(
-          expect.objectContaining({ type: workerMessageTypes.answerTypeInvalid }),
-        );
-      });
-
-      // test('workerMessageTypes.runtimeError - on user fn throws', () => {
-      //   const userSolutionFn = jest.fn(() => { throw new Error('AHH'); });
-      //   userAnswerTypeIsValid.mockReturnValueOnce(true);
-
-      //   executeUserSolution(userSolutionFn, 'QWERTY');
-
-      //   expect(workerThreadMock.parentPort.postMessage).toHaveBeenCalledTimes(1);
-      //   expect(workerThreadMock.parentPort.postMessage).toHaveBeenCalledWith(
-      //     expect.objectContaining({ type: workerMessageTypes.runtimeError }),
-      //   );
-      // });
+      expect(workerThreadMock.parentPort.postMessage).toHaveBeenCalledTimes(1);
+      expect(workerThreadMock.parentPort.postMessage).toHaveBeenCalledWith(
+        expect.objectContaining({ executionTimeNs: endTime - startTime }),
+      );
     });
   });
 
