@@ -29,3 +29,29 @@ export const has = (target, key) => {
       : hasOwnProperty.call(target, key)
   );
 };
+
+/**
+ * Returns the type of the value.
+ * @param {Any} answer
+ * @returns {String}
+ */
+export const getType = (value) => {
+  if (value === null) {
+    return 'null';
+  }
+
+  if (value === undefined) {
+    return 'undefined';
+  }
+
+  if (typeof value === 'number') {
+    if (Number.isNaN(value)) {
+      return 'NaN';
+    }
+    if (!Number.isFinite(value)) {
+      return 'Infinity';
+    }
+  }
+
+  return value.constructor.name;
+};
