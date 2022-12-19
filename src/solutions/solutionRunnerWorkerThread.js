@@ -3,8 +3,12 @@ import { hrtime } from 'node:process';
 import { getType, get } from '../util.js';
 import { workerMessageTypes } from './workerMessageTypes.js';
 import { userAnswerTypeIsValid } from './userAnswerTypeIsValid.js';
-import { UserSolutionMissingFunctionError, UserSolutionThrewError } from '../errors/index.js';
 import { importUserSolutionFile } from './importUserSolutionFile.js';
+import {
+  UserSolutionAnswerInvalidError,
+  UserSolutionMissingFunctionError,
+  UserSolutionThrewError,
+} from '../errors/index.js';
 
 /**
  * Expects to be ran from a Worker. Loads the solution file and tries
@@ -48,18 +52,15 @@ export const executeUserSolution = (userSolutionFn, input) => {
     throw new UserSolutionThrewError(error);
   }
 
-  if (userAnswerTypeIsValid(answer)) {
-    parentPort.postMessage({
-      type: workerMessageTypes.answer,
-      answer,
-      executionTimeNs: Number(end - start),
-    });
-  } else {
-    parentPort.postMessage({
-      type: workerMessageTypes.answerTypeInvalid,
-      answerType: getType(answer),
-    });
+  if (!userAnswerTypeIsValid(answer)) {
+    throw new UserSolutionAnswerInvalidError(getType(answer));
   }
+
+  parentPort.postMessage({
+    type: workerMessageTypes.answer,
+    answer,
+    executionTimeNs: Number(end - start),
+  });
 };
 
 /**
@@ -70,11 +71,13 @@ export const runWorker = async ({ solutionFileName, functionToExecute, input }) 
   logFromWorker('debug', 'worker loading user module: %s', solutionFileName);
   const userSolutionModule = await importUserSolutionFile(solutionFileName);
   const userSolutionFunction = get(userSolutionModule, functionToExecute);
-  logFromWorker('debug', 'worker loading executing user function: %s', functionToExecute);
+
   // bail if user module didn't export the function we need.
   if (!userSolutionFunction || !(userSolutionFunction instanceof Function)) {
     throw new UserSolutionMissingFunctionError(functionToExecute);
   }
+
+  logFromWorker('debug', 'worker loading executing user function: %s', functionToExecute);
   executeUserSolution(userSolutionFunction, input);
 };
 
