@@ -1,48 +1,37 @@
 import {
   describe, jest, test, beforeEach,
 } from '@jest/globals';
-import { DataFileIOError, DataFileParsingError } from '../src/errors/index.js';
-
-// import { getConfigValue } from '../config.js';
-// import { logger } from '../logger.js';
-// import { loadFileContents, saveFile } from './io.js';
+import { DataFileIOError, DataFileParsingError } from '../../src/errors/index.js';
 
 // setup mocks.
-jest.unstable_mockModule('../src/persistence/io.js', () => ({
+jest.unstable_mockModule('../../src/persistence/io.js', () => ({
   loadFileContents: jest.fn(),
   saveFile: jest.fn(),
 }));
 
-jest.unstable_mockModule('../src/config.js', () => ({
+jest.unstable_mockModule('../../src/config.js', () => ({
   getConfigValue: jest.fn(),
 }));
 
-jest.unstable_mockModule('../src/logger.js', () => ({
+jest.unstable_mockModule('../../src/logger.js', () => ({
   logger: {
     silly: jest.fn(),
   },
 }));
 
-// jest.unstable_mockModule('../src/persistence/cachedValue.js', () => ({
-//   CachedValue: jest.fn(() => ({
-//     value: jest.fn(),
-//     setValue: jest.fn(),
-//     hasValue: jest.fn(),
-//   })),
-// }));
 const mockCache = {
   value: null,
   setValue: jest.fn(),
   hasValue: jest.fn(),
 };
-jest.unstable_mockModule('../src/persistence/cachedValue.js', () => ({
+jest.unstable_mockModule('../../src/persistence/cachedValue.js', () => ({
   CachedValue: jest.fn(() => mockCache),
 }));
 
 // import after setting up the mock so the modules import the mocked version
 // const { CachedValue } = await import('../src/persistence/cachedValue.js');
-const { loadFileContents, saveFile } = await import('../src/persistence/io.js');
-const { getStoreValue, setStoreValue } = await import('../src/persistence/jsonFileStore.js');
+const { loadFileContents, saveFile } = await import('../../src/persistence/io.js');
+const { getStoreValue, setStoreValue } = await import('../../src/persistence/jsonFileStore.js');
 
 describe('jsonFileStore', () => {
   describe('getStoreValue()', () => {

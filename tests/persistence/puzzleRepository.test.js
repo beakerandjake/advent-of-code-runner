@@ -1,16 +1,16 @@
 import {
   describe, jest, test, afterEach,
 } from '@jest/globals';
-import { UserDataTranslationError } from '../src/errors/index.js';
+import { UserDataTranslationError } from '../../src/errors/index.js';
 
 // setup jsonFileStore so it can be mocked.
-jest.unstable_mockModule('../src/persistence/jsonFileStore.js', () => ({
+jest.unstable_mockModule('../../src/persistence/jsonFileStore.js', () => ({
   getStoreValue: jest.fn(),
   setStoreValue: jest.fn(),
 }));
 
 // import after setting up the mock so the modules import the mocked version
-const { getStoreValue, setStoreValue } = await import('../src/persistence/jsonFileStore.js');
+const { getStoreValue, setStoreValue } = await import('../../src/persistence/jsonFileStore.js');
 const {
   translateToPuzzleFromData,
   translateToDataFromPuzzle,
@@ -20,7 +20,7 @@ const {
   setPuzzles,
   addOrEditPuzzle,
   createPuzzle,
-} = await import('../src/persistence/puzzleRepository.js');
+} = await import('../../src/persistence/puzzleRepository.js');
 
 afterEach(() => {
   jest.clearAllMocks();
