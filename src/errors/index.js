@@ -1,5 +1,3 @@
-import { AnswerEmptyError } from './answerEmptyError.js';
-import { AnswerTypeInvalidError } from './answerTypeInvalidError.js';
 import { DataFileIOError } from './dataFileIOError.js';
 import { DataFileParsingError } from './dataFileParsingError.js';
 import { LockedOrCompletedPuzzleError } from './lockedOrCompletedPuzzleError.js';
@@ -21,8 +19,6 @@ import { UserError } from './userError.js';
 import { UserPuzzleDataMissingError } from './userPuzzleDataMissingError.js';
 
 export {
-  AnswerTypeInvalidError,
-  AnswerEmptyError,
   DataFileIOError,
   DataFileParsingError,
   LockedOrCompletedPuzzleError,
