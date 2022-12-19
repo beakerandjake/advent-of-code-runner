@@ -12,11 +12,12 @@ import { getType } from '../util.js';
 /**
  * Sends a message from the Worker to the main thread asking the main thread
  * to log the specified data.
+ * @private
  * @param {String} level
  * @param {String} message
  * @param  {...Any} args
  */
-const logFromWorker = (level, message, ...args) => {
+export const logFromWorker = (level, message, ...args) => {
   parentPort.postMessage({
     type: workerMessageTypes.log,
     level,
@@ -27,6 +28,7 @@ const logFromWorker = (level, message, ...args) => {
 
 /**
  * Is the user provided answer a valid type?
+ * @private
  * @param {Any} answer
  */
 const answerIsValidType = (answer) => Number.isFinite(answer) || (typeof answer === 'string' || answer instanceof String);
