@@ -8,7 +8,6 @@ import {
   UserSolutionAnswerInvalidError,
   UserSolutionThrewError,
   SolutionWorkerEmptyInputError,
-  SolutionWorkerUnexpectedError,
   SolutionWorkerExitWithoutAnswerError,
   UserSolutionFileNotFoundError,
 } from '../errors/index.js';
