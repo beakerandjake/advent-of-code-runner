@@ -17,6 +17,7 @@ import {
 import { UserDataTranslationError } from './userDataTranslationError.js';
 import { UserError } from './userError.js';
 import { UserPuzzleDataMissingError } from './userPuzzleDataMissingError.js';
+import { YearIsInvalidError } from './validationErrors.js';
 
 export {
   DataFileIOError,
@@ -37,4 +38,5 @@ export {
   UserSolutionFileNotFoundError,
   UserSolutionMissingFunctionError,
   UserSolutionThrewError,
+  YearIsInvalidError,
 };
