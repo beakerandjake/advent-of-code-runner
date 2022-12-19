@@ -1,5 +1,5 @@
-import { AnswerTypeInvalidError, AnswerEmptyError } from './errors/index.js';
 import { logger } from './logger.js';
+import { answerTypeIsValid } from './validation/validateAnswer.js';
 import { getAllPuzzlesForYear } from './validatePuzzle.js';
 import {
   addOrEditPuzzle,
@@ -16,20 +16,15 @@ import {
  * @throws {AnswerTypeInvalidError}
  */
 export const parseAnswer = (answer) => {
-  if (answer === null || answer === undefined) {
-    throw new AnswerEmptyError();
-  }
-
-  // only supported type is number or string.
-  if (typeof answer !== 'string' && typeof answer !== 'number') {
-    throw new AnswerTypeInvalidError(typeof answer);
+  if (!answerTypeIsValid(answer)) {
+    throw new TypeError('Answer type is invalid');
   }
 
   const trimmedAnswer = answer.toString().trim();
 
   // don't allow empty strings.
   if (!trimmedAnswer.length) {
-    throw new AnswerEmptyError();
+    throw new RangeError('Answer was empty');
   }
 
   return trimmedAnswer;

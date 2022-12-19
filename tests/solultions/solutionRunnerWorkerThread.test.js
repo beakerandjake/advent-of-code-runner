@@ -31,14 +31,14 @@ jest.unstable_mockModule('../../src/solutions/importUserSolutionModule.js', () =
   importUserSolutionModule: jest.fn(),
 }));
 
-jest.unstable_mockModule('../../src/solutions/userAnswerTypeIsValid.js', () => ({
-  userAnswerTypeIsValid: jest.fn(),
+jest.unstable_mockModule('../../src/validation/validateAnswer.js', () => ({
+  answerTypeIsValid: jest.fn(),
 }));
 
 const { hrtime } = await import('node:process');
 const { parentPort } = await import('node:worker_threads');
 const { get } = await import('../../src/util.js');
-const { userAnswerTypeIsValid } = await import('../../src/solutions/userAnswerTypeIsValid.js');
+const { answerTypeIsValid } = await import('../../src/validation/validateAnswer.js');
 const { importUserSolutionModule } = await import('../../src/solutions/importUserSolutionModule.js');
 const { logFromWorker, executeUserSolution, runWorker } = await import('../../src/solutions/solutionRunnerWorkerThread.js');
 
@@ -83,7 +83,7 @@ describe('solutionRunnerWorkerThread', () => {
   describe('executeUserSolution()', () => {
     test('calls user function', () => {
       const userSolutionFn = jest.fn();
-      userAnswerTypeIsValid.mockReturnValueOnce(true);
+      answerTypeIsValid.mockReturnValueOnce(true);
       executeUserSolution(userSolutionFn, 'ASDF');
       expect(userSolutionFn).toBeCalledTimes(1);
     });
@@ -91,7 +91,7 @@ describe('solutionRunnerWorkerThread', () => {
     test('passes input to user function', () => {
       const input = '!@#$!@#$!@#$ASASDF';
       const userSolutionFn = jest.fn();
-      userAnswerTypeIsValid.mockReturnValueOnce(true);
+      answerTypeIsValid.mockReturnValueOnce(true);
       executeUserSolution(userSolutionFn, input);
       expect(userSolutionFn).toBeCalledTimes(1);
       expect(userSolutionFn).toBeCalledWith(input);
@@ -99,26 +99,26 @@ describe('solutionRunnerWorkerThread', () => {
 
     test('throws if user function throws error', () => {
       const userSolutionFn = jest.fn(() => { throw new RangeError('Invalid Index'); });
-      userAnswerTypeIsValid.mockReturnValue(true);
+      answerTypeIsValid.mockReturnValue(true);
       expect(() => executeUserSolution(userSolutionFn, 'asdf')).toThrow(UserSolutionThrewError);
     });
 
     test('throws if user function throws literal', () => {
       // eslint-disable-next-line no-throw-literal
       const userSolutionFn = jest.fn(() => { throw 'Thrown non error object'; });
-      userAnswerTypeIsValid.mockReturnValue(true);
+      answerTypeIsValid.mockReturnValue(true);
       expect(() => executeUserSolution(userSolutionFn, 'asdf')).toThrow(UserSolutionThrewError);
     });
 
     test('throws if answer type is invalid', () => {
-      userAnswerTypeIsValid.mockReturnValue(false);
+      answerTypeIsValid.mockReturnValue(false);
       expect(() => executeUserSolution(() => {}, 'asdf')).toThrow(UserSolutionAnswerInvalidError);
     });
 
     test('posts answer to parent thread on success', () => {
       const answer = 'ASDF';
       const userSolutionFn = () => answer;
-      userAnswerTypeIsValid.mockReturnValueOnce(true);
+      answerTypeIsValid.mockReturnValueOnce(true);
 
       executeUserSolution(userSolutionFn, 'ASDF');
 
@@ -131,7 +131,7 @@ describe('solutionRunnerWorkerThread', () => {
     test('correctly calculates execution time on success', () => {
       const startTime = 4567;
       const endTime = 6789;
-      userAnswerTypeIsValid.mockReturnValueOnce(true);
+      answerTypeIsValid.mockReturnValueOnce(true);
       hrtime.bigint.mockReturnValueOnce(startTime);
       hrtime.bigint.mockReturnValueOnce(endTime);
 
