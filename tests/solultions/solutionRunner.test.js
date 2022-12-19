@@ -3,10 +3,11 @@ import {
 } from '@jest/globals';
 import { join as realJoin } from 'node:path';
 import { EmptyInputError, SolutionNotFoundError, SolutionWorkerUnexpectedError } from '../../src/errors/index.js';
+import { workerMessageTypes } from '../../src/solutions/workerMessageTypes.js';
 import { mockConfig, mockLogger } from '../mocks.js';
 
 // setup mocks.
-mockLogger();
+const loggerMockInstance = mockLogger();
 mockConfig();
 
 jest.unstable_mockModule('../../src/persistence/io.js', () => ({
@@ -31,6 +32,7 @@ jest.unstable_mockModule('path', () => ({
 
 const { Worker } = await import('node:worker_threads');
 const { join } = await import('path');
+const { logger } = await import('../../src/logger.js');
 const { getConfigValue } = await import('../../src/config.js');
 const { fileExists, loadFileContents } = await import('../../src/persistence/io.js');
 const { execute, getSolutionFileName, getFunctionNameForPart } = await import('../../src/solutions/solutionRunner.js');
@@ -146,44 +148,90 @@ describe('solutionRunner', () => {
       );
     });
 
-    test('throws error on worker "error" event', async () => {
-      const part = 1;
-      setConfigMocks(part);
-      loadFileContents.mockResolvedValue(true);
-      let errorCallback;
-      workerOnMock.mockImplementation((key, callback) => {
-        if (key === 'error') {
-          errorCallback = callback;
-        }
+    describe('worker events', () => {
+      test('error event - throws error', async () => {
+        const part = 1;
+        setConfigMocks(part);
+        loadFileContents.mockResolvedValue(true);
+        let errorCallback;
+        workerOnMock.mockImplementation((key, callback) => {
+          if (key === 'error') {
+            errorCallback = callback;
+          }
+        });
+
+        // execute and ensure that mock the worker raising its error event.
+        const promise = execute(1, part, 'ASDF');
+        await Promise.resolve(123);
+        expect(errorCallback).toBeDefined();
+        errorCallback(new Error('FAILED!'));
+
+        expect(async () => promise).rejects.toThrow(SolutionWorkerUnexpectedError);
       });
 
-      // execute and ensure that mock the worker raising its error event.
-      const promise = execute(1, part, 'ASDF');
-      await Promise.resolve(123);
-      expect(errorCallback).toBeDefined();
-      errorCallback(new Error('FAILED!'));
+      test('exit event - throws error', async () => {
+        const part = 1;
+        setConfigMocks(part);
+        loadFileContents.mockResolvedValue(true);
+        let exitCallback;
+        workerOnMock.mockImplementation((key, callback) => {
+          if (key === 'exit') {
+            exitCallback = callback;
+          }
+        });
 
-      expect(async () => promise).rejects.toThrow(SolutionWorkerUnexpectedError);
-    });
+        // execute and ensure that mock the worker raising its error event.
+        const promise = execute(1, part, 'ASDF');
+        await Promise.resolve(123);
+        expect(exitCallback).toBeDefined();
+        exitCallback();
 
-    test('throws error on worker "exit" event', async () => {
-      const part = 1;
-      setConfigMocks(part);
-      loadFileContents.mockResolvedValue(true);
-      let exitCallback;
-      workerOnMock.mockImplementation((key, callback) => {
-        if (key === 'exit') {
-          exitCallback = callback;
-        }
+        expect(async () => promise).rejects.toThrow();
       });
 
-      // execute and ensure that mock the worker raising its error event.
-      const promise = execute(1, part, 'ASDF');
-      await Promise.resolve(123);
-      expect(exitCallback).toBeDefined();
-      exitCallback();
+      describe('message event', () => {
+        const part = 1;
+        let messageCallback;
 
-      expect(async () => promise).rejects.toThrow();
+        beforeEach(() => {
+          setConfigMocks(part);
+          loadFileContents.mockResolvedValue(true);
+          workerOnMock.mockImplementation((key, callback) => {
+            if (key === 'message') {
+              messageCallback = callback;
+            }
+          });
+        });
+
+        test('log - logs to logger', async () => {
+          execute(1, part, 'ASDF');
+          await Promise.resolve(123);
+          expect(messageCallback).toBeDefined();
+          messageCallback({ type: workerMessageTypes.log, level: 'info', message: 'ASDF' });
+          await Promise.resolve(123);
+          expect(loggerMockInstance.log).toHaveBeenLastCalledWith('info', 'ASDF');
+        });
+
+        test('answer - resolves with results', async () => {
+
+        });
+
+        test('answerTypeInvalid - throws', async () => {
+
+        });
+
+        test('runtimeError - throws', async () => {
+
+        });
+
+        test('functionNotFound - throws', async () => {
+
+        });
+
+        test('unknown message type - throws', async () => {
+
+        });
+      });
     });
   });
 });
