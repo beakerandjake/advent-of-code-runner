@@ -6,7 +6,7 @@ import { UserSolutionFileNotFoundError } from '../errors/solutionWorkerErrors.js
  * @param {String} fileName
  * @throws {UserSolutionFileNotFoundError}
  */
-export const importUserSolutionFile = async (fileName) => {
+export const importUserSolutionModule = async (fileName) => {
   try {
     const module = await import(fileName);
     return module;

@@ -3,7 +3,7 @@ import { hrtime } from 'node:process';
 import { getType, get } from '../util.js';
 import { workerMessageTypes } from './workerMessageTypes.js';
 import { userAnswerTypeIsValid } from './userAnswerTypeIsValid.js';
-import { importUserSolutionFile } from './importUserSolutionFile.js';
+import { importUserSolutionModule } from './importUserSolutionModule.js';
 import {
   SolutionWorkerMissingDataError,
   UserSolutionAnswerInvalidError,
@@ -75,7 +75,7 @@ export const runWorker = async ({ solutionFileName, functionToExecute, input } =
   }
 
   logFromWorker('debug', 'worker loading user module: %s', solutionFileName);
-  const userSolutionModule = await importUserSolutionFile(solutionFileName);
+  const userSolutionModule = await importUserSolutionModule(solutionFileName);
   const userSolutionFunction = get(userSolutionModule, functionToExecute);
 
   // bail if user module didn't export the function we need.

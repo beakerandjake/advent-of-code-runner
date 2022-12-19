@@ -27,8 +27,8 @@ jest.unstable_mockModule('../../src/util.js', () => ({
   getType: jest.fn(),
 }));
 
-jest.unstable_mockModule('../../src/solutions/importUserSolutionFile.js', () => ({
-  importUserSolutionFile: jest.fn(),
+jest.unstable_mockModule('../../src/solutions/importUserSolutionModule.js', () => ({
+  importUserSolutionModule: jest.fn(),
 }));
 
 jest.unstable_mockModule('../../src/solutions/userAnswerTypeIsValid.js', () => ({
@@ -39,7 +39,7 @@ const { hrtime } = await import('node:process');
 const { parentPort } = await import('node:worker_threads');
 const { get } = await import('../../src/util.js');
 const { userAnswerTypeIsValid } = await import('../../src/solutions/userAnswerTypeIsValid.js');
-const { importUserSolutionFile } = await import('../../src/solutions/importUserSolutionFile.js');
+const { importUserSolutionModule } = await import('../../src/solutions/importUserSolutionModule.js');
 const { logFromWorker, executeUserSolution, runWorker } = await import('../../src/solutions/solutionRunnerWorkerThread.js');
 
 afterEach(() => {
@@ -164,7 +164,7 @@ describe('solutionRunnerWorkerThread', () => {
     });
 
     test('throws if user solution file not found', async () => {
-      importUserSolutionFile.mockRejectedValue(new UserSolutionFileNotFoundError('NOT FOUND'));
+      importUserSolutionModule.mockRejectedValue(new UserSolutionFileNotFoundError('NOT FOUND'));
       await expect(
         async () => runWorker({ solutionFileName: 'asdf', functionToExecute: 'asdf', input: 'asdf' }),
       ).rejects.toThrow(UserSolutionFileNotFoundError);
@@ -182,7 +182,7 @@ describe('solutionRunnerWorkerThread', () => {
       false,
       true,
     ])('throws if user function returns non function value - %s', async (fn) => {
-      importUserSolutionFile.mockResolvedValue({});
+      importUserSolutionModule.mockResolvedValue({});
       get.mockReturnValue(fn);
       await expect(
         async () => runWorker({ solutionFileName: 'asdf', functionToExecute: 'asdf', input: 'asdf' }),
