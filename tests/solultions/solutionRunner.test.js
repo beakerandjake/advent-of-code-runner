@@ -14,8 +14,8 @@ import { workerMessageTypes } from '../../src/solutions/workerMessageTypes.js';
 import { mockConfig, mockLogger } from '../mocks.js';
 
 // setup mocks.
-const loggerMockInstance = mockLogger();
 mockConfig();
+const loggerMockInstance = mockLogger();
 
 jest.unstable_mockModule('../../src/persistence/io.js', () => ({
   fileExists: jest.fn(),
@@ -39,7 +39,6 @@ jest.unstable_mockModule('path', () => ({
 
 const { Worker } = await import('node:worker_threads');
 const { join } = await import('path');
-const { logger } = await import('../../src/logger.js');
 const { getConfigValue } = await import('../../src/config.js');
 const { fileExists, loadFileContents } = await import('../../src/persistence/io.js');
 const { execute, getSolutionFileName, getFunctionNameForPart } = await import('../../src/solutions/solutionRunner.js');
