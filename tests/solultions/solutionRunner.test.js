@@ -6,7 +6,7 @@ import {
   EmptyInputError,
   SolutionAnswerInvalidError,
   SolutionMissingFunctionError,
-  SolutionNotFoundError,
+  UserSolutionFileNotFoundError,
   SolutionRuntimeError,
   SolutionWorkerUnexpectedError,
 } from '../../src/errors/index.js';
@@ -121,7 +121,7 @@ describe('solutionRunner', () => {
       const part = 1;
       setConfigMocks(part);
       fileExists.mockResolvedValue(false);
-      expect(async () => execute(1, 1, 'asdf')).rejects.toThrow(SolutionNotFoundError);
+      expect(async () => execute(1, 1, 'asdf')).rejects.toThrow(UserSolutionFileNotFoundError);
     });
 
     test('throws if worker file not found', async () => {

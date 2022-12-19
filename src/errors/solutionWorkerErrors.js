@@ -19,3 +19,13 @@ export class SolutionWorkerExitWithoutAnswerError extends UserError {
     this.name = 'SolutionWorkerExitWithoutGivingAnswer';
   }
 }
+
+/**
+ * Error raised if the users solution file cannot be found.
+ */
+export class UserSolutionFileNotFoundError extends UserError {
+  constructor(fileName) {
+    super(`Could not find your solution file, ensure file exits: ${fileName}`);
+    this.name = 'UserSolutionFileNotFoundError';
+  }
+}

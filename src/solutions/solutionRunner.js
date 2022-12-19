@@ -5,12 +5,12 @@ import { getConfigValue } from '../config.js';
 import { fileExists } from '../persistence/io.js';
 import {
   SolutionMissingFunctionError,
-  SolutionNotFoundError,
   SolutionAnswerInvalidError,
   SolutionRuntimeError,
   EmptyInputError,
   SolutionWorkerUnexpectedError,
   SolutionWorkerExitWithoutAnswerError,
+  UserSolutionFileNotFoundError,
 } from '../errors/index.js';
 import { workerMessageTypes } from './workerMessageTypes.js';
 
@@ -73,7 +73,7 @@ export const execute = async (day, part, input) => {
 
   // ensure the user actually has the file we're trying to execute.
   if (!await fileExists(solutionFileName)) {
-    throw new SolutionNotFoundError(solutionFileName);
+    throw new UserSolutionFileNotFoundError(solutionFileName);
   }
 
   return new Promise((resolve, reject) => {
