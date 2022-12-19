@@ -28,6 +28,8 @@
     commands can use one or more actions.
 
   testing... when mocking async fns, am i returning async fn/promise???
+
+  rename config options for validation
  *
  *
  */

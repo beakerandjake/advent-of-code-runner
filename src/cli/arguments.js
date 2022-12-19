@@ -22,7 +22,7 @@ export const parseArgument = (value, validationFn, errorMessage) => {
   }
 };
 
-const daysRange = betweenMessage(getConfigValue('aoc.puzzleValidation.days'));
+const daysRange = betweenMessage(getConfigValue('aoc.validation.days'));
 
 /**
  * Argument for the puzzles day, returns an integer.
@@ -35,7 +35,7 @@ export const dayArgument = new Argument('<day>', `The day to solve (${daysRange}
     `Allowed Days between ${daysRange}.`,
   ));
 
-const partsRange = betweenMessage(getConfigValue('aoc.puzzleValidation.parts'));
+const partsRange = betweenMessage(getConfigValue('aoc.validation.parts'));
 
 /**
  * Argument for the puzzles part, returns an integer.

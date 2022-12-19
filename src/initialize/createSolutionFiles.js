@@ -13,7 +13,7 @@ export const createSolutionFiles = async () => {
 
   await ensureDirectoriesExist(solutionsDir);
 
-  const filePaths = getConfigValue('aoc.puzzleValidation.days').map(
+  const filePaths = getConfigValue('aoc.validation.days').map(
     (day) => join(solutionsDir, `day_${day}.js`),
   );
 

@@ -1,5 +1,5 @@
 import { describe, test } from '@jest/globals';
-import { CachedValue } from '../src/persistence/cachedValue.js';
+import { CachedValue } from '../../src/persistence/cachedValue.js';
 
 describe('cachedValue', () => {
   describe('value', () => {

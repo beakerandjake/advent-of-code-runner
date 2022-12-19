@@ -17,13 +17,13 @@ jest.unstable_mockModule('../src/logger.js', () => ({
   },
 }));
 
-jest.unstable_mockModule('../src/validatePuzzle.js', () => ({
+jest.unstable_mockModule('../src/validation/validatePuzzle.js', () => ({
   getAllPuzzlesForYear: jest.fn(),
 }));
 
 // import after setting up the mock so the modules import the mocked version
 
-const { getAllPuzzlesForYear } = await import('../src/validatePuzzle.js');
+const { getAllPuzzlesForYear } = await import('../src/validation/validatePuzzle.js');
 const {
   findPuzzle, createPuzzle, addOrEditPuzzle, getPuzzles,
 } = await import('../src/persistence/puzzleRepository.js');
