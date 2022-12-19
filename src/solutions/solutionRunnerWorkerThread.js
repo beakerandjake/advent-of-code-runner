@@ -71,24 +71,29 @@ export const executeUserSolution = (userSolutionFn, input) => {
     });
   }
 };
-if (!isMainThread) {
-  console.log('hello from worker', workerData);
-  console.log('the thing is', await importUserSolutionFile('asdf'));
 
-  logFromWorker('debug', 'attempting to execute function: %s on module: %s', workerData.functionToExecute, workerData.solutionFileName);
+/**
+ * The "main" method of this worker, only executed if this isn't the main thread.
+ * @private
+ */
+export const runWorker = async ({ solutionFileName, functionToExecute, input }) => {
+  logFromWorker('debug', 'worker loading user module: %s', solutionFileName);
+  const userSolutionModule = await importUserSolutionFile(solutionFileName);
+  const userSolutionFunction = userSolutionModule[functionToExecute];
+  logFromWorker('debug', 'worker loading executing user function: %s', functionToExecute);
 
-  const importedSolutionModule = await importUserSolutionFile(workerData.solutionFileName);
-  console.log('module is ', importedSolutionModule);
-
-  const functionToExecute = importedSolutionModule[workerData.functionToExecute];
-
-  // ensure function is present and is actually a function.
-  if (!functionToExecute || !(functionToExecute instanceof Function)) {
+  // bail if user module didn't export the function we need.
+  if (!userSolutionFunction || !(userSolutionFunction instanceof Function)) {
     parentPort.postMessage({
       type: workerMessageTypes.functionNotFound,
-      name: workerData.functionToExecute,
+      name: functionToExecute,
     });
-  } else {
-    executeUserSolution(functionToExecute);
+    return;
   }
+  executeUserSolution(userSolutionFunction, input);
+};
+
+// Only run the worker on a child thread, not on the main thread!
+if (!isMainThread) {
+  await runWorker(workerData);
 }
