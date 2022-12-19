@@ -1,7 +1,9 @@
+import { answerTypeIsValid } from './validateAnswer.js';
+import { dayIsValid, partIsValid, yearIsValid } from './validateArgs.js';
 import { parsePositiveInt } from './validationUtils.js';
-import { yearIsValid, dayIsValid, partIsValid } from './validateArgs.js';
 
 export {
+  answerTypeIsValid,
   dayIsValid,
   parsePositiveInt,
   partIsValid,
