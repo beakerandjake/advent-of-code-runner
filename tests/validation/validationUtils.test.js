@@ -1,5 +1,5 @@
 import { describe, test } from '@jest/globals';
-import { parsePositiveInt } from '../../src/validation/index.js';
+import { parsePositiveInt } from '../../src/validation/validationUtils.js';
 
 describe('validationUtils', () => {
   describe('parsePositiveInt()', () => {

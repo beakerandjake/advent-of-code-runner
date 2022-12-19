@@ -1,25 +1,25 @@
-import { describe, jest, test } from '@jest/globals';
-import { getConfigValue as originalGetConfigValue } from '../src/config.js';
+import {
+  describe, jest, test, afterEach,
+} from '@jest/globals';
+import { mockLogger } from '../mocks.js';
 
-// setup getConfigValue so it can be mocked.
-jest.unstable_mockModule('../src/config.js', () => ({
+// set up mocks
+mockLogger();
+
+jest.unstable_mockModule('../../src/config.js', () => ({
   getConfigValue: jest.fn(),
 }));
 
-// mock the logger
-jest.unstable_mockModule('../src/logger.js', () => ({
-  logger: jest.fn(),
-}));
-
 // import after setting up the mock so the modules import the mocked version
-const { getConfigValue } = await import('../src/config.js');
-const { getAllPuzzlesForYear } = await import('../src/validatePuzzle.js');
+const { getConfigValue } = await import('../../src/config.js');
+const { getAllPuzzlesForYear } = await import('../../src/validation/validatePuzzle.js');
 
-// since some tests override the mock implementation, we have to reset it before each test.
-beforeEach(() => getConfigValue.mockImplementation(originalGetConfigValue));
+afterEach(() => {
+  jest.clearAllMocks();
+});
 
 describe('validatePuzzle', () => {
-  describe('getAllPuzzles()', () => {
+  describe('getAllPuzzlesForYear()', () => {
     test('returns expected value', () => {
       const year = 2022;
       getConfigValue.mockReturnValueOnce([1, 2, 3, 4, 5]);

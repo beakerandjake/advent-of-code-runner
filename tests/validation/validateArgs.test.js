@@ -1,15 +1,18 @@
 import {
   describe, jest, test, afterEach,
 } from '@jest/globals';
+import { mockLogger } from '../mocks.js';
 
 // set up mocks
+mockLogger();
+
 jest.unstable_mockModule('../../src/config.js', () => ({
   getConfigValue: jest.fn(),
 }));
 
 // import after setting up the mock so the modules import the mocked version
 const { getConfigValue } = await import('../../src/config.js');
-const { dayIsValid, partIsValid, yearIsValid } = await import('../../src/validation/index.js');
+const { dayIsValid, partIsValid, yearIsValid } = await import('../../src/validation/validateArgs.js');
 
 afterEach(() => {
   jest.clearAllMocks();

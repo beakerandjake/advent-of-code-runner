@@ -5,7 +5,7 @@ import { LockedOrCompletedPuzzleError } from '../errors/index.js';
 import { logger } from '../logger.js';
 import { solve } from '../solutions/index.js';
 import { tryToSetFastestExecutionTime } from '../statistics.js';
-import { puzzleIsUnlocked } from '../validatePuzzle.js';
+import { puzzleIsUnlocked } from '../validation/validatePuzzle.js';
 import { dayArgument, partArgument } from './arguments.js';
 import { getInput } from '../inputs/index.js';
 

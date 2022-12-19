@@ -1,5 +1,5 @@
-import { getConfigValue } from './config.js';
-import { logger } from './logger.js';
+import { logger } from '../logger.js';
+import { getConfigValue } from '../config.js';
 
 /**
  * has the puzzle been unlocked by aoc?

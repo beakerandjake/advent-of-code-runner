@@ -4,7 +4,7 @@ import { getConfigValue } from '../config.js';
 import { LockedPuzzleError } from '../errors/index.js';
 import { logger } from '../logger.js';
 import { solve } from '../solutions/index.js';
-import { puzzleIsUnlocked } from '../validatePuzzle.js';
+import { puzzleIsUnlocked } from '../validationvalidatePuzzle.js';
 import { dayArgument, partArgument } from './arguments.js';
 import {
   puzzleHasBeenSolved,

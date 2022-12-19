@@ -1,6 +1,6 @@
 import { logger } from './logger.js';
 import { answerTypeIsValid } from './validation/validateAnswer.js';
-import { getAllPuzzlesForYear } from './validatePuzzle.js';
+import { getAllPuzzlesForYear } from './validation/validatePuzzle.js';
 import {
   addOrEditPuzzle,
   createPuzzle,
