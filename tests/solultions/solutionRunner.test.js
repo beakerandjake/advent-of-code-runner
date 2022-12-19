@@ -2,7 +2,9 @@ import {
   describe, jest, test, beforeEach,
 } from '@jest/globals';
 import { join as realJoin } from 'node:path';
-import { EmptyInputError, SolutionNotFoundError, SolutionWorkerUnexpectedError } from '../../src/errors/index.js';
+import {
+  EmptyInputError, SolutionAnswerInvalidError, SolutionNotFoundError, SolutionWorkerUnexpectedError,
+} from '../../src/errors/index.js';
 import { workerMessageTypes } from '../../src/solutions/workerMessageTypes.js';
 import { mockConfig, mockLogger } from '../mocks.js';
 
@@ -223,7 +225,11 @@ describe('solutionRunner', () => {
         });
 
         test('answerTypeInvalid - throws', async () => {
-
+          const executePromise = execute(1, part, 'ASDF');
+          await Promise.resolve(123);
+          expect(messageCallback).toBeDefined();
+          messageCallback({ type: workerMessageTypes.answerTypeInvalid });
+          expect(async () => executePromise).rejects.toThrow(SolutionAnswerInvalidError);
         });
 
         test('runtimeError - throws', async () => {
