@@ -2,6 +2,7 @@ import { isMainThread, workerData, parentPort } from 'node:worker_threads';
 import { hrtime } from 'node:process';
 import { workerMessageTypes } from './workerMessageTypes.js';
 import { getType } from '../util.js';
+import { userAnswerTypeIsValid } from './userAnswerTypeIsValid.js';
 
 /**
  * Expects to be ran from a Worker. Loads the solution file and tries
@@ -27,18 +28,12 @@ export const logFromWorker = (level, message, ...args) => {
 };
 
 /**
- * Is the user provided answer a valid type?
- * @private
- * @param {Any} answer
- */
-const answerIsValidType = (answer) => Number.isFinite(answer) || (typeof answer === 'string' || answer instanceof String);
-
-/**
  * Execute the user solution function, measure the time it takes to execute
  * then post the result of the execution back to the parent.
+ * @private
  * @param {Function} userSolutionFn
  */
-const executeUserSolution = (userSolutionFn, input) => {
+export const executeUserSolution = (userSolutionFn, input) => {
   let start;
   let end;
   let answer;
@@ -62,7 +57,7 @@ const executeUserSolution = (userSolutionFn, input) => {
     return;
   }
 
-  if (answerIsValidType(answer)) {
+  if (userAnswerTypeIsValid(answer)) {
     parentPort.postMessage({
       type: workerMessageTypes.answer,
       answer,

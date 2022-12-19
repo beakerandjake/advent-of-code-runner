@@ -13,12 +13,19 @@ jest.unstable_mockModule('node:worker_threads', () => ({
 }));
 
 jest.unstable_mockModule('node:process', () => ({
-  hrtime: jest.fn(),
+  hrtime: {
+    bigint: jest.fn(),
+  },
+}));
+
+jest.unstable_mockModule('../../src/solutions/userAnswerTypeIsValid.js', () => ({
+  userAnswerTypeIsValid: jest.fn(),
 }));
 
 const { isMainThread, workerData, parentPort } = await import('node:worker_threads');
 const { hrtime } = await import('node:process');
-const { logFromWorker } = await import('../../src/solutions/solutionRunnerWorkerThread.js');
+const { userAnswerTypeIsValid } = await import('../../src/solutions/userAnswerTypeIsValid.js');
+const { logFromWorker, executeUserSolution } = await import('../../src/solutions/solutionRunnerWorkerThread.js');
 
 beforeEach(() => {
   jest.clearAllMocks();
@@ -26,11 +33,6 @@ beforeEach(() => {
 
 describe('solutionRunnerWorkerThread', () => {
   describe('logFromWorker()', () => {
-    test('calls parentPort.postMessage()', async () => {
-      logFromWorker('cats', 'dogs', 1234, 45, 6);
-      expect(parentPort.postMessage).toHaveBeenCalledTimes(1);
-    });
-
     test('posts expected data (with args)', async () => {
       // const args = [];
       const args = [1234, { name: 'bob' }, 'SNAP'];
@@ -60,6 +62,70 @@ describe('solutionRunnerWorkerThread', () => {
 
       expect(parentPort.postMessage).toHaveBeenCalledTimes(1);
       expect(parentPort.postMessage).toHaveBeenCalledWith(expected);
+    });
+  });
+
+  describe('executeUserSolution()', () => {
+    test('calls user function', () => {
+      const userSolutionFn = jest.fn();
+      userAnswerTypeIsValid.mockReturnValueOnce(true);
+      executeUserSolution(userSolutionFn, 'ASDF');
+      expect(userSolutionFn).toBeCalledTimes(1);
+    });
+
+    test('passes input to user function', () => {
+      const input = '!@#$!@#$!@#$ASASDF';
+      const userSolutionFn = jest.fn();
+      userAnswerTypeIsValid.mockReturnValueOnce(true);
+      executeUserSolution(userSolutionFn, input);
+      expect(userSolutionFn).toBeCalledTimes(1);
+      expect(userSolutionFn).toBeCalledWith(input);
+    });
+
+    describe('parentPort.postMessage()', () => {
+      test('workerMessageTypes.answer - when answer is valid type', () => {
+        const startTime = 4567;
+        const endTime = 6789;
+        const answer = 'ASDF';
+        const userSolutionFn = () => answer;
+
+        userAnswerTypeIsValid.mockReturnValueOnce(true);
+        hrtime.bigint.mockReturnValueOnce(startTime);
+        hrtime.bigint.mockReturnValueOnce(endTime);
+
+        executeUserSolution(userSolutionFn, 'ASDF');
+
+        expect(parentPort.postMessage).toHaveBeenCalledTimes(1);
+        expect(parentPort.postMessage).toHaveBeenCalledWith({
+          type: workerMessageTypes.answer,
+          answer,
+          executionTimeNs: endTime - startTime,
+        });
+      });
+
+      test('workerMessageTypes.answerTypeInvalid - when answer is invalid type', () => {
+        const userSolutionFn = jest.fn(() => 'ASDF');
+        userAnswerTypeIsValid.mockReturnValueOnce(false);
+
+        executeUserSolution(userSolutionFn, 'QWERTY');
+
+        expect(parentPort.postMessage).toHaveBeenCalledTimes(1);
+        expect(parentPort.postMessage).toHaveBeenCalledWith(
+          expect.objectContaining({ type: workerMessageTypes.answerTypeInvalid }),
+        );
+      });
+
+      test('workerMessageTypes.runtimeError - on user fn throws', () => {
+        const userSolutionFn = jest.fn(() => { throw new Error('AHH'); });
+        userAnswerTypeIsValid.mockReturnValueOnce(true);
+
+        executeUserSolution(userSolutionFn, 'QWERTY');
+
+        expect(parentPort.postMessage).toHaveBeenCalledTimes(1);
+        expect(parentPort.postMessage).toHaveBeenCalledWith(
+          expect.objectContaining({ type: workerMessageTypes.runtimeError }),
+        );
+      });
     });
   });
 });
