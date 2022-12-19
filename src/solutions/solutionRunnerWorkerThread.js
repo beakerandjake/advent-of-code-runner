@@ -1,7 +1,6 @@
 import { isMainThread, workerData, parentPort } from 'node:worker_threads';
 import { hrtime } from 'node:process';
 import { getType } from '../util.js';
-import { importUserSolutionFile } from './importUserSolutionFile.js';
 import { workerMessageTypes } from './workerMessageTypes.js';
 import { userAnswerTypeIsValid } from './userAnswerTypeIsValid.js';
 
@@ -77,10 +76,22 @@ export const executeUserSolution = (userSolutionFn, input) => {
  * @private
  */
 export const runWorker = async ({ solutionFileName, functionToExecute, input }) => {
-  logFromWorker('debug', 'worker loading user module: %s', solutionFileName);
-  const userSolutionModule = await importUserSolutionFile(solutionFileName);
-  const userSolutionFunction = userSolutionModule[functionToExecute];
+  let userSolutionModule;
+
+  try {
+    logFromWorker('debug', 'worker loading user module: %s', solutionFileName);
+    userSolutionModule = await import(solutionFileName);
+  } catch (error) {
+    parentPort.postMessage({
+      type: workerMessageTypes.userModuleImportFailed,
+      fileName: solutionFileName,
+    });
+    return;
+  }
+
   logFromWorker('debug', 'worker loading executing user function: %s', functionToExecute);
+
+  const userSolutionFunction = userSolutionModule[functionToExecute];
 
   // bail if user module didn't export the function we need.
   if (!userSolutionFunction || !(userSolutionFunction instanceof Function)) {
@@ -90,6 +101,7 @@ export const runWorker = async ({ solutionFileName, functionToExecute, input }) 
     });
     return;
   }
+
   executeUserSolution(userSolutionFunction, input);
 };
 

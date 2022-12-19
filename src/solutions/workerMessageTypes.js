@@ -7,4 +7,5 @@ export const workerMessageTypes = {
   answerTypeInvalid: 'ANSWER_TYPE_INVALID',
   runtimeError: 'RUNTIME_ERROR',
   functionNotFound: 'MISSING_FUNCTION_ERROR',
+  userModuleImportFailed: 'MISSING_MODULE_ERROR',
 };

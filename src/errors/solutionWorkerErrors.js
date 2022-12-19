@@ -53,7 +53,7 @@ export class UserSolutionFileNotFoundError extends UserError {
 /**
  * Error raised if a users solution function raises an error.
  */
-export class UserSolutionThrewError extends UserError {
+export class UserSolutionThrewError extends Error {
   constructor(stack) {
     super('Your code threw an error!');
     this.stack = stack;

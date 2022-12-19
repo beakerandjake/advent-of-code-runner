@@ -110,6 +110,9 @@ export const execute = async (day, part, input) => {
         case workerMessageTypes.functionNotFound:
           reject(new UserSolutionMissingFunctionError(data.name));
           break;
+        case workerMessageTypes.userModuleImportFailed:
+          reject(new UserSolutionFileNotFoundError(data.fileName));
+          break;
         default:
           reject(new Error(`Solution Worker provided unknown message type: ${data.type}`));
           break;

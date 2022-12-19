@@ -1,6 +1,7 @@
 import {
   beforeEach, describe, jest, test,
 } from '@jest/globals';
+import { workerData } from 'node:worker_threads';
 import { UserSolutionFileNotFoundError } from '../../src/errors/index.js';
 import { workerMessageTypes } from '../../src/solutions/workerMessageTypes';
 
@@ -31,8 +32,8 @@ jest.unstable_mockModule('../../src/solutions/userAnswerTypeIsValid.js', () => (
 
 const { hrtime } = await import('node:process');
 const { userAnswerTypeIsValid } = await import('../../src/solutions/userAnswerTypeIsValid.js');
-const { importUserSolutionFile } = await import('../../src/solutions/importUserSolutionFile');
-const { logFromWorker, executeUserSolution } = await import('../../src/solutions/solutionRunnerWorkerThread.js');
+const { importUserSolutionFile } = await import('../../src/solutions/importUserSolutionFile.js');
+const { logFromWorker, executeUserSolution, runWorker } = await import('../../src/solutions/solutionRunnerWorkerThread.js');
 
 afterEach(() => {
   jest.clearAllMocks();
@@ -136,18 +137,30 @@ describe('solutionRunnerWorkerThread', () => {
     });
   });
 
-  describe('thread execution', () => {
-    beforeEach(async () => {
-      workerThreadMock.isMainThread = false;
-      workerThreadMock.workerData = {};
-      jest.resetModules();
+  describe('runWorker()', () => {
+    test('throws if user solution file not found', async () => {
+      importUserSolutionFile.mockRejectedValue(new UserSolutionFileNotFoundError('NOT FOUND'));
+      await expect(async () => runWorker({ solutionFileName: 'asdf' })).rejects.toThrow(UserSolutionFileNotFoundError);
     });
 
-    test('throws on dynamic import fails', async () => {
-      importUserSolutionFile.mockRejectedValue(new UserSolutionFileNotFoundError());
-      expect(
-        async () => import('../../src/solutions/solutionRunnerWorkerThread.js'),
-      ).rejects.toThrow(UserSolutionFileNotFoundError);
-    });
+    // test('throws if user solution file missing function', async () => {
+    //   const userModule = {
+    //     cats: () => {},
+    //   };
+
+    //   importUserSolutionFile.mockResolvedValue(userModule);
+    //   await expect(
+    //     async () => runWorker({ solutionFileName: 'asdf', functionToExecute: 'dogs' }),
+    //   ).rejects.toThrow(UserSolutionFileNotFoundError);
+    // });
+
+    // test('throws if exported value is not a function', async () => {
+    //   const userModule = {
+    //     cats: () => {},
+    //   };
+
+    //   importUserSolutionFile.mockRejectedValue(new UserSolutionFileNotFoundError('NOT FOUND'));
+    //   await expect(async () => runWorker({ solutionFileName: 'asdf' })).rejects.toThrow(UserSolutionFileNotFoundError);
+    // });
   });
 });
