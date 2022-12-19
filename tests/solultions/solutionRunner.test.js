@@ -213,7 +213,13 @@ describe('solutionRunner', () => {
         });
 
         test('answer - resolves with results', async () => {
-
+          const expected = { answer: 1234, executionTimeNs: 1234 };
+          const executePromise = execute(1, part, 'ASDF');
+          await Promise.resolve(123);
+          expect(messageCallback).toBeDefined();
+          messageCallback({ ...expected, type: workerMessageTypes.answer });
+          const result = await executePromise;
+          expect(result).toEqual(expected);
         });
 
         test('answerTypeInvalid - throws', async () => {
