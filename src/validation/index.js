@@ -1,4 +1,4 @@
-import { parsePositiveInt } from './validationUtils';
+import { parsePositiveInt } from './validationUtils.js';
 import { yearIsValid, dayIsValid, partIsValid } from './validateArgs.js';
 
 export {
