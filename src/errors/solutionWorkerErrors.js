@@ -54,9 +54,14 @@ export class UserSolutionFileNotFoundError extends UserError {
  * Error raised if a users solution function raises an error.
  */
 export class UserSolutionThrewError extends Error {
-  constructor(stack) {
-    super('Your code threw an error!');
-    this.stack = stack;
+  constructor(functionName, originalError) {
+    super(`Your function: "${functionName}" threw the following Error:`, { cause: originalError });
+    // modify the stack trace to output the original error
+    // this is more relevant to the user than what part of our code raised this error.
+    this.stack = [
+      this.message,
+      `↳ ${originalError?.stack ? originalError.stack : originalError}`,
+    ].join('\n');
     this.name = 'UserSolutionThrewError';
   }
 }
