@@ -39,7 +39,7 @@ const questions = [
     name: 'year',
     message: festiveStyle('What year of advent of code are you doing?'),
     prefix: festiveEmoji(),
-    choices: getConfigValue('aoc.puzzleValidation.years').reverse(),
+    choices: getConfigValue('aoc.validation.years').reverse(),
     loop: false,
   },
   {
@@ -48,7 +48,7 @@ const questions = [
     name: 'authToken',
     message: festiveStyle('Enter your advent of code authentication token'),
     prefix: festiveEmoji(),
-    choices: getConfigValue('aoc.puzzleValidation.years'),
+    choices: getConfigValue('aoc.validation.years'),
     loop: false,
     validate: (input) => (input ? true : chalk.bold.italic.red('Token cannot be empty!')),
     filter: (input) => input.trim(),

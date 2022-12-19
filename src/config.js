@@ -105,7 +105,7 @@ const CONFIG = {
     rateLimiting: {
       defaultTimeoutMs: parsePositiveInt(process.env[envOptions.rateLimitDefaultTimeoutMs], 300000),
     },
-    puzzleValidation: {
+    validation: {
       // could dynamically set valid dates here, but keeping this explicit
       // prevents edge cases where system time has been set maliciously
       // also allows possibility that aoc doesn't run during a specific year.

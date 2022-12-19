@@ -19,7 +19,7 @@ export const puzzleIsUnlocked = (year, day) => {
  * @param {Number} year
  */
 export const getAllPuzzlesForYear = (year) => {
-  const days = getConfigValue('aoc.puzzleValidation.days');
-  const parts = getConfigValue('aoc.puzzleValidation.parts');
+  const days = getConfigValue('aoc.validation.days');
+  const parts = getConfigValue('aoc.validation.parts');
   return days.reduce((acc, day) => [...acc, ...parts.map((part) => ({ year, day, part }))], []);
 };
