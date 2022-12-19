@@ -1,14 +1,15 @@
 import {
-  describe, jest, test, beforeEach,
+  beforeEach, describe, jest, test,
 } from '@jest/globals';
 import { join as realJoin } from 'node:path';
 import {
   SolutionWorkerEmptyInputError,
-  UserSolutionAnswerInvalidError,
-  UserSolutionMissingFunctionError,
-  UserSolutionFileNotFoundError,
-  UserSolutionThrewError,
   SolutionWorkerUnexpectedError,
+  SolutionWorkerExitWithoutAnswerError,
+  UserSolutionAnswerInvalidError,
+  UserSolutionFileNotFoundError,
+  UserSolutionMissingFunctionError,
+  UserSolutionThrewError,
 } from '../../src/errors/index.js';
 import { workerMessageTypes } from '../../src/solutions/workerMessageTypes.js';
 import { mockConfig, mockLogger } from '../mocks.js';
@@ -257,7 +258,7 @@ describe('solutionRunner', () => {
           await Promise.resolve(123);
           expect(messageCallback).toBeDefined();
           messageCallback({ type: 'DOESNOTEXIST' });
-          expect(async () => executePromise).rejects.toThrow(Error);
+          expect(async () => executePromise).rejects.toThrow(SolutionWorkerExitWithoutAnswerError);
         });
       });
     });

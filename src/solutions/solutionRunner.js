@@ -51,12 +51,13 @@ export const getFunctionNameForPart = (part) => {
  * @param {Number} day
  * @param {Number} part
  * @param {String} input
- * @throws {SolutionFileMissingRequiredFunctionError}
- * @throws {SolutionFileNotFoundError}
- * @throws {SolutionRunnerExitError}
+ * @throws {UserSolutionMissingFunctionError}
+ * @throws {UserSolutionAnswerInvalidError}
  * @throws {UserSolutionThrewError}
- * @throws {UnexpectedSolutionRunnerWorkerError}
- * @throws {UnknownSolutionRunnerWorkerMessageTypeError}
+ * @throws {SolutionWorkerEmptyInputError}
+ * @throws {SolutionWorkerUnexpectedError}
+ * @throws {SolutionWorkerExitWithoutAnswerError}
+ * @throws {UserSolutionFileNotFoundError}
  */
 export const execute = async (day, part, input) => {
   logger.verbose('spawning worker to execute solution', { day, part });
