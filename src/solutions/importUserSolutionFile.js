@@ -2,6 +2,7 @@ import { UserSolutionFileNotFoundError } from '../errors/solutionWorkerErrors.js
 
 /**
  * Dynamically imports the users solution file and returns the loaded module
+ * (exists only for testability of the worker thread)
  * @param {String} fileName
  * @throws {UserSolutionFileNotFoundError}
  */
