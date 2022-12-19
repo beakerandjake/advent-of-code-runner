@@ -10,6 +10,6 @@ export const importUserSolutionFile = async (fileName) => {
     const module = await import(fileName);
     return module;
   } catch (error) {
-    throw new UserSolutionFileNotFoundError();
+    throw new UserSolutionFileNotFoundError(fileName, { cause: error });
   }
 };

@@ -1,8 +1,10 @@
 import { isMainThread, workerData, parentPort } from 'node:worker_threads';
 import { hrtime } from 'node:process';
-import { getType } from '../util.js';
+import { getType, get } from '../util.js';
 import { workerMessageTypes } from './workerMessageTypes.js';
 import { userAnswerTypeIsValid } from './userAnswerTypeIsValid.js';
+import { UserSolutionMissingFunctionError, UserSolutionThrewError } from '../errors/index.js';
+import { importUserSolutionFile } from './importUserSolutionFile.js';
 
 /**
  * Expects to be ran from a Worker. Loads the solution file and tries
@@ -43,18 +45,7 @@ export const executeUserSolution = (userSolutionFn, input) => {
     answer = userSolutionFn(input);
     end = hrtime.bigint();
   } catch (error) {
-    const stack = error instanceof Error
-      ? error.stack
-      : 'Thrown object was not Error';
-
-    // Expect that if error is thrown here it's from userSolutionFn (not hrtime).
-    // Catch this error and let the parent know the user's code threw an exception.
-    parentPort.postMessage({
-      type: workerMessageTypes.runtimeError,
-      stack,
-    });
-
-    return;
+    throw new UserSolutionThrewError(error);
   }
 
   if (userAnswerTypeIsValid(answer)) {
@@ -76,32 +67,14 @@ export const executeUserSolution = (userSolutionFn, input) => {
  * @private
  */
 export const runWorker = async ({ solutionFileName, functionToExecute, input }) => {
-  let userSolutionModule;
-
-  try {
-    logFromWorker('debug', 'worker loading user module: %s', solutionFileName);
-    userSolutionModule = await import(solutionFileName);
-  } catch (error) {
-    parentPort.postMessage({
-      type: workerMessageTypes.userModuleImportFailed,
-      fileName: solutionFileName,
-    });
-    return;
-  }
-
+  logFromWorker('debug', 'worker loading user module: %s', solutionFileName);
+  const userSolutionModule = await importUserSolutionFile(solutionFileName);
+  const userSolutionFunction = get(userSolutionModule, functionToExecute);
   logFromWorker('debug', 'worker loading executing user function: %s', functionToExecute);
-
-  const userSolutionFunction = userSolutionModule[functionToExecute];
-
   // bail if user module didn't export the function we need.
   if (!userSolutionFunction || !(userSolutionFunction instanceof Function)) {
-    parentPort.postMessage({
-      type: workerMessageTypes.functionNotFound,
-      name: functionToExecute,
-    });
-    return;
+    throw new UserSolutionMissingFunctionError(functionToExecute);
   }
-
   executeUserSolution(userSolutionFunction, input);
 };
 

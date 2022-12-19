@@ -119,10 +119,8 @@ export const execute = async (day, part, input) => {
       }
     });
 
-    // handle uncaught exceptions.
-    worker.on('error', (error) => {
-      reject(new SolutionWorkerUnexpectedError(`Solution Worker raised unexpected Error: ${error.message}`, { cause: error }));
-    });
+    // handle any exceptions raised by the worker.
+    worker.on('error', (error) => reject(error));
     // handle potential edge case where worker does not send a solution message.
     worker.on('exit', () => reject(new SolutionWorkerExitWithoutAnswerError()));
   });

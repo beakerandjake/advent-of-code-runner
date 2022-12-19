@@ -44,8 +44,8 @@ export class UserSolutionAnswerInvalidError extends Error {
  * Error raised if users solution file cannot be found.
  */
 export class UserSolutionFileNotFoundError extends UserError {
-  constructor(fileName) {
-    super(`Could not find your solution file, ensure file exits: ${fileName}`);
+  constructor(fileName, ...args) {
+    super(`Could not import your solution file, ensure file exits: ${fileName}`, ...args);
     this.name = 'UserSolutionFileNotFoundError';
   }
 }
@@ -54,8 +54,8 @@ export class UserSolutionFileNotFoundError extends UserError {
  * Error raised if a users solution function raises an error.
  */
 export class UserSolutionThrewError extends Error {
-  constructor(functionName, originalError) {
-    super(`Your function: "${functionName}" threw the following Error:`, { cause: originalError });
+  constructor(originalError) {
+    super('Your function threw the following Error:', { cause: originalError });
     // modify the stack trace to output the original error
     // this is more relevant to the user than what part of our code raised this error.
     this.stack = [
