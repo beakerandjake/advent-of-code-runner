@@ -3,6 +3,7 @@ import { logger } from '../logger.js';
 import { loadFileContents, saveFile } from './io.js';
 import { CachedValue } from './cachedValue.js';
 import { DataFileIOError, DataFileParsingError } from '../errors/index.js';
+import { get } from '../util.js';
 
 const dataFilePath = getConfigValue('paths.dataStoreFile');
 
@@ -71,9 +72,7 @@ const saveData = async (data) => {
 export const getStoreValue = async (key, defaultValue = undefined) => {
   logger.silly('loading store value with key: "%s"', key);
   const data = await loadData();
-  const toReturn = Object.prototype.hasOwnProperty.call(data, key) ? data[key] : defaultValue;
-  logger.silly('loaded value from store: %s', toReturn);
-  return toReturn;
+  return get(data, key, defaultValue);
 };
 
 /**
