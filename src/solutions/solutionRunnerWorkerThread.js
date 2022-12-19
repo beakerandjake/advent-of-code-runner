@@ -1,8 +1,8 @@
 import { isMainThread, workerData, parentPort } from 'node:worker_threads';
 import { hrtime } from 'node:process';
 import { getType, get } from '../util.js';
+import { answerTypeIsValid } from '../validation/validateAnswer.js';
 import { workerMessageTypes } from './workerMessageTypes.js';
-import { userAnswerTypeIsValid } from './userAnswerTypeIsValid.js';
 import { importUserSolutionModule } from './importUserSolutionModule.js';
 import {
   SolutionWorkerMissingDataError,
@@ -53,7 +53,7 @@ export const executeUserSolution = (userSolutionFn, input) => {
     throw new UserSolutionThrewError(error);
   }
 
-  if (!userAnswerTypeIsValid(answer)) {
+  if (!answerTypeIsValid(answer)) {
     throw new UserSolutionAnswerInvalidError(getType(answer));
   }
 
