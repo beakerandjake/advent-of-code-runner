@@ -42,6 +42,41 @@ export const getFunctionNameForPart = (part) => {
 };
 
 /**
+ * Runs the worker in a new thread and returns a promise
+ * that is resolved or rejected with the results of the worker
+ * @private
+ * @param {String} workerThreadFileName
+ * @param {Object} workerData
+ */
+export const spawnWorker = async (workerThreadFileName, workerData) => (
+  new Promise((resolve, reject) => {
+    const worker = new Worker(workerThreadFileName, { workerData });
+
+    // listen to messages from the worker.
+    worker.on('message', (data) => {
+      switch (data.type) {
+      // worker just wants to log, pipe it through to our logger.
+        case workerMessageTypes.log:
+          logger.log(data.level, data.message, ...(data.meta || []));
+          break;
+          // worker finished executing and has posted an answer
+        case workerMessageTypes.answer:
+          resolve({ answer: data.answer, executionTimeNs: data.executionTimeNs });
+          break;
+        default:
+          reject(new Error(`Solution Worker provided unknown message type: ${data.type}`));
+          break;
+      }
+    });
+
+    // handle any exceptions raised by the worker.
+    worker.on('error', (error) => reject(error));
+    // handle potential edge case where worker does not send a solution message.
+    worker.on('exit', () => reject(new SolutionWorkerExitWithoutAnswerError()));
+  })
+);
+
+/**
  * Spawns a worker thread to import the solution file
  * executes the solution function and returns the result and performance data.
  * @param {Number} day
@@ -72,36 +107,5 @@ export const execute = async (day, part, input) => {
     throw new UserSolutionFileNotFoundError(solutionFileName);
   }
 
-  return new Promise((resolve, reject) => {
-    // spawn a Worker thread to run the user solution.
-    const worker = new Worker(workerThreadFileName, {
-      workerData: {
-        functionToExecute,
-        solutionFileName,
-        input,
-      },
-    });
-
-    // listen to messages from the worker.
-    worker.on('message', (data) => {
-      switch (data.type) {
-        // worker just wants to log, pipe it through to our logger.
-        case workerMessageTypes.log:
-          logger.log(data.level, data.message, ...(data.meta || []));
-          break;
-        // worker finished executing and has posted an answer
-        case workerMessageTypes.answer:
-          resolve({ answer: data.answer, executionTimeNs: data.executionTimeNs });
-          break;
-        default:
-          reject(new Error(`Solution Worker provided unknown message type: ${data.type}`));
-          break;
-      }
-    });
-
-    // handle any exceptions raised by the worker.
-    worker.on('error', (error) => reject(error));
-    // handle potential edge case where worker does not send a solution message.
-    worker.on('exit', () => reject(new SolutionWorkerExitWithoutAnswerError()));
-  });
+  return spawnWorker(workerThreadFileName, { solutionFileName, functionToExecute, input });
 };

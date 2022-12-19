@@ -4,12 +4,8 @@ import {
 import { join as realJoin } from 'node:path';
 import {
   SolutionWorkerEmptyInputError,
-  SolutionWorkerUnexpectedError,
   SolutionWorkerExitWithoutAnswerError,
-  UserSolutionAnswerInvalidError,
   UserSolutionFileNotFoundError,
-  UserSolutionMissingFunctionError,
-  UserSolutionThrewError,
 } from '../../src/errors/index.js';
 import { workerMessageTypes } from '../../src/solutions/workerMessageTypes.js';
 import { mockConfig, mockLogger } from '../mocks.js';
@@ -42,30 +38,14 @@ const { Worker } = await import('node:worker_threads');
 const { join } = await import('path');
 const { getConfigValue } = await import('../../src/config.js');
 const { fileExists, loadFileContents } = await import('../../src/persistence/io.js');
-const { execute, getSolutionFileName, getFunctionNameForPart } = await import('../../src/solutions/solutionRunner.js');
+const {
+  execute, getSolutionFileName, getFunctionNameForPart, spawnWorker,
+} = await import('../../src/solutions/solutionRunner.js');
 
 beforeEach(() => {
   jest.clearAllMocks();
   workerOnMock.mockClear();
 });
-
-/**
- * helps set the mock getConfigValue for the solution runner.
- */
-const setConfigMocks = (part, { solutionsDir = '.', partFunctions = [{ key: part, name: 'cats' }], workerFileName = '.' } = {}) => {
-  getConfigValue.mockImplementation((key) => {
-    switch (key) {
-      case 'paths.solutionsDir':
-        return solutionsDir;
-      case 'solutionRunner.partFunctions':
-        return partFunctions;
-      case 'paths.solutionRunnerWorkerFile':
-        return workerFileName;
-      default:
-        return undefined;
-    }
-  });
-};
 
 describe('solutionRunner', () => {
   describe('getSolutionFileName()', () => {
@@ -111,7 +91,94 @@ describe('solutionRunner', () => {
     });
   });
 
+  describe('spawnWorker()', () => {
+    test('throws if worker throws', async () => {
+      let errorCallback;
+      workerOnMock.mockImplementation((key, callback) => {
+        if (key === 'error') {
+          errorCallback = callback;
+        }
+      });
+      const promise = spawnWorker('ASDF', {});
+      await Promise.resolve();
+      errorCallback(new RangeError('Invalid Index'));
+      await expect(async () => promise).rejects.toThrow(RangeError);
+    });
+
+    test('throws if worker exits without answer', async () => {
+      let exitCallback;
+      workerOnMock.mockImplementation((key, callback) => {
+        if (key === 'exit') {
+          exitCallback = callback;
+        }
+      });
+      const promise = spawnWorker('ASDF', {});
+      await Promise.resolve();
+      exitCallback();
+      await expect(async () => promise).rejects.toThrow(SolutionWorkerExitWithoutAnswerError);
+    });
+
+    test('logs if worker posts log message', async () => {
+      let messageCallback;
+      workerOnMock.mockImplementation((key, callback) => {
+        if (key === 'message') {
+          messageCallback = callback;
+        }
+      });
+      const logMessage = {
+        type: workerMessageTypes.log,
+        level: 'info',
+        message: 'ASDF ASDF ASDF',
+      };
+      spawnWorker('ASDF', {});
+      await Promise.resolve();
+      messageCallback(logMessage);
+      await Promise.resolve();
+      expect(loggerMockInstance.log).toHaveBeenLastCalledWith(logMessage.level, logMessage.message);
+    });
+
+    test('resolves if worker posts answer', async () => {
+      let messageCallback;
+      workerOnMock.mockImplementation((key, callback) => {
+        if (key === 'message') {
+          messageCallback = callback;
+        }
+      });
+      const answerMessage = {
+        type: workerMessageTypes.answer,
+        answer: 'cats',
+        executionTimeNs: 1234,
+      };
+      const workerPromise = spawnWorker('ASDF', {});
+      await Promise.resolve();
+      messageCallback(answerMessage);
+      await Promise.resolve();
+      const result = await workerPromise;
+      expect(result).toEqual(
+        { answer: answerMessage.answer, executionTimeNs: answerMessage.executionTimeNs },
+      );
+    });
+  });
+
   describe('execute()', () => {
+    /**
+     * helps set the mock getConfigValue for the solution runner.
+     */
+    const setConfigMocks = (part, { solutionsDir = '.', partFunctions = [{ key: part, name: 'cats' }], workerFileName = '.' } = {}) => {
+      getConfigValue.mockImplementation((key) => {
+        switch (key) {
+          case 'paths.solutionsDir':
+            return solutionsDir;
+          case 'solutionRunner.partFunctions':
+            return partFunctions;
+          case 'paths.solutionRunnerWorkerFile':
+            return workerFileName;
+          default:
+            return undefined;
+        }
+      });
+    };
+
     test('throws if input is empty', async () => {
       expect(async () => execute(1, 1, null)).rejects.toThrow(SolutionWorkerEmptyInputError);
       expect(async () => execute(1, 1, undefined)).rejects.toThrow(SolutionWorkerEmptyInputError);
@@ -153,114 +220,6 @@ describe('solutionRunner', () => {
         expect.any(String),
         expect.objectContaining({ workerData: expected }),
       );
-    });
-
-    describe('worker events', () => {
-      test('error event - throws error', async () => {
-        const part = 1;
-        setConfigMocks(part);
-        loadFileContents.mockResolvedValue(true);
-        let errorCallback;
-        workerOnMock.mockImplementation((key, callback) => {
-          if (key === 'error') {
-            errorCallback = callback;
-          }
-        });
-
-        // execute and ensure that mock the worker raising its error event.
-        const promise = execute(1, part, 'ASDF');
-        await Promise.resolve(123);
-        expect(errorCallback).toBeDefined();
-        errorCallback(new Error('FAILED!'));
-
-        expect(async () => promise).rejects.toThrow(SolutionWorkerUnexpectedError);
-      });
-
-      test('exit event - throws error', async () => {
-        const part = 1;
-        setConfigMocks(part);
-        loadFileContents.mockResolvedValue(true);
-        let exitCallback;
-        workerOnMock.mockImplementation((key, callback) => {
-          if (key === 'exit') {
-            exitCallback = callback;
-          }
-        });
-
-        // execute and ensure that mock the worker raising its error event.
-        const promise = execute(1, part, 'ASDF');
-        await Promise.resolve(123);
-        expect(exitCallback).toBeDefined();
-        exitCallback();
-
-        expect(async () => promise).rejects.toThrow(SolutionWorkerExitWithoutAnswerError);
-      });
-
-      describe('message event', () => {
-        const part = 1;
-        let messageCallback;
-
-        beforeEach(() => {
-          setConfigMocks(part);
-          loadFileContents.mockResolvedValue(true);
-          workerOnMock.mockImplementation((key, callback) => {
-            if (key === 'message') {
-              messageCallback = callback;
-            }
-          });
-        });
-
-        test('log - logs to logger', async () => {
-          execute(1, part, 'ASDF');
-          await Promise.resolve(123);
-          expect(messageCallback).toBeDefined();
-          messageCallback({ type: workerMessageTypes.log, level: 'info', message: 'ASDF' });
-          await Promise.resolve(123);
-          expect(loggerMockInstance.log).toHaveBeenLastCalledWith('info', 'ASDF');
-        });
-
-        test('answer - resolves with results', async () => {
-          const expected = { answer: 1234, executionTimeNs: 1234 };
-          const executePromise = execute(1, part, 'ASDF');
-          await Promise.resolve(123);
-          expect(messageCallback).toBeDefined();
-          messageCallback({ ...expected, type: workerMessageTypes.answer });
-          const result = await executePromise;
-          expect(result).toEqual(expected);
-        });
-
-        test('answerTypeInvalid - throws', async () => {
-          const executePromise = execute(1, part, 'ASDF');
-          await Promise.resolve(123);
-          expect(messageCallback).toBeDefined();
-          messageCallback({ type: workerMessageTypes.answerTypeInvalid });
-          expect(async () => executePromise).rejects.toThrow(UserSolutionAnswerInvalidError);
-        });
-
-        test('runtimeError - throws', async () => {
-          const executePromise = execute(1, part, 'ASDF');
-          await Promise.resolve(123);
-          expect(messageCallback).toBeDefined();
-          messageCallback({ type: workerMessageTypes.runtimeError });
-          expect(async () => executePromise).rejects.toThrow(UserSolutionThrewError);
-        });
-
-        test('functionNotFound - throws', async () => {
-          const executePromise = execute(1, part, 'ASDF');
-          await Promise.resolve(123);
-          expect(messageCallback).toBeDefined();
-          messageCallback({ type: workerMessageTypes.functionNotFound });
-          expect(async () => executePromise).rejects.toThrow(UserSolutionMissingFunctionError);
-        });
-
-        test('unknown message type - throws', async () => {
-          const executePromise = execute(1, part, 'ASDF');
-          await Promise.resolve(123);
-          expect(messageCallback).toBeDefined();
-          messageCallback({ type: 'DOESNOTEXIST' });
-          expect(async () => executePromise).rejects.toThrow();
-        });
-      });
     });
   });
 });
