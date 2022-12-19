@@ -3,7 +3,12 @@ import {
 } from '@jest/globals';
 import { join as realJoin } from 'node:path';
 import {
-  EmptyInputError, SolutionAnswerInvalidError, SolutionNotFoundError, SolutionWorkerUnexpectedError,
+  EmptyInputError,
+  SolutionAnswerInvalidError,
+  SolutionMissingFunctionError,
+  SolutionNotFoundError,
+  SolutionRuntimeError,
+  SolutionWorkerUnexpectedError,
 } from '../../src/errors/index.js';
 import { workerMessageTypes } from '../../src/solutions/workerMessageTypes.js';
 import { mockConfig, mockLogger } from '../mocks.js';
@@ -233,15 +238,27 @@ describe('solutionRunner', () => {
         });
 
         test('runtimeError - throws', async () => {
-
+          const executePromise = execute(1, part, 'ASDF');
+          await Promise.resolve(123);
+          expect(messageCallback).toBeDefined();
+          messageCallback({ type: workerMessageTypes.runtimeError });
+          expect(async () => executePromise).rejects.toThrow(SolutionRuntimeError);
         });
 
         test('functionNotFound - throws', async () => {
-
+          const executePromise = execute(1, part, 'ASDF');
+          await Promise.resolve(123);
+          expect(messageCallback).toBeDefined();
+          messageCallback({ type: workerMessageTypes.functionNotFound });
+          expect(async () => executePromise).rejects.toThrow(SolutionMissingFunctionError);
         });
 
         test('unknown message type - throws', async () => {
-
+          const executePromise = execute(1, part, 'ASDF');
+          await Promise.resolve(123);
+          expect(messageCallback).toBeDefined();
+          messageCallback({ type: 'DOESNOTEXIST' });
+          expect(async () => executePromise).rejects.toThrow(Error);
         });
       });
     });
