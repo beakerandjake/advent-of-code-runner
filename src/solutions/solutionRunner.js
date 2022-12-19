@@ -4,9 +4,6 @@ import { logger } from '../logger.js';
 import { getConfigValue } from '../config.js';
 import { fileExists } from '../persistence/io.js';
 import {
-  UserSolutionMissingFunctionError,
-  UserSolutionAnswerInvalidError,
-  UserSolutionThrewError,
   SolutionWorkerEmptyInputError,
   SolutionWorkerExitWithoutAnswerError,
   UserSolutionFileNotFoundError,
@@ -50,13 +47,12 @@ export const getFunctionNameForPart = (part) => {
  * @param {Number} day
  * @param {Number} part
  * @param {String} input
- * @throws {UserSolutionMissingFunctionError}
  * @throws {UserSolutionAnswerInvalidError}
+ * @throws {UserSolutionFileNotFoundError}
+ * @throws {UserSolutionMissingFunctionError}
  * @throws {UserSolutionThrewError}
  * @throws {SolutionWorkerEmptyInputError}
- * @throws {SolutionWorkerUnexpectedError}
  * @throws {SolutionWorkerExitWithoutAnswerError}
- * @throws {UserSolutionFileNotFoundError}
  */
 export const execute = async (day, part, input) => {
   logger.verbose('spawning worker to execute solution', { day, part });
@@ -96,21 +92,6 @@ export const execute = async (day, part, input) => {
         // worker finished executing and has posted an answer
         case workerMessageTypes.answer:
           resolve({ answer: data.answer, executionTimeNs: data.executionTimeNs });
-          break;
-        // user code provided invalid answer type.
-        case workerMessageTypes.answerTypeInvalid:
-          reject(new UserSolutionAnswerInvalidError(data.answerType));
-          break;
-        // user code threw error
-        case workerMessageTypes.runtimeError:
-          reject(new UserSolutionThrewError(data.stack));
-          break;
-        // user code missing required function.
-        case workerMessageTypes.functionNotFound:
-          reject(new UserSolutionMissingFunctionError(data.name));
-          break;
-        case workerMessageTypes.userModuleImportFailed:
-          reject(new UserSolutionFileNotFoundError(data.fileName));
           break;
         default:
           reject(new Error(`Solution Worker provided unknown message type: ${data.type}`));
