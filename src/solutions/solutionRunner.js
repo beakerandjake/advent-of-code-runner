@@ -4,7 +4,7 @@ import { logger } from '../logger.js';
 import { getConfigValue } from '../config.js';
 import { fileExists } from '../persistence/io.js';
 import {
-  SolutionMissingFunctionError,
+  UserSolutionMissingFunctionError,
   UserSolutionAnswerInvalidError,
   UserSolutionThrewError,
   SolutionWorkerEmptyInputError,
@@ -107,7 +107,7 @@ export const execute = async (day, part, input) => {
           break;
         // user code missing required function.
         case workerMessageTypes.functionNotFound:
-          reject(new SolutionMissingFunctionError(data.name));
+          reject(new UserSolutionMissingFunctionError(data.name));
           break;
         default:
           reject(new Error(`Solution Worker provided unknown message type: ${data.type}`));

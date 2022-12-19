@@ -51,12 +51,22 @@ export class UserSolutionFileNotFoundError extends UserError {
 }
 
 /**
- * Error that is raised when a users solution function raises an error.
+ * Error raised if a users solution function raises an error.
  */
 export class UserSolutionThrewError extends UserError {
   constructor(stack) {
     super('Your code threw an error!');
     this.stack = stack;
     this.name = 'UserSolutionThrewError';
+  }
+}
+
+/**
+ * Error raised if a users solution file is missing the required function.
+ */
+export class UserSolutionMissingFunctionError extends UserError {
+  constructor(functionName) {
+    super(`Function not found. Your solution file must export function "${functionName}" as a named export.`);
+    this.name = 'UserSolutionMissingFunctionError';
   }
 }

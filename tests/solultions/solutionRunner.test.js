@@ -5,7 +5,7 @@ import { join as realJoin } from 'node:path';
 import {
   SolutionWorkerEmptyInputError,
   UserSolutionAnswerInvalidError,
-  SolutionMissingFunctionError,
+  UserSolutionMissingFunctionError,
   UserSolutionFileNotFoundError,
   UserSolutionThrewError,
   SolutionWorkerUnexpectedError,
@@ -249,7 +249,7 @@ describe('solutionRunner', () => {
           await Promise.resolve(123);
           expect(messageCallback).toBeDefined();
           messageCallback({ type: workerMessageTypes.functionNotFound });
-          expect(async () => executePromise).rejects.toThrow(SolutionMissingFunctionError);
+          expect(async () => executePromise).rejects.toThrow(UserSolutionMissingFunctionError);
         });
 
         test('unknown message type - throws', async () => {
