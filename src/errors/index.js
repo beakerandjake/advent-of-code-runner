@@ -3,7 +3,6 @@ import { DataFileParsingError } from './dataFileParsingError.js';
 import { LockedOrCompletedPuzzleError } from './lockedOrCompletedPuzzleError.js';
 import { LockedPuzzleError } from './lockedPuzzleError.js';
 import { PackageInstallFailedError } from './packageInstallFailedError.js';
-import { PuzzleAlreadySolvedError } from './puzzleAlreadySolvedError.js';
 import { RateLimitExceededError } from './rateLimitExceededError.js';
 import {
   SolutionWorkerEmptyInputError,
@@ -17,13 +16,13 @@ import {
 import { UserDataTranslationError } from './userDataTranslationError.js';
 import { UserError } from './userError.js';
 import { UserPuzzleDataMissingError } from './userPuzzleDataMissingError.js';
+import { PuzzleHasBeenSolvedError, DuplicateAnswerSubmittedError } from './submissionErrors.js';
 
 export {
   DataFileIOError,
   DataFileParsingError,
   LockedOrCompletedPuzzleError,
   LockedPuzzleError,
-  PuzzleAlreadySolvedError,
   RateLimitExceededError,
   PackageInstallFailedError,
   UserDataTranslationError,
@@ -37,4 +36,7 @@ export {
   UserSolutionFileNotFoundError,
   UserSolutionMissingFunctionError,
   UserSolutionThrewError,
+
+  PuzzleHasBeenSolvedError,
+  DuplicateAnswerSubmittedError,
 };
