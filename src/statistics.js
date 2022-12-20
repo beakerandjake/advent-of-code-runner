@@ -1,5 +1,5 @@
 import { logger } from './logger.js';
-import { addOrEditPuzzle, findPuzzle } from './persistence/puzzleRepository.js';
+import { addOrEditPuzzle, createPuzzle, findPuzzle } from './persistence/puzzleRepository.js';
 import { parsePositiveInt } from './validation/validationUtils.js';
 
 /**
@@ -23,7 +23,7 @@ export const getFastestExecutionTime = async (year, day, part) => {
  */
 export const setFastestExecutionTime = async (year, day, part, timeNs) => {
   const parsed = parsePositiveInt(timeNs);
-  const puzzle = await findPuzzle(year, day, part);
+  const puzzle = await findPuzzle(year, day, part) || createPuzzle(year, day, part);
   const updated = { ...puzzle, fastestExecutionTimeNs: parsed };
   return addOrEditPuzzle(updated);
 };
