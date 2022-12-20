@@ -1,8 +1,8 @@
-import { getConfigValue } from '../../config';
+import { getYear } from './actionUtil.js';
 
 /**
  * Solves the next unsolved puzzle.
  */
 export const autoSolve = async () => {
-  const year = getConfigValue('aoc.year');
+  const year = getYear();
 };
