@@ -5,8 +5,8 @@ import inquirer from 'inquirer';
  * @param {Object} question
  */
 export const confirmWithUser = async (question) => {
-  const { confirm } = await inquirer.prompt({ ...question, type: 'confirm' });
-  return confirm;
+  const { confirmed } = await inquirer.prompt({ ...question, type: 'confirm' });
+  return confirmed;
 };
 
 /**

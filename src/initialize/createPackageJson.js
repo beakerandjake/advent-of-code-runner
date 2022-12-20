@@ -16,9 +16,8 @@ const envFileTokens = [
 
 /**
  * Creates a package.json file in the cwd.
- * @param {Number} year
  */
-export const createPackageJson = async (year) => {
+export const createPackageJson = async ({ year }) => {
   logger.debug('creating package.json file');
 
   // might be better to run npm init in a child_process

@@ -18,12 +18,12 @@ beforeEach(() => {
 describe('interactive', () => {
   describe('confirmWithUser()', () => {
     test('returns true if user confirms', async () => {
-      mockPrompt.mockResolvedValue({ confirm: true });
+      mockPrompt.mockResolvedValue({ confirmed: true });
       const result = await confirmWithUser({});
       expect(result).toBe(true);
     });
     test('returns false is user does not confirm', async () => {
-      mockPrompt.mockResolvedValue({ confirm: false });
+      mockPrompt.mockResolvedValue({ confirmed: false });
       const result = await confirmWithUser({});
       expect(result).toBe(false);
     });
