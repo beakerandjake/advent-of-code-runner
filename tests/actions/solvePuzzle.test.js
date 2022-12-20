@@ -55,7 +55,7 @@ describe('actions', () => {
       expect(getInputAndExecuteSolution).toHaveBeenCalled();
     });
 
-    test('does not update statistics if puzzle not solved', async () => {
+    test('does not update fastest execution time if puzzle not solved', async () => {
       puzzleIsUnlocked.mockResolvedValue(true);
       getInputAndExecuteSolution.mockResolvedValue({});
       getCorrectAnswer.mockResolvedValue(null);
@@ -63,13 +63,22 @@ describe('actions', () => {
       expect(tryToUpdateFastestExecutionTime).not.toHaveBeenCalled();
     });
 
-    test('does not update statistics if answer incorrect', async () => {
+    test('does not update fastest execution time if answer incorrect', async () => {
       puzzleIsUnlocked.mockResolvedValue(true);
       getInputAndExecuteSolution.mockResolvedValue({});
       getCorrectAnswer.mockResolvedValue('ASDF');
       answersEqual.mockReturnValue(false);
       await solvePuzzle(1, 1);
       expect(tryToUpdateFastestExecutionTime).not.toHaveBeenCalled();
+    });
+
+    test('updates fastest execution time if answer correct', async () => {
+      puzzleIsUnlocked.mockResolvedValue(true);
+      getInputAndExecuteSolution.mockResolvedValue({});
+      getCorrectAnswer.mockResolvedValue('ASDF');
+      answersEqual.mockReturnValue(true);
+      await solvePuzzle(1, 1);
+      expect(tryToUpdateFastestExecutionTime).toHaveBeenCalled();
     });
   });
 });
