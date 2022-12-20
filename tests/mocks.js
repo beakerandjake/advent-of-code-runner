@@ -14,7 +14,7 @@ export const mockLogger = () => {
     festive: jest.fn(),
     log: jest.fn(),
   };
-  jest.unstable_mockModule('../../src/logger.js', () => ({
+  jest.unstable_mockModule('src/logger.js', () => ({
     logger: toReturn,
   }));
 
