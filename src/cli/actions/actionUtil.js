@@ -31,7 +31,7 @@ export const getYear = () => {
  * @throws {PuzzleIsLockedError}
  * @throws {PuzzlePartIsLockedError}
  */
-export const puzzleCanBeSolved = async (year, day, part) => {
+export const puzzleIsUnlocked = async (year, day, part) => {
   // don't allow solve future puzzles.
   if (!puzzleIsInFuture(year, day)) {
     logger.error(`You cannot attempt this puzzle (day ${day}, part ${part}) because it is in the future and has not unlocked.`);

@@ -1,11 +1,11 @@
-import { solveCommand } from './solveCommand.js';
-import { submitCommand } from './submitCommand.js';
+import { solveCommand } from './commands.js';
+// import { submitCommand } from './submitCommand.js';
 import { initCommand } from './initCommand.js';
 import { exitOverride } from './exitOverride.js';
 
 export {
   solveCommand,
-  submitCommand,
+  // submitCommand,
   initCommand,
   exitOverride,
 };
