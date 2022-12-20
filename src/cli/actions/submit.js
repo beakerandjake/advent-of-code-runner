@@ -7,7 +7,44 @@ import {
 import { submitSolution } from '../../api/mockApi.js';
 import { getConfigValue } from '../../config.js';
 import { logger } from '../../logger.js';
+import { setFastestExecutionTime } from '../../statistics.js';
 import { executeSolutionAndLog, getYear, puzzleIsUnlocked } from './actionUtil.js';
+
+/**
+ * Handle the fact that the submitted answer was correct.
+ * @param {Number} year
+ * @param {Number} day
+ * @param {Number} part
+ * @param {String} submissionMessage
+ * @param {Object} solutionResult
+ * @returns
+ */
+const onSubmissionCorrect = async (
+  year,
+  day,
+  part,
+  submissionMessage,
+  { answer, executionTimeNs },
+) => {
+  logger.festive('%s', submissionMessage);
+  return Promise.all([
+    setCorrectAnswer(year, day, part, answer),
+    setFastestExecutionTime(year, day, part, executionTimeNs),
+  ]);
+};
+
+/**
+ * Handle the fact that the submitted answer was incorrect.
+ * @param {Number} year
+ * @param {Number} day
+ * @param {Number} part
+ * @param {String} submissionMessage
+ * @param {Object} solutionResult
+ */
+const onSubmissionIncorrect = async (year, day, part, submissionMessage, { answer }) => {
+  logger.error('%s', submissionMessage);
+  return addIncorrectAnswer(year, day, part, answer);
+};
 
 /**
  * Solves a specific puzzle
@@ -27,25 +64,19 @@ export const submit = async (day, part) => {
     return;
   }
 
-  const { answer, executionTimeNs } = await executeSolutionAndLog(day, part);
+  const solutionResult = await executeSolutionAndLog(day, part);
 
   // don't re-submit answer if user has already submitted it.
-  if (await answerHasBeenSubmitted(year, day, part, answer)) {
+  if (await answerHasBeenSubmitted(year, day, part, solutionResult.answer)) {
     logger.error('You\'ve already submitted this answer to advent of code!');
     return;
   }
 
-  const { success, message } = await submitSolution(year, day, part, answer, getConfigValue('aoc.authenticationToken'));
+  const { success, message } = await submitSolution(year, day, part, solutionResult.answer, getConfigValue('aoc.authenticationToken'));
 
-  if (!success) {
-    logger.error('%s', message);
-    await addIncorrectAnswer(year, day, part, answer);
-    return;
-  }
-
-  logger.festive('%s', message);
-  await Promise.all([
-    setCorrectAnswer(year, day, part, answer),
-    // TODO stats for execution time
-  ]);
+  await (
+    success
+      ? onSubmissionCorrect(year, day, part, message, solutionResult)
+      : onSubmissionIncorrect(year, day, part, message, solutionResult)
+  );
 };
