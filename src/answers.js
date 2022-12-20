@@ -156,7 +156,6 @@ export const requiredPartsHaveBeenSolved = async (year, day, part) => {
   if (part === 1) {
     return true;
   }
-
   // generate array of all numbers leading up to part.
   const requiredParts = [...Array(part - 1).keys()].map((x) => x + 1);
   // get all parts for this day that the user has solved.

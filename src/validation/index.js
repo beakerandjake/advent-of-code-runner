@@ -1,6 +1,6 @@
 import { answerTypeIsValid } from './validateAnswer.js';
 import { dayIsValid, partIsValid, yearIsValid } from './validateArgs.js';
-import { getAllPuzzlesForYear, puzzleIsUnlocked } from './validatePuzzle.js';
+import { getAllPuzzlesForYear, puzzleIsInFuture } from './validatePuzzle.js';
 import { parsePositiveInt } from './validationUtils.js';
 
 export {
@@ -9,6 +9,6 @@ export {
   getAllPuzzlesForYear,
   parsePositiveInt,
   partIsValid,
-  puzzleIsUnlocked,
+  puzzleIsInFuture,
   yearIsValid,
 };

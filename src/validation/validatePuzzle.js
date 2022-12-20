@@ -2,13 +2,14 @@ import { logger } from '../logger.js';
 import { getConfigValue } from '../config.js';
 
 /**
- * Checks if the puzzle is unlocked on advent of code.
+ * Checks to see if the user is attempting a puzzle
+ * that is in the future and therefore not unlocked.
  * @param {Number} year
  * @param {Number} day
  */
-export const puzzleIsUnlocked = (year, day) => {
+export const puzzleIsInFuture = (year, day) => {
   logger.warn('not implemented - puzzleIsUnlocked()');
-  return true;
+  return false;
 };
 
 /**
