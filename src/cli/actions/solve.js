@@ -23,12 +23,14 @@ export const solve = async (day, part) => {
   if (!correctAnswer) {
     return;
   }
+
   // the current answer is not the correct answer.
   // the user could have changed code and broke something.
   if (!answersEqual(answer, correctAnswer)) {
     logger.error('You have already correctly answered this puzzle, but answer: "%s" doesn\'t match correct answer: "%s"', answer, correctAnswer);
     return;
   }
+
   // the current answer is correct, see if the user broke a performance record.
   logger.festive('You have already correctly answered this puzzle');
   await tryToSetFastestExecutionTime(year, day, part, executionTimeNs);
