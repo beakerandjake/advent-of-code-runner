@@ -14,10 +14,8 @@ import { tryToSubmitPuzzleAnswer } from './tryToSubmitPuzzleAnswer.js';
  */
 const onAnswerCorrect = async (year, day, part, message, { answer, executionTimeNs }) => {
   logger.festive('%s', message);
-  return Promise.all([
-    setCorrectAnswer(year, day, part, answer),
-    setFastestExecutionTime(year, day, part, executionTimeNs),
-  ]);
+  await setCorrectAnswer(year, day, part, answer);
+  await setFastestExecutionTime(year, day, part, executionTimeNs);
 };
 
 /**
