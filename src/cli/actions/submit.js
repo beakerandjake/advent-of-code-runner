@@ -35,15 +35,15 @@ export const submit = async (day, part) => {
     return;
   }
 
-  logger.festive('Submitting your answer to advent of code');
   const { success, message } = await submitSolution(year, day, part, answer, getConfigValue('aoc.authenticationToken'));
-  logger[success ? 'festive' : 'error']('%s', message);
 
   if (!success) {
+    logger.error('%s', message);
     await addIncorrectAnswer(year, day, part, answer);
     return;
   }
 
+  logger.festive('%s', message);
   await Promise.all([
     setCorrectAnswer(year, day, part, answer),
     // TODO stats for execution time
