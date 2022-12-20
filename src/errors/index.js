@@ -17,7 +17,7 @@ import {
 import { UserDataTranslationError } from './userDataTranslationError.js';
 import { UserError } from './userError.js';
 import { UserPuzzleDataMissingError } from './userPuzzleDataMissingError.js';
-import { InvalidYearError, PuzzleIsLockedError, PuzzlePartIsLockedError } from './validationErrors.js';
+import { InvalidYearError } from './validationErrors.js';
 
 export {
   DataFileIOError,
@@ -40,6 +40,4 @@ export {
   UserSolutionThrewError,
 
   InvalidYearError,
-  PuzzleIsLockedError,
-  PuzzlePartIsLockedError,
 };
