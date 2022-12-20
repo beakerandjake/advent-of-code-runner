@@ -5,6 +5,7 @@ import { printFestiveTitle } from './festive.js';
 import { handleError } from './errorHandler.js';
 import {
   autoSolveCommand,
+  autoSubmitCommand,
   initializeCommand,
   solveCommand,
   submitCommand,
@@ -23,6 +24,7 @@ program
 
 program.addCommand(autoSolveCommand);
 program.addCommand(solveCommand);
+program.addCommand(autoSubmitCommand);
 program.addCommand(submitCommand);
 program.addCommand(initializeCommand);
 

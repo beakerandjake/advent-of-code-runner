@@ -1,5 +1,6 @@
 import {
   autoSolveCommand,
+  autoSubmitCommand,
   initializeCommand,
   solveCommand,
   submitCommand,
@@ -8,6 +9,7 @@ import { exitOverride } from './exitOverride.js';
 
 export {
   autoSolveCommand,
+  autoSubmitCommand,
   initializeCommand,
   solveCommand,
   submitCommand,

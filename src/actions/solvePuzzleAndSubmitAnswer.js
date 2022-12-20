@@ -36,6 +36,7 @@ const onAnswerIncorrect = async (year, day, part, message, { answer }) => {
  * @param {Number} part
  */
 export const solvePuzzleAndSubmitAnswer = async (day, part) => {
+  logger.festive('Submitting puzzle for day: %s, part: %s', day, part);
   const year = getYear();
 
   // can't submit a locked puzzle
