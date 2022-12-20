@@ -1,6 +1,6 @@
 import { downloadInput } from '../api/index.js';
 import { getConfigValue } from '../config.js';
-import { inputIsCached, getCachedInput, cacheInput } from './inputCache.js';
+import { inputIsCached, getCachedInput, cacheInput } from '../inputs.js';
 import { logger } from '../logger.js';
 
 /**
@@ -11,7 +11,7 @@ import { logger } from '../logger.js';
  * @param {Number} day
  * @returns {Promise<String>}
  */
-export const getInput = async (year, day) => {
+export const getPuzzleInput = async (year, day) => {
   logger.verbose('getting input', { year, day });
 
   let toReturn;

@@ -1,7 +1,25 @@
 import { answersEqual, getCorrectAnswer } from '../../answers.js';
 import { logger } from '../../logger.js';
-import { tryToSetFastestExecutionTime } from '../../statistics.js';
+import { getFastestExecutionTime, setFastestExecutionTime } from '../../statistics.js';
 import { executeSolutionAndLog, getYear, puzzleIsUnlocked } from './actionUtil.js';
+
+/**
+ * Checks to see if execution time beat record, if so will update record.
+ * @param {Number} year
+ * @param {Number} day
+ * @param {Number} part
+ * @param {Number} executionTimeNs
+ */
+const tryToUpdateFastestExecutionTime = async (year, day, part, executionTimeNs) => {
+  const fastestExecutionTime = await getFastestExecutionTime(year, day, part);
+
+  if (executionTimeNs && (executionTimeNs >= fastestExecutionTime)) {
+    logger.debug('not setting fastest execution time, %s is slower than record: %s', executionTimeNs, fastestExecutionTime);
+    return;
+  }
+
+  await setFastestExecutionTime(year, day, part, executionTimeNs);
+};
 
 /**
  * Solves a specific puzzle
@@ -19,6 +37,7 @@ export const solve = async (day, part) => {
   // the user might have already submitted the correct answer to this problem
   // but are re-executing their solution because they made code or performance improvements.
   const correctAnswer = await getCorrectAnswer(year, day, part);
+
   // the user has not previously submitted a correct answer.
   if (!correctAnswer) {
     return;
@@ -31,7 +50,5 @@ export const solve = async (day, part) => {
     return;
   }
 
-  // the current answer is correct, see if the user broke a performance record.
-  logger.festive('You have already correctly answered this puzzle');
-  await tryToSetFastestExecutionTime(year, day, part, executionTimeNs);
+  await tryToUpdateFastestExecutionTime(year, day, part, executionTimeNs);
 };

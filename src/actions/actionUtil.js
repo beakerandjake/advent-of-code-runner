@@ -1,10 +1,7 @@
-import { requiredPartsHaveBeenSolved } from '../../answers.js';
-import { getConfigValue } from '../../config.js';
-import { humanizeDuration } from '../../formatting.js';
-import { getInput } from '../../inputs/index.js';
-import { logger } from '../../logger.js';
-import { executeUserSolution } from '../../solutions/index.js';
-import { puzzleIsInFuture, yearIsValid } from '../../validation/index.js';
+import { requiredPartsHaveBeenSolved } from '../answers.js';
+import { getConfigValue } from '../config.js';
+import { logger } from '../logger.js';
+import { puzzleIsInFuture, yearIsValid } from '../validation/index.js';
 
 /**
  * Grabs the year value from the config, validates and returns it.
@@ -43,18 +40,4 @@ export const puzzleIsUnlocked = async (year, day, part) => {
   }
 
   return true;
-};
-
-/**
- * Executes the users solution and logs the result.
- * @param {Number} day
- * @param {Number} part
- * @param {Number} input
- */
-export const executeSolutionAndLog = async (day, part) => {
-  const input = await getInput();
-  logger.festive('Executing your code');
-  const { answer, executionTimeNs } = await executeUserSolution(day, part, input);
-  logger.festive('You answered: %s (solved in %s)', answer, humanizeDuration(executionTimeNs));
-  return { answer, executionTimeNs };
 };
