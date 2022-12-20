@@ -10,6 +10,10 @@
     commands can use one or more actions.
 
   testing... when mocking async fns, am i returning async fn/promise???
+
+  commands
+    solve - test
+    init - add action and test.
  *
  *
  */
