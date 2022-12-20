@@ -1,5 +1,13 @@
+import { autoSolve } from './autoSolve.js';
+import { autoSubmit } from './autoSubmit.js';
+import { initialize } from './initialize.js';
 import { solvePuzzle } from './solvePuzzle.js';
 import { solvePuzzleAndSubmitAnswer } from './solvePuzzleAndSubmitAnswer.js';
-import { initialize } from './initialize.js';
 
-export { solvePuzzle, solvePuzzleAndSubmitAnswer, initialize };
+export {
+  autoSolve,
+  autoSubmit,
+  initialize,
+  solvePuzzle,
+  solvePuzzleAndSubmitAnswer,
+};

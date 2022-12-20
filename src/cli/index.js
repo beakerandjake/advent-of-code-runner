@@ -1,9 +1,17 @@
-import { solveCommand, submitCommand, initializeCommand } from './commands.js';
+import {
+  autoSolveCommand,
+  autoSubmitCommand,
+  initializeCommand,
+  solveCommand,
+  submitCommand,
+} from './commands.js';
 import { exitOverride } from './exitOverride.js';
 
 export {
+  autoSolveCommand,
+  autoSubmitCommand,
+  initializeCommand,
   solveCommand,
   submitCommand,
-  initializeCommand,
   exitOverride,
 };

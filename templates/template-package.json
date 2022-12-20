@@ -5,6 +5,7 @@
   "type": "module",
   "scripts": {
     "solve": "advent-of-code-runner solve",
+    "autosolve": "advent-of-code-runner autosolve",
     "submit": "advent-of-code-runner submit",
     "help": "advent-of-code-runner help"
   },

@@ -4,9 +4,11 @@ import { getConfigValue } from './config.js';
 import { printFestiveTitle } from './festive.js';
 import { handleError } from './errorHandler.js';
 import {
+  autoSolveCommand,
+  autoSubmitCommand,
+  initializeCommand,
   solveCommand,
   submitCommand,
-  initializeCommand,
   exitOverride,
 } from './cli/index.js';
 
@@ -20,7 +22,9 @@ program
   .hook('preAction', printFestiveTitle)
   .exitOverride(exitOverride);
 
+program.addCommand(autoSolveCommand);
 program.addCommand(solveCommand);
+program.addCommand(autoSubmitCommand);
 program.addCommand(submitCommand);
 program.addCommand(initializeCommand);
 
