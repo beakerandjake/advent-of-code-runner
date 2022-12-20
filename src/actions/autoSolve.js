@@ -8,13 +8,13 @@ import { solvePuzzle } from './solvePuzzle.js';
  */
 export const autoSolve = async () => {
   logger.festive('Finding next unsolved puzzle');
-  const { day, part } = await getNextUnansweredPuzzle(getYear()) || {};
+  const nextPuzzle = await getNextUnansweredPuzzle(getYear());
 
   // bail if all puzzles solved.
-  if (!day && !part) {
+  if (!nextPuzzle) {
     logger.festive('You\'ve already solve all the puzzles for this year! If you want to solve a specific problem use the "solve" command instead.');
     return;
   }
 
-  await solvePuzzle(day, part);
+  await solvePuzzle(nextPuzzle.day, nextPuzzle.part);
 };
