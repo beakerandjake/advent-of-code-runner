@@ -52,8 +52,9 @@ export const puzzleIsUnlocked = async (year, day, part) => {
  * @param {Number} input
  */
 export const executeSolutionAndLog = async (day, part) => {
-  logger.festive('Executing solution function');
-  const { answer, executionTimeNs } = await executeUserSolution(day, part, await getInput());
+  const input = await getInput();
+  logger.festive('Executing your code');
+  const { answer, executionTimeNs } = await executeUserSolution(day, part, input);
   logger.festive('You answered: %s (solved in %s)', answer, humanizeDuration(executionTimeNs));
   return { answer, executionTimeNs };
 };
