@@ -2,9 +2,7 @@ import { logger } from '../logger.js';
 import { getConfigValue } from '../config.js';
 
 /**
- * has the puzzle been unlocked by aoc?
- * not an issue for past years but for current year
- * it's necessary to ensure we don't attempt puzzles which are in the future
+ * Checks if the puzzle is unlocked on advent of code.
  * @param {Number} year
  * @param {Number} day
  */
