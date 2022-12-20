@@ -1,23 +1,19 @@
 import {
   describe, jest, test, afterEach,
 } from '@jest/globals';
+import { mockLogger } from './mocks.js';
 
 // setup mocks.
-jest.unstable_mockModule('../src/persistence/puzzleRepository.js', () => ({
+mockLogger();
+
+jest.unstable_mockModule('src/persistence/puzzleRepository.js', () => ({
   findPuzzle: jest.fn(),
   createPuzzle: jest.fn(),
   addOrEditPuzzle: jest.fn(),
   getPuzzles: jest.fn(),
 }));
 
-jest.unstable_mockModule('../src/logger.js', () => ({
-  logger: {
-    debug: jest.fn(),
-    warn: jest.fn(),
-  },
-}));
-
-jest.unstable_mockModule('../src/validation/validatePuzzle.js', () => ({
+jest.unstable_mockModule('src/validation/validatePuzzle.js', () => ({
   getAllPuzzlesForYear: jest.fn(),
 }));
 
@@ -36,6 +32,7 @@ const {
   answerHasBeenSubmitted,
   getNextUnansweredPuzzle,
   answersEqual,
+  requiredPartsHaveBeenSolved,
 } = await import('../src/answers.js');
 
 afterEach(() => {
@@ -376,6 +373,114 @@ describe('answers', () => {
         },
       ]);
       expect(await getNextUnansweredPuzzle(year)).toStrictEqual({ day: 3, part: 1 });
+    });
+  });
+
+  describe('requiredPartsHaveBeenSolved()', () => {
+    test('returns true on part 1', async () => {
+      const result = await requiredPartsHaveBeenSolved(2022, 1, 1);
+      expect(result).toBe(true);
+    });
+
+    test('returns true when required parts solved', async () => {
+      const year = 2022;
+      const day = 1;
+      const part = 4;
+      getPuzzles.mockReturnValue([
+        {
+          year, day, part: 1, correctAnswer: 'ASDF',
+        },
+        {
+          year, day, part: 2, correctAnswer: 'QWER',
+        },
+        {
+          year, day, part: 3, correctAnswer: 1234,
+        },
+      ]);
+      const result = await requiredPartsHaveBeenSolved(year, day, part);
+      expect(result).toBe(true);
+    });
+
+    test('returns true when when re-solving already part', async () => {
+      const year = 2022;
+      const day = 1;
+      const part = 3;
+      getPuzzles.mockReturnValue([
+        {
+          year, day, part: 1, correctAnswer: 'ASDF',
+        },
+        {
+          year, day, part: 2, correctAnswer: 'QWER',
+        },
+        {
+          year, day, part: 3, correctAnswer: 1234,
+        },
+      ]);
+      const result = await requiredPartsHaveBeenSolved(year, day, part);
+      expect(result).toBe(true);
+    });
+
+    test('returns false on none solved', async () => {
+      const year = 2022;
+      const day = 1;
+      const part = 2;
+      getPuzzles.mockReturnValue([
+        {
+          year, day, part: 1, correctAnswer: null,
+        },
+        {
+          year, day, part: 2, correctAnswer: null,
+        },
+        {
+          year, day, part: 3, correctAnswer: null,
+        },
+      ]);
+      const result = await requiredPartsHaveBeenSolved(year, day, part);
+      expect(result).toBe(false);
+    });
+
+    test('returns false on required part not solved (consecutive)', async () => {
+      const year = 2022;
+      const day = 1;
+      const part = 4;
+      getPuzzles.mockReturnValue([
+        {
+          year, day, part: 1, correctAnswer: 'ASDF',
+        },
+        {
+          year, day, part: 2, correctAnswer: 'ASDF',
+        },
+        {
+          year, day, part: 3, correctAnswer: null,
+        },
+      ]);
+      const result = await requiredPartsHaveBeenSolved(year, day, part);
+      expect(result).toBe(false);
+    });
+
+    test('returns false on required part not solved (non-consecutive)', async () => {
+      const year = 2022;
+      const day = 1;
+      const part = 4;
+      getPuzzles.mockReturnValue([
+        {
+          year, day, part: 1, correctAnswer: 'ASDF',
+        },
+        {
+          year, day, part: 2, correctAnswer: null,
+        },
+        {
+          year, day, part: 3, correctAnswer: null,
+        },
+      ]);
+      const result = await requiredPartsHaveBeenSolved(year, day, part);
+      expect(result).toBe(false);
+    });
+
+    test('returns false on no data for day', async () => {
+      getPuzzles.mockReturnValue([]);
+      const result = await requiredPartsHaveBeenSolved(2022, 1, 2);
+      expect(result).toBe(false);
     });
   });
 });
