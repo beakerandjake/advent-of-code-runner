@@ -19,7 +19,7 @@ const { getConfigValue } = await import('../../src/config.js');
 // import { logger } from '../../logger.js';
 // import { executeUserSolution } from '../../solutions/index.js';
 const { puzzleIsInFuture, yearIsValid } = await import('../../src/validation/index.js');
-const { getYear, puzzleIsUnlocked } = await import('../../src/cli/actions/actionUtil.js');
+const { getYear, puzzleIsUnlocked } = await import('../../src/actions/actionUtil.js');
 
 afterEach(() => {
   jest.clearAllMocks();
