@@ -1,6 +1,6 @@
 import { Command } from 'commander';
 import { dayArgument, partArgument } from './arguments.js';
-import { solvePuzzle, solvePuzzleAndSubmitAnswer } from '../actions/index.js';
+import { solvePuzzle, solvePuzzleAndSubmitAnswer, initialize } from '../actions/index.js';
 
 /**
  * Command which lets the user solve a specific puzzle
@@ -21,3 +21,11 @@ export const submitCommand = new Command()
   .addArgument(dayArgument)
   .addArgument(partArgument)
   .action(solvePuzzleAndSubmitAnswer);
+
+/**
+ * Command to initialize the users repository so it can run our cli.
+ */
+export const initializeCommand = new Command()
+  .name('init')
+  .description('Initialize a directory so advent-of-code-runner can run solutions.')
+  .action(initialize);

@@ -6,7 +6,7 @@ import { handleError } from './errorHandler.js';
 import {
   solveCommand,
   submitCommand,
-  initCommand,
+  initializeCommand,
   exitOverride,
 } from './cli/index.js';
 
@@ -22,7 +22,7 @@ program
 
 program.addCommand(solveCommand);
 program.addCommand(submitCommand);
-program.addCommand(initCommand);
+program.addCommand(initializeCommand);
 
 try {
   await program.parseAsync();
