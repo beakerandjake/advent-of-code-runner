@@ -1,5 +1,5 @@
 import { logger } from '../logger.js';
-import { getFastestExecutionTime, setFastestExecutionTime } from '../statistics';
+import { getFastestExecutionTime, setFastestExecutionTime } from '../statistics.js';
 
 /**
  *

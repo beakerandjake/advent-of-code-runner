@@ -1,6 +1,6 @@
-import { addIncorrectAnswer, setCorrectAnswer } from '../answers';
+import { addIncorrectAnswer, setCorrectAnswer } from '../answers.js';
 import { logger } from '../logger.js';
-import { setFastestExecutionTime } from '../statistics';
+import { setFastestExecutionTime } from '../statistics.js';
 import { getYear, puzzleIsUnlocked } from './actionUtil.js';
 import { getInputAndExecuteSolution } from './getInputAndExecuteSolution.js';
 import { tryToSubmitPuzzleAnswer } from './tryToSubmitPuzzleAnswer.js';

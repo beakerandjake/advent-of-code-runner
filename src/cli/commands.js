@@ -1,6 +1,6 @@
 import { Command } from 'commander';
 import { dayArgument, partArgument } from './arguments.js';
-import { submit, solve } from './actions/index.js';
+import { solvePuzzle, solvePuzzleAndSubmitAnswer } from '../actions/index.js';
 
 /**
  * Command which lets the user solve a specific puzzle
@@ -10,7 +10,7 @@ export const solveCommand = new Command()
   .description('Solve the puzzle, benchmark the execution time, and output the result.')
   .addArgument(dayArgument)
   .addArgument(partArgument)
-  .action(solve);
+  .action(solvePuzzle);
 
 /**
  * Command which allows the user to submit a puzzles answer to advent of code.
@@ -20,4 +20,4 @@ export const submitCommand = new Command()
   .description('Run the solution for the puzzle, then submit the result.')
   .addArgument(dayArgument)
   .addArgument(partArgument)
-  .action(submit);
+  .action(solvePuzzleAndSubmitAnswer);
