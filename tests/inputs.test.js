@@ -1,34 +1,34 @@
 import {
   describe, jest, test, beforeEach,
 } from '@jest/globals';
-import { mockLogger } from '../mocks.js';
+import { mockLogger } from './mocks.js';
 
 // setup mocks.
 mockLogger();
 
-jest.unstable_mockModule('../../src/config.js', () => ({
+jest.unstable_mockModule('src/config.js', () => ({
   getConfigValue: jest.fn(),
 }));
 
-jest.unstable_mockModule('../../src/api/index.js', () => ({
+jest.unstable_mockModule('src/api/index.js', () => ({
   downloadInput: jest.fn(),
 }));
 
-jest.unstable_mockModule('../../src/persistence/io.js', () => ({
+jest.unstable_mockModule('src/persistence/io.js', () => ({
   saveFile: jest.fn(),
   loadFileContents: jest.fn(),
   fileExists: jest.fn(),
 }));
 
-const { getConfigValue } = await import('../../src/config.js');
-const { fileExists, loadFileContents, saveFile } = await import('../../src/persistence/io.js');
-const { getCachedInput, cacheInput, inputIsCached } = await import('../../src/inputs/inputCache.js');
+const { getConfigValue } = await import('../src/config.js');
+const { fileExists, loadFileContents, saveFile } = await import('../src/persistence/io.js');
+const { getCachedInput, cacheInput, inputIsCached } = await import('../src/inputs.js');
 
 beforeEach(() => {
   jest.clearAllMocks();
 });
 
-describe('inputCache', () => {
+describe('inputs', () => {
   describe('cacheInput()', () => {
     test('saves input to file', async () => {
       const input = 'asdf';

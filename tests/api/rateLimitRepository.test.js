@@ -13,38 +13,38 @@ const { getStoreValue, setStoreValue } = await import('../../src/persistence/jso
 const { getRateLimit, setRateLimit } = await import('../../src/persistence/rateLimitRepository.js');
 
 afterEach(() => {
-  jest.clearAllMocks();
+  jest.resetAllMocks();
 });
 
 describe('rateLimitRepository', () => {
   describe('getRateLimit()', () => {
     test('no stored data, returns null', async () => {
-      getStoreValue.mockReturnValueOnce({});
+      getStoreValue.mockResolvedValueOnce({});
       expect(await getRateLimit('ASDF')).toBe(null);
     });
 
     test('no date for action type, returns null', async () => {
       const key = 'cool';
-      getStoreValue.mockReturnValueOnce({ notCool: '1234' });
+      getStoreValue.mockResolvedValueOnce({ notCool: '1234' });
       expect(await getRateLimit(key)).toBe(null);
     });
 
     test('empty date for action type, returns null', async () => {
       const key = 'cool';
-      getStoreValue.mockReturnValueOnce({ [key]: null });
+      getStoreValue.mockResolvedValueOnce({ [key]: null });
       expect(await getRateLimit(key)).toEqual(null);
     });
 
     test('value date for action type, returns date', async () => {
       const expected = new Date();
       const key = 'cool';
-      getStoreValue.mockReturnValueOnce({ [key]: expected.toISOString() });
+      getStoreValue.mockResolvedValueOnce({ [key]: expected.toISOString() });
       expect(await getRateLimit(key)).toEqual(expected);
     });
 
     test('invalid date for action type, throws', async () => {
       const key = 'cool';
-      getStoreValue.mockReturnValueOnce({ [key]: 'really not a date!' });
+      getStoreValue.mockResolvedValueOnce({ [key]: 'really not a date!' });
       expect(async () => getRateLimit(key)).rejects.toThrow();
     });
   });
@@ -71,7 +71,7 @@ describe('rateLimitRepository', () => {
       const key = 'cool';
       const value = new Date(2022, 11, 4);
       const orig = { notCool: new Date().toISOString() };
-      getStoreValue.mockReturnValueOnce({ notCool: new Date().toISOString() });
+      getStoreValue.mockResolvedValueOnce({ notCool: new Date().toISOString() });
       await setRateLimit(key, value);
       expect(setStoreValue).toHaveBeenCalledWith(
         expect.any(String),
@@ -83,7 +83,7 @@ describe('rateLimitRepository', () => {
       const key = 'cool';
       const value = new Date(2022, 11, 4);
       const orig = { notCool: new Date().toISOString(), [key]: value.toISOString() };
-      getStoreValue.mockReturnValueOnce({ notCool: new Date().toISOString() });
+      getStoreValue.mockResolvedValueOnce({ notCool: new Date().toISOString() });
       await setRateLimit(key, value);
       expect(setStoreValue).toHaveBeenCalledWith(
         expect.any(String),

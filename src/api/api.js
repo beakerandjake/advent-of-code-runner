@@ -150,6 +150,7 @@ const parseSolutionResponse = (responseBody = '') => {
  * @param {String} authenticationToken - Token to authenticate with aoc.
  */
 export const submitSolution = async (year, day, part, solution, authenticationToken) => {
+  logger.festive('Submitting your answer to advent of code');
   logger.verbose('submitting solution to advent of code for year: %s, day: %s, part: %s', year, day, part);
 
   if (!authenticationToken) {
