@@ -1,22 +1,21 @@
-import { getConfigValue } from '../../config.js';
-import { yearIsValid, puzzleIsInFuture } from '../../validation/index.js';
 import { requiredPartsHaveBeenSolved } from '../../answers.js';
-import { InvalidYearError } from '../../errors/index.js';
-import { logger } from '../../logger.js';
+import { getConfigValue } from '../../config.js';
 import { humanizeDuration } from '../../formatting.js';
-import { executeUserSolution } from '../../solutions/index.js';
 import { getInput } from '../../inputs/index.js';
+import { logger } from '../../logger.js';
+import { executeUserSolution } from '../../solutions/index.js';
+import { puzzleIsInFuture, yearIsValid } from '../../validation/index.js';
 
 /**
  * Grabs the year value from the config, validates and returns it.
- * @throws {YearIsInvalidError}
+ * @throws {RangeError}
  * @returns {Number}
  */
 export const getYear = () => {
   const year = getConfigValue('aoc.year');
 
   if (!yearIsValid(year)) {
-    throw new InvalidYearError();
+    throw new RangeError(`The year: ${year} is invalid, check your .env file to ensure you have specified a valid year.`);
   }
 
   return year;
