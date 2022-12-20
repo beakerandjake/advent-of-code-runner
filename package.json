@@ -17,7 +17,7 @@
   "main": "src/main.js",
   "bin": "src/main.js",
   "scripts": {
-    "test": "NODE_OPTIONS=--experimental-vm-modules jest",
+    "test": "NODE_OPTIONS=\"--experimental-vm-modules --no-warnings\" jest",
     "start": "node src/main.js"
   },
   "repository": {
