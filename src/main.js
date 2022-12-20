@@ -5,7 +5,7 @@ import { printFestiveTitle } from './festive.js';
 import { handleError } from './errorHandler.js';
 import {
   solveCommand,
-  // submitCommand,
+  submitCommand,
   initCommand,
   exitOverride,
 } from './cli/index.js';
@@ -21,7 +21,7 @@ program
   .exitOverride(exitOverride);
 
 program.addCommand(solveCommand);
-// program.addCommand(submitCommand);
+program.addCommand(submitCommand);
 program.addCommand(initCommand);
 
 try {
