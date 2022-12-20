@@ -21,6 +21,10 @@ const { getConfigValue } = await import('../../src/config.js');
 const { puzzleIsInFuture, yearIsValid } = await import('../../src/validation/index.js');
 const { getYear, puzzleIsUnlocked } = await import('../../src/cli/actions/actionUtil.js');
 
+afterEach(() => {
+  jest.clearAllMocks();
+});
+
 describe('actionUtil', () => {
   describe('getYear()', () => {
     test('returns value if valid', () => {
