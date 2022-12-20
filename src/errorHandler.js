@@ -8,7 +8,7 @@ import { logger } from './logger.js';
  */
 export const handleError = (error) => {
   if (error instanceof UserError) {
-    logger.error(error, { useDefaultFormat: true });
+    logger.error(error, { simpleErrorFormat: true });
   } else {
     logger.error(error);
   }
