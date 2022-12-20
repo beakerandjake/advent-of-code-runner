@@ -1,6 +1,11 @@
 import { Command } from 'commander';
+import {
+  autoSolve,
+  initialize,
+  solvePuzzle,
+  solvePuzzleAndSubmitAnswer,
+} from '../actions/index.js';
 import { dayArgument, partArgument } from './arguments.js';
-import { solvePuzzle, solvePuzzleAndSubmitAnswer, initialize } from '../actions/index.js';
 
 /**
  * Command which lets the user solve a specific puzzle
@@ -11,6 +16,14 @@ export const solveCommand = new Command()
   .addArgument(dayArgument)
   .addArgument(partArgument)
   .action(solvePuzzle);
+
+/**
+ * Command to solve the next unsolved puzzle.
+ */
+export const autoSolveCommand = new Command()
+  .name('autosolve')
+  .description('Find the next unsolved puzzle, execute it, benchmark the execution time and output the result.')
+  .action(autoSolve);
 
 /**
  * Command which allows the user to submit a puzzles answer to advent of code.
