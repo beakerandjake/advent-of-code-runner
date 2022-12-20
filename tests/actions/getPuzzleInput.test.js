@@ -25,31 +25,60 @@ const { inputIsCached, getCachedInput, cacheInput } = await import('../../src/in
 const { getPuzzleInput } = await import('../../src/actions/getPuzzleInput.js');
 
 beforeEach(() => {
-  jest.clearAllMocks();
+  jest.resetAllMocks();
 });
 
 describe('getPuzzleInput', () => {
-  test('returns cached if cached', async () => {
+  test('returns cached value if cached', async () => {
     const expected = 'ASDF';
     inputIsCached.mockResolvedValueOnce(true);
     getCachedInput.mockResolvedValueOnce(expected);
-
     const result = await getPuzzleInput(2000, 1);
-
-    expect(downloadInput).not.toHaveBeenCalled();
-    expect(cacheInput).not.toHaveBeenCalled();
+    expect(getCachedInput).toHaveBeenCalled();
     expect(result).toBe(expected);
   });
 
-  test('downloads and caches if not cached', async () => {
+  test('does not download if cached', async () => {
+    inputIsCached.mockResolvedValueOnce(true);
+    await getPuzzleInput(2000, 1);
+    expect(downloadInput).not.toHaveBeenCalled();
+  });
+
+  test('does not cache if cached', async () => {
+    inputIsCached.mockResolvedValueOnce(true);
+    await getPuzzleInput(2000, 1);
+    expect(cacheInput).not.toHaveBeenCalled();
+  });
+
+  test('returns downloaded value if not cached', async () => {
     const expected = 'ASDF';
     inputIsCached.mockResolvedValueOnce(false);
     downloadInput.mockResolvedValueOnce(expected);
-
     const result = await getPuzzleInput(2000, 1);
-
-    expect(cacheInput).toHaveBeenCalled();
-    expect(getCachedInput).not.toHaveBeenCalled();
     expect(result).toBe(expected);
+  });
+
+  test('does not cache if download fails', async () => {
+    inputIsCached.mockResolvedValueOnce(false);
+    downloadInput.mockRejectedValue(new Error());
+    await expect(async () => getPuzzleInput(2000, 1)).rejects.toThrow();
+    expect(downloadInput).toHaveBeenCalled();
+    expect(cacheInput).not.toHaveBeenCalled();
+  });
+
+  test('caches if downloads', async () => {
+    inputIsCached.mockResolvedValueOnce(false);
+    await getPuzzleInput(2000, 1);
+    expect(cacheInput).toHaveBeenCalled();
+  });
+
+  test('caches with result of download', async () => {
+    const year = 2000;
+    const day = 1;
+    const downloadResult = 'ASDF';
+    inputIsCached.mockResolvedValueOnce(false);
+    downloadInput.mockResolvedValueOnce(downloadResult);
+    await getPuzzleInput(2000, 1);
+    expect(cacheInput).toHaveBeenCalledWith(year, day, downloadResult);
   });
 });
