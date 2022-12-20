@@ -1,14 +1,15 @@
 import { getPuzzleInput } from './getPuzzleInput.js';
 import { humanizeDuration } from '../formatting.js';
 import { logger } from '../logger.js';
+import { executeUserSolution } from '../solutions/index.js';
 
 /**
- * Executes the users solution and logs the result.
+ * Gets the puzzles input and executes the users solution.
  * @param {Number} day
  * @param {Number} part
  * @param {Number} input
  */
-export const executeUserSolution = async (day, part) => {
+export const getInputAndExecuteSolution = async (day, part) => {
   const input = await getPuzzleInput();
   logger.festive('Executing your code');
   const { answer, executionTimeNs } = await executeUserSolution(day, part, input);

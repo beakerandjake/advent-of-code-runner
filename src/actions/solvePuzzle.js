@@ -1,7 +1,7 @@
 import { answersEqual, getCorrectAnswer } from '../answers.js';
 import { logger } from '../logger.js';
 import { getYear, puzzleIsUnlocked } from './actionUtil.js';
-import { executeUserSolution } from './executeUserSolution.js';
+import { getInputAndExecuteSolution } from './getInputAndExecuteSolution.js';
 import { tryToUpdateFastestExecutionTime } from './tryToUpdateFastestExecutionTime.js';
 
 /**
@@ -19,7 +19,7 @@ export const solvePuzzle = async (day, part) => {
   }
 
   // run the users code.
-  const { answer, executionTimeNs } = await executeUserSolution(day, part);
+  const { answer, executionTimeNs } = await getInputAndExecuteSolution(day, part);
 
   // check to see if the user has correctly submitted an answer to this puzzle.
   const correctAnswer = await getCorrectAnswer(year, day, part);
