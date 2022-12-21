@@ -30,6 +30,22 @@ beforeEach(() => {
 });
 
 describe('getPuzzleInput', () => {
+  const badInputs = [
+    null,
+    undefined,
+    'CATS',
+    () => {},
+    -4444,
+  ];
+
+  test.each(badInputs)('throws if day is: %s', async (value) => {
+    await expect(async () => getPuzzleInput(2022, value)).rejects.toThrow();
+  });
+
+  test.each(badInputs)('throws if year is: %s', async (value) => {
+    await expect(async () => getPuzzleInput(value, 1)).rejects.toThrow();
+  });
+
   test('returns cached value if cached', async () => {
     const expected = 'ASDF';
     inputIsCached.mockResolvedValueOnce(true);
