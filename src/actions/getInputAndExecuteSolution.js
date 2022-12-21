@@ -10,7 +10,7 @@ import { executeUserSolution } from '../solutions/index.js';
  * @param {Number} input
  */
 export const getInputAndExecuteSolution = async (day, part) => {
-  const input = await getPuzzleInput();
+  const input = await getPuzzleInput(day, part);
   logger.festive('Executing your code');
   const { answer, executionTimeNs } = await executeUserSolution(day, part, input);
   logger.festive('You answered: %s (solved in %s)', answer, humanizeDuration(executionTimeNs));

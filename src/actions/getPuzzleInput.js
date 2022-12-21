@@ -2,6 +2,7 @@ import { downloadInput } from '../api/index.js';
 import { getConfigValue } from '../config.js';
 import { inputIsCached, getCachedInput, cacheInput } from '../inputs.js';
 import { logger } from '../logger.js';
+import { parsePositiveInt } from '../validation/index.js';
 
 /**
  * Returns the input for the puzzle.
@@ -13,16 +14,17 @@ import { logger } from '../logger.js';
  */
 export const getPuzzleInput = async (year, day) => {
   logger.verbose('getting input', { year, day });
-
+  const parsedYear = parsePositiveInt(year);
+  const parsedDay = parsePositiveInt(day);
   let toReturn;
 
-  if (!await inputIsCached(year, day)) {
+  if (!await inputIsCached(parsedYear, parsedDay)) {
     logger.festive('Downloading and caching input file');
-    toReturn = await downloadInput(year, day, getConfigValue('aoc.authenticationToken'));
-    await cacheInput(year, day, toReturn);
+    toReturn = await downloadInput(parsedYear, parsedDay, getConfigValue('aoc.authenticationToken'));
+    await cacheInput(parsedYear, parsedDay, toReturn);
   } else {
     logger.festive('Loading cached input file');
-    toReturn = await getCachedInput(year, day);
+    toReturn = await getCachedInput(parsedYear, parsedDay);
   }
 
   return toReturn;
