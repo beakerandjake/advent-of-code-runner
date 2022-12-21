@@ -1,8 +1,7 @@
-import {
-  describe, jest, test, afterEach,
-} from '@jest/globals';
+import { describe, test } from '@jest/globals';
 
 import { getElementByTagName, getTextContent } from '../../src/api/parseHtml.js';
+import { actualResponseMainTags, getResponseHtml } from './getActualResponseHtml.js';
 
 describe('parseHtml', () => {
   describe('getElementByTagName()', () => {
@@ -53,6 +52,28 @@ describe('parseHtml', () => {
       const result = getElementByTagName(html, tag);
       expect(result).toBe(expected);
     });
+
+    describe('actual advent of code responses', () => {
+      test('wrong answer', () => {
+        const html = getResponseHtml(actualResponseMainTags.wrongAnswer);
+        const result = getElementByTagName(html, 'main');
+        expect(result).toBe(actualResponseMainTags.wrongAnswer);
+      });
+
+      test.todo('correct answer');
+
+      test('bad level', () => {
+        const html = getResponseHtml(actualResponseMainTags.badLevel);
+        const result = getElementByTagName(html, 'main');
+        expect(result).toBe(actualResponseMainTags.badLevel);
+      });
+
+      test('too many requests', () => {
+        const html = getResponseHtml(actualResponseMainTags.tooManyRequests);
+        const result = getElementByTagName(html, 'main');
+        expect(result).toBe(actualResponseMainTags.tooManyRequests);
+      });
+    });
   });
 
   describe('getTextContent()', () => {
@@ -84,52 +105,27 @@ describe('parseHtml', () => {
       const result = getTextContent(html);
       expect(result).toBe(expected);
     });
-    //   test('handles basic tag', () => {
-    //     const input = '<span>hello world</span>';
-    //     const expected = 'hello world';
-    //     expect(getTextContent(input)).toBe(expected);
-    //   });
 
-    //   test('handles tag with attributes', () => {
-    //     const input = '<span id="helloWorld" class="cats">hello world</span>';
-    //     const expected = 'hello world';
-    //     expect(getTextContent(input)).toBe(expected);
-    //   });
+    describe('actual advent of code responses', () => {
+      test('wrong answer', () => {
+        const expected = 'That\'s not the right answer.  If you\'re stuck, make sure you\'re using the full input data; there are also some general tips on the about page, or you can ask for hints on the subreddit.  Because you have guessed incorrectly 12 times on this puzzle, please wait 15 minutes before trying again. (You guessed 12349857.) [Return to Day 1]';
+        const result = getTextContent(actualResponseMainTags.wrongAnswer, expected);
+        expect(result).toBe(expected);
+      });
 
-    //   test('handles simple nested element', () => {
-    //     const input = `
-    //       <p>
-    //         <span>hello world</span>
-    //       </p>
-    //     `;
-    //     const expected = 'hello world';
-    //     expect(getTextContent(input)).toBe(expected);
-    //   });
+      test.todo('correct answer');
 
-    //   test('handles deeply nested element', () => {
-    //     const input = `
-    //       <p>
-    //         <span>
-    //           <span>
-    //             <span>hello world</span>
-    //           </span>
-    //         </span>
-    //       </p>`;
-    //     const expected = 'hello world';
-    //     expect(getTextContent(input)).toBe(expected);
-    //   });
+      test('bad level', () => {
+        const expected = 'You don\'t seem to be solving the right level.  Did you already complete it? [Return to Day 2]';
+        const result = getTextContent(actualResponseMainTags.badLevel, expected);
+        expect(result).toBe(expected);
+      });
 
-  //   test('handles deeply nested element with attributes', () => {
-  //     const input = `
-  //       <p class="cats">
-  //         <span id="anchor1" class="purple">
-  //           <span onClick="myCoolFunction()">
-  //             <span style="color:blue">hello world</span>
-  //           </span>
-  //         </span>
-  //       </p>`;
-  //     const expected = 'hello world';
-  //     expect(getTextContent(input)).toBe(expected);
-  //   });
+      test('too many requests', () => {
+        const expected = 'You gave an answer too recently; you have to wait after submitting an answer before trying again.  You have 14m 6s left to wait. [Return to Day 1]';
+        const result = getTextContent(actualResponseMainTags.tooManyRequests, expected);
+        expect(result).toBe(expected);
+      });
+    });
   });
 });
