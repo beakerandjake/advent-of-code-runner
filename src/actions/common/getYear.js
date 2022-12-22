@@ -13,7 +13,6 @@ export const getYear = (args = {}) => {
     throw new RangeError(`The year: ${year} is invalid, check your .env file to ensure you have specified a valid year.`);
   }
 
-  logger.debug('setting year to: %s', year);
-
+  logger.debug('using year value from config: %s', year);
   return { ...args, year };
 };
