@@ -3,7 +3,7 @@ import {
   autoSolve,
   autoSubmit,
   initialize,
-  solvePuzzle,
+  solve,
   solvePuzzleAndSubmitAnswer,
 } from '../actions/index.js';
 import { dayArgument, partArgument } from './arguments.js';
@@ -16,7 +16,7 @@ export const solveCommand = new Command()
   .description('Solve the puzzle, benchmark the execution time, and output the result.')
   .addArgument(dayArgument)
   .addArgument(partArgument)
-  .action(solvePuzzle);
+  .action(solve);
 
 /**
  * Command to solve the next unsolved puzzle.
