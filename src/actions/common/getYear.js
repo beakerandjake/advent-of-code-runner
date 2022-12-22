@@ -6,7 +6,7 @@ import { yearIsValid } from '../../validation/index.js';
  * Grabs the year value from the config, validates it, then adds it to the args.
  * @throws {RangeError}
  */
-export const getYear = (args) => {
+export const getYear = (args = {}) => {
   const year = getConfigValue('aoc.year');
 
   if (!yearIsValid(year)) {
