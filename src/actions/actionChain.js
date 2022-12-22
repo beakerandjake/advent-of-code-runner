@@ -32,8 +32,10 @@ export const executeChain = async (links, args = {}) => {
         break;
       }
 
-      // if a value is returned, that means the link wants the args updated.
-      if (result) {
+      // if any value except true/undefined is returned, that means the link wants the args updated.
+      // true is ignored to allow assert actions pass eslint rule "consistent-return"
+      // undefined is ignored to support void links.
+      if (result !== true && result !== undefined) {
         // not logging the actual args on purpose, could contain secrets...
         chainLog('link: %s has updated the args', link.name);
         currentArgs = result;
@@ -48,14 +50,14 @@ export const executeChain = async (links, args = {}) => {
 };
 
 /**
- * Returns a function which can be executed via command line, this function will:
- * 1. Invoke each function in the array sequentially. Each function:
- *      - Is passed the current args object
- *      - Can modify the current args object by returning a new object.
- *      - Can halt the execution of the chain by returning false.
- *      - Can halt the execution of the chain by throwing an exception.
+ * Returns a function which can be executed via command line:
+ * This function will invoke each function in the array sequentially, each function:
+ *  - Is passed the current args object
+ *  - Can return a bool: the chain continues (true) or halts (false).
+ *  - Can return a non-bool: the args object will be set to this value (the chain continues).
+ *  - Can be void (return undefined): the chain continues and args are not changed.
+ *  - Can raise an Error: the chain halts.
  * If any function in the chain causes a halt, then chains which come after it are not executed.
- *
  * @param {Function[]} actions - The functions to execute.
  */
 export const createChain = (actions = []) => {
