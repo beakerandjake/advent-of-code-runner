@@ -1,0 +1,180 @@
+/**
+ * Module which returns actual html response from advent of code.
+ * Used to mock actual api responses for testing.
+ */
+
+/**
+ * token which will be replaced with the content of the specific response type.
+ */
+const replacementToken = '{{MAIN_SECTION}}';
+
+/**
+ * The actual html returned by advent of code,
+ * tokenized to allow replacement of the body to simulate different responses
+ */
+const baseResponseHtml = `
+<!DOCTYPE html>
+<html lang="en-us">
+
+<head>
+  <meta charset="utf-8" />
+  <title>Day 1 - Advent of Code 2022</title>
+  <!--[if lt IE 9]><script src="/static/html5.js"></script><![endif]-->
+  <link href='//fonts.googleapis.com/css?family=Source+Code+Pro:300&subset=latin,latin-ext' rel='stylesheet'
+    type='text/css' />
+  <link rel="stylesheet" type="text/css" href="/static/style.css?30" />
+  <link rel="stylesheet alternate" type="text/css" href="/static/highcontrast.css?0" title="High Contrast" />
+  <link rel="shortcut icon" href="/favicon.png" />
+  <script>window.addEventListener('click', function (e, s, r) { if (e.target.nodeName === 'CODE' && e.detail === 3) { s = window.getSelection(); s.removeAllRanges(); r = document.createRange(); r.selectNodeContents(e.target); s.addRange(r); } });</script>
+</head><!--
+
+
+
+
+Oh, hello!  Funny seeing you here.
+
+I appreciate your enthusiasm, but you aren't going to find much down here.
+There certainly aren't clues to any of the puzzles.  The best surprises don't
+even appear in the source until you unlock them for real.
+
+Please be careful with automated requests; I'm not a massive company, and I can
+only take so much traffic.  Please be considerate so that everyone gets to play.
+
+If you're curious about how Advent of Code works, it's running on some custom
+Perl code. Other than a few integrations (auth, analytics, social media), I
+built the whole thing myself, including the design, animations, prose, and all
+of the puzzles.
+
+The puzzles are most of the work; preparing a new calendar and a new set of
+puzzles each year takes all of my free time for 4-5 months. A lot of effort
+went into building this thing - I hope you're enjoying playing it as much as I
+enjoyed making it for you!
+
+If you'd like to hang out, I'm @ericwastl on Twitter.
+
+- Eric Wastl
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+-->
+
+<body>
+  <header>
+    <div>
+      <h1 class="title-global"><a href="/">Advent of Code</a></h1>
+      <nav>
+        <ul>
+          <li><a href="/2022/about">[About]</a></li>
+          <li><a href="/2022/events">[Events]</a></li>
+          <li><a href="https://teespring.com/stores/advent-of-code" target="_blank">[Shop]</a></li>
+          <li><a href="/2022/settings">[Settings]</a></li>
+          <li><a href="/2022/auth/logout">[Log Out]</a></li>
+        </ul>
+      </nav>
+      <div class="user">(COOL GUY)</div>
+    </div>
+    <div>
+      <h1 class="title-event">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span
+          class="title-event-wrap"></span><a href="/2022">2022</a><span class="title-event-wrap"></span></h1>
+      <nav>
+        <ul>
+          <li><a href="/2022">[Calendar]</a></li>
+          <li><a href="/2022/support">[AoC++]</a></li>
+          <li><a href="/2022/sponsors">[Sponsors]</a></li>
+          <li><a href="/2022/leaderboard">[Leaderboard]</a></li>
+          <li><a href="/2022/stats">[Stats]</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <div id="sidebar">
+    <div id="sponsor">
+      <div class="quiet">Our <a href="/2022/sponsors">sponsors</a> help make Advent of Code possible:</div>
+      <div class="sponsor"><a href="https://www.accenture.com/us-en/industries/afs-index" target="_blank"
+          onclick="if(ga)ga('send','event','sponsor','sidebar',this.href);" rel="noopener">Accenture Federal
+          Services</a> - Technology &amp; ingenuity moving missions forward – come solve problems with us. Hiring
+        software engineers, developers, and more now. Refer someone to earn up to $20K.</div>
+    </div>
+  </div><!--/sidebar-->
+
+  ${replacementToken}
+
+  <!-- ga -->
+  <script>
+    (function (i, s, o, g, r, a, m) {
+      i['GoogleAnalyticsObject'] = r; i[r] = i[r] || function () {
+        (i[r].q = i[r].q || []).push(arguments)
+      }, i[r].l = 1 * new Date(); a = s.createElement(o),
+        m = s.getElementsByTagName(o)[0]; a.async = 1; a.src = g; m.parentNode.insertBefore(a, m)
+    })(window, document, 'script', '//www.google-analytics.com/analytics.js', 'ga');
+    ga('set', 'anonymizeIp', true);
+    ga('send', 'pageview');
+  </script>
+  <!-- /ga -->
+</body>
+
+</html>
+`;
+
+/**
+ * Returns the advent of code html response with the specified main tag.
+ * @param {String} mainTag
+ */
+export const getResponseHtml = (mainTag) => baseResponseHtml.replace(replacementToken, mainTag);
+
+/**
+ * The <main> tags of each response type from advent of code.
+ */
+export const actualResponseMainTags = {
+  wrongAnswer: '<main><article><p>That&apos;s not the right answer.  If you&apos;re stuck, make sure you&apos;re using the full input data; there are also some general tips on the <a href="/2022/about">about page</a>, or you can ask for hints on the <a href="https://www.reddit.com/r/adventofcode/" target="_blank">subreddit</a>.  Because you have guessed incorrectly 12 times on this puzzle, please wait 15 minutes before trying again. (You guessed <span style="white-space:nowrap;"><code>12349857</code>.)</span> <a href="/2022/day/1">[Return to Day 1]</a></p></article></main>',
+  badLevel: '<main><article><p>You don&apos;t seem to be solving the right level.  Did you already complete it? <a href="/2022/day/2">[Return to Day 2]</a></p></article></main>',
+  tooManyRequests: '<main><article><p>You gave an answer too recently; you have to wait after submitting an answer before trying again.  You have 14m 6s left to wait. <a href="/2022/day/1">[Return to Day 1]</a></p></article></main>',
+};

@@ -1,4 +1,4 @@
-import { RateLimitExceededError } from '../errors/rateLimitExceededError.js';
+import { RateLimitExceededError } from '../errors/apiErrors.js';
 import { isRateLimited, updateRateLimit } from './rateLimit.js';
 import { logger } from '../logger.js';
 

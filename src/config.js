@@ -84,7 +84,7 @@ const CONFIG = {
       tooManyRequests: /you gave an answer too recently/gim,
       sanitizers: [
         // remove return to day link
-        { pattern: /\[Return to Day \d+\]/, replace: '' },
+        { pattern: /\[Return to Day \d+\]/g, replace: '' },
         // remove help message
         {
           pattern:
@@ -92,7 +92,7 @@ const CONFIG = {
           replace: '',
         },
         {
-          pattern: /\(You guessed .*\)/m,
+          pattern: /\(You guessed .*\)/g,
           replace: '',
         },
         // standardize whitespace

@@ -1,8 +1,7 @@
-import { JSDOM } from 'jsdom';
 import { logger } from '../logger.js';
 import { getConfigValue } from '../config.js';
 import { sizeOfStringInKb } from '../formatting.js';
-import { LockedOrCompletedPuzzleError, RateLimitExceededError } from '../errors/index.js';
+import { extractTextContentOfMain, sanitizeMessage, parseResponseMessage } from './parseSubmissionResponse.js';
 
 /**
  * Creates a headers object which can be passed to fetch.
@@ -15,11 +14,12 @@ const getHeaders = (authenticationToken) => ({
 });
 
 /**
- * Generates a URL which when queried, returns the input for the given year and day.
- * @param {Number} year - The year of the puzzle
- * @param {Number} day - The day of the puzzle.
+ * Generates the base url for the puzzle
+ * from this base url we can download input or submit solution
+ * @param {Number} year
+ * @param {Number} day
  */
-const getInputURL = (year, day) => `${getConfigValue('aoc.baseUrl')}/${year}/day/${day}/input`;
+const getBaseUrl = (year, day) => `${getConfigValue('aoc.baseUrl')}/${year}/day/${day}`;
 
 /**
  * Queries the Advent of Code website for the input for a given year and day.
@@ -27,21 +27,16 @@ const getInputURL = (year, day) => `${getConfigValue('aoc.baseUrl')}/${year}/day
  * @param {Number} day - The day of the puzzle.
  * @param {String} authenticationToken - Token to authenticate with aoc.
  */
-export const downloadInput = async (
-  year,
-  day,
-  authenticationToken,
-) => {
+export const downloadInput = async (year, day, authenticationToken) => {
   logger.verbose('downloading input file for year: %s, day: %s', year, day);
 
   if (!authenticationToken) {
-    throw new Error('Authentication Token is required to download input file.');
+    throw new Error('Authentication Token is required to query advent of code.');
   }
 
-  const url = getInputURL(year, day);
-
+  // query api
+  const url = `${getBaseUrl(year, day)}/input`;
   logger.debug('querying url for input: %s', url);
-
   const response = await fetch(url, {
     headers: getHeaders(authenticationToken),
   });
@@ -50,95 +45,24 @@ export const downloadInput = async (
   if (response.status === 400) {
     throw new Error('Authentication failed, double check authentication token');
   }
-
   // not found, invalid day or year.
   if (response.status === 404) {
     throw new Error('That year/day combination could not be found');
   }
-
   // handle all other error status codes
   if (!response.ok) {
-    throw new Error(`Failed to download input file: ${response.statusText}`);
+    throw new Error(`Unexpected server error while downloading input file, error: ${response.status} - ${response.statusText}`);
   }
 
-  const text = (await response.text()) || '';
-
+  // expect text of response is the input.
+  const text = (await response.text())?.trim() || '';
   logger.debug('downloaded: %skb', sizeOfStringInKb(text));
 
-  return text.trim();
-};
-
-/**
- * Generates a URL for submitting the input for the given year and day.
- * @param {Number} year - The year of the puzzle
- * @param {Number} day - The day of the puzzle.
- */
-const getSubmitSolutionUrl = (year, day) => `${getConfigValue('aoc.baseUrl')}/${year}/day/${day}/answer`;
-
-/**
- * Parses the response html document and returns the text content of the <main> element.
- * @param {String} responseBody - The html of the response.
- */
-const extractMessage = (responseBody = '') => {
-  logger.debug('extracting message from api response');
-
-  const { textContent } = new JSDOM(responseBody)
-    .window
-    .document
-    .querySelector('main') || {};
-
-  logger.debug('extracted text content from <main> element: %s', textContent);
-
-  return textContent;
-};
-
-/**
- * Removes extra content from the api response message.
- * @param {String} message
- */
-const sanitizeMessage = (message = '') => {
-  logger.debug('sanitizing api response message');
-
-  return getConfigValue('aoc.responseParsing.sanitizers').reduce(
-    (acc, sanitizer) => acc.replace(sanitizer.pattern, sanitizer.replace),
-    message,
-  ).trim();
-};
-
-/**
- * Determine if the puzzle was solved or not.
- * @param {String} responseBody - The body of the response
- */
-const parseSolutionResponse = (responseBody = '') => {
-  const message = extractMessage(responseBody);
-
-  if (!message) {
-    throw new Error('Failed to parse response from API, could not get message from main element');
+  if (!text) {
+    throw new Error('Advent of code returned empty input');
   }
 
-  const sanitizedMessage = sanitizeMessage(message);
-
-  // check solution was correct
-  if (sanitizedMessage.match(getConfigValue('aoc.responseParsing.correctSolution'))) {
-    logger.debug('message indicated solution was correct');
-    return { success: true, message: sanitizedMessage };
-  }
-  // check solution was incorrect
-  if (sanitizedMessage.match(getConfigValue('aoc.responseParsing.incorrectSolution'))) {
-    logger.debug('message indicated solution was incorrect');
-    return { success: false, message: sanitizedMessage };
-  }
-  // check bad level, indicates user tried to solve locked or already solved part.
-  if (sanitizedMessage.match(getConfigValue('aoc.responseParsing.badLevel'))) {
-    throw new LockedOrCompletedPuzzleError(sanitizedMessage);
-  }
-
-  // check too many requests
-  if (sanitizedMessage.match(getConfigValue('aoc.responseParsing.tooManyRequests'))) {
-    throw new RateLimitExceededError(sanitizedMessage);
-  }
-
-  throw new Error(`Unable to parse response message: ${sanitizedMessage}`);
+  return text;
 };
 
 /**
@@ -150,17 +74,15 @@ const parseSolutionResponse = (responseBody = '') => {
  * @param {String} authenticationToken - Token to authenticate with aoc.
  */
 export const submitSolution = async (year, day, part, solution, authenticationToken) => {
-  logger.festive('Submitting your answer to advent of code');
   logger.verbose('submitting solution to advent of code for year: %s, day: %s, part: %s', year, day, part);
 
   if (!authenticationToken) {
-    throw new Error('Authentication Token is required to submit the solution.');
+    throw new Error('Authentication Token is required to query advent of code.');
   }
 
-  const url = getSubmitSolutionUrl(year, day);
-
-  logger.debug('posting to url for solution: %s', url);
-
+  // post to api
+  const url = `${getBaseUrl(year, day)}/answer`;
+  logger.debug('posting to url: %s', url);
   const response = await fetch(url, {
     method: 'POST',
     headers: { ...getHeaders(authenticationToken), 'Content-Type': 'application/x-www-form-urlencoded' },
@@ -168,20 +90,31 @@ export const submitSolution = async (year, day, part, solution, authenticationTo
   });
 
   // bad request, authentication failed.
-  if (response.status === 400) {
+  // as of writing advent returns a 302 to redirect the user to the puzzle page on fail
+  // but check 400 too just incase.
+  if (response.status === 400 || response.status === 302) {
     throw new Error('Authentication failed, double check authentication token');
   }
-
   // not found, invalid day or year.
   if (response.status === 404) {
     throw new Error('That year/day combination could not be found');
   }
-
+  // bail on any other type of http error
   if (!response.ok) {
-    throw new Error(`Failed to post solution: ${response.statusText}`);
+    throw new Error(`Unexpected server error while posting solution, error: ${response.status} - ${response.statusText}`);
   }
 
-  const bodyText = await response.text();
+  // advent of code doesn't return status codes, we have to parse the html.
+  // grab the text content of the <main> element which contains the message we need.
+  const responseMessage = sanitizeMessage(
+    extractTextContentOfMain(await response.text()),
+  );
 
-  return parseSolutionResponse(bodyText);
+  if (!responseMessage) {
+    throw new Error('Unable get message from advent of code response.');
+  }
+
+  // the content of the message tells us what happened
+  // parse this message to determine the submission result.
+  return parseResponseMessage(responseMessage);
 };

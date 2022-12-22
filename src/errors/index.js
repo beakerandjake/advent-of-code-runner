@@ -2,7 +2,6 @@ import { DataFileIOError } from './dataFileIOError.js';
 import { DataFileParsingError } from './dataFileParsingError.js';
 import { LockedOrCompletedPuzzleError } from './lockedOrCompletedPuzzleError.js';
 import { PackageInstallFailedError } from './packageInstallFailedError.js';
-import { RateLimitExceededError } from './rateLimitExceededError.js';
 import {
   SolutionWorkerEmptyInputError,
   SolutionWorkerExitWithoutAnswerError,
@@ -16,6 +15,7 @@ import { UserDataTranslationError } from './userDataTranslationError.js';
 import { UserError } from './userError.js';
 import { UserPuzzleDataMissingError } from './userPuzzleDataMissingError.js';
 import { PuzzleHasBeenSolvedError, DuplicateAnswerSubmittedError } from './submissionErrors.js';
+import { RateLimitExceededError, SolvingWrongLevelError } from './apiErrors.js';
 
 export {
   DataFileIOError,
@@ -37,4 +37,5 @@ export {
 
   PuzzleHasBeenSolvedError,
   DuplicateAnswerSubmittedError,
+  SolvingWrongLevelError,
 };
