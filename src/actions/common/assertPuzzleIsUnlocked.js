@@ -4,7 +4,7 @@ import { puzzleIsInFuture } from '../../validation/validatePuzzle.js';
 /**
  * Halts execution if the puzzle is not yet unlocked on advent of code.
  */
-export const assertPuzzleIsUnlocked = async ({ year, day }) => {
+export const assertPuzzleIsUnlocked = ({ year, day }) => {
   logger.debug('checking if puzzle is unlocked', { year, day });
   // puzzle is unlocked if its not in the future.
   if (puzzleIsInFuture(year, day)) {
