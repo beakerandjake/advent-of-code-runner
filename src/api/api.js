@@ -27,21 +27,16 @@ const getBaseUrl = (year, day) => `${getConfigValue('aoc.baseUrl')}/${year}/day/
  * @param {Number} day - The day of the puzzle.
  * @param {String} authenticationToken - Token to authenticate with aoc.
  */
-export const downloadInput = async (
-  year,
-  day,
-  authenticationToken,
-) => {
+export const downloadInput = async (year, day, authenticationToken) => {
   logger.verbose('downloading input file for year: %s, day: %s', year, day);
 
   if (!authenticationToken) {
-    throw new Error('Authentication Token is required to download input file.');
+    throw new Error('Authentication Token is required to query advent of code.');
   }
 
+  // query api
   const url = `${getBaseUrl(year, day)}/input`;
-
   logger.debug('querying url for input: %s', url);
-
   const response = await fetch(url, {
     headers: getHeaders(authenticationToken),
   });
@@ -50,17 +45,16 @@ export const downloadInput = async (
   if (response.status === 400) {
     throw new Error('Authentication failed, double check authentication token');
   }
-
   // not found, invalid day or year.
   if (response.status === 404) {
     throw new Error('That year/day combination could not be found');
   }
-
   // handle all other error status codes
   if (!response.ok) {
     throw new Error(`Failed to download input file, error: ${response.status} - ${response.statusText}`);
   }
 
+  // expect text of response is the input, return.
   const text = (await response.text()) || '';
   logger.debug('downloaded: %skb', sizeOfStringInKb(text));
   return text.trim();
@@ -78,13 +72,12 @@ export const submitSolution = async (year, day, part, solution, authenticationTo
   logger.verbose('submitting solution to advent of code for year: %s, day: %s, part: %s', year, day, part);
 
   if (!authenticationToken) {
-    throw new Error('Authentication Token is required to submit the solution.');
+    throw new Error('Authentication Token is required to query advent of code.');
   }
 
+  // post to api
   const url = `${getBaseUrl(year, day)}/answer`;
-
   logger.debug('posting to url: %s', url);
-
   const response = await fetch(url, {
     method: 'POST',
     headers: { ...getHeaders(authenticationToken), 'Content-Type': 'application/x-www-form-urlencoded' },
@@ -95,12 +88,10 @@ export const submitSolution = async (year, day, part, solution, authenticationTo
   if (response.status === 400) {
     throw new Error('Authentication failed, double check authentication token');
   }
-
   // not found, invalid day or year.
   if (response.status === 404) {
     throw new Error('That year/day combination could not be found');
   }
-
   // bail on any other type of http error
   if (!response.ok) {
     throw new Error(`Failed to post solution, error: ${response.status} - ${response.statusText}`);
