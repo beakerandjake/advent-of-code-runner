@@ -4,7 +4,7 @@ import { logger } from '../logger.js';
  * Helper function for consistent logging in the chain.
  */
 const chainLog = (message, ...rest) => {
-  logger.silly(`(action chain) ${message}`, ...rest);
+  logger.debug(`(action chain) ${message}`, ...rest);
 };
 
 /**
@@ -34,7 +34,8 @@ export const executeChain = async (links, args = {}) => {
 
       // if a value is returned, that means the link wants the args updated.
       if (result) {
-        chainLog('link: %s updated the args to', link.name, result);
+        // not logging the actual args on purpose, could contain secrets...
+        chainLog('link: %s has updated the args', link.name);
         currentArgs = result;
       }
     } catch (error) {
