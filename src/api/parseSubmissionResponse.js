@@ -1,6 +1,7 @@
 import { getConfigValue } from '../config.js';
 import { logger } from '../logger.js';
 import { getElementByTagName, getTextContent } from './parseHtml.js';
+import { RateLimitExceededError, SolvingWrongLevelError } from '../errors/index.js';
 
 /**
  * Parses the response html, finds the <main> element and then extracts its text content.
@@ -41,6 +42,32 @@ export const sanitizeMessage = (message = '') => {
   ).trim();
 };
 
-export const parseSubmissionResponse = (responseHtml) => {
-  const message = extractTextContentOfMain(responseHtml);
+/**
+ * Determine if the puzzle was solved or not.
+ * @param {String} responseBody - The body of the response
+ */
+export const parseSolutionResponse = (responseHtml = '') => {
+  const message = sanitizeMessage(extractTextContentOfMain(responseHtml));
+
+  // check solution was correct
+  if (message.match(getConfigValue('aoc.responseParsing.correctSolution'))) {
+    logger.debug('message indicated solution was correct');
+    return { correct: true, message };
+  }
+  // check solution was incorrect
+  if (message.match(getConfigValue('aoc.responseParsing.incorrectSolution'))) {
+    logger.debug('message indicated solution was incorrect');
+    return { correct: false, message };
+  }
+  // check bad level, indicates user tried to solve locked or already solved part.
+  if (message.match(getConfigValue('aoc.responseParsing.badLevel'))) {
+    throw new SolvingWrongLevelError();
+  }
+
+  // check too many requests
+  if (message.match(getConfigValue('aoc.responseParsing.tooManyRequests'))) {
+    throw new RateLimitExceededError();
+  }
+
+  throw new Error(`Unable to parse response message: ${message}`);
 };
