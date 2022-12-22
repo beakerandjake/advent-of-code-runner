@@ -153,5 +153,16 @@ describe('parseSubmissionResponse', () => {
       });
       expect(() => parseResponseMessage(input)).toThrow();
     });
+
+    test('throws on no match', () => {
+      const input = 'CATS';
+      getConfigValue.mockReturnValue({
+        correctSolution: /NOMATCH/,
+        incorrectSolution: /NOMATCH/,
+        badLevel: /NOMATCH/,
+        tooManyRequests: /NOMATCH/,
+      });
+      expect(() => parseResponseMessage(input)).toThrow('Unable to parse');
+    });
   });
 });
