@@ -70,6 +70,18 @@ describe('actionChain', () => {
       after.forEach((x) => expect(x).not.toHaveBeenCalled());
     });
 
+    test('link can return true (noop)', async () => {
+      const chain = [jest.fn(), jest.fn(() => true), jest.fn()];
+      await executeChain(chain);
+      chain.forEach((x) => expect(x).toHaveBeenCalledTimes(1));
+    });
+
+    test('links can be void functions', async () => {
+      const chain = [jest.fn(), jest.fn(), jest.fn()];
+      await executeChain(chain);
+      chain.forEach((x) => expect(x).toHaveBeenCalledTimes(1));
+    });
+
     test('throws if any link throws', async () => {
       const chain = [jest.fn(), jest.fn(() => Promise.reject(new RangeError())), jest.fn()];
       await expect(async () => executeChain(chain)).rejects.toThrow(RangeError);
