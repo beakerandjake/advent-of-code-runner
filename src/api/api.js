@@ -14,11 +14,12 @@ const getHeaders = (authenticationToken) => ({
 });
 
 /**
- * Generates a URL which when queried, returns the input for the given year and day.
- * @param {Number} year - The year of the puzzle
- * @param {Number} day - The day of the puzzle.
+ * Generates the base url for the puzzle
+ * from this base url we can download input or submit solution
+ * @param {Number} year
+ * @param {Number} day
  */
-const getInputURL = (year, day) => `${getConfigValue('aoc.baseUrl')}/${year}/day/${day}/input`;
+const getBaseUrl = (year, day) => `${getConfigValue('aoc.baseUrl')}/${year}/day/${day}`;
 
 /**
  * Queries the Advent of Code website for the input for a given year and day.
@@ -37,7 +38,7 @@ export const downloadInput = async (
     throw new Error('Authentication Token is required to download input file.');
   }
 
-  const url = getInputURL(year, day);
+  const url = `${getBaseUrl(year, day)}/input`;
 
   logger.debug('querying url for input: %s', url);
 
@@ -57,22 +58,13 @@ export const downloadInput = async (
 
   // handle all other error status codes
   if (!response.ok) {
-    throw new Error(`Failed to download input file: ${response.statusText}`);
+    throw new Error(`Failed to download input file, error: ${response.status} - ${response.statusText}`);
   }
 
   const text = (await response.text()) || '';
-
   logger.debug('downloaded: %skb', sizeOfStringInKb(text));
-
   return text.trim();
 };
-
-/**
- * Generates a URL for submitting the input for the given year and day.
- * @param {Number} year - The year of the puzzle
- * @param {Number} day - The day of the puzzle.
- */
-const getSubmitSolutionUrl = (year, day) => `${getConfigValue('aoc.baseUrl')}/${year}/day/${day}/answer`;
 
 /**
  * Post a solution for the problem of the given year / day / part.
@@ -89,7 +81,7 @@ export const submitSolution = async (year, day, part, solution, authenticationTo
     throw new Error('Authentication Token is required to submit the solution.');
   }
 
-  const url = getSubmitSolutionUrl(year, day);
+  const url = `${getBaseUrl(year, day)}/answer`;
 
   logger.debug('posting to url: %s', url);
 
