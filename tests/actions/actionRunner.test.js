@@ -4,8 +4,7 @@ import {
 import { mockLogger } from '../mocks.js';
 
 // setup mocks
-const logger = mockLogger();
-logger.debug = (...args) => console.log(...args);
+mockLogger();
 
 // import after mocks setup
 const { createAction, runAction } = await import('../../src/actions/actionRunner.js');
