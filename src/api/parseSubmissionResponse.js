@@ -1,3 +1,4 @@
+import { getConfigValue } from '../config.js';
 import { logger } from '../logger.js';
 import { getElementByTagName, getTextContent } from './parseHtml.js';
 
@@ -26,12 +27,20 @@ export const extractTextContentOfMain = (responseHtml) => {
   return text;
 };
 
-export const parseSubmissionResponse = (responseHtml) => {
-  const main = getTextContent(
-    getElementByTagName(responseHtml, 'main'),
-  );
+/**
+ * Removes unnecessary content from the message and applies standardized formatting.
+ * @private
+ * @param {String} message
+ */
+export const sanitizeMessage = (message = '') => {
+  logger.debug('sanitizing api response message');
 
-  if (!main) {
-    throw new Error('Failed to parse html response from advent of code, could not extract text content of <main>');
-  }
+  return getConfigValue('aoc.responseParsing.sanitizers').reduce(
+    (acc, sanitizer) => acc.replace(sanitizer.pattern, sanitizer.replace),
+    message,
+  ).trim();
+};
+
+export const parseSubmissionResponse = (responseHtml) => {
+  const message = extractTextContentOfMain(responseHtml);
 };
