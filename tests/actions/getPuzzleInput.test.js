@@ -1,19 +1,12 @@
 import {
   describe, jest, test, beforeEach,
 } from '@jest/globals';
-import { mockLogger } from '../mocks';
+import { mockConfig, mockLogger } from '../mocks';
 
 // setup mocks.
 mockLogger();
-
-jest.unstable_mockModule('src/config.js', () => ({
-  getConfigValue: jest.fn(),
-}));
-
-jest.unstable_mockModule('src/api/index.js', () => ({
-  downloadInput: jest.fn(),
-}));
-
+mockConfig();
+jest.unstable_mockModule('src/api/index.js', () => ({ downloadInput: jest.fn() }));
 jest.unstable_mockModule('src/inputs.js', () => ({
   inputIsCached: jest.fn(),
   getCachedInput: jest.fn(),
@@ -23,79 +16,72 @@ jest.unstable_mockModule('src/inputs.js', () => ({
 // import mocks after setting up mocks
 const { downloadInput } = await import('../../src/api/index.js');
 const { inputIsCached, getCachedInput, cacheInput } = await import('../../src/inputs.js');
-const { getPuzzleInput } = await import('../../src/actions/getPuzzleInput.js');
+const { getPuzzleInput } = await import('../../src/actions/common/getPuzzleInput.js');
 
 beforeEach(() => {
   jest.resetAllMocks();
 });
 
-describe('getPuzzleInput', () => {
-  const badInputs = [
-    null,
-    undefined,
-    'CATS',
-    () => {},
-    -4444,
-  ];
+describe('actions', () => {
+  describe('common', () => {
+    describe('getPuzzleInput()', () => {
+      test('returns cached value if cached', async () => {
+        const input = 'ASDF';
+        inputIsCached.mockResolvedValue(true);
+        getCachedInput.mockResolvedValue(input);
+        const { input: result } = await getPuzzleInput({ year: 2022, day: 1, authToken: 'ASDF' });
+        expect(getCachedInput).toHaveBeenCalled();
+        expect(result).toBe(input);
+      });
 
-  test.each(badInputs)('throws if day is: %s', async (value) => {
-    await expect(async () => getPuzzleInput(2022, value)).rejects.toThrow();
-  });
+      test('does not download if cached', async () => {
+        inputIsCached.mockResolvedValue(true);
+        await getPuzzleInput({ year: 2022, day: 1, authToken: 'ASDF' });
+        expect(downloadInput).not.toHaveBeenCalled();
+      });
 
-  test.each(badInputs)('throws if year is: %s', async (value) => {
-    await expect(async () => getPuzzleInput(value, 1)).rejects.toThrow();
-  });
+      test('does not cache if cached', async () => {
+        inputIsCached.mockResolvedValue(true);
+        await getPuzzleInput({ year: 2022, day: 1, authToken: 'ASDF' });
+        expect(cacheInput).not.toHaveBeenCalled();
+      });
 
-  test('returns cached value if cached', async () => {
-    const expected = 'ASDF';
-    inputIsCached.mockResolvedValueOnce(true);
-    getCachedInput.mockResolvedValueOnce(expected);
-    const result = await getPuzzleInput(2000, 1);
-    expect(getCachedInput).toHaveBeenCalled();
-    expect(result).toBe(expected);
-  });
+      test('returns downloaded value if not cached', async () => {
+        const expected = 'ASDF';
+        inputIsCached.mockResolvedValue(false);
+        downloadInput.mockResolvedValue(expected);
+        const { input: result } = await getPuzzleInput({ year: 2022, day: 1, authToken: 'ASDF' });
+        expect(result).toBe(expected);
+      });
 
-  test('does not download if cached', async () => {
-    inputIsCached.mockResolvedValueOnce(true);
-    await getPuzzleInput(2000, 1);
-    expect(downloadInput).not.toHaveBeenCalled();
-  });
+      test('does not cache if download fails', async () => {
+        inputIsCached.mockResolvedValue(false);
+        downloadInput.mockRejectedValue(new Error());
+        await expect(async () => getPuzzleInput({ year: 2022, day: 1, authToken: 'ASDF' })).rejects.toThrow();
+        expect(downloadInput).toHaveBeenCalled();
+        expect(cacheInput).not.toHaveBeenCalled();
+      });
 
-  test('does not cache if cached', async () => {
-    inputIsCached.mockResolvedValueOnce(true);
-    await getPuzzleInput(2000, 1);
-    expect(cacheInput).not.toHaveBeenCalled();
-  });
+      test('caches if downloads', async () => {
+        const args = { year: 2022, day: 10, authToken: 'ASDF' };
+        const input = 'ASDFASDF';
+        inputIsCached.mockResolvedValue(false);
+        downloadInput.mockResolvedValue(input);
+        await getPuzzleInput(args);
+        expect(cacheInput).toHaveBeenCalledWith(args.year, args.day, input);
+      });
 
-  test('returns downloaded value if not cached', async () => {
-    const expected = 'ASDF';
-    inputIsCached.mockResolvedValueOnce(false);
-    downloadInput.mockResolvedValueOnce(expected);
-    const result = await getPuzzleInput(2000, 1);
-    expect(result).toBe(expected);
-  });
-
-  test('does not cache if download fails', async () => {
-    inputIsCached.mockResolvedValueOnce(false);
-    downloadInput.mockRejectedValue(new Error());
-    await expect(async () => getPuzzleInput(2000, 1)).rejects.toThrow();
-    expect(downloadInput).toHaveBeenCalled();
-    expect(cacheInput).not.toHaveBeenCalled();
-  });
-
-  test('caches if downloads', async () => {
-    inputIsCached.mockResolvedValueOnce(false);
-    await getPuzzleInput(2000, 1);
-    expect(cacheInput).toHaveBeenCalled();
-  });
-
-  test('caches with result of download', async () => {
-    const year = 2000;
-    const day = 1;
-    const downloadResult = 'ASDF';
-    inputIsCached.mockResolvedValueOnce(false);
-    downloadInput.mockResolvedValueOnce(downloadResult);
-    await getPuzzleInput(2000, 1);
-    expect(cacheInput).toHaveBeenCalledWith(year, day, downloadResult);
+      test.each([false, true])('appends input to args if cached is %s', async (cached) => {
+        const args = {
+          year: 2022, day: 1, authToken: 'SADF', cats: false, dogs: true,
+        };
+        const input = 'ASDFSDFASF';
+        inputIsCached.mockResolvedValue(cached);
+        getCachedInput.mockResolvedValue(input);
+        downloadInput.mockResolvedValue(input);
+        const result = await getPuzzleInput(args);
+        expect(result).toEqual({ ...args, input });
+      });
+    });
   });
 });
