@@ -1,8 +1,10 @@
-import { getYear } from './common/index.js';
 import { createChain } from './actionChain.js';
+import { getAuthenticationToken, getPuzzleInput, getYear } from './common/index.js';
 
 const actionChain = createChain([
   getYear,
+  getPuzzleInput,
+  getAuthenticationToken,
 ]);
 
 /**
