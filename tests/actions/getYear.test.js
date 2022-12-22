@@ -17,26 +17,28 @@ afterEach(() => {
   jest.resetAllMocks();
 });
 
-describe('actionUtil', () => {
-  describe('getYear()', () => {
-    test('throws if not valid', () => {
-      yearIsValid.mockReturnValue(false);
-      expect(() => getYear()).toThrow(RangeError);
-    });
+describe('actions', () => {
+  describe('common', () => {
+    describe('getYear()', () => {
+      test('throws if not valid', () => {
+        yearIsValid.mockReturnValue(false);
+        expect(() => getYear()).toThrow(RangeError);
+      });
 
-    test('appends year to empty args', () => {
-      const year = 2022;
-      getConfigValue.mockReturnValue(year);
-      yearIsValid.mockReturnValue(true);
-      expect(getYear()).toEqual({ year });
-    });
+      test('appends year to empty args', () => {
+        const year = 2022;
+        getConfigValue.mockReturnValue(year);
+        yearIsValid.mockReturnValue(true);
+        expect(getYear()).toEqual({ year });
+      });
 
-    test('appends year to existing args', () => {
-      const existing = { cats: true, dogs: false };
-      const year = 2022;
-      getConfigValue.mockReturnValue(year);
-      yearIsValid.mockReturnValue(true);
-      expect(getYear(existing)).toEqual({ ...existing, year });
+      test('appends year to existing args', () => {
+        const existing = { cats: true, dogs: false };
+        const year = 2022;
+        getConfigValue.mockReturnValue(year);
+        yearIsValid.mockReturnValue(true);
+        expect(getYear(existing)).toEqual({ ...existing, year });
+      });
     });
   });
 });
