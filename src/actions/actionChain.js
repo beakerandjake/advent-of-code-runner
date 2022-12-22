@@ -27,7 +27,7 @@ export const executeChain = async (links, args = {}) => {
 
       // if a value is returned, that means the link wants the args updated.
       if (result) {
-        logger.silly('action runner: function: %s updated the args to', link.name, currentArgs);
+        logger.silly('action runner: function: %s updated the args to', link.name, result);
         currentArgs = result;
       }
     } catch (error) {
