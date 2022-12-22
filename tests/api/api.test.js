@@ -79,4 +79,66 @@ describe('api', () => {
       expect(result).toBe(expected);
     });
   });
+
+  describe('submitSolution', () => {
+    test.each([
+      undefined, null, '',
+    ])('throws if authentication token is: "%s"', async (value) => {
+      await expect(async () => submitSolution(2022, 1, 1, 'ASDF', value)).rejects.toThrow(/authentication/i);
+    });
+
+    test.each([
+      400, 302,
+    ])('throws on auth failed with: %s', async (status) => {
+      mockFetch.mockImplementation(() => Promise.resolve({
+        status,
+        statusText: 'you no logged in pal',
+      }));
+      await expect(async () => submitSolution(2022, 1, 1, 'solution', 'auth')).rejects.toThrow(/authentication/i);
+    });
+
+    test.each([
+      400, 302,
+    ])('throws on auth failed with: %s', async (status) => {
+      mockFetch.mockImplementation(() => Promise.resolve({
+        status,
+        statusText: 'you no logged in pal',
+      }));
+      await expect(async () => submitSolution(2022, 1, 1, 'solution', 'auth')).rejects.toThrow(/authentication/i);
+    });
+
+    test('throws on response not ok', async () => {
+      mockFetch.mockImplementation(() => Promise.resolve({
+        ok: false,
+        status: 503,
+        statusText: 'da gateway is bad pal',
+      }));
+      await expect(async () => submitSolution(2022, 1, 1, 'solution', 'auth')).rejects.toThrow(/unexpected/i);
+    });
+
+    test.each([
+      null, undefined, '',
+    ])('throws on empty response text: %s', async (value) => {
+      mockFetch.mockImplementation(() => Promise.resolve({
+        ok: true,
+        status: 200,
+        text: () => Promise.resolve(value),
+      }));
+      await expect(async () => submitSolution(2022, 1, 1, 'solution', 'auth')).rejects.toThrow(/response/i);
+    });
+
+    test('returns input on success', async () => {
+      const expected = { success: true, message: 'ASDF' };
+      mockFetch.mockImplementation(() => Promise.resolve({
+        ok: true,
+        status: 200,
+        text: () => Promise.resolve('some response'),
+      }));
+      sanitizeMessage.mockReturnValue('not empty');
+      parseResponseMessage.mockReturnValue(expected);
+
+      const result = await submitSolution(2022, 1, 1, 'solution', 'auth');
+      expect(result).toBe(expected);
+    });
+  });
 });

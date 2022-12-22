@@ -51,7 +51,7 @@ export const downloadInput = async (year, day, authenticationToken) => {
   }
   // handle all other error status codes
   if (!response.ok) {
-    throw new Error(`Unexpected server error downloading input file, error: ${response.status} - ${response.statusText}`);
+    throw new Error(`Unexpected server error while downloading input file, error: ${response.status} - ${response.statusText}`);
   }
 
   // expect text of response is the input.
@@ -90,7 +90,9 @@ export const submitSolution = async (year, day, part, solution, authenticationTo
   });
 
   // bad request, authentication failed.
-  if (response.status === 400) {
+  // as of writing advent returns a 302 to redirect the user to the puzzle page on fail
+  // but check 400 too just incase.
+  if (response.status === 400 || response.status === 302) {
     throw new Error('Authentication failed, double check authentication token');
   }
   // not found, invalid day or year.
@@ -99,7 +101,7 @@ export const submitSolution = async (year, day, part, solution, authenticationTo
   }
   // bail on any other type of http error
   if (!response.ok) {
-    throw new Error(`Failed to post solution, error: ${response.status} - ${response.statusText}`);
+    throw new Error(`Unexpected server error while posting solution, error: ${response.status} - ${response.statusText}`);
   }
 
   // advent of code doesn't return status codes, we have to parse the html.
@@ -107,6 +109,10 @@ export const submitSolution = async (year, day, part, solution, authenticationTo
   const responseMessage = sanitizeMessage(
     extractTextContentOfMain(await response.text()),
   );
+
+  if (!responseMessage) {
+    throw new Error('Unable get message from advent of code response.');
+  }
 
   // the content of the message tells us what happened
   // parse this message to determine the submission result.
