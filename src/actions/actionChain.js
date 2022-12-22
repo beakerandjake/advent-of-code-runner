@@ -5,7 +5,7 @@ import { logger } from '../logger.js';
  * Run the pre action chain and the action.
  * @private
  */
-export const runAction = async (args, actionFn, preActionFnChain) => {
+export const executeChain = async (args, actionFn, preActionFnChain) => {
   logger.debug('action runner: executing pre-action function chain (length: %s)', preActionFnChain.length);
   let chainArgs = args;
 
@@ -44,7 +44,7 @@ export const runAction = async (args, actionFn, preActionFnChain) => {
  * @param {Function} actionFn - The action to execute, will be passed the args
  * @param {Function[]} preActionFnChain - Each function to execute before the action.
  */
-export const createAction = (actionFn, preActionFnChain = []) => {
+export const createChain = (actionFn, preActionFnChain = []) => {
   // bail if action is not function.
   if (!actionFn || !(actionFn instanceof Function)) {
     throw new Error('Expected action to be a function');
