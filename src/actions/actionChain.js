@@ -1,4 +1,3 @@
-/* eslint-disable no-await-in-loop */
 import { logger } from '../logger.js';
 
 /**
@@ -16,6 +15,8 @@ export const executeChain = async (links, args = {}) => {
 
     try {
       logger.silly('action runner: executing function: %s', link.name);
+
+      // eslint-disable-next-line no-await-in-loop
       const result = await link(currentArgs);
 
       // if false is explicitly returned, that means the link wants the chain to halt.
