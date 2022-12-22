@@ -9,4 +9,6 @@
     - Correct Answer - ?
     - Bad level - 200 returned, parse html
 
+  - After solving correctly, check solving again..
+
  */
