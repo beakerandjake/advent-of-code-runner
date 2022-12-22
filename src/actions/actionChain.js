@@ -5,28 +5,37 @@ import { logger } from '../logger.js';
  * Run the pre action chain and the action.
  * @private
  */
-export const executeChain = async (args, actionFn, preActionFnChain) => {
-  logger.debug('action runner: executing pre-action function chain (length: %s)', preActionFnChain.length);
-  let chainArgs = args;
+export const executeChain = async (links, args) => {
+  logger.debug('action runner: executing function chain (length: %s)', links.length);
+  let currentArgs = args;
+  let iterations = 0;
 
-  // run each function in the chain one by one, passing arguments along the way.
-  for (const preAction of preActionFnChain) {
+  // run each function in the chain sequentially
+  for (const link of links) {
+    iterations += 1;
+
     try {
-      logger.debug('action runner: executing pre-chain function: %s', preAction.name);
-      const newArgs = await preAction(chainArgs);
+      logger.silly('action runner: executing function: %s', link.name);
+      const result = await link(currentArgs);
 
-      if (newArgs != null) {
-        logger.silly('action runner: pre-chain function: %s updated the args to', preAction.name, chainArgs);
-        chainArgs = newArgs;
+      // if false is explicitly returned, that means the link wants the chain to halt.
+      if (result === false) {
+        logger.silly('action runner: function: %s has halted execution', link.name);
+        break;
+      }
+
+      // if a value is returned, that means the link wants the args updated.
+      if (result) {
+        logger.silly('action runner: function: %s updated the args to', link.name, currentArgs);
+        currentArgs = result;
       }
     } catch (error) {
-      logger.debug('action runner: executing halted because error was raised by pre-chain function: %s', preAction.name);
+      logger.debug('action runner: executing halted because error was raised by function: %s', link.name);
       throw error;
     }
   }
 
-  logger.debug('action runner: invoking action function');
-  return actionFn(chainArgs || {});
+  logger.debug('action runner: successfully executed (%s/%s)', iterations, links.length);
 };
 
 /**
@@ -41,19 +50,13 @@ export const executeChain = async (args, actionFn, preActionFnChain) => {
  *
  * 2. Once all pre action functions are finished:
  *      - The actionFn will be invoked with the args.
- * @param {Function} actionFn - The action to execute, will be passed the args
- * @param {Function[]} preActionFnChain - Each function to execute before the action.
+ * @param {Function[]} actions - The functions to execute.
  */
-export const createChain = (actionFn, preActionFnChain = []) => {
-  // bail if action is not function.
-  if (!actionFn || !(actionFn instanceof Function)) {
-    throw new Error('Expected action to be a function');
-  }
-
+export const createChain = (actions = []) => {
   // bail if chain is not array.
-  if (!Array.isArray(preActionFnChain) || preActionFnChain.some((x) => !(x instanceof Function))) {
-    throw new Error('Expected function chain is an array of functions');
+  if (!Array.isArray(actions) || actions.some((x) => !(x instanceof Function))) {
+    throw new Error('Expected an array of functions');
   }
 
-  return async (args) => runAction(args || {}, actionFn, preActionFnChain);
+  return async (args) => executeChain(actions, args);
 };
