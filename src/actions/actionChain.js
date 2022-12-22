@@ -5,7 +5,7 @@ import { logger } from '../logger.js';
  * Run the pre action chain and the action.
  * @private
  */
-export const executeChain = async (links, args) => {
+export const executeChain = async (links, args = {}) => {
   logger.debug('action runner: executing function chain (length: %s)', links.length);
   let currentArgs = args;
   let iterations = 0;
@@ -40,23 +40,21 @@ export const executeChain = async (links, args) => {
 
 /**
  * Returns a function which can be executed via command line, this function will:
- * 1. Run each function in the pre action chain before executing the action function.
- *      - Each pre action function:
- *        - Is passed the current args
- *        - Can modify the args by returning a new object.
- *        - Can halt execution by throwing an exception.
+ * 1. Invoke each function in the array sequentially. Each function:
+ *      - Is passed the current args object
+ *      - Can modify the current args object by returning a new object.
+ *      - Can halt the execution of the chain by returning false.
+ *      - Can halt the execution of the chain by throwing an exception.
+ * If any function in the chain causes a halt, then chains which come after it are not executed.
  *
- * If any pre action function throws, then execution is halted and the actionFn will not be called.
- *
- * 2. Once all pre action functions are finished:
- *      - The actionFn will be invoked with the args.
  * @param {Function[]} actions - The functions to execute.
  */
 export const createChain = (actions = []) => {
-  // bail if chain is not array.
   if (!Array.isArray(actions) || actions.some((x) => !(x instanceof Function))) {
     throw new Error('Expected an array of functions');
   }
+
+  // could probably do some fun stuff here with a fluent api..
 
   return async (args) => executeChain(actions, args);
 };
