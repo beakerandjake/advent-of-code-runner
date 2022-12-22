@@ -12,16 +12,71 @@ jest.unstable_mockModule('src/api/parseSubmissionResponse.js', () => ({
   parseResponseMessage: jest.fn(),
 }));
 
+const mockFetch = jest.fn();
+global.fetch = mockFetch;
+
 // import after mocks are setup
 const { extractTextContentOfMain, sanitizeMessage, parseResponseMessage } = await import('../../src/api/parseSubmissionResponse.js');
 const { downloadInput, submitSolution } = await import('../../src/api/api.js');
 
 beforeEach(() => {
   jest.resetAllMocks();
+  mockFetch.mockReset();
 });
 
 describe('api', () => {
   describe('downloadInput()', () => {
-    test('throws if no authentication token')
+    test.each([
+      undefined, null, '',
+    ])('throws if authentication token is: "%s"', async (value) => {
+      await expect(async () => downloadInput(2022, 1, value)).rejects.toThrow(/authentication/i);
+    });
+
+    test('throws on 400', async () => {
+      mockFetch.mockImplementation(() => Promise.resolve({
+        status: 400,
+        statusText: 'you no logged in pal',
+      }));
+      await expect(async () => downloadInput(2022, 1, 'ASDF')).rejects.toThrow(/authentication/i);
+    });
+
+    test('throws on 404', async () => {
+      mockFetch.mockImplementation(() => Promise.resolve({
+        status: 404,
+        statusText: 'da puzzle is not found pal',
+      }));
+      await expect(async () => downloadInput(2022, 1, 'ASDF')).rejects.toThrow(/found/i);
+    });
+
+    test('throws on response not ok', async () => {
+      mockFetch.mockImplementation(() => Promise.resolve({
+        ok: false,
+        status: 503,
+        statusText: 'da gateway is bad pal',
+      }));
+      await expect(async () => downloadInput(2022, 1, 'ASDF')).rejects.toThrow(/unexpected/i);
+    });
+
+    test.each([
+      undefined, null, '', '\t',
+    ])('throws on empty input: "%s"', async (value) => {
+      mockFetch.mockImplementation(() => Promise.resolve({
+        ok: true,
+        status: 200,
+        text: () => Promise.resolve(value),
+      }));
+      await expect(async () => downloadInput(2022, 1, 'ASDF')).rejects.toThrow(/empty/i);
+    });
+
+    test('returns input on success', async () => {
+      const expected = '1234\n5678\n9101112';
+      mockFetch.mockImplementation(() => Promise.resolve({
+        ok: true,
+        status: 200,
+        text: () => Promise.resolve(expected),
+      }));
+      const result = await downloadInput(2022, 1, 'ASDF');
+      expect(result).toBe(expected);
+    });
   });
 });

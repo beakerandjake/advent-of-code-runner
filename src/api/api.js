@@ -51,13 +51,18 @@ export const downloadInput = async (year, day, authenticationToken) => {
   }
   // handle all other error status codes
   if (!response.ok) {
-    throw new Error(`Failed to download input file, error: ${response.status} - ${response.statusText}`);
+    throw new Error(`Unexpected server error downloading input file, error: ${response.status} - ${response.statusText}`);
   }
 
-  // expect text of response is the input, return.
-  const text = (await response.text()) || '';
+  // expect text of response is the input.
+  const text = (await response.text())?.trim() || '';
   logger.debug('downloaded: %skb', sizeOfStringInKb(text));
-  return text.trim();
+
+  if (!text) {
+    throw new Error('Advent of code returned empty input');
+  }
+
+  return text;
 };
 
 /**
