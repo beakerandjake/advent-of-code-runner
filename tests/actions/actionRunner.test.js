@@ -49,25 +49,25 @@ describe('actionRunner', () => {
   });
 
   describe('runAction()', () => {
-    test('invokes each pre-action function', async () => {
+    test('invokes each link in pre-action chain', async () => {
       const chain = [jest.fn(), jest.fn(), jest.fn()];
       await runAction({}, () => {}, chain);
       chain.forEach((x) => expect(x).toHaveBeenCalledTimes(1));
     });
 
-    test('invokes action if no pre-actions', async () => {
+    test('invokes action if no chain', async () => {
       const action = jest.fn();
       await runAction({}, action, []);
       expect(action).toHaveBeenCalledTimes(1);
     });
 
-    test('invokes action if has pre-actions (none throw)', async () => {
+    test('invokes action if has chain (none throw)', async () => {
       const action = jest.fn();
       await runAction({}, action, [jest.fn(), jest.fn(), jest.fn(), jest.fn()]);
       expect(action).toHaveBeenCalledTimes(1);
     });
 
-    test('throws if any pre action throws', async () => {
+    test('throws if any link throws', async () => {
       const chain = [jest.fn(), jest.fn(() => Promise.reject(new RangeError())), jest.fn()];
       await expect(async () => runAction({}, () => {}, chain)).rejects.toThrow(RangeError);
     });
@@ -113,6 +113,15 @@ describe('actionRunner', () => {
       const actionFn = jest.fn();
       await runAction(args, actionFn, [jest.fn(), jest.fn(), jest.fn()]);
       expect(actionFn).toHaveBeenCalledWith(args);
+    });
+
+    test('passes mutated args to action', async () => {
+      const origArgs = { cats: true, dogs: false };
+      const mutatedArgs = { ...origArgs, apples: true };
+      const chain = [jest.fn(), jest.fn(), jest.fn(() => mutatedArgs)];
+      const actionFn = jest.fn();
+      await runAction(origArgs, actionFn, chain);
+      expect(actionFn).toHaveBeenCalledWith(mutatedArgs);
     });
   });
 });
