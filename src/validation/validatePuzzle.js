@@ -1,4 +1,3 @@
-import { logger } from '../logger.js';
 import { getConfigValue } from '../config.js';
 
 /**
@@ -8,8 +7,12 @@ import { getConfigValue } from '../config.js';
  * @param {Number} day
  */
 export const puzzleIsInFuture = (year, day) => {
-  logger.warn('not implemented - puzzleIsUnlocked()');
-  return false;
+  // can easily check for past or future years, but current year is where the hard part is.
+  if (year !== new Date().getFullYear()) {
+    return year > new Date().getFullYear();
+  }
+  const puzzleUnlockTimeUTC = Date.UTC(year, 11, day, 19);
+  return Date.now() < puzzleUnlockTimeUTC;
 };
 
 /**

@@ -12,13 +12,73 @@ jest.unstable_mockModule('../../src/config.js', () => ({
 
 // import after setting up the mock so the modules import the mocked version
 const { getConfigValue } = await import('../../src/config.js');
-const { getAllPuzzlesForYear } = await import('../../src/validation/validatePuzzle.js');
+const { getAllPuzzlesForYear, puzzleIsInFuture } = await import('../../src/validation/validatePuzzle.js');
 
 afterEach(() => {
-  jest.clearAllMocks();
+  jest.resetAllMocks();
 });
 
 describe('validatePuzzle', () => {
+  describe('puzzleIsInFuture()', () => {
+    beforeAll(() => {
+      jest.useFakeTimers();
+    });
+
+    afterAll(() => {
+      jest.useRealTimers();
+    });
+
+    test('returns false - year in past', () => {
+      jest.setSystemTime(new Date(2022, 11, 3));
+      const result = puzzleIsInFuture(2019, 5);
+      expect(result).toBe(false);
+    });
+
+    test('returns true - year in future', () => {
+      jest.setSystemTime(new Date(2022, 11, 3));
+      const result = puzzleIsInFuture(2045, 5);
+      expect(result).toBe(true);
+    });
+
+    test('returns false - same year, day in past', () => {
+      jest.setSystemTime(new Date(2022, 11, 16));
+      const result = puzzleIsInFuture(2022, 1);
+      expect(result).toBe(false);
+    });
+
+    test('returns true - same year, day in future', () => {
+      jest.setSystemTime(new Date(2022, 11, 16));
+      const result = puzzleIsInFuture(2022, 18);
+      expect(result).toBe(true);
+    });
+
+    // test literally every minute from midnight until unlock time.
+    [...Array(60 * 19).keys()].forEach((minutes) => {
+      const year = 2022;
+      const day = 22;
+      const utcMidnightMs = new Date(year, 11, day).setUTCHours(0, 0, 0, 0);
+      const systemTime = new Date(utcMidnightMs + minutes * 60000);
+
+      test(`returns false - same day time is: ${systemTime.toISOString()}`, () => {
+        jest.setSystemTime(systemTime);
+        expect(puzzleIsInFuture(year, day)).toBe(true);
+      });
+    });
+
+    // test literally every minute from unlock time until midnight.
+    [...Array(60 * 5).keys()].forEach((minutes) => {
+      const year = 2022;
+      const day = 22;
+      const utcUnlockTimeMs = new Date(year, 11, day).setUTCHours(19, 0, 0, 0);
+      const systemTime = new Date(utcUnlockTimeMs + minutes * 60000);
+
+      test(`returns false - same day time is: ${systemTime.toISOString()}`, () => {
+        jest.setSystemTime(systemTime);
+        expect(puzzleIsInFuture(year, day)).toBe(false);
+      });
+    });
+  });
+
   describe('getAllPuzzlesForYear()', () => {
     test('returns expected value', () => {
       const year = 2022;
