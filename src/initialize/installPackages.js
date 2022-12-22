@@ -16,7 +16,7 @@ export const installPackages = async () => {
     // run npm install command
     const childProcess = spawn(
       'npm',
-      ['i'],
+      ['i', '--omit=dev'],
       {
         cwd: getConfigValue('cwd'),
         stdio: ['ignore', 'ignore', 'pipe'],
