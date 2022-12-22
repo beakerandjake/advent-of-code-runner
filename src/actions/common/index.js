@@ -1,3 +1,4 @@
+import { getAuthenticationToken } from './getAuthenticationToken.js';
 import { getYear } from './getYear.js';
 
 /**
@@ -5,5 +6,6 @@ import { getYear } from './getYear.js';
  */
 
 export {
+  getAuthenticationToken,
   getYear,
 };
