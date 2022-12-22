@@ -27,8 +27,6 @@ export const downloadInput = async (
  */
 export const submitSolution = async (year, day, part, solution, authenticationToken) => {
   logger.festive('Submitting your answer to the mock api');
-
   const success = getConfigValue('aoc.mockApi.answerCorrect');
-
   return { success, message: success ? 'Great Job you answered correct!' : 'That\'s the wrong answer!' };
 };
