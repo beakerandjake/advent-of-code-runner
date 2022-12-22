@@ -1,11 +1,18 @@
 import { logger } from '../logger.js';
 
 /**
+ * Helper function for consistent logging in the chain.
+ */
+const chainLog = (message, ...rest) => {
+  logger.silly(`(action chain) ${message}`, ...rest);
+};
+
+/**
  * Run the pre action chain and the action.
  * @private
  */
 export const executeChain = async (links, args = {}) => {
-  logger.debug('action runner: executing function chain (length: %s)', links.length);
+  chainLog('executing action chain (length: %s)', links.length);
   let currentArgs = args;
   let iterations = 0;
 
@@ -14,29 +21,29 @@ export const executeChain = async (links, args = {}) => {
     iterations += 1;
 
     try {
-      logger.silly('action runner: executing function: %s', link.name);
+      chainLog('executing link (%s/%s): %s', iterations, links.length, link.name);
 
       // eslint-disable-next-line no-await-in-loop
       const result = await link(currentArgs);
 
       // if false is explicitly returned, that means the link wants the chain to halt.
       if (result === false) {
-        logger.silly('action runner: function: %s has halted execution', link.name);
+        chainLog('link: %s has halted execution', link.name);
         break;
       }
 
       // if a value is returned, that means the link wants the args updated.
       if (result) {
-        logger.silly('action runner: function: %s updated the args to', link.name, result);
+        chainLog('link: %s updated the args to', link.name, result);
         currentArgs = result;
       }
     } catch (error) {
-      logger.debug('action runner: executing halted because error was raised by function: %s', link.name);
+      logger.silly('executing halted because error was raised by link: %s', link.name);
       throw error;
     }
   }
 
-  logger.debug('action runner: successfully executed (%s/%s)', iterations, links.length);
+  chainLog('successfully executed (%s/%s)', iterations, links.length);
 };
 
 /**
