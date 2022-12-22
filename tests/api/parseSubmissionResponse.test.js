@@ -16,7 +16,7 @@ jest.unstable_mockModule('src/api/parseHtml.js', () => ({
 // import after mocks
 const { getConfigValue } = await import('../../src/config.js');
 const { getElementByTagName, getTextContent } = await import('../../src/api/parseHtml.js');
-const { extractTextContentOfMain, sanitizeMessage } = await import('../../src/api/parseSubmissionResponse.js');
+const { extractTextContentOfMain, sanitizeMessage, parseResponseMessage } = await import('../../src/api/parseSubmissionResponse.js');
 
 beforeEach(() => {
   jest.resetAllMocks();
@@ -46,7 +46,7 @@ describe('parseSubmissionResponse', () => {
     });
   });
 
-  describe('sanitizeMessage', () => {
+  describe('sanitizeMessage()', () => {
     test('trims message', () => {
       const expected = 'ASDF';
       const input = `\t\t\t\t\t${expected}\r\n\r\n`;
@@ -114,6 +114,44 @@ describe('parseSubmissionResponse', () => {
         const result = sanitizeMessage(input);
         expect(result).toBe(expected);
       });
+    });
+  });
+
+  describe('parseSolutionResponse()', () => {
+    test('matches wrong answer', () => {
+      const input = 'CATS';
+      getConfigValue.mockReturnValue({
+        correctSolution: /NOMATCH/,
+        incorrectSolution: /CATS/i,
+        badLevel: /NOMATCH/,
+        tooManyRequests: /NOMATCH/,
+      });
+      const { correct } = parseResponseMessage(input);
+      expect(correct).toBe(false);
+    });
+
+    test.todo('matches correct answer');
+
+    test('matches bad level', () => {
+      const input = 'CATS';
+      getConfigValue.mockReturnValue({
+        correctSolution: /NOMATCH/,
+        incorrectSolution: /NOMATCH/,
+        badLevel: /CATS/i,
+        tooManyRequests: /NOMATCH/,
+      });
+      expect(() => parseResponseMessage(input)).toThrow();
+    });
+
+    test('matches too many requests', () => {
+      const input = 'CATS';
+      getConfigValue.mockReturnValue({
+        correctSolution: /NOMATCH/,
+        incorrectSolution: /NOMATCH/,
+        badLevel: /NOMATCH/,
+        tooManyRequests: /CATS/i,
+      });
+      expect(() => parseResponseMessage(input)).toThrow();
     });
   });
 });

@@ -10,5 +10,7 @@
     - Bad level - 200 returned, parse html
 
   - After solving correctly, check solving again..
+  - Probably need to return a status code enum and a message from parse response instead of simple boolean
+  - 
 
  */

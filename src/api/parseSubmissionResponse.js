@@ -5,7 +5,6 @@ import { RateLimitExceededError, SolvingWrongLevelError } from '../errors/index.
 
 /**
  * Parses the response html, finds the <main> element and then extracts its text content.
- * @private
  * @param {String} responseHtml
  * @returns {String}
  */
@@ -30,12 +29,10 @@ export const extractTextContentOfMain = (responseHtml) => {
 
 /**
  * Removes unnecessary content from the message and applies standardized formatting.
- * @private
  * @param {String} message
  */
 export const sanitizeMessage = (message = '') => {
   logger.debug('sanitizing api response message');
-
   return getConfigValue('aoc.responseParsing.sanitizers').reduce(
     (acc, sanitizer) => acc.replaceAll(sanitizer.pattern, sanitizer.replace),
     message,
@@ -43,29 +40,28 @@ export const sanitizeMessage = (message = '') => {
 };
 
 /**
- * Determine if the puzzle was solved or not.
- * @param {String} responseBody - The body of the response
+ * Parses the message from advent of code and determines the result
+ * @param {String} message - The sanitized message extracted from the response body.
  */
-export const parseSolutionResponse = (responseHtml = '') => {
-  const message = sanitizeMessage(extractTextContentOfMain(responseHtml));
+export const parseResponseMessage = (message = '') => {
+  const matchers = getConfigValue('aoc.responseParsing');
 
   // check solution was correct
-  if (message.match(getConfigValue('aoc.responseParsing.correctSolution'))) {
+  if (message.match(matchers.correctSolution)) {
     logger.debug('message indicated solution was correct');
     return { correct: true, message };
   }
   // check solution was incorrect
-  if (message.match(getConfigValue('aoc.responseParsing.incorrectSolution'))) {
+  if (message.match(matchers.incorrectSolution)) {
     logger.debug('message indicated solution was incorrect');
     return { correct: false, message };
   }
   // check bad level, indicates user tried to solve locked or already solved part.
-  if (message.match(getConfigValue('aoc.responseParsing.badLevel'))) {
+  if (message.match(matchers.badLevel)) {
     throw new SolvingWrongLevelError();
   }
-
   // check too many requests
-  if (message.match(getConfigValue('aoc.responseParsing.tooManyRequests'))) {
+  if (message.match(matchers.tooManyRequests)) {
     throw new RateLimitExceededError();
   }
 
