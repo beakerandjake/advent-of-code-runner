@@ -36,7 +36,7 @@ export const sanitizeMessage = (message = '') => {
   logger.debug('sanitizing api response message');
 
   return getConfigValue('aoc.responseParsing.sanitizers').reduce(
-    (acc, sanitizer) => acc.replace(sanitizer.pattern, sanitizer.replace),
+    (acc, sanitizer) => acc.replaceAll(sanitizer.pattern, sanitizer.replace),
     message,
   ).trim();
 };
