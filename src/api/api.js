@@ -1,8 +1,7 @@
-import { JSDOM } from 'jsdom';
 import { logger } from '../logger.js';
 import { getConfigValue } from '../config.js';
 import { sizeOfStringInKb } from '../formatting.js';
-import { LockedOrCompletedPuzzleError, RateLimitExceededError } from '../errors/index.js';
+import { extractTextContentOfMain, sanitizeMessage, parseResponseMessage } from './parseSubmissionResponse.js';
 
 /**
  * Creates a headers object which can be passed to fetch.
@@ -76,72 +75,6 @@ export const downloadInput = async (
 const getSubmitSolutionUrl = (year, day) => `${getConfigValue('aoc.baseUrl')}/${year}/day/${day}/answer`;
 
 /**
- * Parses the response html document and returns the text content of the <main> element.
- * @param {String} responseBody - The html of the response.
- */
-const extractMessage = (responseBody = '') => {
-  logger.debug('extracting message from api response');
-
-  const { textContent } = new JSDOM(responseBody)
-    .window
-    .document
-    .querySelector('main') || {};
-
-  logger.debug('extracted text content from <main> element: %s', textContent);
-
-  return textContent;
-};
-
-/**
- * Removes extra content from the api response message.
- * @param {String} message
- */
-const sanitizeMessage = (message = '') => {
-  logger.debug('sanitizing api response message');
-
-  return getConfigValue('aoc.responseParsing.sanitizers').reduce(
-    (acc, sanitizer) => acc.replace(sanitizer.pattern, sanitizer.replace),
-    message,
-  ).trim();
-};
-
-/**
- * Determine if the puzzle was solved or not.
- * @param {String} responseBody - The body of the response
- */
-const parseSolutionResponse = (responseBody = '') => {
-  const message = extractMessage(responseBody);
-
-  if (!message) {
-    throw new Error('Failed to parse response from API, could not get message from main element');
-  }
-
-  const sanitizedMessage = sanitizeMessage(message);
-
-  // check solution was correct
-  if (sanitizedMessage.match(getConfigValue('aoc.responseParsing.correctSolution'))) {
-    logger.debug('message indicated solution was correct');
-    return { success: true, message: sanitizedMessage };
-  }
-  // check solution was incorrect
-  if (sanitizedMessage.match(getConfigValue('aoc.responseParsing.incorrectSolution'))) {
-    logger.debug('message indicated solution was incorrect');
-    return { success: false, message: sanitizedMessage };
-  }
-  // check bad level, indicates user tried to solve locked or already solved part.
-  if (sanitizedMessage.match(getConfigValue('aoc.responseParsing.badLevel'))) {
-    throw new LockedOrCompletedPuzzleError(sanitizedMessage);
-  }
-
-  // check too many requests
-  if (sanitizedMessage.match(getConfigValue('aoc.responseParsing.tooManyRequests'))) {
-    throw new RateLimitExceededError(sanitizedMessage);
-  }
-
-  throw new Error(`Unable to parse response message: ${sanitizedMessage}`);
-};
-
-/**
  * Post a solution for the problem of the given year / day / part.
  * @param {Number} year - The year of the puzzle
  * @param {Number} day - The day of the puzzle.
@@ -150,7 +83,6 @@ const parseSolutionResponse = (responseBody = '') => {
  * @param {String} authenticationToken - Token to authenticate with aoc.
  */
 export const submitSolution = async (year, day, part, solution, authenticationToken) => {
-  logger.festive('Submitting your answer to advent of code');
   logger.verbose('submitting solution to advent of code for year: %s, day: %s, part: %s', year, day, part);
 
   if (!authenticationToken) {
@@ -159,7 +91,7 @@ export const submitSolution = async (year, day, part, solution, authenticationTo
 
   const url = getSubmitSolutionUrl(year, day);
 
-  logger.debug('posting to url for solution: %s', url);
+  logger.debug('posting to url: %s', url);
 
   const response = await fetch(url, {
     method: 'POST',
@@ -177,11 +109,18 @@ export const submitSolution = async (year, day, part, solution, authenticationTo
     throw new Error('That year/day combination could not be found');
   }
 
+  // bail on any other type of http error
   if (!response.ok) {
-    throw new Error(`Failed to post solution: ${response.statusText}`);
+    throw new Error(`Failed to post solution, error: ${response.status} - ${response.statusText}`);
   }
 
-  const bodyText = await response.text();
+  // advent of code doesn't return status codes, we have to parse the html.
+  // grab the text content of the <main> element which contains the message we need.
+  const responseMessage = sanitizeMessage(
+    extractTextContentOfMain(await response.text()),
+  );
 
-  return parseSolutionResponse(bodyText);
+  // the content of the message tells us what happened
+  // parse this message to determine the submission result.
+  return parseResponseMessage(responseMessage);
 };
