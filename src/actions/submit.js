@@ -1,28 +1,17 @@
 import { createChain } from './actionChain.js';
-import {
-  assertAnswerIsCorrect,
-  assertPuzzleIsUnlocked,
-  assertPuzzleLevelMet,
-  executeUserSolution,
-  getAuthenticationToken,
-  getPuzzleInput,
-  getYear,
-  storeFastestExecutionTime,
-  storeSubmittedAnswer,
-  submitPuzzleAnswer,
-} from './links/index.js';
+import * as links from './links/index.js';
 
 const actionChain = createChain([
-  getYear,
-  assertPuzzleIsUnlocked,
-  assertPuzzleLevelMet,
-  getAuthenticationToken,
-  getPuzzleInput,
-  executeUserSolution,
-  submitPuzzleAnswer,
-  storeSubmittedAnswer,
-  assertAnswerIsCorrect,
-  storeFastestExecutionTime,
+  links.getYear,
+  links.assertPuzzleIsUnlocked,
+  links.assertPuzzleLevelMet,
+  links.getAuthenticationToken,
+  links.getPuzzleInput,
+  links.executeUserSolution,
+  links.submitPuzzleAnswer,
+  links.storeSubmittedAnswer,
+  links.assertAnswerIsCorrect,
+  links.storeFastestExecutionTime,
 ]);
 
 /**
