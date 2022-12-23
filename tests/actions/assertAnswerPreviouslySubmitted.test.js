@@ -16,7 +16,7 @@ afterEach(() => {
 });
 
 describe('actions', () => {
-  describe('common', () => {
+  describe('links', () => {
     describe('assertAnswerPreviouslySubmitted()', () => {
       test('returns true if answer has been submitted', async () => {
         answerHasBeenSubmitted.mockResolvedValue(true);

@@ -16,7 +16,7 @@ afterEach(() => {
 });
 
 describe('actions', () => {
-  describe('common', () => {
+  describe('links', () => {
     describe('assertPuzzleUnsolved()', () => {
       test('returns true if puzzle has not been solved', async () => {
         puzzleHasBeenSolved.mockResolvedValue(false);

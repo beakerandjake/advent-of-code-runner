@@ -16,7 +16,7 @@ afterEach(() => {
 });
 
 describe('actions', () => {
-  describe('common', () => {
+  describe('links', () => {
     describe('assertPuzzleLevelMet()', () => {
       test('returns true if level met', async () => {
         requiredPartsHaveBeenSolved.mockReturnValue(true);

@@ -4,7 +4,7 @@ import {
 import { or, not } from '../../src/actions/links/logical.js';
 
 describe('actions', () => {
-  describe('common', () => {
+  describe('links', () => {
     describe('logical', () => {
       describe('or()', () => {
         test('returns function', () => {

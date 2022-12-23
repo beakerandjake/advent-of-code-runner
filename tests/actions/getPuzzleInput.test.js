@@ -23,7 +23,7 @@ beforeEach(() => {
 });
 
 describe('actions', () => {
-  describe('common', () => {
+  describe('links', () => {
     describe('getPuzzleInput()', () => {
       test('returns cached value if cached', async () => {
         const input = 'ASDF';

@@ -16,7 +16,7 @@ afterEach(() => {
 });
 
 describe('actions', () => {
-  describe('common', () => {
+  describe('links', () => {
     describe('submitPuzzleAnswer()', () => {
       test('returns on answer correct', async () => {
         const apiResponse = { success: true, message: 'great job!' };

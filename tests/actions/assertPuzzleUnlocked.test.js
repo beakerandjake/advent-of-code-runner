@@ -16,7 +16,7 @@ afterEach(() => {
 });
 
 describe('actions', () => {
-  describe('common', () => {
+  describe('links', () => {
     describe('assertPuzzleUnlocked()', () => {
       test('returns true if puzzle is unlocked', () => {
         puzzleIsInFuture.mockReturnValue(false);

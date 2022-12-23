@@ -19,7 +19,7 @@ afterEach(() => {
 });
 
 describe('actions', () => {
-  describe('common', () => {
+  describe('links', () => {
     describe('assertAnswerCorrect()', () => {
       test('returns false if puzzle not solved', async () => {
         getCorrectAnswer.mockReturnValue(null);

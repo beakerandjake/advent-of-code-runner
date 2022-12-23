@@ -18,7 +18,7 @@ afterEach(() => {
 });
 
 describe('actions', () => {
-  describe('common', () => {
+  describe('links', () => {
     describe('getYear()', () => {
       test('throws if not valid', () => {
         yearIsValid.mockReturnValue(false);

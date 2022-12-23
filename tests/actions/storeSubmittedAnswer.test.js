@@ -19,7 +19,7 @@ afterEach(() => {
 });
 
 describe('actions', () => {
-  describe('common', () => {
+  describe('links', () => {
     describe('storeSubmittedAnswer()', () => {
       test('sets correct answer if submission was correct', async () => {
         await storeSubmittedAnswer({

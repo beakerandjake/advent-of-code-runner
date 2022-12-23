@@ -16,7 +16,7 @@ afterEach(() => {
 });
 
 describe('actions', () => {
-  describe('common', () => {
+  describe('links', () => {
     describe('assertInitialized()', () => {
       test('returns true if data store file exists', async () => {
         dataStoreFileExists.mockResolvedValue(true);

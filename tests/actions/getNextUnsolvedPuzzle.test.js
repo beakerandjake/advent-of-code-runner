@@ -16,7 +16,7 @@ afterEach(() => {
 });
 
 describe('actions', () => {
-  describe('common', () => {
+  describe('links', () => {
     describe('getNextUnsolvedPuzzle()', () => {
       test('halts chain if all puzzles answered', async () => {
         getNextUnansweredPuzzle.mockResolvedValue(null);

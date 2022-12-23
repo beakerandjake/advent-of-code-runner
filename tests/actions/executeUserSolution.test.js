@@ -16,7 +16,7 @@ afterEach(() => {
 });
 
 describe('actions', () => {
-  describe('common', () => {
+  describe('links', () => {
     describe('executeUserSolution()', () => {
       test('returns results', async () => {
         const args = { day: 1, part: 1, input: 'ASDF' };

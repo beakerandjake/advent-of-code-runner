@@ -20,23 +20,25 @@ beforeEach(() => {
 });
 
 describe('actions', () => {
-  describe('tryToUpdateFastestExecutionTime()', () => {
-    test('sets if no previous record set', async () => {
-      getFastestExecutionTime.mockResolvedValue(null);
-      await tryToUpdateFastestExecutionTime({ executionTimeNs: 1234 });
-      expect(setFastestExecutionTime).toHaveBeenCalled();
-    });
+  describe('links', () => {
+    describe('tryToUpdateFastestExecutionTime()', () => {
+      test('sets if no previous record set', async () => {
+        getFastestExecutionTime.mockResolvedValue(null);
+        await tryToUpdateFastestExecutionTime({ executionTimeNs: 1234 });
+        expect(setFastestExecutionTime).toHaveBeenCalled();
+      });
 
-    test('does not set if record not broken', async () => {
-      getFastestExecutionTime.mockResolvedValue(1234);
-      await tryToUpdateFastestExecutionTime({ executionTimeNs: 4321 });
-      expect(setFastestExecutionTime).not.toHaveBeenCalled();
-    });
+      test('does not set if record not broken', async () => {
+        getFastestExecutionTime.mockResolvedValue(1234);
+        await tryToUpdateFastestExecutionTime({ executionTimeNs: 4321 });
+        expect(setFastestExecutionTime).not.toHaveBeenCalled();
+      });
 
-    test('sets if record is broken', async () => {
-      getFastestExecutionTime.mockResolvedValue(4321);
-      await tryToUpdateFastestExecutionTime({ executionTimeNs: 1234 });
-      expect(setFastestExecutionTime).toHaveBeenCalled();
+      test('sets if record is broken', async () => {
+        getFastestExecutionTime.mockResolvedValue(4321);
+        await tryToUpdateFastestExecutionTime({ executionTimeNs: 1234 });
+        expect(setFastestExecutionTime).toHaveBeenCalled();
+      });
     });
   });
 });

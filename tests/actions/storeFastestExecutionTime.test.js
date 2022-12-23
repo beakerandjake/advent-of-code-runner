@@ -16,7 +16,7 @@ afterEach(() => {
 });
 
 describe('actions', () => {
-  describe('common', () => {
+  describe('links', () => {
     describe('storeFastestExecutionTime()', () => {
       test('sets value', async () => {
         await storeFastestExecutionTime({
