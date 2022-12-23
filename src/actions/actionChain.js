@@ -41,7 +41,7 @@ export const executeChain = async (links, args = {}) => {
         currentArgs = result;
       }
     } catch (error) {
-      logger.silly('executing halted because error was raised by link: %s', link.name);
+      chainLog('executing halted because error was raised by link: %s', link.name);
       throw error;
     }
   }
