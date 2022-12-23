@@ -1,0 +1,44 @@
+import {
+  describe, jest, test, afterEach,
+} from '@jest/globals';
+
+// setup mocks
+const mockPrompt = jest.fn();
+jest.unstable_mockModule('inquirer', () => ({
+  default: ({
+    prompt: mockPrompt,
+  }),
+}));
+
+// import after setting up mocks
+const { getAnswersFromUser } = await import('../../src/actions/links/getAnswersFromUser.js');
+
+beforeEach(() => {
+  jest.resetAllMocks();
+});
+
+describe('actions', () => {
+  describe('links', () => {
+    describe('getAnswersFromUser()', () => {
+      test('builds and returns link', () => {
+        const result = getAnswersFromUser({});
+        expect(result).toBeInstanceOf(Function);
+      });
+
+      // test('returns answers', async () => {
+      //   const expected = { one: true, two: false };
+      //   mockPrompt.mockResolvedValue(expected);
+      //   const answers = await getAnswersFromUser([]);
+      //   expect(answers).toEqual(expected);
+      // });
+
+      test('returned link returns answers', async () => {
+        const expected = { one: true, two: false };
+        mockPrompt.mockResolvedValue(expected);
+        const fn = getAnswersFromUser({});
+        const result = await fn();
+        expect(result).toEqual({ answers: expected });
+      });
+    });
+  });
+});
