@@ -1,4 +1,4 @@
-import { solveLinks } from './solve.js';
+import { submitLinks } from './submit.js';
 import { getNextUnsolvedPuzzle, getYear } from './links/index.js';
 import { createChain } from './actionChain.js';
 
@@ -8,7 +8,7 @@ import { createChain } from './actionChain.js';
 const actionChain = createChain([
   getYear,
   getNextUnsolvedPuzzle,
-  ...solveLinks.filter((x) => x !== getYear),
+  ...submitLinks.filter((x) => x !== getYear),
 ]);
 
 /**
