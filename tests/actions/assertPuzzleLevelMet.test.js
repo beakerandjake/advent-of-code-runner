@@ -17,7 +17,7 @@ afterEach(() => {
 
 describe('actions', () => {
   describe('common', () => {
-    describe('assertPuzzleIsUnlocked()', () => {
+    describe('assertPuzzleLevelMet()', () => {
       test('returns true if level met', async () => {
         requiredPartsHaveBeenSolved.mockReturnValue(true);
         const result = await assertPuzzleLevelMet({ year: 2022, day: 1, part: 1 });
