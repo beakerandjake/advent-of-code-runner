@@ -8,8 +8,6 @@ import { logger } from '../../logger.js';
  * If the input is not cached, it will be downloaded and cached
  */
 export const getPuzzleInput = async ({ year, day, authToken } = {}) => {
-  logger.debug('getting puzzle input', { year, day });
-
   let input;
 
   if (!await inputIsCached(year, day)) {

@@ -9,8 +9,6 @@ import { logger } from '../../logger.js';
 export const assertAnswerStillCorrect = async ({
   year, day, part, answer,
 } = {}) => {
-  logger.debug('checking if answer matches stored correct answer');
-
   const correctAnswer = await getCorrectAnswer(year, day, part);
 
   // if there isn't a correct answer stored, then this puzzle hasn't been solved.
@@ -27,5 +25,6 @@ export const assertAnswerStillCorrect = async ({
     return false;
   }
 
+  logger.debug('answer: %s matches correct answer: %s', answer, correctAnswer);
   return true;
 };

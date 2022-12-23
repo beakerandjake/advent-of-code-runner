@@ -6,13 +6,12 @@ import { logger } from '../../logger.js';
  * @throws {Error} The token was empty
  */
 export const getAuthenticationToken = () => {
-  logger.debug('getting authentication token');
-
   const authToken = getConfigValue('aoc.authenticationToken');
 
   if (!authToken) {
     throw new Error('Could not get authentication token from .env file, this should have been set during the "init" command');
   }
 
+  logger.debug('loaded authentication token');
   return { authToken };
 };

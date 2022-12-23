@@ -7,7 +7,6 @@ import { yearIsValid } from '../../validation/index.js';
  * @throws {RangeError} The year was not valid
  */
 export const getYear = () => {
-  logger.debug('getting year');
   const year = getConfigValue('aoc.year');
 
   if (!yearIsValid(year)) {
