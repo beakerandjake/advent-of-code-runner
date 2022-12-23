@@ -1,4 +1,5 @@
 import { assertPuzzleIsUnlocked } from './assertPuzzleIsUnlocked.js';
+import { executeUserSolution } from './executeUserSolution.js';
 import { getAuthenticationToken } from './getAuthenticationToken.js';
 import { getPuzzleInput } from './getPuzzleInput.js';
 import { getYear } from './getYear.js';
@@ -9,6 +10,7 @@ import { getYear } from './getYear.js';
 
 export {
   assertPuzzleIsUnlocked,
+  executeUserSolution,
   getAuthenticationToken,
   getPuzzleInput,
   getYear,
