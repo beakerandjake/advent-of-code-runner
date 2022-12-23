@@ -15,7 +15,7 @@ export const assertAnswerStillCorrect = async ({
 
   // if there isn't a correct answer stored, then this puzzle hasn't been solved.
   if (!correctAnswer) {
-    logger.debug('no stored correct answer, puzzle has not been solved');
+    logger.debug('could not find a stored correct answer for this puzzle');
     return false;
   }
 
