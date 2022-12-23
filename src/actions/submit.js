@@ -8,7 +8,7 @@ export const submitLinks = [
   links.getYear,
   links.assertPuzzleUnlocked,
   links.assertPuzzleLevelMet,
-  links.assertPuzzleIsUnsolved,
+  links.assertPuzzleUnsolved,
   links.getAuthenticationToken,
   links.getPuzzleInput,
   links.executeUserSolution,

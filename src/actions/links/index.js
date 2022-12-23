@@ -1,7 +1,7 @@
 import { assertAnswerCorrect } from './assertAnswerCorrect.js';
 import { assertAnswerNotPreviouslySubmitted } from './assertAnswerNotPreviouslySubmitted.js';
 import { assertPuzzleUnlocked } from './assertPuzzleUnlocked.js';
-import { assertPuzzleIsUnsolved } from './assertPuzzleIsUnsolved.js';
+import { assertPuzzleUnsolved } from './assertPuzzleUnsolved.js';
 import { assertPuzzleLevelMet } from './assertPuzzleLevelMet.js';
 import { executeUserSolution } from './executeUserSolution.js';
 import { getAuthenticationToken } from './getAuthenticationToken.js';
@@ -22,7 +22,7 @@ export {
   assertAnswerCorrect,
   assertAnswerNotPreviouslySubmitted,
   assertPuzzleUnlocked,
-  assertPuzzleIsUnsolved,
+  assertPuzzleUnsolved,
   assertPuzzleLevelMet,
   executeUserSolution,
   getAuthenticationToken,
