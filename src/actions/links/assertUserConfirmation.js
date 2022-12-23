@@ -6,6 +6,8 @@ import inquirer from 'inquirer';
  * @param {Object} question - The question passed to inquirer
  */
 export const assertUserConfirmation = (question) => {
+  // create a variable for this fn instead of just returning the fn
+  // this gives the fn a .name property and makes debugging easier.
   const confirmWithUser = async () => {
     const { confirmed } = await inquirer.prompt({ ...question, type: 'confirm' });
     return confirmed;
