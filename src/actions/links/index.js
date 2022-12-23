@@ -1,4 +1,4 @@
-import { assertAnswerIsCorrect } from './assertAnswerIsCorrect.js';
+import { assertAnswerCorrect } from './assertAnswerCorrect.js';
 import { assertAnswerNotPreviouslySubmitted } from './assertAnswerNotPreviouslySubmitted.js';
 import { assertPuzzleIsUnlocked } from './assertPuzzleIsUnlocked.js';
 import { assertPuzzleIsUnsolved } from './assertPuzzleIsUnsolved.js';
@@ -19,7 +19,7 @@ import { tryToUpdateFastestExecutionTime } from './tryToUpdateFastestExecutionTi
  */
 
 export {
-  assertAnswerIsCorrect,
+  assertAnswerCorrect,
   assertAnswerNotPreviouslySubmitted,
   assertPuzzleIsUnlocked,
   assertPuzzleIsUnsolved,

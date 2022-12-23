@@ -11,7 +11,7 @@ export const solveLinks = [
   links.getAuthenticationToken,
   links.getPuzzleInput,
   links.executeUserSolution,
-  links.assertAnswerIsCorrect,
+  links.assertAnswerCorrect,
   links.tryToUpdateFastestExecutionTime,
 ];
 

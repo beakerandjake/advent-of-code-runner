@@ -15,7 +15,7 @@ export const submitLinks = [
   links.assertAnswerNotPreviouslySubmitted,
   links.submitPuzzleAnswer,
   links.storeSubmittedAnswer,
-  links.assertAnswerIsCorrect,
+  links.assertAnswerCorrect,
   links.storeFastestExecutionTime,
 ];
 

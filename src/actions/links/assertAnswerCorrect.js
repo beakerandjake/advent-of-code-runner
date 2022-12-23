@@ -6,7 +6,7 @@ import { logger } from '../../logger.js';
  * Returns true only if the values are equal.
  * Returns false if the puzzle has not been solved or the values are not equal
  */
-export const assertAnswerIsCorrect = async ({
+export const assertAnswerCorrect = async ({
   year, day, part, answer,
 } = {}) => {
   const correctAnswer = await getCorrectAnswer(year, day, part);
