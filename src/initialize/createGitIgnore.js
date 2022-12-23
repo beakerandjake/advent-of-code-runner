@@ -9,5 +9,5 @@ export const createGitIgnore = async () => {
   logger.debug('creating .gitignore file');
   const { source, dest } = getConfigValue('paths.templates.gitignore');
   logger.debug('copying template .gitignore from: %s to: %s', source, dest);
-  return copyFile(source, dest);
+  await copyFile(source, dest);
 };
