@@ -1,5 +1,6 @@
 import { createChain } from './actionChain.js';
 import {
+  assertAnswerStillCorrect,
   assertPuzzleIsUnlocked,
   executeUserSolution,
   getAuthenticationToken,
@@ -13,6 +14,7 @@ const actionChain = createChain([
   getAuthenticationToken,
   getPuzzleInput,
   executeUserSolution,
+  assertAnswerStillCorrect,
 ]);
 
 /**

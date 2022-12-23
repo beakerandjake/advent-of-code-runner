@@ -23,21 +23,27 @@ describe('actions', () => {
     describe('assertPuzzleIsUnlocked()', () => {
       test('returns false if puzzle not solved', async () => {
         getCorrectAnswer.mockReturnValue(null);
-        const result = await assertAnswerStillCorrect({ year: 2022, day: 1 });
+        const result = await assertAnswerStillCorrect({
+          year: 2022, day: 1, part: 1, answer: 'ASDF',
+        });
         expect(result).toBe(false);
       });
 
       test('returns false answer does not equal correct answer', async () => {
         getCorrectAnswer.mockResolvedValue('ASDF');
         answersEqual.mockReturnValue(false);
-        const result = await assertAnswerStillCorrect({ year: 2022, day: 1 });
+        const result = await assertAnswerStillCorrect({
+          year: 2022, day: 1, part: 1, answer: 'ASDF',
+        });
         expect(result).toBe(false);
       });
 
       test('returns true if answer equals correct answer', async () => {
         getCorrectAnswer.mockResolvedValue('ASDF');
         answersEqual.mockReturnValue(true);
-        const result = await assertAnswerStillCorrect({ year: 2022, day: 1 });
+        const result = await assertAnswerStillCorrect({
+          year: 2022, day: 1, part: 1, answer: 'ASDF',
+        });
         expect(result).toBe(true);
       });
     });
