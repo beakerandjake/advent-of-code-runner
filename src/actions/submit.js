@@ -1,7 +1,10 @@
 import { createChain } from './actionChain.js';
 import * as links from './links/index.js';
 
-const actionChain = createChain([
+/**
+ * The links which together make up the submit action.
+ */
+const submitLinks = [
   links.getYear,
   links.assertPuzzleIsUnlocked,
   links.assertPuzzleLevelMet,
@@ -14,7 +17,12 @@ const actionChain = createChain([
   links.storeSubmittedAnswer,
   links.assertAnswerIsCorrect,
   links.storeFastestExecutionTime,
-]);
+];
+
+/**
+ * "compile" the links into the submit action.
+ */
+const actionChain = createChain(submitLinks);
 
 /**
  * Execute the users solution then submit their answer to advent of code

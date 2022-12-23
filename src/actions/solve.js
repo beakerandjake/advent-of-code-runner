@@ -10,7 +10,10 @@ import {
   tryToUpdateFastestExecutionTime,
 } from './links/index.js';
 
-const actionChain = createChain([
+/**
+ * The links which together make up the solve action.
+ */
+export const solveLinks = [
   getYear,
   assertPuzzleIsUnlocked,
   assertPuzzleLevelMet,
@@ -19,7 +22,12 @@ const actionChain = createChain([
   executeUserSolution,
   assertAnswerIsCorrect,
   tryToUpdateFastestExecutionTime,
-]);
+];
+
+/**
+ * "compile" the links into the solve action.
+ */
+const actionChain = createChain(solveLinks);
 
 /**
  * Downloads or loads the input to the puzzle, executes the users solution and outputs results.
