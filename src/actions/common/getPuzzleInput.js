@@ -6,16 +6,11 @@ import { logger } from '../../logger.js';
  * Returns the input for the puzzle.
  * If the input is cached, the cached input will be returned.
  * If the input is not cached, it will be downloaded and cached
- * @param {Object} args
- * @param {Number} args.year
- * @param {Number} args.day
- * @param {String} args.authToken
  */
-export const getPuzzleInput = async (args = {}) => {
-  const { year, day, authToken } = args;
-  let input;
-
+export const getPuzzleInput = async ({ year, day, authToken } = {}) => {
   logger.debug('getting puzzle input', { year, day });
+
+  let input;
 
   if (!await inputIsCached(year, day)) {
     logger.festive('Downloading and caching input file');
@@ -26,5 +21,5 @@ export const getPuzzleInput = async (args = {}) => {
     input = await getCachedInput(year, day);
   }
 
-  return { ...args, input };
+  return { input };
 };
