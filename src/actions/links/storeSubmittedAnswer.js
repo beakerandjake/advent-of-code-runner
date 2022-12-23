@@ -2,9 +2,9 @@ import { addIncorrectAnswer, setCorrectAnswer } from '../../answers.js';
 import { logger } from '../../logger';
 
 /**
- * Store the answer so it cannot be re-submitted to this puzzle in the future.
+ * Store the answer (and its correctness) so it cannot be re-submitted to this puzzle in the future.
  */
-export const storeSubmissionResult = async ({
+export const storeSubmittedAnswer = async ({
   year, day, part, answer, submissionResult: { correct },
 } = {}) => {
   if (correct) {

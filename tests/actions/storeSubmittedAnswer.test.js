@@ -12,7 +12,7 @@ jest.unstable_mockModule('src/answers.js', () => ({
 
 // import after mocks set up
 const { addIncorrectAnswer, setCorrectAnswer } = await import('../../src/answers.js');
-const { storeSubmissionResult } = await import('../../src/actions/links/storeSubmissionResult.js');
+const { storeSubmittedAnswer } = await import('../../src/actions/links/storeSubmittedAnswer.js');
 
 afterEach(() => {
   jest.resetAllMocks();
@@ -20,9 +20,9 @@ afterEach(() => {
 
 describe('actions', () => {
   describe('common', () => {
-    describe('storeSubmissionResult()', () => {
+    describe('storeSubmittedAnswer()', () => {
       test('sets correct answer if submission was correct', async () => {
-        await storeSubmissionResult({
+        await storeSubmittedAnswer({
           year: 2022, day: 1, part: 1, answer: 'ASDF', submissionResult: { correct: true },
         });
         expect(setCorrectAnswer).toHaveBeenCalled();
@@ -30,7 +30,7 @@ describe('actions', () => {
       });
 
       test('adds incorrect answer if submission was not correct', async () => {
-        await storeSubmissionResult({
+        await storeSubmittedAnswer({
           year: 2022, day: 1, part: 1, answer: 'ASDF', submissionResult: { correct: false },
         });
         expect(setCorrectAnswer).not.toHaveBeenCalled();
