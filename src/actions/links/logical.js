@@ -26,13 +26,14 @@ export const or = (lhs, rhs) => {
  * @returns {Promise<Boolean>}
  */
 export const not = (fn) => {
+  const fnName = ['not', fn?.name].join('-');
   /**
    * creating object and returning its function instead of the arrow function directly
    * this is a hack to ensure that we get a .name property on the returned function.
    * if we just returned arrow fn it wouldn't have a .name, that makes debugging the chain hard.
    */
   const toReturn = {
-    not: async (...args) => !fn(...args),
+    [fnName]: async (...args) => !(await fn(...args)),
   };
-  return toReturn.not;
+  return toReturn[fnName];
 };
