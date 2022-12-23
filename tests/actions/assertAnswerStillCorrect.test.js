@@ -20,7 +20,7 @@ afterEach(() => {
 
 describe('actions', () => {
   describe('common', () => {
-    describe('assertPuzzleIsUnlocked()', () => {
+    describe('assertAnswerStillCorrect()', () => {
       test('returns false if puzzle not solved', async () => {
         getCorrectAnswer.mockReturnValue(null);
         const result = await assertAnswerStillCorrect({
