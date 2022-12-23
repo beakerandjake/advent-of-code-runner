@@ -12,15 +12,12 @@ export const and = (lhs, rhs) => {
   const fnName = (lhs?.name && rhs?.name)
     ? `${lhs.name}-and-${rhs.name}`
     : 'and';
-  /**
-   * creating object and returning its function instead of the arrow function directly
-   * this is a hack to ensure that we get a .name property on the returned function.
-   * if we just returned arrow fn it wouldn't have a .name, that makes debugging the chain hard.
-   */
-  const toReturn = {
+  // create a variable for this fn instead of just returning the fn
+  // this gives the fn a .name property and makes debugging easier.
+  const _ = {
     [fnName]: async (...args) => await lhs(...args) && rhs(...args),
   };
-  return toReturn[fnName];
+  return _[fnName];
 };
 
 /**
@@ -33,15 +30,12 @@ export const or = (lhs, rhs) => {
   const fnName = (lhs?.name && rhs?.name)
     ? `${lhs.name}-or-${rhs.name}`
     : 'or';
-  /**
-   * creating object and returning its function instead of the arrow function directly
-   * this is a hack to ensure that we get a .name property on the returned function.
-   * if we just returned arrow fn it wouldn't have a .name, that makes debugging the chain hard.
-   */
-  const toReturn = {
+  // create a variable for this fn instead of just returning the fn
+  // this gives the fn a .name property and makes debugging easier.
+  const _ = {
     [fnName]: async (...args) => await lhs(...args) || rhs(...args),
   };
-  return toReturn[fnName];
+  return _[fnName];
 };
 
 /**
@@ -51,13 +45,10 @@ export const or = (lhs, rhs) => {
  */
 export const not = (fn) => {
   const fnName = ['not', fn?.name].join('-');
-  /**
-   * creating object and returning its function instead of the arrow function directly
-   * this is a hack to ensure that we get a .name property on the returned function.
-   * if we just returned arrow fn it wouldn't have a .name, that makes debugging the chain hard.
-   */
-  const toReturn = {
+  // create a variable for this fn instead of just returning the fn
+  // this gives the fn a .name property and makes debugging easier.
+  const _ = {
     [fnName]: async (...args) => !(await fn(...args)),
   };
-  return toReturn[fnName];
+  return _[fnName];
 };
