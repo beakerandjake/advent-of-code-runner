@@ -1,22 +1,17 @@
 import {
   describe, jest, test, beforeEach,
 } from '@jest/globals';
+import { mockLogger, mockConfig } from '../mocks.js';
 import { DataFileIOError, DataFileParsingError } from '../../src/errors/index.js';
 
 // setup mocks.
+mockLogger();
+mockConfig();
+
 jest.unstable_mockModule('../../src/persistence/io.js', () => ({
   loadFileContents: jest.fn(),
   saveFile: jest.fn(),
-}));
-
-jest.unstable_mockModule('../../src/config.js', () => ({
-  getConfigValue: jest.fn(),
-}));
-
-jest.unstable_mockModule('../../src/logger.js', () => ({
-  logger: {
-    silly: jest.fn(),
-  },
+  fileExists: jest.fn(),
 }));
 
 const mockCache = {
@@ -30,8 +25,8 @@ jest.unstable_mockModule('../../src/persistence/cachedValue.js', () => ({
 
 // import after setting up the mock so the modules import the mocked version
 // const { CachedValue } = await import('../src/persistence/cachedValue.js');
-const { loadFileContents, saveFile } = await import('../../src/persistence/io.js');
-const { getStoreValue, setStoreValue } = await import('../../src/persistence/jsonFileStore.js');
+const { loadFileContents, saveFile, fileExists } = await import('../../src/persistence/io.js');
+const { getStoreValue, setStoreValue, dataStoreFileExists } = await import('../../src/persistence/jsonFileStore.js');
 
 describe('jsonFileStore', () => {
   describe('getStoreValue()', () => {
@@ -242,6 +237,20 @@ describe('jsonFileStore', () => {
           .rejects
           .toThrow(DataFileIOError);
       });
+    });
+  });
+
+  describe('dataStoreFileExists()', () => {
+    test('returns true if file exists', async () => {
+      fileExists.mockResolvedValue(true);
+      const result = await dataStoreFileExists();
+      expect(result).toBe(true);
+    });
+
+    test('returns false if file does not exist', async () => {
+      fileExists.mockResolvedValue(false);
+      const result = await dataStoreFileExists();
+      expect(result).toBe(false);
     });
   });
 });
