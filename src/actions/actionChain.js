@@ -1,6 +1,13 @@
 import { logger } from '../logger.js';
 
 /**
+ * Could get really crazy with this and have the chain return a value.
+ * That would let us nest chains within chains :D
+ *
+ * Could also have decorator links like NOT, OR
+ */
+
+/**
  * Helper function for consistent logging in the chain.
  */
 const chainLog = (message, ...rest) => {
