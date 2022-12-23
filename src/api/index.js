@@ -5,7 +5,7 @@ import { logger } from '../logger.js';
 
 const useMockApi = getConfigValue('aoc.mockApi.enabled');
 
-logger.debug('api is loading mock: %s', useMockApi);
+logger.debug('api is loading mock: %s', !!useMockApi);
 
 /**
  * Decorates the api methods with rate limiting.
