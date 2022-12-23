@@ -5,6 +5,11 @@ import { logger } from '../logger.js';
  * That would let us nest chains within chains :D
  *
  * Could also have decorator links like NOT, OR
+ *
+ * Would be cool to support a .requires property on functions.
+ * It would check the args for each value in the requires array
+ * and throw if that value was missing from the args.
+ *
  */
 
 /**
