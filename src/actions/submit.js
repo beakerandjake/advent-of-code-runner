@@ -6,7 +6,7 @@ import * as links from './links/index.js';
  */
 export const submitLinks = [
   links.getYear,
-  links.assertPuzzleIsUnlocked,
+  links.assertPuzzleUnlocked,
   links.assertPuzzleLevelMet,
   links.assertPuzzleIsUnsolved,
   links.getAuthenticationToken,
