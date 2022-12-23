@@ -17,8 +17,9 @@ const customLevels = {
   info: 2,
   verbose: 3,
   debug: 4,
-  silly: 5,
-  festive: 6,
+  actionchain: 5,
+  silly: 6,
+  festive: 7,
 };
 
 addColors({
@@ -27,7 +28,8 @@ addColors({
   info: 'green',
   verbose: 'cyan',
   debug: 'blue',
-  silly: 'magenta',
+  silly: 'white',
+  actionchain: 'magenta',
   // festive error colors don't matter
   // they are handled by the festive transport not colorize.
   festive: 'black',

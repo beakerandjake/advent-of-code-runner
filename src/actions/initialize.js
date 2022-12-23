@@ -1,31 +1,89 @@
-import ora from 'ora';
-import { confirmWithUser, getAnswersFromUser } from './interactive.js';
-import { initializeQuestions, confirmOverwriteCwdQuestion } from './initializeQuestions.js';
-import { createFiles, cwdIsEmpty, installPackages } from '../initialize/index.js';
-import { festiveStyle, festiveEmoji } from '../festive.js';
+import { getConfigValue } from '../config.js';
+import { festiveEmoji, festiveStyle } from '../festive.js';
+import {
+  createDataFile,
+  createDotEnv,
+  createGitIgnore,
+  createPackageJson,
+  createReadme,
+  createSolutionFiles,
+  cwdIsEmpty,
+  installPackages,
+} from '../initialize/index.js';
+import { createChainWithReporting } from './actionChainWithProgress.js';
+import { assertUserConfirmation, getAnswersFromUser } from './links/index.js';
+
+/**
+ * inquirer.js question which makes the user confirm the initialize operation.
+ */
+export const confirmInitializeQuestion = {
+  type: 'confirm',
+  name: 'confirmed',
+  message: festiveStyle(
+    'This directory is not empty! This operation will overwrite files, do you want to continue?',
+  ),
+  default: false,
+  prefix: festiveEmoji(),
+};
+
+/**
+ * Array of inquirer questions which will be asked in order.
+ * The answers will provide us all of the information we need to initialize.
+ */
+export const initializeQuestions = [
+  {
+    // in future if list of years becomes too large the change to raw input.
+    type: 'list',
+    name: 'year',
+    message: festiveStyle('What year of advent of code are you doing?'),
+    prefix: festiveEmoji(),
+    choices: getConfigValue('aoc.validation.years').reverse(),
+    loop: false,
+  },
+  {
+    // in future if list of years becomes too large the change to raw input.
+    type: 'password',
+    name: 'authToken',
+    message: festiveStyle('Enter your advent of code authentication token'),
+    prefix: festiveEmoji(),
+    choices: getConfigValue('aoc.validation.years'),
+    loop: false,
+    validate: (input) => (input ? true : 'Token cannot be empty!'),
+    filter: (input) => input.trim(),
+  },
+];
+
+/**
+ * A Link which creates all required files in the cwd.
+ */
+const createFiles = async ({ answers }) => {
+  await Promise.all([
+    createDataFile(answers),
+    createDotEnv(answers),
+    createGitIgnore(answers),
+    createPackageJson(answers),
+    createReadme(answers),
+    createSolutionFiles(answers),
+  ]);
+};
 
 /**
  * Scaffolds the cwd with all files required to use this cli.
  */
 export const initialize = async () => {
   // if there are files in the cwd, get confirmation with the user that they want to proceed.
-  if (!await cwdIsEmpty() && !await confirmWithUser(confirmOverwriteCwdQuestion)) {
+  if (!await cwdIsEmpty() && !await assertUserConfirmation(confirmInitializeQuestion)()) {
     return;
   }
 
-  const answers = await getAnswersFromUser(initializeQuestions);
-  const spinner = ora({ text: festiveStyle('Creating files'), spinner: 'christmas' }).start();
+  // get all the info we need in order to initialize.
+  const { answers } = await getAnswersFromUser(initializeQuestions)();
 
-  try {
-    await createFiles(answers);
-    spinner.text = festiveStyle('Installing packages');
-    await installPackages();
-    spinner.stopAndPersist({
-      text: festiveStyle('Successfully initialized your repository, have fun!'),
-      symbol: festiveEmoji(),
-    });
-  } catch (error) {
-    spinner.fail();
-    throw error;
-  }
+  // run initialize steps in an action chain that reports its progress to the user.
+  const actionChain = createChainWithReporting([
+    { fn: createFiles, message: 'Creating files...' },
+    { fn: installPackages, message: 'Installing Packages...' },
+  ], 'Successfully initialized your repository, have fun! (see README for help)');
+
+  await actionChain({ answers });
 };

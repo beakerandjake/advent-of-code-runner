@@ -41,5 +41,5 @@ export const createPackageJson = async ({ year }) => {
 
   logger.debug('saving package.json file to: %s', dest);
 
-  return saveFile(dest, packageJson);
+  await saveFile(dest, packageJson);
 };

@@ -9,5 +9,5 @@ export const createReadme = async () => {
   logger.debug('creating README.md file');
   const { source, dest } = getConfigValue('paths.templates.readme');
   logger.debug('copying template readme from: %s to: %s', source, dest);
-  return copyFile(source, dest);
+  await copyFile(source, dest);
 };

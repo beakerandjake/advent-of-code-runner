@@ -139,9 +139,6 @@ export const getNextUnansweredPuzzle = async (year) => {
   const toReturn = allPuzzles.find((x) => !answeredPuzzles.some(
     (puzzle) => puzzle.year === x.year && puzzle.day === x.day && puzzle.part === x.part,
   ));
-
-  logger.debug('found earliest unanswered puzzle', toReturn);
-
   return toReturn ? { day: toReturn.day, part: toReturn.part } : null;
 };
 

@@ -34,5 +34,5 @@ export const createDotEnv = async (args) => {
 
   logger.debug('saving .env file to: %s', dest);
 
-  return saveFile(dest, envFile);
+  await saveFile(dest, envFile);
 };

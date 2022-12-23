@@ -19,7 +19,7 @@ export const createSolutionFiles = async () => {
 
   const templateSolutionFile = getConfigValue('paths.templates.solution');
 
-  return Promise.all(
+  await Promise.all(
     filePaths.map((dest) => copyFile(templateSolutionFile, dest)),
   );
 };

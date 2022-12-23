@@ -1,6 +1,6 @@
 import { getConfigValue } from '../config.js';
 import { logger } from '../logger.js';
-import { loadFileContents, saveFile } from './io.js';
+import { fileExists, loadFileContents, saveFile } from './io.js';
 import { CachedValue } from './cachedValue.js';
 import { DataFileIOError, DataFileParsingError } from '../errors/index.js';
 import { get } from '../util.js';
@@ -86,3 +86,8 @@ export const setStoreValue = async (key, value) => {
   const updated = { ...data, [key]: value };
   await saveData(updated);
 };
+
+/**
+ * Returns true if the user data store file exists.
+ */
+export const dataStoreFileExists = async () => fileExists(dataFilePath);

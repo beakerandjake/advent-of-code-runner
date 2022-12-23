@@ -26,5 +26,5 @@ export const createDataFile = async () => {
 
   logger.debug('copying template data store file from: %s to: %s', source, dest);
 
-  return saveFile(dest, dataFile);
+  await saveFile(dest, dataFile);
 };

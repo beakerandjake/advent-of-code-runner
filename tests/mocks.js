@@ -13,6 +13,7 @@ export const mockLogger = () => {
     silly: jest.fn(),
     festive: jest.fn(),
     log: jest.fn(),
+    actionchain: jest.fn(),
   };
   jest.unstable_mockModule('src/logger.js', () => ({
     logger: toReturn,
@@ -25,7 +26,9 @@ export const mockLogger = () => {
  * Mocks the config module and all of the commonly used functions.
  */
 export const mockConfig = () => {
-  jest.unstable_mockModule('src/config.js', () => ({
+  const toReturn = {
     getConfigValue: jest.fn(),
-  }));
+  };
+  jest.unstable_mockModule('src/config.js', () => toReturn);
+  return toReturn;
 };
