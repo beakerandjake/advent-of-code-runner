@@ -5,7 +5,7 @@ import { getPuzzleInput } from './getPuzzleInput.js';
 import { getYear } from './getYear.js';
 
 /**
- * barrel for all common actions which are used or could be used by multiple action chains.
+ * barrel for "link" functions which are used to compose action chains.
  */
 
 export {

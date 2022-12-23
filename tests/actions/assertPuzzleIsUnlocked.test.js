@@ -9,7 +9,7 @@ const puzzleIsInFuture = jest.fn();
 jest.unstable_mockModule('src/validation/validatePuzzle.js', () => ({ puzzleIsInFuture }));
 
 // import after mocks set up
-const { assertPuzzleIsUnlocked } = await import('../../src/actions/common/assertPuzzleIsUnlocked.js');
+const { assertPuzzleIsUnlocked } = await import('../../src/actions/links/assertPuzzleIsUnlocked.js');
 
 afterEach(() => {
   jest.resetAllMocks();

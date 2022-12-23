@@ -8,7 +8,7 @@ mockLogger();
 const { getConfigValue } = mockConfig();
 
 // import after mocks set up
-const { getAuthenticationToken } = await import('../../src/actions/common/getAuthenticationToken.js');
+const { getAuthenticationToken } = await import('../../src/actions/links/getAuthenticationToken.js');
 
 afterEach(() => {
   jest.resetAllMocks();

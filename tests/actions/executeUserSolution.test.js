@@ -9,7 +9,7 @@ const mockExecuter = jest.fn();
 jest.unstable_mockModule('src/solutions/index.js', () => ({ executeUserSolution: mockExecuter }));
 
 // import after mocks set up
-const { executeUserSolution } = await import('../../src/actions/common/executeUserSolution.js');
+const { executeUserSolution } = await import('../../src/actions/links/executeUserSolution.js');
 
 afterEach(() => {
   jest.resetAllMocks();

@@ -16,7 +16,7 @@ jest.unstable_mockModule('src/inputs.js', () => ({
 // import mocks after setting up mocks
 const { downloadInput } = await import('../../src/api/index.js');
 const { inputIsCached, getCachedInput, cacheInput } = await import('../../src/inputs.js');
-const { getPuzzleInput } = await import('../../src/actions/common/getPuzzleInput.js');
+const { getPuzzleInput } = await import('../../src/actions/links/getPuzzleInput.js');
 
 beforeEach(() => {
   jest.resetAllMocks();

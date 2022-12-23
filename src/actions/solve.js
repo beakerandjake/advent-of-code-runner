@@ -5,7 +5,7 @@ import {
   getAuthenticationToken,
   getPuzzleInput,
   getYear,
-} from './common/index.js';
+} from './links/index.js';
 
 const actionChain = createChain([
   getYear,

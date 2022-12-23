@@ -11,7 +11,7 @@ jest.unstable_mockModule('src/validation/index.js', () => ({ yearIsValid: jest.f
 // import after mocks set up
 const { getConfigValue } = await import('../../src/config.js');
 const { yearIsValid } = await import('../../src/validation/index.js');
-const { getYear } = await import('../../src/actions/common/getYear.js');
+const { getYear } = await import('../../src/actions/links/getYear.js');
 
 afterEach(() => {
   jest.resetAllMocks();
