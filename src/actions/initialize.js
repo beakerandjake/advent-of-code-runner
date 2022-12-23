@@ -33,15 +33,35 @@
 import { getYear } from './links/index.js';
 import { createChain } from './actionChain.js';
 
+const spinnerDecorator = () => async (...args) => {
+  // TODO create spinner, pass args to chain { updateProgressText: function }
+  // on chain finish, stop and persist spinner
+  // on chain fail, fail spinner and re-throw
+};
+
+const coolFn = (args) => {
+  console.log('coolFn args:', args);
+};
+
+const coolFn2 = (...args) => {
+  console.log('coolFn2 args:', args);
+};
+
+const coolFn3 = (...args) => {
+  console.log('coolFn3 args:', ...args);
+};
+
 /**
- * We basically just need to run 'getNextUnsolvedPuzzle' at the start of the regular solve chain.
- * But to run 'getNextUnsolvedPuzzle' we need 'getYear', and the solve chain already has that.
- * It wouldn't be the end of the world to run 'getYear' twice, it's idempotent....
- * But there's no reason to if we don't have to, so just yank it off the front of the solve chain.
- * Add our required actions then concat the modified solve chain and we're golden.
+ *
  */
 const actionChain = createChain([
   getYear,
+  // () => {
+  //   const args = { cat: true, dog: false, cow: 'moo' };
+  //   coolFn(args);
+  //   coolFn2(args);
+  //   coolFn3(args);
+  // },
 ]);
 
 /**
