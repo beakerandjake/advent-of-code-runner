@@ -52,6 +52,7 @@ export const executeChain = async (links, args = {}) => {
   }
 
   logger.actionchain('successfully executed (%s/%s)', iterations, links.length);
+  return iterations === links.length;
 };
 
 /**
@@ -62,6 +63,7 @@ export const executeChain = async (links, args = {}) => {
  *  - Can return an object: the value will be spread onto the args object (the chain continues).
  *  - Can be void (return undefined): the chain continues and args are not changed.
  *  - Can raise an Error: the chain halts.
+ * This function will return a boolean indicating whether or not each link ran.
  * If any function in the chain causes a halt, then chains which come after it are not executed.
  * @param {Function[]} actions - The functions to execute.
  */
