@@ -18,12 +18,12 @@ afterEach(() => {
 describe('actions', () => {
   describe('common', () => {
     describe('executeUserSolution()', () => {
-      test('adds results to args', async () => {
+      test('returns results', async () => {
         const args = { day: 1, part: 1, input: 'ASDF' };
         const executionResult = { answer: '1234', executionTimeNs: 1234 };
         mockExecuter.mockResolvedValue(executionResult);
         const result = await executeUserSolution(args);
-        expect(result).toEqual({ ...args, ...executionResult });
+        expect(result).toEqual(executionResult);
       });
     });
   });

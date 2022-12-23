@@ -24,19 +24,11 @@ describe('actions', () => {
         expect(() => getAuthenticationToken()).toThrow();
       });
 
-      test('appends token to empty args', () => {
+      test('returns auth token', () => {
         const expected = 'ASDF';
         getConfigValue.mockReturnValue(expected);
         const result = getAuthenticationToken();
         expect(result).toEqual({ authToken: expected });
-      });
-
-      test('appends token to existing args', () => {
-        const existing = { cats: true, dogs: false };
-        const expected = { ...existing, authToken: 'SADF' };
-        getConfigValue.mockReturnValue(expected.authToken);
-        const result = getAuthenticationToken(existing);
-        expect(result).toEqual(expected);
       });
     });
   });

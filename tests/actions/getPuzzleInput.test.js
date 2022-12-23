@@ -29,9 +29,9 @@ describe('actions', () => {
         const input = 'ASDF';
         inputIsCached.mockResolvedValue(true);
         getCachedInput.mockResolvedValue(input);
-        const { input: result } = await getPuzzleInput({ year: 2022, day: 1, authToken: 'ASDF' });
+        const result = await getPuzzleInput({ year: 2022, day: 1, authToken: 'ASDF' });
         expect(getCachedInput).toHaveBeenCalled();
-        expect(result).toBe(input);
+        expect(result).toEqual({ input });
       });
 
       test('does not download if cached', async () => {
@@ -47,11 +47,11 @@ describe('actions', () => {
       });
 
       test('returns downloaded value if not cached', async () => {
-        const expected = 'ASDF';
+        const input = 'ASDF';
         inputIsCached.mockResolvedValue(false);
-        downloadInput.mockResolvedValue(expected);
-        const { input: result } = await getPuzzleInput({ year: 2022, day: 1, authToken: 'ASDF' });
-        expect(result).toBe(expected);
+        downloadInput.mockResolvedValue(input);
+        const result = await getPuzzleInput({ year: 2022, day: 1, authToken: 'ASDF' });
+        expect(result).toEqual({ input });
       });
 
       test('does not cache if download fails', async () => {
@@ -69,18 +69,6 @@ describe('actions', () => {
         downloadInput.mockResolvedValue(input);
         await getPuzzleInput(args);
         expect(cacheInput).toHaveBeenCalledWith(args.year, args.day, input);
-      });
-
-      test.each([false, true])('appends input to args if cached is %s', async (cached) => {
-        const args = {
-          year: 2022, day: 1, authToken: 'SADF', cats: false, dogs: true,
-        };
-        const input = 'ASDFSDFASF';
-        inputIsCached.mockResolvedValue(cached);
-        getCachedInput.mockResolvedValue(input);
-        downloadInput.mockResolvedValue(input);
-        const result = await getPuzzleInput(args);
-        expect(result).toEqual({ ...args, input });
       });
     });
   });

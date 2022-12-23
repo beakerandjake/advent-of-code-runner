@@ -25,19 +25,12 @@ describe('actions', () => {
         expect(() => getYear()).toThrow(RangeError);
       });
 
-      test('appends year to empty args', () => {
+      test('returns year', () => {
         const year = 2022;
         getConfigValue.mockReturnValue(year);
         yearIsValid.mockReturnValue(true);
-        expect(getYear()).toEqual({ year });
-      });
-
-      test('appends year to existing args', () => {
-        const existing = { cats: true, dogs: false };
-        const year = 2022;
-        getConfigValue.mockReturnValue(year);
-        yearIsValid.mockReturnValue(true);
-        expect(getYear(existing)).toEqual({ ...existing, year });
+        const result = getYear();
+        expect(result).toEqual({ year });
       });
     });
   });

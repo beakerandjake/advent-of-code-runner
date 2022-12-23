@@ -106,12 +106,12 @@ describe('actionChain', () => {
 
     test('link in chain can mutate args for future links', async () => {
       const origArgs = { cats: true, dogs: false };
-      const mutatedArgs = { ...origArgs, apples: true };
-      const before = [jest.fn(), jest.fn(), jest.fn(() => mutatedArgs)];
+      const changes = { apples: true };
+      const before = [jest.fn(), jest.fn(), jest.fn(() => ({ apples: true }))];
       const after = [jest.fn(), jest.fn()];
       await executeChain([...before, ...after], origArgs);
       before.forEach((x) => expect(x).toHaveBeenCalledWith(origArgs));
-      after.forEach((x) => expect(x).toHaveBeenCalledWith(mutatedArgs));
+      after.forEach((x) => expect(x).toHaveBeenCalledWith({ ...origArgs, ...changes }));
     });
   });
 });
