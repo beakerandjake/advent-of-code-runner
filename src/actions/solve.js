@@ -1,27 +1,18 @@
 import { createChain } from './actionChain.js';
-import {
-  assertAnswerIsCorrect,
-  assertPuzzleIsUnlocked,
-  assertPuzzleLevelMet,
-  executeUserSolution,
-  getAuthenticationToken,
-  getPuzzleInput,
-  getYear,
-  tryToUpdateFastestExecutionTime,
-} from './links/index.js';
+import * as links from './links/index.js';
 
 /**
  * The links which together make up the solve action.
  */
 export const solveLinks = [
-  getYear,
-  assertPuzzleIsUnlocked,
-  assertPuzzleLevelMet,
-  getAuthenticationToken,
-  getPuzzleInput,
-  executeUserSolution,
-  assertAnswerIsCorrect,
-  tryToUpdateFastestExecutionTime,
+  links.getYear,
+  links.assertPuzzleIsUnlocked,
+  links.assertPuzzleLevelMet,
+  links.getAuthenticationToken,
+  links.getPuzzleInput,
+  links.executeUserSolution,
+  links.assertAnswerIsCorrect,
+  links.tryToUpdateFastestExecutionTime,
 ];
 
 /**
