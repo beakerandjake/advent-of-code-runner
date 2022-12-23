@@ -1,5 +1,5 @@
 import { addIncorrectAnswer, setCorrectAnswer } from '../../answers.js';
-import { logger } from '../../logger';
+import { logger } from '../../logger.js';
 
 /**
  * Store the answer (and its correctness) so it cannot be re-submitted to this puzzle in the future.
