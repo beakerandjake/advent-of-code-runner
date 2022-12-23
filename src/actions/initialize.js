@@ -1,4 +1,3 @@
-import ora from 'ora';
 import { getConfigValue } from '../config.js';
 import { festiveEmoji, festiveStyle } from '../festive.js';
 import {
@@ -8,16 +7,11 @@ import {
   createPackageJson,
   createReadme,
   createSolutionFiles,
+  cwdIsEmpty,
   installPackages,
 } from '../initialize/index.js';
-import { createChain } from './actionChain.js';
-import { getAnswersFromUser } from './links/getAnswersFromUser.js';
-import {
-  assertInitialized,
-  assertUserConfirmation,
-  not,
-  or,
-} from './links/index.js';
+import { createChainWithReporting } from './actionChainWithProgress.js';
+import { assertUserConfirmation, getAnswersFromUser } from './links/index.js';
 
 /**
  * inquirer.js question which makes the user confirm the initialize operation.
@@ -74,32 +68,22 @@ const createFiles = async ({ answers }) => {
 };
 
 /**
- * Performs first time setup, scaffolds the cwd with all of the files required to run this cli.
+ * Scaffolds the cwd with all files required to use this cli.
  */
 export const initialize = async () => {
-  // could be some long running operations here, we will use a spinner
-  // to let the user know it's not frozen.
-  const spinner = ora({ spinner: 'christmas' });
-
-  const actionChain = createChain([
-    // halt the chain the cwd is not empty and the user does not confirm
-    or(not(assertInitialized), assertUserConfirmation(confirmInitializeQuestion)),
-    // grab year / auth token from user.
-    getAnswersFromUser(initializeQuestions),
-    // create all required files in the cwd.
-    () => spinner.start(festiveStyle('Creating files')),
-    createFiles,
-    // install npm packages for the user.
-    () => { spinner.text = festiveStyle('Installing packages'); },
-    installPackages,
-  ]);
-
-  try {
-    const completed = await actionChain();
-    // make sure we stop the spinner when the chain finishes.
-    completed && spinner.succeed(festiveStyle('Successfully initialized your repository, have fun!'));
-  } catch (error) {
-    spinner.fail();
-    throw error;
+  // if there are files in the cwd, get confirmation with the user that they want to proceed.
+  if (!await cwdIsEmpty() && !await assertUserConfirmation(confirmInitializeQuestion)()) {
+    return;
   }
+
+  // get all the info we need in order to initialize.
+  const { answers } = await getAnswersFromUser(initializeQuestions)();
+
+  // run initialize steps in an action chain that reports its progress to the user.
+  const actionChain = createChainWithReporting([
+    { fn: createFiles, message: 'Creating files...' },
+    { fn: installPackages, message: 'Installing Packages...' },
+  ], 'Successfully initialized your repository, have fun! (see README for help)');
+
+  await actionChain({ answers });
 };
