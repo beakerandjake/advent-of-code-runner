@@ -7,10 +7,10 @@ import { getFastestExecutionTime, setFastestExecutionTime } from '../../statisti
  */
 export const tryToUpdateFastestExecutionTime = async ({
   year, day, part, executionTimeNs,
-}) => {
+} = {}) => {
   const fastestExecutionTime = await getFastestExecutionTime(year, day, part);
 
-  if (executionTimeNs && (executionTimeNs >= fastestExecutionTime)) {
+  if (fastestExecutionTime > 0 && (executionTimeNs && (executionTimeNs >= fastestExecutionTime))) {
     logger.debug('not setting fastest execution time, %s is slower than record: %s', executionTimeNs, fastestExecutionTime);
     return;
   }
