@@ -23,5 +23,6 @@ module.exports = {
     'no-console': 'off',
     'no-restricted-syntax': 'off',
     'max-classes-per-file': 'off',
+    'no-unused-expressions': ['error', { allowShortCircuit: true, allowTernary: true }],
   },
 };
