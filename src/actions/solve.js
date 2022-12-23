@@ -2,6 +2,7 @@ import { createChain } from './actionChain.js';
 import {
   assertAnswerStillCorrect,
   assertPuzzleIsUnlocked,
+  assertPuzzleLevelMet,
   executeUserSolution,
   getAuthenticationToken,
   getPuzzleInput,
@@ -12,6 +13,7 @@ import {
 const actionChain = createChain([
   getYear,
   assertPuzzleIsUnlocked,
+  assertPuzzleLevelMet,
   getAuthenticationToken,
   getPuzzleInput,
   executeUserSolution,

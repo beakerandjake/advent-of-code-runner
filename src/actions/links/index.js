@@ -1,5 +1,6 @@
 import { assertAnswerStillCorrect } from './assertAnswerStillCorrect.js';
 import { assertPuzzleIsUnlocked } from './assertPuzzleIsUnlocked.js';
+import { assertPuzzleLevelMet } from './assertPuzzleLevelMet.js';
 import { executeUserSolution } from './executeUserSolution.js';
 import { getAuthenticationToken } from './getAuthenticationToken.js';
 import { getPuzzleInput } from './getPuzzleInput.js';
@@ -13,6 +14,7 @@ import { tryToUpdateFastestExecutionTime } from './tryToUpdateFastestExecutionTi
 export {
   assertAnswerStillCorrect,
   assertPuzzleIsUnlocked,
+  assertPuzzleLevelMet,
   executeUserSolution,
   getAuthenticationToken,
   getPuzzleInput,
