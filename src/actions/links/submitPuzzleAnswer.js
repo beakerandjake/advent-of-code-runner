@@ -9,5 +9,6 @@ export const submitPuzzleAnswer = async ({
 } = {}) => {
   logger.festive('Submitting your answer to advent of code');
   const { correct, message } = await submitSolution(year, day, part, answer, authenticationToken);
+  logger[correct ? 'festive' : 'error'](message);
   return { submissionResult: { correct, message } };
 };
