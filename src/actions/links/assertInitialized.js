@@ -1,5 +1,5 @@
 import { logger } from '../../logger.js';
-import { dataStoreFileExists } from '../../persistence/jsonFileStore';
+import { dataStoreFileExists } from '../../persistence/jsonFileStore.js';
 
 /**
  * Asserts that the user has ran an init command in the cwd.
