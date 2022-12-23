@@ -1,11 +1,13 @@
 import { createChain } from './actionChain.js';
 import {
+  assertAnswerIsCorrect,
   assertPuzzleIsUnlocked,
   assertPuzzleLevelMet,
   executeUserSolution,
   getAuthenticationToken,
   getPuzzleInput,
   getYear,
+  storeFastestExecutionTime,
   storeSubmittedAnswer,
   submitPuzzleAnswer,
 } from './links/index.js';
@@ -19,6 +21,8 @@ const actionChain = createChain([
   executeUserSolution,
   submitPuzzleAnswer,
   storeSubmittedAnswer,
+  assertAnswerIsCorrect,
+  storeFastestExecutionTime,
 ]);
 
 /**

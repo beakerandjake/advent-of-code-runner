@@ -9,6 +9,7 @@ import { getYear } from './getYear.js';
 import { submitPuzzleAnswer } from './submitPuzzleAnswer.js';
 import { storeSubmittedAnswer } from './storeSubmittedAnswer.js';
 import { tryToUpdateFastestExecutionTime } from './tryToUpdateFastestExecutionTime.js';
+import { storeFastestExecutionTime } from './storeFastestExecutionTime.js';
 
 /**
  * barrel for "link" functions which are used to compose action chains.
@@ -26,4 +27,5 @@ export {
   submitPuzzleAnswer,
   storeSubmittedAnswer,
   tryToUpdateFastestExecutionTime,
+  storeFastestExecutionTime,
 };
