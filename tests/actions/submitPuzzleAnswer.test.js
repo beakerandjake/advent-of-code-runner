@@ -19,7 +19,7 @@ describe('actions', () => {
   describe('common', () => {
     describe('submitPuzzleAnswer()', () => {
       test('returns on answer correct', async () => {
-        const apiResponse = { correct: true, message: 'great job!' };
+        const apiResponse = { success: true, message: 'great job!' };
         submitSolution.mockReturnValue(apiResponse);
         const result = await submitPuzzleAnswer({
           year: 2022, day: 1, part: 1, answer: 'ASDF', authenticationToken: 'asdf',
@@ -28,7 +28,7 @@ describe('actions', () => {
       });
 
       test('returns on answer incorrect', async () => {
-        const apiResponse = { correct: false, message: 'that is wrong!' };
+        const apiResponse = { success: false, message: 'that is wrong!' };
         submitSolution.mockReturnValue(apiResponse);
         const result = await submitPuzzleAnswer({
           year: 2022, day: 1, part: 1, answer: 'ASDF', authenticationToken: 'asdf',
