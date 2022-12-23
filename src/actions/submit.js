@@ -5,6 +5,7 @@ import * as links from './links/index.js';
  * The links which together make up the submit action.
  */
 export const submitLinks = [
+  links.assertInitialized,
   links.getYear,
   links.assertPuzzleUnlocked,
   links.assertPuzzleLevelMet,

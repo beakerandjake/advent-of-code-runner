@@ -1,15 +1,14 @@
 import { submitLinks } from './submit.js';
-import { getNextUnsolvedPuzzle, getYear } from './links/index.js';
+import { assertInitialized, getNextUnsolvedPuzzle, getYear } from './links/index.js';
 import { createChain } from './actionChain.js';
 
 /**
- * Same as autoSolve, replace the submit chains 'getYear' with our additional link.
+ * Append our links to the front of submits links, but be sure to remove duplicates.
  */
-const actionChain = createChain([
-  getYear,
-  getNextUnsolvedPuzzle,
-  ...submitLinks.filter((x) => x !== getYear),
-]);
+const actionChain = createChain([...new Set([
+  ...[assertInitialized, getYear, getNextUnsolvedPuzzle],
+  ...submitLinks,
+])]);
 
 /**
  * Downloads or loads the input to the puzzle, executes the users solution and outputs results.

@@ -5,6 +5,7 @@ import * as links from './links/index.js';
  * The links which together make up the solve action.
  */
 export const solveLinks = [
+  links.assertInitialized,
   links.getYear,
   links.assertPuzzleUnlocked,
   links.assertPuzzleLevelMet,
