@@ -9,10 +9,8 @@ import { logger } from '../logger.js';
 export const installPackages = async () => {
   // TODO test multiplatform support
   // TODO can probably support yarn install too.
-
   logger.debug('installing npm packages');
-
-  return new Promise((resolve, reject) => {
+  await new Promise((resolve, reject) => {
     // run npm install command
     const childProcess = spawn(
       'npm',
