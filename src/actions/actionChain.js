@@ -65,14 +65,14 @@ export const executeChain = async (links, args = {}) => {
  *  - Can raise an Error: the chain halts.
  * This function will return a boolean indicating whether or not each link ran.
  * If any function in the chain causes a halt, then chains which come after it are not executed.
- * @param {Function[]} actions - The functions to execute.
+ * @param {Function[]} links - The functions to execute.
  */
-export const createChain = (actions = []) => {
-  if (!Array.isArray(actions) || actions.some((x) => !(x instanceof Function))) {
+export const createChain = (links = []) => {
+  if (!Array.isArray(links) || links.some((x) => !(x instanceof Function))) {
     throw new Error('Expected an array of functions');
   }
 
   // could probably do some fun stuff here with a fluent api..
 
-  return async (args) => executeChain(actions, args);
+  return async (args) => executeChain(links, args);
 };
