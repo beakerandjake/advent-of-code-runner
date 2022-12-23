@@ -1,20 +1,19 @@
-import { getYear } from './actionUtil.js';
-import { getNextUnansweredPuzzle } from '../answers.js';
-import { logger } from '../logger.js';
-import { solvePuzzleAndSubmitAnswer } from './solvePuzzleAndSubmitAnswer.js';
+import { solveLinks } from './solve.js';
+import { getNextUnsolvedPuzzle, getYear } from './links/index.js';
+import { createChain } from './actionChain.js';
 
 /**
- * Finds and submits the next puzzle the user has not solved.
+ * Same as autoSolve, replace the submit chains 'getYear' with our additional link.
  */
-export const autoSubmit = async () => {
-  logger.festive('Finding next unsolved puzzle');
-  const nextPuzzle = await getNextUnansweredPuzzle(getYear());
+const actionChain = createChain([
+  getYear,
+  getNextUnsolvedPuzzle,
+  ...solveLinks.filter((x) => x !== getYear),
+]);
 
-  // bail if all puzzles solved.
-  if (!nextPuzzle) {
-    logger.festive('You\'ve already solved all the puzzles for this year! If you want to submit a specific problem use the "submit" command instead.');
-    return;
-  }
-
-  await solvePuzzleAndSubmitAnswer(nextPuzzle.day, nextPuzzle.part);
-};
+/**
+ * Downloads or loads the input to the puzzle, executes the users solution and outputs results.
+ * @param {Number} day
+ * @param {Number} part
+ */
+export const autoSubmit = () => actionChain({});
