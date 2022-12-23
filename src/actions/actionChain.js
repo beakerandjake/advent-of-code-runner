@@ -38,7 +38,7 @@ export const executeChain = async (links, args = {}) => {
       if (result !== true && result !== undefined) {
         // not logging the actual args on purpose, could contain secrets...
         chainLog('link: %s has updated the args', link.name);
-        currentArgs = result;
+        currentArgs = { ...currentArgs, ...result };
       }
     } catch (error) {
       chainLog('executing halted because error was raised by link: %s', link.name);
@@ -54,7 +54,7 @@ export const executeChain = async (links, args = {}) => {
  * This function will invoke each function in the array sequentially, each function:
  *  - Is passed the current args object
  *  - Can return a bool: the chain continues (true) or halts (false).
- *  - Can return a non-bool: the args object will be set to this value (the chain continues).
+ *  - Can return an object: the value will be spread onto the args object (the chain continues).
  *  - Can be void (return undefined): the chain continues and args are not changed.
  *  - Can raise an Error: the chain halts.
  * If any function in the chain causes a halt, then chains which come after it are not executed.
