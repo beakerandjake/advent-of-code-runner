@@ -9,7 +9,7 @@ import { createChain } from './actionChain.js';
  */
 
 /**
- *
+ * Returns a decorated action chain that will output progress to the cli.
  * @param {ReportingLink[]} links - Array of links to execute
  * @param {String} successMessage - Message displayed if all links in the chain are completed.
  */
@@ -28,6 +28,8 @@ export const createChainWithReporting = (links = [], successMessage = '') => {
 
   const chain = createChain(decoratedActions);
 
+  // return a wrapper around the action chain that will
+  // stop the spinner when the chain finishes
   return async (args) => {
     try {
       const completed = await chain(args);
