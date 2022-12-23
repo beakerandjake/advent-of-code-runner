@@ -6,6 +6,7 @@ import {
   getAuthenticationToken,
   getPuzzleInput,
   getYear,
+  storeSubmissionResult,
   submitPuzzleAnswer,
 } from './links/index.js';
 
@@ -17,6 +18,7 @@ const actionChain = createChain([
   getPuzzleInput,
   executeUserSolution,
   submitPuzzleAnswer,
+  storeSubmissionResult,
 ]);
 
 /**
