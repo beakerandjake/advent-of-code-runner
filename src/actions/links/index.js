@@ -6,6 +6,7 @@ import { executeUserSolution } from './executeUserSolution.js';
 import { getAuthenticationToken } from './getAuthenticationToken.js';
 import { getPuzzleInput } from './getPuzzleInput.js';
 import { getYear } from './getYear.js';
+import { submitPuzzleAnswer } from './submitPuzzleAnswer.js';
 import { tryToUpdateFastestExecutionTime } from './tryToUpdateFastestExecutionTime.js';
 
 /**
@@ -21,5 +22,6 @@ export {
   getAuthenticationToken,
   getPuzzleInput,
   getYear,
+  submitPuzzleAnswer,
   tryToUpdateFastestExecutionTime,
 };

@@ -6,6 +6,7 @@ import {
   getAuthenticationToken,
   getPuzzleInput,
   getYear,
+  submitPuzzleAnswer,
 } from './links/index.js';
 
 const actionChain = createChain([
@@ -15,6 +16,7 @@ const actionChain = createChain([
   getAuthenticationToken,
   getPuzzleInput,
   executeUserSolution,
+  submitPuzzleAnswer,
 ]);
 
 /**
