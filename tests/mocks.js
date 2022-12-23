@@ -13,6 +13,7 @@ export const mockLogger = () => {
     silly: jest.fn(),
     festive: jest.fn(),
     log: jest.fn(),
+    actionchain: jest.fn(),
   };
   jest.unstable_mockModule('src/logger.js', () => ({
     logger: toReturn,

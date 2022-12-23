@@ -13,18 +13,11 @@ import { logger } from '../logger.js';
  */
 
 /**
- * Helper function for consistent logging in the chain.
- */
-const chainLog = (message, ...rest) => {
-  logger.debug(`(action chain) ${message}`, ...rest);
-};
-
-/**
  * Run the pre action chain and the action.
  * @private
  */
 export const executeChain = async (links, args = {}) => {
-  chainLog('executing action chain (length: %s)', links.length);
+  logger.actionchain('executing action chain (length: %s)', links.length);
   let currentArgs = args;
   let iterations = 0;
 
@@ -33,14 +26,14 @@ export const executeChain = async (links, args = {}) => {
     iterations += 1;
 
     try {
-      chainLog('executing link (%s/%s): %s', iterations, links.length, link.name);
+      logger.actionchain('executing link (%s/%s): %s', iterations, links.length, link.name);
 
       // eslint-disable-next-line no-await-in-loop
       const result = await link(currentArgs);
 
       // if false is explicitly returned, that means the link wants the chain to halt.
       if (result === false) {
-        chainLog('link: %s has halted execution', link.name);
+        logger.actionchain('link: %s has halted execution', link.name);
         break;
       }
 
@@ -49,16 +42,16 @@ export const executeChain = async (links, args = {}) => {
       // undefined is ignored to support void links.
       if (result !== true && result !== undefined) {
         // not logging the actual args on purpose, could contain secrets...
-        chainLog('link: %s has updated the args', link.name);
+        logger.actionchain('link: %s has updated the args', link.name);
         currentArgs = { ...currentArgs, ...result };
       }
     } catch (error) {
-      chainLog('executing halted because error was raised by link: %s', link.name);
+      logger.actionchain('executing halted because error was raised by link: %s', link.name);
       throw error;
     }
   }
 
-  chainLog('successfully executed (%s/%s)', iterations, links.length);
+  logger.actionchain('successfully executed (%s/%s)', iterations, links.length);
 };
 
 /**
