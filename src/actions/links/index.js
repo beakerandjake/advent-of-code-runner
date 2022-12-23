@@ -10,7 +10,7 @@ import { getAuthenticationToken } from './getAuthenticationToken.js';
 import { getNextUnsolvedPuzzle } from './getNextUnsolvedPuzzle.js';
 import { getPuzzleInput } from './getPuzzleInput.js';
 import { getYear } from './getYear.js';
-import { or, not } from './logical.js';
+import { or, not, and } from './logical.js';
 import { storeFastestExecutionTime } from './storeFastestExecutionTime.js';
 import { storeSubmittedAnswer } from './storeSubmittedAnswer.js';
 import { submitPuzzleAnswer } from './submitPuzzleAnswer.js';
@@ -39,4 +39,5 @@ export {
   tryToUpdateFastestExecutionTime,
   or,
   not,
+  and,
 };
