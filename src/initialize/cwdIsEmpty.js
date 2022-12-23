@@ -7,6 +7,7 @@ import { getConfigValue } from '../config.js';
 const whitelist = [
   '.git',
   '.DS_Store',
+  'LICENSE',
 ];
 
 /**
