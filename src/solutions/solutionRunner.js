@@ -1,7 +1,8 @@
 import { join } from 'node:path';
+import { env } from 'node:process';
 import { Worker } from 'node:worker_threads';
 import { logger } from '../logger.js';
-import { getConfigValue } from '../config.js';
+import { getConfigValue, envOptions } from '../config.js';
 import { fileExists } from '../persistence/io.js';
 import {
   SolutionWorkerEmptyInputError,
@@ -50,9 +51,11 @@ export const getFunctionNameForPart = (part) => {
  */
 export const spawnWorker = async (workerThreadFileName, workerData) => (
   new Promise((resolve, reject) => {
-    const worker = new Worker(workerThreadFileName, { workerData });
-
-    // listen to messages from the worker.
+    // omit the auth token from the workers env.
+    const { [envOptions.authenticationToken]: _, ...workerEnv } = env;
+    // spawn the worker thread
+    const worker = new Worker(workerThreadFileName, { workerData, env: workerEnv });
+    // listen to messages from the worker thread.
     worker.on('message', (data) => {
       switch (data.type) {
       // worker just wants to log, pipe it through to our logger.

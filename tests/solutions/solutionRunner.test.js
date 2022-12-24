@@ -42,12 +42,19 @@ const {
   execute, getSolutionFileName, getFunctionNameForPart, spawnWorker,
 } = await import('../../src/solutions/solutionRunner.js');
 
-beforeEach(() => {
-  jest.clearAllMocks();
-  workerOnMock.mockClear();
-});
-
 describe('solutionRunner', () => {
+  const origEnv = process.env;
+
+  beforeEach(() => {
+    jest.clearAllMocks();
+    workerOnMock.mockClear();
+    process.env = { ...origEnv };
+  });
+
+  afterAll(() => {
+    process.env = origEnv;
+  });
+
   describe('getSolutionFileName()', () => {
     test('returns expected value', () => {
       const dir = 'asdf';
@@ -164,7 +171,9 @@ describe('solutionRunner', () => {
     /**
      * helps set the mock getConfigValue for the solution runner.
      */
-    const setConfigMocks = (part, { solutionsDir = '.', partFunctions = [{ key: part, name: 'cats' }], workerFileName = '.' } = {}) => {
+    const setConfigMocks = (part, {
+      solutionsDir = '.', partFunctions = [{ key: part, name: 'cats' }], workerFileName = '.', authToken = '',
+    } = {}) => {
       getConfigValue.mockImplementation((key) => {
         switch (key) {
           case 'paths.solutionsDir':
@@ -173,6 +182,8 @@ describe('solutionRunner', () => {
             return partFunctions;
           case 'paths.solutionRunnerWorkerFile':
             return workerFileName;
+          case 'aoc.authenticationToken':
+            return authToken;
           default:
             return undefined;
         }
@@ -219,6 +230,23 @@ describe('solutionRunner', () => {
       expect(Worker).toHaveBeenCalledWith(
         expect.any(String),
         expect.objectContaining({ workerData: expected }),
+      );
+    });
+
+    test('removes auth token from works env', async () => {
+      const authToken = 'ASDF';
+      process.env = { ...process.env, authToken };
+      setConfigMocks(1, { authToken });
+      fileExists.mockResolvedValue(true);
+      // hacky way to ensure worker constructor is called.
+      // cant await execute cause that promise never resolves.
+      // so await a different promise to ensure constructor is called
+      execute(1, 1, 'ASDF');
+      await Promise.resolve();
+
+      expect(Worker).toHaveBeenCalledWith(
+        expect.any(String),
+        expect.not.objectContaining({ env: { authToken } }),
       );
     });
   });
