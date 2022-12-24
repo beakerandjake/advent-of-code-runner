@@ -18,20 +18,36 @@ afterEach(() => {
 describe('actions', () => {
   describe('links', () => {
     describe('submitPuzzleAnswer()', () => {
+      test.each([
+        null, undefined,
+      ])('throws if auth token is: %s', async (authToken) => {
+        await expect(async () => submitPuzzleAnswer({
+          year: 2022, day: 1, part: 1, answer: 'asdf', authToken,
+        })).rejects.toThrow();
+      });
+
+      test.each([
+        null, undefined,
+      ])('throws if answer is: %s', async (answer) => {
+        await expect(async () => submitPuzzleAnswer({
+          year: 2022, day: 1, part: 1, answer, authToken: 'SADF',
+        })).rejects.toThrow();
+      });
+
       test('returns on answer correct', async () => {
-        const apiResponse = { success: true, message: 'great job!' };
+        const apiResponse = { correct: true, message: 'great job!' };
         submitSolution.mockReturnValue(apiResponse);
         const result = await submitPuzzleAnswer({
-          year: 2022, day: 1, part: 1, answer: 'ASDF', authenticationToken: 'asdf',
+          year: 2022, day: 1, part: 1, answer: 'ASDF', authToken: 'asdf',
         });
         expect(result).toEqual({ submissionResult: apiResponse });
       });
 
       test('returns on answer incorrect', async () => {
-        const apiResponse = { success: false, message: 'that is wrong!' };
+        const apiResponse = { correct: false, message: 'that is wrong!' };
         submitSolution.mockReturnValue(apiResponse);
         const result = await submitPuzzleAnswer({
-          year: 2022, day: 1, part: 1, answer: 'ASDF', authenticationToken: 'asdf',
+          year: 2022, day: 1, part: 1, answer: 'ASDF', authToken: 'asdf',
         });
         expect(result).toEqual({ submissionResult: apiResponse });
       });
