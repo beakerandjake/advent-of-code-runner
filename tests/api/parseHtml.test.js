@@ -1,7 +1,9 @@
 import { describe, test } from '@jest/globals';
 
 import { getElementByTagName, getTextContent } from '../../src/api/parseHtml.js';
-import { actualResponseMainTags, getResponseHtml } from './getActualResponseHtml.js';
+import {
+  badLevel, correctAnswerDayComplete, wrongAnswer, tooManyRequests, correctAnswerDayIncomplete,
+} from './getActualResponseHtml.js';
 
 describe('parseHtml', () => {
   describe('getElementByTagName()', () => {
@@ -55,23 +57,28 @@ describe('parseHtml', () => {
 
     describe('actual advent of code responses', () => {
       test('wrong answer', () => {
-        const html = getResponseHtml(actualResponseMainTags.wrongAnswer);
-        const result = getElementByTagName(html, 'main');
-        expect(result).toBe(actualResponseMainTags.wrongAnswer);
+        const result = getElementByTagName(wrongAnswer.html, 'main');
+        expect(result).toBe(wrongAnswer.mainTag);
       });
 
-      test.todo('correct answer');
-
       test('bad level', () => {
-        const html = getResponseHtml(actualResponseMainTags.badLevel);
-        const result = getElementByTagName(html, 'main');
-        expect(result).toBe(actualResponseMainTags.badLevel);
+        const result = getElementByTagName(badLevel.html, 'main');
+        expect(result).toBe(badLevel.mainTag);
+      });
+
+      test('correct answer (day complete)', () => {
+        const result = getElementByTagName(correctAnswerDayComplete.html, 'main');
+        expect(result).toBe(correctAnswerDayComplete.mainTag);
+      });
+
+      test('correct answer (day incomplete)', () => {
+        const result = getElementByTagName(correctAnswerDayIncomplete.html, 'main');
+        expect(result).toBe(correctAnswerDayIncomplete.mainTag);
       });
 
       test('too many requests', () => {
-        const html = getResponseHtml(actualResponseMainTags.tooManyRequests);
-        const result = getElementByTagName(html, 'main');
-        expect(result).toBe(actualResponseMainTags.tooManyRequests);
+        const result = getElementByTagName(tooManyRequests.html, 'main');
+        expect(result).toBe(tooManyRequests.mainTag);
       });
     });
   });
@@ -108,22 +115,35 @@ describe('parseHtml', () => {
 
     describe('actual advent of code responses', () => {
       test('wrong answer', () => {
-        const expected = 'That\'s not the right answer.  If you\'re stuck, make sure you\'re using the full input data; there are also some general tips on the about page, or you can ask for hints on the subreddit.  Because you have guessed incorrectly 12 times on this puzzle, please wait 15 minutes before trying again. (You guessed 12349857.) [Return to Day 1]';
-        const result = getTextContent(actualResponseMainTags.wrongAnswer, expected);
+        // eslint-disable-next-line quotes
+        const expected = `That's not the right answer. If you're stuck, make sure you're using the full input data; there are also some general tips on the about page, or you can ask for hints on the subreddit. Please wait one minute before trying again. (You guessed ASDF.) [Return to Day 2]`;
+        const result = getTextContent(wrongAnswer.mainTag);
         expect(result).toBe(expected);
       });
 
-      test.todo('correct answer');
+      test('correct answer (day complete)', () => {
+        // eslint-disable-next-line quotes
+        const expected = `That's the right answer! You are one gold star closer to collecting enough star fruit. You have completed Day 1! You can [Shareon Twitter Mastodon] this victory or [Return to Your Advent Calendar].`;
+        const result = getTextContent(correctAnswerDayComplete.mainTag);
+        expect(result).toBe(expected);
+      });
+
+      test('correct answer (day incomplete)', () => {
+        // eslint-disable-next-line quotes
+        const expected = `That's the right answer! You are one gold star closer to collecting enough star fruit. [Continue to Part Two]`;
+        const result = getTextContent(correctAnswerDayIncomplete.mainTag);
+        expect(result).toBe(expected);
+      });
 
       test('bad level', () => {
-        const expected = 'You don\'t seem to be solving the right level.  Did you already complete it? [Return to Day 2]';
-        const result = getTextContent(actualResponseMainTags.badLevel, expected);
+        const expected = 'You don\'t seem to be solving the right level. Did you already complete it? [Return to Day 1]';
+        const result = getTextContent(badLevel.mainTag);
         expect(result).toBe(expected);
       });
 
       test('too many requests', () => {
-        const expected = 'You gave an answer too recently; you have to wait after submitting an answer before trying again.  You have 14m 6s left to wait. [Return to Day 1]';
-        const result = getTextContent(actualResponseMainTags.tooManyRequests, expected);
+        const expected = 'You gave an answer too recently; you have to wait after submitting an answer before trying again. You have 14m 6s left to wait. [Return to Day 1]';
+        const result = getTextContent(tooManyRequests.mainTag);
         expect(result).toBe(expected);
       });
     });

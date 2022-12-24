@@ -83,16 +83,22 @@ const CONFIG = {
       badLevel: /you don't seem to be solving the right level/gim,
       tooManyRequests: /you gave an answer too recently/gim,
       sanitizers: [
-        // remove return to day link
-        { pattern: /\[Return to Day \d+\]/g, replace: '' },
-        // remove help message
+        // remove links, shows up on incorrect/correct answer
+        { pattern: /\[(Return|Continue) to .*\]\.?/gi, replace: '' },
+        // remove help message, shows up on wrong answer
         {
           pattern:
             "If you're stuck, make sure you're using the full input data; there are also some general tips on the about page, or you can ask for hints on the subreddit.",
           replace: '',
         },
+        // remove guess text, shows up on wrong answer
         {
-          pattern: /\(You guessed .*\)/g,
+          pattern: /\(You guessed .*\)/gi,
+          replace: '',
+        },
+        // remove share text, shows up when answer is correct (but all levels not solved)
+        {
+          pattern: /You can \[.*\] this victory or/gi,
           replace: '',
         },
         // standardize whitespace
