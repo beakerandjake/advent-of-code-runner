@@ -28,6 +28,7 @@ export const mockLogger = () => {
 export const mockConfig = () => {
   const toReturn = {
     getConfigValue: jest.fn(),
+    envOptions: {},
   };
   jest.unstable_mockModule('src/config.js', () => toReturn);
   return toReturn;
