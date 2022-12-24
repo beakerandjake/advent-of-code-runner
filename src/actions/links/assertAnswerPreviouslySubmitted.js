@@ -7,6 +7,10 @@ import { answerHasBeenSubmitted } from '../../answers.js';
 export const assertAnswerPreviouslySubmitted = async ({
   year, day, part, answer,
 } = {}) => {
+  if (answer == null) {
+    throw new Error('Answer was not provided');
+  }
+
   if (await answerHasBeenSubmitted(year, day, part, answer)) {
     logger.error('You have already submitted this answer for this puzzle!');
     return true;
