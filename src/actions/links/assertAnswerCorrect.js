@@ -9,6 +9,10 @@ import { logger } from '../../logger.js';
 export const assertAnswerCorrect = async ({
   year, day, part, answer,
 } = {}) => {
+  if (answer == null) {
+    throw new Error('Answer was not provided');
+  }
+
   const correctAnswer = await getCorrectAnswer(year, day, part);
 
   // if there isn't a correct answer stored, then this puzzle hasn't been solved.

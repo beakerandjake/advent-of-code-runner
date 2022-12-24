@@ -21,6 +21,15 @@ afterEach(() => {
 describe('actions', () => {
   describe('links', () => {
     describe('assertAnswerCorrect()', () => {
+      test.each([
+        null, undefined,
+      ])('throws if answer is %s', async (answer) => {
+        getCorrectAnswer.mockResolvedValue(answer);
+        await expect(async () => assertAnswerCorrect({
+          year: 2022, day: 1, part: 5, answer,
+        })).rejects.toThrow();
+      });
+
       test('returns false if puzzle not solved', async () => {
         getCorrectAnswer.mockReturnValue(null);
         const result = await assertAnswerCorrect({
