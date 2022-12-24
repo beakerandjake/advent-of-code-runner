@@ -13,7 +13,7 @@ export const getElementByTagName = (html, name) => {
     (element) => element.type === 'tag' && element.name === name,
     parseDocument(html).children,
   );
-  return found ? render(found) : null;
+  return found ? render(found, { encodeEntities: false }) : null;
 };
 
 /**
