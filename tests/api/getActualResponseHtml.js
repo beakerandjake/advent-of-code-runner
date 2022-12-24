@@ -1,3 +1,4 @@
+/* eslint-disable quotes */
 /**
  * Module which returns actual html response from advent of code.
  * Used to mock actual api responses for testing.
