@@ -8,9 +8,17 @@ import { getFastestExecutionTime, setFastestExecutionTime } from '../../statisti
 export const tryToUpdateFastestExecutionTime = async ({
   year, day, part, executionTimeNs,
 } = {}) => {
+  if (executionTimeNs == null) {
+    throw new Error('null or undefined execution time');
+  }
+
+  if (executionTimeNs < 0) {
+    throw new RangeError('execution time cannot be negative');
+  }
+
   const fastestExecutionTime = await getFastestExecutionTime(year, day, part);
 
-  if (fastestExecutionTime > 0 && (executionTimeNs && (executionTimeNs >= fastestExecutionTime))) {
+  if (fastestExecutionTime != null && executionTimeNs >= fastestExecutionTime) {
     logger.debug('not setting fastest execution time, %s is slower than record: %s', executionTimeNs, fastestExecutionTime);
     return;
   }
