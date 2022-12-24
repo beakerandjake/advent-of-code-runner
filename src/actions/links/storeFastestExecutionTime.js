@@ -7,6 +7,10 @@ import { setFastestExecutionTime as doSetFastestExecutionTime } from '../../stat
 export const storeFastestExecutionTime = async ({
   year, day, part, executionTimeNs,
 } = {}) => {
+  if (executionTimeNs == null) {
+    throw new Error('null or undefined execution time');
+  }
+
   logger.debug('setting fastest execution time to: %s', executionTimeNs);
   await doSetFastestExecutionTime(year, day, part, executionTimeNs);
 };
