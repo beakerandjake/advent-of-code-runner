@@ -20,17 +20,14 @@ beforeEach(() => {
 describe('actions', () => {
   describe('links', () => {
     describe('getAnswersFromUser()', () => {
+      test('throws if questions is null', () => {
+        expect(() => getAnswersFromUser(null)).toThrow();
+      });
+
       test('builds and returns link', () => {
         const result = getAnswersFromUser({});
         expect(result).toBeInstanceOf(Function);
       });
-
-      // test('returns answers', async () => {
-      //   const expected = { one: true, two: false };
-      //   mockPrompt.mockResolvedValue(expected);
-      //   const answers = await getAnswersFromUser([]);
-      //   expect(answers).toEqual(expected);
-      // });
 
       test('returned link returns answers', async () => {
         const expected = { one: true, two: false };
