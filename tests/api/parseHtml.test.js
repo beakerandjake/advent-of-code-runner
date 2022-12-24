@@ -2,7 +2,7 @@ import { describe, test } from '@jest/globals';
 
 import { getElementByTagName, getTextContent } from '../../src/api/parseHtml.js';
 import {
-  badLevel, correctAnswerDayComplete, wrongAnswer, tooManyRequests,
+  badLevel, correctAnswerDayComplete, wrongAnswer, tooManyRequests, correctAnswerDayIncomplete,
 } from './getActualResponseHtml.js';
 
 describe('parseHtml', () => {
@@ -71,7 +71,10 @@ describe('parseHtml', () => {
         expect(result).toBe(correctAnswerDayComplete.mainTag);
       });
 
-      test.todo('correct answer (day incomplete)');
+      test('correct answer (day incomplete)', () => {
+        const result = getElementByTagName(correctAnswerDayIncomplete.html, 'main');
+        expect(result).toBe(correctAnswerDayIncomplete.mainTag);
+      });
 
       test('too many requests', () => {
         const result = getElementByTagName(tooManyRequests.html, 'main');
@@ -125,7 +128,12 @@ describe('parseHtml', () => {
         expect(result).toBe(expected);
       });
 
-      test.todo('correct answer (day incomplete)');
+      test('correct answer (day incomplete)', () => {
+        // eslint-disable-next-line quotes
+        const expected = `That's the right answer! You are one gold star closer to collecting enough star fruit. [Continue to Part Two]`;
+        const result = getTextContent(correctAnswerDayIncomplete.mainTag);
+        expect(result).toBe(expected);
+      });
 
       test('bad level', () => {
         const expected = 'You don\'t seem to be solving the right level. Did you already complete it? [Return to Day 1]';
