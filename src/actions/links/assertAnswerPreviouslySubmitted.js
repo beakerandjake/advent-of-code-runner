@@ -8,7 +8,7 @@ export const assertAnswerPreviouslySubmitted = async ({
   year, day, part, answer,
 } = {}) => {
   if (answer == null) {
-    throw new Error('Answer was not provided');
+    throw new Error('null or undefined answer');
   }
 
   if (await answerHasBeenSubmitted(year, day, part, answer)) {

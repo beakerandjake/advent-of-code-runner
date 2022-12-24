@@ -10,7 +10,7 @@ export const assertAnswerCorrect = async ({
   year, day, part, answer,
 } = {}) => {
   if (answer == null) {
-    throw new Error('Answer was not provided');
+    throw new Error('null or undefined answer');
   }
 
   const correctAnswer = await getCorrectAnswer(year, day, part);
