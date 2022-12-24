@@ -8,7 +8,7 @@ export const submitPuzzleAnswer = async ({
   year, day, part, answer, authToken,
 } = {}) => {
   logger.festive('Submitting your answer to advent of code');
-  const { success, message } = await submitSolution(year, day, part, answer, authToken);
-  logger[success ? 'festive' : 'error'](message);
-  return { submissionResult: { success, message } };
+  const { correct, message } = await submitSolution(year, day, part, answer, authToken);
+  logger[correct ? 'festive' : 'error'](message);
+  return { submissionResult: { correct, message } };
 };

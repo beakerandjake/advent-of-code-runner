@@ -5,9 +5,9 @@ import { logger } from '../../logger.js';
  * Store the answer (and its correctness) so it cannot be re-submitted to this puzzle in the future.
  */
 export const storeSubmittedAnswer = async ({
-  year, day, part, answer, submissionResult: { success },
+  year, day, part, answer, submissionResult: { correct },
 } = {}) => {
-  if (success) {
+  if (correct) {
     logger.debug('storing correct answer: %s', answer);
     await setCorrectAnswer(year, day, part, answer);
   } else {
