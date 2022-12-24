@@ -3,7 +3,6 @@ import {
 } from '@jest/globals';
 import { mockConfig, mockLogger } from '../mocks.js';
 import { getConfigValue as getConfigValueOrig } from '../../src/config.js';
-import { actualResponseMainTags, getResponseHtml } from './getActualResponseHtml.js';
 
 // setup mocks
 mockLogger();
