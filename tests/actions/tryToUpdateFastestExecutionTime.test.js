@@ -22,6 +22,14 @@ beforeEach(() => {
 describe('actions', () => {
   describe('links', () => {
     describe('tryToUpdateFastestExecutionTime()', () => {
+      test.each([
+        null, undefined, -1,
+      ])('throws if execution time is: %s', async (executionTimeNs) => {
+        await expect(async () => tryToUpdateFastestExecutionTime({
+          year: 2022, day: 11, part: 1, executionTimeNs,
+        })).rejects.toThrow();
+      });
+
       test('sets if no previous record set', async () => {
         getFastestExecutionTime.mockResolvedValue(null);
         await tryToUpdateFastestExecutionTime({ executionTimeNs: 1234 });

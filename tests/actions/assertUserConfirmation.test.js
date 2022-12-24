@@ -20,6 +20,12 @@ beforeEach(() => {
 describe('actions', () => {
   describe('links', () => {
     describe('assertUserConfirmation()', () => {
+      test.each([
+        null, undefined,
+      ])('throws if question is %s', (question) => {
+        expect(() => assertUserConfirmation(question)).toThrow();
+      });
+
       test('builds and returns function', () => {
         const result = assertUserConfirmation({});
         expect(result).toBeInstanceOf(Function);

@@ -18,6 +18,14 @@ afterEach(() => {
 describe('actions', () => {
   describe('links', () => {
     describe('assertAnswerPreviouslySubmitted()', () => {
+      test.each([
+        null, undefined,
+      ])('throws if answer is %s', async (answer) => {
+        await expect(async () => assertAnswerPreviouslySubmitted({
+          year: 2022, day: 1, part: 5, answer,
+        })).rejects.toThrow();
+      });
+
       test('returns true if answer has been submitted', async () => {
         answerHasBeenSubmitted.mockResolvedValue(true);
         const result = await assertAnswerPreviouslySubmitted({
