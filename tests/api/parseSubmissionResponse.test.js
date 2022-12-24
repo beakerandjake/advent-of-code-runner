@@ -1,3 +1,4 @@
+/* eslint-disable quotes */
 import {
   jest, describe, test, beforeEach,
 } from '@jest/globals';
@@ -87,7 +88,7 @@ describe('parseSubmissionResponse', () => {
 
     // these tests are super brittle, but want some way to test the actual
     // sanitizer values from the actual config.
-    describe('actual sanitizers', () => {
+    describe('actual sanitizers from config', () => {
       test('wrong answer', () => {
         getConfigValue.mockImplementation((...args) => getConfigValueOrig(...args));
         const input = 'That\'s not the right answer.  If you\'re stuck, make sure you\'re using the full input data; there are also some general tips on the about page, or you can ask for hints on the subreddit.  Because you have guessed incorrectly 12 times on this puzzle, please wait 15 minutes before trying again. (You guessed 12349857.) [Return to Day 1]';
@@ -96,7 +97,21 @@ describe('parseSubmissionResponse', () => {
         expect(result).toBe(expected);
       });
 
-      test.todo('correct answer');
+      test('correct answer (day complete)', () => {
+        getConfigValue.mockImplementation((...args) => getConfigValueOrig(...args));
+        const input = `That's the right answer! You are one gold star closer to collecting enough star fruit. You have completed Day 1! You can [Shareon Twitter Mastodon] this victory or [Return to Your Advent Calendar].`;
+        const expected = `That's the right answer! You are one gold star closer to collecting enough star fruit. You have completed Day 1!`;
+        const result = sanitizeMessage(input);
+        expect(result).toBe(expected);
+      });
+
+      test('correct answer (day incomplete)', () => {
+        getConfigValue.mockImplementation((...args) => getConfigValueOrig(...args));
+        const input = `That's the right answer! You are one gold star closer to collecting enough star fruit. [Continue to Part Two]`;
+        const expected = `That's the right answer! You are one gold star closer to collecting enough star fruit.`;
+        const result = sanitizeMessage(input);
+        expect(result).toBe(expected);
+      });
 
       test('bad level', () => {
         getConfigValue.mockImplementation((...args) => getConfigValueOrig(...args));
@@ -129,7 +144,30 @@ describe('parseSubmissionResponse', () => {
       expect(correct).toBe(false);
     });
 
-    test.todo('matches correct answer');
+    test('matches correct answer (day complete)', () => {
+      const input = `That's the right answer! You are one gold star closer to collecting enough star fruit. You have completed Day 1!`;
+      getConfigValue.mockReturnValue({
+        correctSolution: /that's the right answer/gim,
+        incorrectSolution: /NOMATCH/i,
+        badLevel: /NOMATCH/,
+        tooManyRequests: /NOMATCH/,
+      });
+      const { correct } = parseResponseMessage(input);
+      expect(correct).toBe(true);
+    });
+
+    test('matches correct answer (day incomplete)', () => {
+      const input = `That's the right answer! You are one gold star closer to collecting enough star fruit.`;
+      getConfigValue.mockReturnValue({
+        correctSolution: /that's the right answer/gim,
+        incorrectSolution: /NOMATCH/,
+        badLevel: /NOMATCH/,
+        tooManyRequests: /NOMATCH/,
+      });
+      const { correct } = parseResponseMessage(input);
+      expect(correct).toBe(true);
+    });
+
 
     test('matches bad level', () => {
       const input = 'CATS';
