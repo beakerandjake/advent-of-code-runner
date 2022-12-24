@@ -264,7 +264,7 @@ export const correctAnswerDayComplete = {
       })(window, document, 'script', '//www.google-analytics.com/analytics.js', 'ga');
       ga('set', 'anonymizeIp', true);
       ga('send', 'pageview'); </script> <!-- /ga --> </body> </html>`,
-  main: `<main> <article> <p>That's the right answer! You are <span class="day-success">one gold star</span> closer to collecting enough star fruit.</p> <p>You have completed Day 1! You can <span class="share">[Share<span class="share-content">on <a href="https://twitter.com/intent/tweet?text=I+just+completed+%22Calorie+Counting%22+%2D+Day+1+%2D+Advent+of+Code+2022&amp;url=https%3A%2F%2Fadventofcode%2Ecom%2F2022%2Fday%2F1&amp;related=ericwastl&amp;hashtags=AdventOfCode" target="_blank">Twitter</a> <a href="javascript:void(0);" onclick="var mastodon_instance=prompt('Mastodon Instance / Server Name?'); if(typeof mastodon_instance==='string' && mastodon_instance.length){this.href='https://'+mastodon_instance+'/share?text=I+just+completed+%22Calorie+Counting%22+%2D+Day+1+%2D+Advent+of+Code+2022+%23AdventOfCode+https%3A%2F%2Fadventofcode%2Ecom%2F2022%2Fday%2F1'}else{return false;}" target="_blank">Mastodon</a></span>]</span> this victory or <a href="/2022">[Return to Your Advent Calendar]</a>.</p> </article> </main>`,
+  mainTag: `<main> <article> <p>That's the right answer! You are <span class="day-success">one gold star</span> closer to collecting enough star fruit.</p> <p>You have completed Day 1! You can <span class="share">[Share<span class="share-content">on <a href="https://twitter.com/intent/tweet?text=I+just+completed+%22Calorie+Counting%22+%2D+Day+1+%2D+Advent+of+Code+2022&amp;url=https%3A%2F%2Fadventofcode%2Ecom%2F2022%2Fday%2F1&amp;related=ericwastl&amp;hashtags=AdventOfCode" target="_blank">Twitter</a> <a href="javascript:void(0);" onclick="var mastodon_instance=prompt('Mastodon Instance / Server Name?'); if(typeof mastodon_instance==='string' && mastodon_instance.length){this.href='https://'+mastodon_instance+'/share?text=I+just+completed+%22Calorie+Counting%22+%2D+Day+1+%2D+Advent+of+Code+2022+%23AdventOfCode+https%3A%2F%2Fadventofcode%2Ecom%2F2022%2Fday%2F1'}else{return false;}" target="_blank">Mastodon</a></span>]</span> this victory or <a href="/2022">[Return to Your Advent Calendar]</a>.</p> </article> </main>`,
 };
 
 export const tooManyRequests = {
@@ -351,5 +351,5 @@ export const tooManyRequests = {
   })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
   ga('set', 'anonymizeIp', true);
   ga('send', 'pageview'); </script> <!-- /ga --> </body> </html>`,
-  main: `<main> <article><p>You gave an answer too recently; you have to wait after submitting an answer before trying again. You have 14m 6s left to wait. <a href="/2022/day/1">[Return to Day 1]</a></p></article> </main>`,
+  mainTag: `<main> <article><p>You gave an answer too recently; you have to wait after submitting an answer before trying again. You have 14m 6s left to wait. <a href="/2022/day/1">[Return to Day 1]</a></p></article> </main>`,
 };
