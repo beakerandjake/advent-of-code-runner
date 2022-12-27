@@ -1,8 +1,8 @@
 import { getConfigValue } from '../config.js';
 import { logger } from '../logger.js';
-import { fileExists, loadFileContents, saveFile } from './io.js';
-import { CachedValue } from './cachedValue.js';
 import { get } from '../util.js';
+import { CachedValue } from './cachedValue.js';
+import { fileExists, loadFileContents, saveFile } from './io.js';
 
 const dataFilePath = getConfigValue('paths.dataStoreFile');
 
