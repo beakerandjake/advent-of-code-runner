@@ -88,13 +88,13 @@ describe('solutionRunnerWorkerThread', () => {
       expect(userSolutionFn).toBeCalledTimes(1);
     });
 
-    test('passes input to user function', () => {
-      const input = '!@#$!@#$!@#$ASASDF';
+    test('passes inputs to user function', () => {
+      const args = { input: 'ASDF\nASDF', lines: ['ASDF', 'ASDF'] };
       const userSolutionFn = jest.fn();
       answerTypeIsValid.mockReturnValueOnce(true);
-      executeUserSolution(userSolutionFn, input);
+      executeUserSolution(userSolutionFn, args.input, args.lines);
       expect(userSolutionFn).toBeCalledTimes(1);
-      expect(userSolutionFn).toBeCalledWith(input);
+      expect(userSolutionFn).toBeCalledWith(args);
     });
 
     test('throws if user function throws error', () => {
@@ -147,26 +147,34 @@ describe('solutionRunnerWorkerThread', () => {
   describe('runWorker()', () => {
     test('throws if user data missing "solutionName"', async () => {
       await expect(
-        async () => runWorker({ functionToExecute: 'asdf', input: 'asdf' }),
+        async () => runWorker({ functionToExecute: 'asdf', input: 'asdf', lines: ['asdf'] }),
       ).rejects.toThrow(SolutionWorkerMissingDataError);
     });
 
     test('throws if user data missing "functionToExecute"', async () => {
       await expect(
-        async () => runWorker({ solutionFileName: 'asdf', input: 'asdf' }),
+        async () => runWorker({ solutionFileName: 'asdf', input: 'asdf', lines: ['asdf'] }),
       ).rejects.toThrow(SolutionWorkerMissingDataError);
     });
 
     test('throws if user data missing "input"', async () => {
       await expect(
-        async () => runWorker({ functionToExecute: 'asdf', solutionFileName: 'asdf' }),
+        async () => runWorker({ functionToExecute: 'asdf', solutionFileName: 'asdf', lines: ['asdf'] }),
+      ).rejects.toThrow(SolutionWorkerMissingDataError);
+    });
+
+    test('throws if user data missing "lines"', async () => {
+      await expect(
+        async () => runWorker({ functionToExecute: 'asdf', solutionFileName: 'asdf', input: 'asdf' }),
       ).rejects.toThrow(SolutionWorkerMissingDataError);
     });
 
     test('throws if user solution file not found', async () => {
       importUserSolutionModule.mockRejectedValue(new UserSolutionFileNotFoundError('NOT FOUND'));
       await expect(
-        async () => runWorker({ solutionFileName: 'asdf', functionToExecute: 'asdf', input: 'asdf' }),
+        async () => runWorker({
+          solutionFileName: 'asdf', functionToExecute: 'asdf', input: 'asdf', lines: ['asdf'],
+        }),
       ).rejects.toThrow(UserSolutionFileNotFoundError);
     });
 
@@ -185,7 +193,9 @@ describe('solutionRunnerWorkerThread', () => {
       importUserSolutionModule.mockResolvedValue({});
       get.mockReturnValue(fn);
       await expect(
-        async () => runWorker({ solutionFileName: 'asdf', functionToExecute: 'asdf', input: 'asdf' }),
+        async () => runWorker({
+          solutionFileName: 'asdf', functionToExecute: 'asdf', input: 'asdf', lines: ['asdf'],
+        }),
       ).rejects.toThrow(UserSolutionMissingFunctionError);
     });
   });

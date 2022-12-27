@@ -40,14 +40,14 @@ export const logFromWorker = (level, message, ...args) => {
  * @private
  * @param {Function} userSolutionFn
  */
-export const executeUserSolution = (userSolutionFn, input) => {
+export const executeUserSolution = (userSolutionFn, input, lines) => {
   let start;
   let end;
   let answer;
 
   try {
     start = hrtime.bigint();
-    answer = userSolutionFn(input);
+    answer = userSolutionFn({ input, lines });
     end = hrtime.bigint();
   } catch (error) {
     throw new UserSolutionThrewError(error);
@@ -68,9 +68,11 @@ export const executeUserSolution = (userSolutionFn, input) => {
  * The "main" method of this worker, only executed if this isn't the main thread.
  * @private
  */
-export const runWorker = async ({ solutionFileName, functionToExecute, input } = {}) => {
+export const runWorker = async ({
+  solutionFileName, functionToExecute, input, lines,
+} = {}) => {
   // expect worker data to have required fields
-  if (!solutionFileName || !functionToExecute || !input) {
+  if (!solutionFileName || !functionToExecute || !input || !lines) {
     throw new SolutionWorkerMissingDataError();
   }
 
@@ -84,7 +86,7 @@ export const runWorker = async ({ solutionFileName, functionToExecute, input } =
   }
 
   logFromWorker('debug', 'worker loading executing user function: %s', functionToExecute);
-  executeUserSolution(userSolutionFunction, input);
+  executeUserSolution(userSolutionFunction, input, lines);
 };
 
 // Only run the worker on a child thread, not on the main thread!

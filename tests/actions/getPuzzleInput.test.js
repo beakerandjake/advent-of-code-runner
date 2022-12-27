@@ -7,7 +7,7 @@ import { mockConfig, mockLogger } from '../mocks';
 mockLogger();
 mockConfig();
 jest.unstable_mockModule('src/api/index.js', () => ({ downloadInput: jest.fn() }));
-jest.unstable_mockModule('src/inputs.js', () => ({
+jest.unstable_mockModule('src/inputs/inputCache.js', () => ({
   inputIsCached: jest.fn(),
   getCachedInput: jest.fn(),
   cacheInput: jest.fn(),
@@ -15,7 +15,7 @@ jest.unstable_mockModule('src/inputs.js', () => ({
 
 // import mocks after setting up mocks
 const { downloadInput } = await import('../../src/api/index.js');
-const { inputIsCached, getCachedInput, cacheInput } = await import('../../src/inputs.js');
+const { inputIsCached, getCachedInput, cacheInput } = await import('../../src/inputs/inputCache.js');
 const { getPuzzleInput } = await import('../../src/actions/links/getPuzzleInput.js');
 
 beforeEach(() => {

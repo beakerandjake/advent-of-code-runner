@@ -211,12 +211,13 @@ describe('solutionRunner', () => {
       expect(async () => execute(1, 1, 'asdf')).rejects.toThrow();
     });
 
-    test('passes required data to worker', async () => {
+    test('passes worker data to worker', async () => {
       const part = 1;
       const expected = {
         functionToExecute: 'partOne',
         solutionFileName: 'day_1.js',
-        input: 'ASDFASDFASDFASDF',
+        input: 'ASDF\nASDF',
+        lines: ['ASDF', 'ASDF'],
       };
       setConfigMocks(part, { partFunctions: [{ key: part, name: expected.functionToExecute }] });
       fileExists.mockResolvedValue(true);
