@@ -1,7 +1,7 @@
 import {
   describe, jest, test, afterEach,
 } from '@jest/globals';
-import { RateLimitExceededError } from '../../src/errors/index.js';
+import { RateLimitExceededError } from '../../src/errors/apiErrors.js';
 
 // setup mocks.
 jest.unstable_mockModule('../../src/api/rateLimit.js', () => ({

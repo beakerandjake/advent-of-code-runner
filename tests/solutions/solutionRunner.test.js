@@ -6,7 +6,7 @@ import {
   SolutionWorkerEmptyInputError,
   SolutionWorkerExitWithoutAnswerError,
   UserSolutionFileNotFoundError,
-} from '../../src/errors/index.js';
+} from '../../src/errors/solutionWorkerErrors.js';
 import { workerMessageTypes } from '../../src/solutions/workerMessageTypes.js';
 import { mockConfig, mockLogger } from '../mocks.js';
 
