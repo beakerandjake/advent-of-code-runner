@@ -1,4 +1,3 @@
-import { UserDataTranslationError } from '../errors/index.js';
 import { getStoreValue, setStoreValue } from './jsonFileStore.js';
 
 /**
@@ -38,7 +37,7 @@ const parseValidId = (id) => ({
  */
 export const translateToPuzzleFromData = (data) => {
   if (!data || typeof data !== 'object') {
-    throw new UserDataTranslationError('Puzzle data invalid, expected a non null object');
+    throw new TypeError('Puzzle data invalid, expected a non null object');
   }
 
   const {
@@ -49,15 +48,15 @@ export const translateToPuzzleFromData = (data) => {
   } = data;
 
   if (!id || (typeof id !== 'string') || !idRegex.test(id)) {
-    throw new UserDataTranslationError(`Puzzle ${id} did not expected format of YYYYDDPP (year day part)`);
+    throw new TypeError(`Puzzle ${id} not expected format of YYYYDDPP (year day part)`);
   }
 
   if (!Array.isArray(incorrectAnswers)) {
-    throw new UserDataTranslationError('Puzzle "incorrectAnswers" expected to be array');
+    throw new TypeError('Puzzle "incorrectAnswers" expected to be array');
   }
 
   if (fastestExecutionTimeNs && !Number.isFinite(fastestExecutionTimeNs)) {
-    throw new UserDataTranslationError('Puzzle "fastestExecutionTimeNs" expected to be number');
+    throw new TypeError('Puzzle "fastestExecutionTimeNs" expected to be number');
   }
 
   return {
@@ -77,7 +76,7 @@ export const translateToPuzzleFromData = (data) => {
  */
 export const translateToDataFromPuzzle = (puzzle) => {
   if (!puzzle || typeof puzzle !== 'object') {
-    throw new UserDataTranslationError('Puzzle invalid, expected a non null object');
+    throw new TypeError('Puzzle invalid, expected a non null object');
   }
 
   const {
@@ -88,15 +87,15 @@ export const translateToDataFromPuzzle = (puzzle) => {
   } = puzzle;
 
   if (!id || typeof id !== 'string' || !idRegex.test(id)) {
-    throw new UserDataTranslationError('Puzzle "id" did not expected format of YYYYDDPP (year day part)');
+    throw new TypeError('Puzzle "id" not expected format of YYYYDDPP (year day part)');
   }
 
   if (!Array.isArray(incorrectAnswers)) {
-    throw new UserDataTranslationError('Puzzle "incorrectAnswers" expected to be array');
+    throw new TypeError('Puzzle "incorrectAnswers" expected to be array');
   }
 
   if (fastestExecutionTimeNs && !Number.isFinite(fastestExecutionTimeNs)) {
-    throw new UserDataTranslationError('Puzzle "fastestExecutionTimeNs" expected to be number');
+    throw new TypeError('Puzzle "fastestExecutionTimeNs" expected to be number');
   }
 
   return {
@@ -118,7 +117,7 @@ export const getId = (year, day, part) => {
   const toReturn = `${year?.toString().padStart(4)}${day?.toString().padStart(2, '0')}${part?.toString().padStart(2, '0')}`;
 
   if (!idRegex.test(toReturn)) {
-    throw new UserDataTranslationError(`Could not generate valid id from year: "${year}", day: "${day}", part: "${part}"`);
+    throw new TypeError(`Could not generate valid id from year: "${year}", day: "${day}", part: "${part}"`);
   }
   return toReturn;
 };

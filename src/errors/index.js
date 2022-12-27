@@ -10,7 +10,6 @@ import {
   UserSolutionSyntaxError,
   UserSolutionThrewError,
 } from './solutionWorkerErrors.js';
-import { UserDataTranslationError } from './userDataTranslationError.js';
 import { UserError } from './userError.js';
 import { PuzzleHasBeenSolvedError, DuplicateAnswerSubmittedError } from './submissionErrors.js';
 import { RateLimitExceededError, SolvingWrongLevelError } from './apiErrors.js';
@@ -19,7 +18,6 @@ export {
   LockedOrCompletedPuzzleError,
   RateLimitExceededError,
   PackageInstallFailedError,
-  UserDataTranslationError,
   UserError,
 
   SolutionWorkerEmptyInputError,

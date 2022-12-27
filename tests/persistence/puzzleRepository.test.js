@@ -1,7 +1,6 @@
 import {
   describe, jest, test, afterEach,
 } from '@jest/globals';
-import { UserDataTranslationError } from '../../src/errors/index.js';
 
 // setup jsonFileStore so it can be mocked.
 jest.unstable_mockModule('../../src/persistence/jsonFileStore.js', () => ({
@@ -29,20 +28,20 @@ afterEach(() => {
 describe('puzzleRepository', () => {
   describe('translateToPuzzleFromData()', () => {
     test('throws with null value', () => {
-      expect(() => translateToPuzzleFromData(null)).toThrow(UserDataTranslationError);
+      expect(() => translateToPuzzleFromData(null)).toThrow(TypeError);
     });
 
     test('throws with undefined value', () => {
-      expect(() => translateToPuzzleFromData(undefined)).toThrow(UserDataTranslationError);
+      expect(() => translateToPuzzleFromData(undefined)).toThrow(TypeError);
     });
 
     test('throws with non object', () => {
-      expect(() => translateToPuzzleFromData(1234)).toThrow(UserDataTranslationError);
-      expect(() => translateToPuzzleFromData(() => {})).toThrow(UserDataTranslationError);
+      expect(() => translateToPuzzleFromData(1234)).toThrow(TypeError);
+      expect(() => translateToPuzzleFromData(() => {})).toThrow(TypeError);
       expect(
         () => translateToPuzzleFromData(Promise.resolve(10)),
-      ).toThrow(UserDataTranslationError);
-      expect(() => translateToPuzzleFromData('asdf')).toThrow(UserDataTranslationError);
+      ).toThrow(TypeError);
+      expect(() => translateToPuzzleFromData('asdf')).toThrow(TypeError);
     });
 
     test('throws missing id', () => {
@@ -51,7 +50,7 @@ describe('puzzleRepository', () => {
         incorrectAnswers: [],
         correctAnswer: null,
       };
-      expect(() => translateToPuzzleFromData(puzzle)).toThrow(UserDataTranslationError);
+      expect(() => translateToPuzzleFromData(puzzle)).toThrow(TypeError);
     });
 
     test('throws non string id', () => {
@@ -61,7 +60,7 @@ describe('puzzleRepository', () => {
         incorrectAnswers: [],
         correctAnswer: null,
       };
-      expect(() => translateToPuzzleFromData(puzzle)).toThrow(UserDataTranslationError);
+      expect(() => translateToPuzzleFromData(puzzle)).toThrow(TypeError);
     });
 
     test('throws id contains non-numeric character', () => {
@@ -71,7 +70,7 @@ describe('puzzleRepository', () => {
         incorrectAnswers: [],
         correctAnswer: null,
       };
-      expect(() => translateToPuzzleFromData(puzzle)).toThrow(UserDataTranslationError);
+      expect(() => translateToPuzzleFromData(puzzle)).toThrow(TypeError);
     });
 
     test('throws with id invalid length', () => {
@@ -81,7 +80,7 @@ describe('puzzleRepository', () => {
         incorrectAnswers: [],
         correctAnswer: null,
       };
-      expect(() => translateToPuzzleFromData(puzzle)).toThrow(UserDataTranslationError);
+      expect(() => translateToPuzzleFromData(puzzle)).toThrow(TypeError);
     });
 
     test('throws with incorrectAnswers not array', () => {
@@ -91,7 +90,7 @@ describe('puzzleRepository', () => {
         incorrectAnswers: {},
         correctAnswer: null,
       };
-      expect(() => translateToPuzzleFromData(puzzle)).toThrow(UserDataTranslationError);
+      expect(() => translateToPuzzleFromData(puzzle)).toThrow(TypeError);
     });
 
     test('throws with fastestExecutionTime not number', () => {
@@ -101,7 +100,7 @@ describe('puzzleRepository', () => {
         incorrectAnswers: [],
         correctAnswer: null,
       };
-      expect(() => translateToPuzzleFromData(puzzle)).toThrow(UserDataTranslationError);
+      expect(() => translateToPuzzleFromData(puzzle)).toThrow(TypeError);
     });
 
     test('translates year, day, part from id', () => {
@@ -180,20 +179,20 @@ describe('puzzleRepository', () => {
 
   describe('translateToDataFromPuzzle()', () => {
     test('throws with null value', () => {
-      expect(() => translateToDataFromPuzzle(null)).toThrow(UserDataTranslationError);
+      expect(() => translateToDataFromPuzzle(null)).toThrow(TypeError);
     });
 
     test('throws with undefined value', () => {
-      expect(() => translateToDataFromPuzzle(undefined)).toThrow(UserDataTranslationError);
+      expect(() => translateToDataFromPuzzle(undefined)).toThrow(TypeError);
     });
 
     test('throws with non object', () => {
-      expect(() => translateToDataFromPuzzle(1234)).toThrow(UserDataTranslationError);
-      expect(() => translateToDataFromPuzzle(() => {})).toThrow(UserDataTranslationError);
+      expect(() => translateToDataFromPuzzle(1234)).toThrow(TypeError);
+      expect(() => translateToDataFromPuzzle(() => {})).toThrow(TypeError);
       expect(
         () => translateToDataFromPuzzle(Promise.resolve(10)),
-      ).toThrow(UserDataTranslationError);
-      expect(() => translateToDataFromPuzzle('asdf')).toThrow(UserDataTranslationError);
+      ).toThrow(TypeError);
+      expect(() => translateToDataFromPuzzle('asdf')).toThrow(TypeError);
     });
 
     test('throws missing id', () => {
@@ -205,7 +204,7 @@ describe('puzzleRepository', () => {
         day: 20,
         part: 1,
       };
-      expect(() => translateToDataFromPuzzle(puzzle)).toThrow(UserDataTranslationError);
+      expect(() => translateToDataFromPuzzle(puzzle)).toThrow(TypeError);
     });
 
     test('throws non string id', () => {
@@ -218,7 +217,7 @@ describe('puzzleRepository', () => {
         day: 20,
         part: 1,
       };
-      expect(() => translateToDataFromPuzzle(puzzle)).toThrow(UserDataTranslationError);
+      expect(() => translateToDataFromPuzzle(puzzle)).toThrow(TypeError);
     });
 
     test('throws id contains non-numeric character', () => {
@@ -231,7 +230,7 @@ describe('puzzleRepository', () => {
         day: 20,
         part: 1,
       };
-      expect(() => translateToDataFromPuzzle(puzzle)).toThrow(UserDataTranslationError);
+      expect(() => translateToDataFromPuzzle(puzzle)).toThrow(TypeError);
     });
 
     test('throws with id invalid length', () => {
@@ -244,7 +243,7 @@ describe('puzzleRepository', () => {
         day: 20,
         part: 1,
       };
-      expect(() => translateToDataFromPuzzle(puzzle)).toThrow(UserDataTranslationError);
+      expect(() => translateToDataFromPuzzle(puzzle)).toThrow(TypeError);
     });
 
     test('throws with incorrectAnswers not array', () => {
@@ -257,7 +256,7 @@ describe('puzzleRepository', () => {
         day: 20,
         part: 1,
       };
-      expect(() => translateToDataFromPuzzle(puzzle)).toThrow(UserDataTranslationError);
+      expect(() => translateToDataFromPuzzle(puzzle)).toThrow(TypeError);
     });
 
     test('throws with fastestExecutionTime not number', () => {
@@ -270,7 +269,7 @@ describe('puzzleRepository', () => {
         day: 20,
         part: 1,
       };
-      expect(() => translateToDataFromPuzzle(puzzle)).toThrow(UserDataTranslationError);
+      expect(() => translateToDataFromPuzzle(puzzle)).toThrow(TypeError);
     });
 
     test('strips properties (year, day, part)', () => {
@@ -375,51 +374,51 @@ describe('puzzleRepository', () => {
     });
 
     test('throws when year is null', () => {
-      expect(() => getId(null, 1, 2)).toThrow(UserDataTranslationError);
+      expect(() => getId(null, 1, 2)).toThrow(TypeError);
     });
 
     test('throws when year length < 4', () => {
-      expect(() => getId(222, 1, 2)).toThrow(UserDataTranslationError);
+      expect(() => getId(222, 1, 2)).toThrow(TypeError);
     });
 
     test('throws when year length > 4', () => {
-      expect(() => getId(50000, 1, 2)).toThrow(UserDataTranslationError);
+      expect(() => getId(50000, 1, 2)).toThrow(TypeError);
     });
 
     test('throws when year is non-numeric', () => {
-      expect(() => getId('202R', 1, 2)).toThrow(UserDataTranslationError);
+      expect(() => getId('202R', 1, 2)).toThrow(TypeError);
     });
 
     test('throws when day is null', () => {
-      expect(() => getId(2022, null, 2)).toThrow(UserDataTranslationError);
+      expect(() => getId(2022, null, 2)).toThrow(TypeError);
     });
 
     test('throws when day is negative', () => {
-      expect(() => getId(2022, -2, 2)).toThrow(UserDataTranslationError);
+      expect(() => getId(2022, -2, 2)).toThrow(TypeError);
     });
 
     test('throws when day length > 2', () => {
-      expect(() => getId(2022, 100, 2)).toThrow(UserDataTranslationError);
+      expect(() => getId(2022, 100, 2)).toThrow(TypeError);
     });
 
     test('throws when day is non-numeric', () => {
-      expect(() => getId(2022, 'Y', 2)).toThrow(UserDataTranslationError);
+      expect(() => getId(2022, 'Y', 2)).toThrow(TypeError);
     });
 
     test('throws when part is null', () => {
-      expect(() => getId(2022, null, 2)).toThrow(UserDataTranslationError);
+      expect(() => getId(2022, null, 2)).toThrow(TypeError);
     });
 
     test('throws when part length > 2', () => {
-      expect(() => getId(2022, 1, 111)).toThrow(UserDataTranslationError);
+      expect(() => getId(2022, 1, 111)).toThrow(TypeError);
     });
 
     test('throws when part is negative', () => {
-      expect(() => getId(2022, 2, -2)).toThrow(UserDataTranslationError);
+      expect(() => getId(2022, 2, -2)).toThrow(TypeError);
     });
 
     test('throws when part is non-numeric', () => {
-      expect(() => getId(2022, 1, 'H')).toThrow(UserDataTranslationError);
+      expect(() => getId(2022, 1, 'H')).toThrow(TypeError);
     });
   });
 
