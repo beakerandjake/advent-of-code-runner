@@ -4,10 +4,17 @@ import {
   access,
   readFile,
   copyFile as copy,
-  open,
+  rm,
 } from 'node:fs/promises';
 import { dirname } from 'node:path';
 import { logger } from '../logger.js';
+
+/**
+ * Convenience layer around file io
+ * makes testing slightly easier
+ * add consistent logging
+ * performs some helper logic such as ensuring directories exist.
+ */
 
 /**
  * Recursively creates all directories which do not exist. Existing directories will be skipped.
@@ -19,34 +26,14 @@ export const ensureDirectoriesExist = async (path) => {
 };
 
 /**
- * Write the contents to the file specified by fileName
- * @param {String} fileName
- * @param {String} data
- * @param {String} flags
- */
-const writeToFile = async (fileName, data, flags = 'w') => {
-  logger.silly('writing file: %s with flags: %s', fileName, flags);
-  await ensureDirectoriesExist(dirname(fileName));
-  await writeFile(fileName, data, { flag: flags });
-  logger.silly('successfully wrote file: %s', fileName);
-};
-
-/**
  * Writes the data to the file, overwriting the existing file if already exists, creating if not.
  * @param {String} fileName
  * @param {String|Stream} data
  */
 export const saveFile = async (fileName, data) => {
-  await writeToFile(fileName, data);
-};
-
-/**
- * Writes the data to the file, appending to the end of the existing file or creating file if not.
- * @param {String} fileName
- * @param {String|Stream} data
- */
-export const appendToFile = async (fileName, data) => {
-  await writeToFile(fileName, data, 'a+');
+  logger.silly('writing file: %s', fileName);
+  await ensureDirectoriesExist(dirname(fileName));
+  await writeFile(fileName, data);
 };
 
 /**
@@ -56,6 +43,7 @@ export const appendToFile = async (fileName, data) => {
  */
 export const copyFile = async (sourcePath, destPath) => {
   logger.silly('copying file: %s to: %s', sourcePath, destPath);
+  await ensureDirectoriesExist(dirname(destPath));
   await copy(sourcePath, destPath);
 };
 
@@ -85,7 +73,16 @@ export const loadFileContents = async (fileName) => {
   return (await readFile(fileName)).toString();
 };
 
-export const openFile = async (fileName) => {
-  logger.silly('opening file at: %s', fileName);
-  return open(fileName);
+/**
+ * Removes all of the files in the directory (recursively)
+ * @param {String} path
+ */
+export const clearDirectory = async (path) => {
+  logger.silly('clearing directory: %s', path);
+
+  if (!path) {
+    throw new Error('Cannot clear an empty directory');
+  }
+
+  await rm(path, { force: true, recursive: true });
 };

@@ -8,6 +8,7 @@ import {
   createReadme,
   createSolutionFiles,
   cwdIsEmpty,
+  deleteExistingInputFiles,
   installPackages,
 } from '../initialize/index.js';
 import { createChainWithReporting } from './actionChainWithProgress.js';
@@ -58,6 +59,7 @@ export const initializeQuestions = [
  */
 const createFiles = async ({ answers }) => {
   await Promise.all([
+    deleteExistingInputFiles(),
     createDataFile(answers),
     createDotEnv(answers),
     createGitIgnore(answers),

@@ -1,9 +1,11 @@
 import { join } from 'node:path';
 import { getConfigValue } from '../config.js';
-import {
-  ensureDirectoriesExist, loadFileContents, saveFile,
-} from '../persistence/io.js';
 import { logger } from '../logger.js';
+import {
+  ensureDirectoriesExist,
+  loadFileContents,
+  saveFile,
+} from '../persistence/io.js';
 import { replaceTokens } from './replaceTokens.js';
 
 /**
