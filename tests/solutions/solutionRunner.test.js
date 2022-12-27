@@ -211,7 +211,7 @@ describe('solutionRunner', () => {
       expect(async () => execute(1, 1, 'asdf')).rejects.toThrow();
     });
 
-    test('passes required data to worker', async () => {
+    test('passes worker data to worker', async () => {
       const part = 1;
       const expected = {
         functionToExecute: 'partOne',
