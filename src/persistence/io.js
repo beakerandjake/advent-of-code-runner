@@ -9,6 +9,13 @@ import { dirname } from 'node:path';
 import { logger } from '../logger.js';
 
 /**
+ * Convenience layer around file io
+ * makes testing slightly easier
+ * add consistent logging
+ * performs some helper logic such as ensuring directories exist.
+ */
+
+/**
  * Recursively creates all directories which do not exist. Existing directories will be skipped.
  * @param {String} path
  */
