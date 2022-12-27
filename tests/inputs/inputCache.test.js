@@ -1,7 +1,7 @@
 import {
   describe, jest, test, beforeEach,
 } from '@jest/globals';
-import { mockLogger } from './mocks.js';
+import { mockLogger } from '../mocks.js';
 
 // setup mocks.
 mockLogger();
@@ -20,9 +20,9 @@ jest.unstable_mockModule('src/persistence/io.js', () => ({
   fileExists: jest.fn(),
 }));
 
-const { getConfigValue } = await import('../src/config.js');
-const { fileExists, loadFileContents, saveFile } = await import('../src/persistence/io.js');
-const { getCachedInput, cacheInput, inputIsCached } = await import('../src/inputs.js');
+const { getConfigValue } = await import('../../src/config.js');
+const { fileExists, loadFileContents, saveFile } = await import('../../src/persistence/io.js');
+const { getCachedInput, cacheInput, inputIsCached } = await import('../../src/inputs/inputCache.js');
 
 beforeEach(() => {
   jest.clearAllMocks();
