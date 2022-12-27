@@ -9,7 +9,7 @@ import { fileExists, loadFileContents, saveFile } from '../persistence/io.js';
  * @param {Number} day
  * @private
  */
-const getInputFileName = (year, day) => join(getConfigValue('paths.inputsDir'), `${year}_${day}.txt`);
+const getInputFileName = (year, day) => join(getConfigValue('paths.inputsDir'), `${year}_${day.toString().padStart(2, '0')}.txt`);
 
 /**
  * Caches the input so it can be re-used without re-downloading
