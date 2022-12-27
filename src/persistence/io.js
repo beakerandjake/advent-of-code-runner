@@ -4,7 +4,6 @@ import {
   access,
   readFile,
   copyFile as copy,
-  open,
 } from 'node:fs/promises';
 import { dirname } from 'node:path';
 import { logger } from '../logger.js';
@@ -19,34 +18,14 @@ export const ensureDirectoriesExist = async (path) => {
 };
 
 /**
- * Write the contents to the file specified by fileName
- * @param {String} fileName
- * @param {String} data
- * @param {String} flags
- */
-const writeToFile = async (fileName, data, flags = 'w') => {
-  logger.silly('writing file: %s with flags: %s', fileName, flags);
-  await ensureDirectoriesExist(dirname(fileName));
-  await writeFile(fileName, data, { flag: flags });
-  logger.silly('successfully wrote file: %s', fileName);
-};
-
-/**
  * Writes the data to the file, overwriting the existing file if already exists, creating if not.
  * @param {String} fileName
  * @param {String|Stream} data
  */
 export const saveFile = async (fileName, data) => {
-  await writeToFile(fileName, data);
-};
-
-/**
- * Writes the data to the file, appending to the end of the existing file or creating file if not.
- * @param {String} fileName
- * @param {String|Stream} data
- */
-export const appendToFile = async (fileName, data) => {
-  await writeToFile(fileName, data, 'a+');
+  logger.silly('writing file: %s', fileName);
+  await ensureDirectoriesExist(dirname(fileName));
+  await writeFile(fileName, data);
 };
 
 /**
@@ -56,6 +35,7 @@ export const appendToFile = async (fileName, data) => {
  */
 export const copyFile = async (sourcePath, destPath) => {
   logger.silly('copying file: %s to: %s', sourcePath, destPath);
+  await ensureDirectoriesExist(dirname(destPath));
   await copy(sourcePath, destPath);
 };
 
@@ -83,9 +63,4 @@ export const fileExists = async (fileName) => {
 export const loadFileContents = async (fileName) => {
   logger.silly('loading file contents: %s', fileName);
   return (await readFile(fileName)).toString();
-};
-
-export const openFile = async (fileName) => {
-  logger.silly('opening file at: %s', fileName);
-  return open(fileName);
 };
