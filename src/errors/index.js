@@ -1,5 +1,3 @@
-import { DataFileIOError } from './dataFileIOError.js';
-import { DataFileParsingError } from './dataFileParsingError.js';
 import { LockedOrCompletedPuzzleError } from './lockedOrCompletedPuzzleError.js';
 import { PackageInstallFailedError } from './packageInstallFailedError.js';
 import {
@@ -18,8 +16,6 @@ import { PuzzleHasBeenSolvedError, DuplicateAnswerSubmittedError } from './submi
 import { RateLimitExceededError, SolvingWrongLevelError } from './apiErrors.js';
 
 export {
-  DataFileIOError,
-  DataFileParsingError,
   LockedOrCompletedPuzzleError,
   RateLimitExceededError,
   PackageInstallFailedError,

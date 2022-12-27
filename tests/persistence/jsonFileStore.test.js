@@ -2,7 +2,6 @@ import {
   describe, jest, test, beforeEach,
 } from '@jest/globals';
 import { mockLogger, mockConfig } from '../mocks.js';
-import { DataFileIOError, DataFileParsingError } from '../../src/errors/index.js';
 
 // setup mocks.
 mockLogger();
@@ -57,12 +56,12 @@ describe('jsonFileStore', () => {
 
       test('throws if loadFileContents throws', async () => {
         loadFileContents.mockRejectedValue(new Error('Could not load file!'));
-        expect(async () => getStoreValue('2134')).rejects.toThrow(DataFileIOError);
+        expect(async () => getStoreValue('2134')).rejects.toThrow();
       });
 
       test('throws if data file is invalid json', async () => {
         loadFileContents.mockResolvedValue('{COOL:1234,}');
-        expect(async () => getStoreValue('2134')).rejects.toThrow(DataFileParsingError);
+        expect(async () => getStoreValue('2134')).rejects.toThrow(SyntaxError);
       });
 
       test('returns default value if user data file has no contents', async () => {
@@ -179,9 +178,7 @@ describe('jsonFileStore', () => {
         saveFile.mockImplementationOnce(async () => {
           throw new Error('Could not save file!');
         });
-        expect(async () => setStoreValue('1234', false))
-          .rejects
-          .toThrow(DataFileIOError);
+        expect(async () => setStoreValue('1234', false)).rejects.toThrow();
       });
     });
 
@@ -229,7 +226,7 @@ describe('jsonFileStore', () => {
 
       test('throws if could not save file', async () => {
         saveFile.mockRejectedValue(new Error('Could not save file!'));
-        expect(async () => setStoreValue('1234', false)).rejects.toThrow(DataFileIOError);
+        expect(async () => setStoreValue('1234', false)).rejects.toThrow();
       });
     });
   });
