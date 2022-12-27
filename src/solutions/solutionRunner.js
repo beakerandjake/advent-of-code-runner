@@ -26,7 +26,7 @@ import { workerMessageTypes } from './workerMessageTypes.js';
  * @param {Number} year
  * @param {Number} day
  */
-export const getSolutionFileName = (day) => join(getConfigValue('paths.solutionsDir'), `day_${day}.js`);
+export const getSolutionFileName = (day) => join(getConfigValue('paths.solutionsDir'), `day_${day.toString().padStart(2, '0')}.js`);
 
 /**
  * Returns the name of the function to execute for the puzzles part.
