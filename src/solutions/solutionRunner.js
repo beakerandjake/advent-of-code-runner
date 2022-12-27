@@ -7,7 +7,7 @@ import {
   SolutionWorkerExitWithoutAnswerError,
   UserSolutionFileNotFoundError,
 } from '../errors/index.js';
-import { splitLines } from '../inputs/parseInput';
+import { splitLines } from '../inputs/parseInput.js';
 import { logger } from '../logger.js';
 import { fileExists } from '../persistence/io.js';
 import { workerMessageTypes } from './workerMessageTypes.js';
