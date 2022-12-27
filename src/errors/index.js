@@ -14,7 +14,6 @@ import {
 } from './solutionWorkerErrors.js';
 import { UserDataTranslationError } from './userDataTranslationError.js';
 import { UserError } from './userError.js';
-import { UserPuzzleDataMissingError } from './userPuzzleDataMissingError.js';
 import { PuzzleHasBeenSolvedError, DuplicateAnswerSubmittedError } from './submissionErrors.js';
 import { RateLimitExceededError, SolvingWrongLevelError } from './apiErrors.js';
 
@@ -25,7 +24,6 @@ export {
   RateLimitExceededError,
   PackageInstallFailedError,
   UserDataTranslationError,
-  UserPuzzleDataMissingError,
   UserError,
 
   SolutionWorkerEmptyInputError,
