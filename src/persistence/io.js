@@ -4,6 +4,7 @@ import {
   access,
   readFile,
   copyFile as copy,
+  rm,
 } from 'node:fs/promises';
 import { dirname } from 'node:path';
 import { logger } from '../logger.js';
@@ -70,4 +71,13 @@ export const fileExists = async (fileName) => {
 export const loadFileContents = async (fileName) => {
   logger.silly('loading file contents: %s', fileName);
   return (await readFile(fileName)).toString();
+};
+
+/**
+ * Removes all of the files in the directory (recursively)
+ * @param {String} path
+ */
+export const clearDirectory = async (path) => {
+  logger.silly('clearing directory: %s', path);
+  await rm(path, { force: true, recurse: true });
 };
