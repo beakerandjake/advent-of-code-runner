@@ -5,6 +5,7 @@ import { createPackageJson } from './createPackageJson.js';
 import { createReadme } from './createReadme.js';
 import { createSolutionFiles } from './createSolutionFiles.js';
 import { cwdIsEmpty } from './cwdIsEmpty.js';
+import { deleteExistingInputFiles } from './deleteExistingInputFiles.js';
 import { installPackages } from './installPackages.js';
 
 export {
@@ -15,5 +16,6 @@ export {
   createReadme,
   createSolutionFiles,
   cwdIsEmpty,
+  deleteExistingInputFiles,
   installPackages,
 };

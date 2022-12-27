@@ -79,5 +79,10 @@ export const loadFileContents = async (fileName) => {
  */
 export const clearDirectory = async (path) => {
   logger.silly('clearing directory: %s', path);
+
+  if (!path) {
+    throw new Error('Cannot clear an empty directory');
+  }
+
   await rm(path, { force: true, recursive: true });
 };
