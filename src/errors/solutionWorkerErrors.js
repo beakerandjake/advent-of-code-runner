@@ -49,18 +49,35 @@ export class UserSolutionFileNotFoundError extends Error {
 }
 
 /**
+ * Creates a new stack trace which merges the message
+ * and the original errors stack trace.
+ * @param {String} message
+ * @param {Error} originalError
+ */
+const withOriginalErrorStack = (message, originalError) => [
+  message,
+  `↳ ${originalError?.stack ? originalError.stack : originalError}`,
+].join('\n');
+
+/**
  * Error raised if a users solution function raises an error.
  */
 export class UserSolutionThrewError extends Error {
-  constructor(originalError) {
-    super('Your function threw the following Error:', { cause: originalError });
-    // modify the stack trace to output the original error
-    // this is more relevant to the user than what part of our code raised this error.
-    this.stack = [
-      this.message,
-      `↳ ${originalError?.stack ? originalError.stack : originalError}`,
-    ].join('\n');
+  constructor(cause) {
+    super('Your function threw the following Error:', { cause });
+    this.message = withOriginalErrorStack(this.message, cause);
     this.name = 'UserSolutionThrewError';
+  }
+}
+
+/**
+ * Error raised if a users solution has a syntax error.
+ */
+export class UserSolutionSyntaxError extends Error {
+  constructor(cause) {
+    super('Your solution file has the following Syntax Error:', { cause });
+    this.stack = withOriginalErrorStack(this.message, cause);
+    this.name = 'UserSolutionSyntaxError';
   }
 }
 

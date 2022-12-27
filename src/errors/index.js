@@ -9,6 +9,7 @@ import {
   UserSolutionAnswerInvalidError,
   UserSolutionFileNotFoundError,
   UserSolutionMissingFunctionError,
+  UserSolutionSyntaxError,
   UserSolutionThrewError,
 } from './solutionWorkerErrors.js';
 import { UserDataTranslationError } from './userDataTranslationError.js';
@@ -33,6 +34,7 @@ export {
   UserSolutionAnswerInvalidError,
   UserSolutionFileNotFoundError,
   UserSolutionMissingFunctionError,
+  UserSolutionSyntaxError,
   UserSolutionThrewError,
 
   PuzzleHasBeenSolvedError,
