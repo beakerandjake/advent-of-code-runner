@@ -216,7 +216,8 @@ describe('solutionRunner', () => {
       const expected = {
         functionToExecute: 'partOne',
         solutionFileName: 'day_1.js',
-        input: 'ASDFASDFASDFASDF',
+        input: 'ASDF\nASDF',
+        lines: ['ASDF', 'ASDF'],
       };
       setConfigMocks(part, { partFunctions: [{ key: part, name: expected.functionToExecute }] });
       fileExists.mockResolvedValue(true);
