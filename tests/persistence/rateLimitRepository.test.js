@@ -45,27 +45,40 @@ describe('rateLimitRepository', () => {
     test('invalid date for action type, throws', async () => {
       const key = 'cool';
       getStoreValue.mockResolvedValueOnce({ [key]: 'really not a date!' });
-      expect(async () => getRateLimit(key)).rejects.toThrow();
+      expect(async () => getRateLimit(key)).rejects.toThrow(TypeError);
     });
   });
 
   describe('setRateLimit()', () => {
-    test('throws on null/undefined expiration', () => {
-      expect(async () => setRateLimit('asdf', null)).rejects.toThrow();
-      expect(async () => setRateLimit('asdf', undefined)).rejects.toThrow();
+    test.each([
+      null,
+      undefined,
+      Promise.resolve(new Date()),
+      true,
+      1234,
+      '12/01/2022',
+      {},
+      new Date(Infinity),
+    ])('throws on invalid date value: "%s"', async (value) => {
+      expect(async () => setRateLimit('asdf', value)).rejects.toThrow(TypeError);
     });
 
-    test('throws on expiration is not a date ', () => {
-      expect(async () => setRateLimit('asdf', Promise.resolve(new Date()))).rejects.toThrow();
-      expect(async () => setRateLimit('asdf', true)).rejects.toThrow();
-      expect(async () => setRateLimit('asdf', 1234234)).rejects.toThrow();
-      expect(async () => setRateLimit('asdf', '12/01/2022')).rejects.toThrow();
-      expect(async () => setRateLimit('asdf', {})).rejects.toThrow();
-    });
+    // test('throws on null/undefined expiration', () => {
+    //   expect(async () => setRateLimit('asdf', null)).rejects.toThrow(TypeError);
+    //   expect(async () => setRateLimit('asdf', undefined)).rejects.toThrow(TypeError);
+    // });
 
-    test('throws on expiration is invalid date', () => {
-      expect(async () => setRateLimit('asdf', new Date(Infinity))).rejects.toThrow();
-    });
+    // test('throws on expiration is not a date ', () => {
+    //   expect(async () => setRateLimit('asdf', Promise.resolve(new Date()))).rejects.toThrow(TypeError);
+    //   expect(async () => setRateLimit('asdf', true)).rejects.toThrow(TypeError);
+    //   expect(async () => setRateLimit('asdf', 1234234)).rejects.toThrow(TypeError);
+    //   expect(async () => setRateLimit('asdf', '12/01/2022')).rejects.toThrow(TypeError);
+    //   expect(async () => setRateLimit('asdf', {})).rejects.toThrow(TypeError);
+    // });
+
+    // test('throws on expiration is invalid date', () => {
+    //   expect(async () => setRateLimit('asdf', new Date(Infinity))).rejects.toThrow(TypeError);
+    // });
 
     test('adds if didn\'t exist', async () => {
       const key = 'cool';
