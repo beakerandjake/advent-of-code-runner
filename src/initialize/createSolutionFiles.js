@@ -32,7 +32,7 @@ export const createSolutionFiles = async ({ year }) => {
   // create each template solution file.
   const createFilePromises = getConfigValue('aoc.validation.days').map(
     (day) => saveFile(
-      join(solutionsDir, `day_${day}.js`),
+      join(solutionsDir, `day_${day.toString().padStart(2, '0')}.js`),
       replaceTokens(tokens, { year, day }, templateSolutionFile),
     ),
   );

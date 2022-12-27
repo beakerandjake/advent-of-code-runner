@@ -60,7 +60,7 @@ describe('solutionRunner', () => {
       const dir = 'asdf';
       getConfigValue.mockReturnValueOnce(dir);
       join.mockImplementation((...args) => realJoin(...args));
-      const expected = realJoin(dir, 'day_1.js');
+      const expected = realJoin(dir, 'day_01.js');
 
       const result = getSolutionFileName(1);
 
@@ -215,7 +215,7 @@ describe('solutionRunner', () => {
       const part = 1;
       const expected = {
         functionToExecute: 'partOne',
-        solutionFileName: 'day_1.js',
+        solutionFileName: 'day_01.js',
         input: 'ASDF\nASDF',
         lines: ['ASDF', 'ASDF'],
       };
