@@ -11,7 +11,6 @@ import {
   UserSolutionThrewError,
 } from './solutionWorkerErrors.js';
 import { UserError } from './userError.js';
-import { PuzzleHasBeenSolvedError, DuplicateAnswerSubmittedError } from './submissionErrors.js';
 import { RateLimitExceededError, SolvingWrongLevelError } from './apiErrors.js';
 
 export {
@@ -28,8 +27,6 @@ export {
   UserSolutionMissingFunctionError,
   UserSolutionSyntaxError,
   UserSolutionThrewError,
-
-  PuzzleHasBeenSolvedError,
-  DuplicateAnswerSubmittedError,
+  
   SolvingWrongLevelError,
 };
