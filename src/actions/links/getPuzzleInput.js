@@ -1,5 +1,5 @@
 import { downloadInput } from '../../api/index.js';
-import { cacheInput, getCachedInput, inputIsCached } from '../../inputs/index.js';
+import { cacheInput, getCachedInput, inputIsCached } from '../../inputs/inputCache.js';
 import { logger } from '../../logger.js';
 
 /**
