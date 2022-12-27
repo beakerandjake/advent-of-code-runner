@@ -1,4 +1,3 @@
-import { PackageInstallFailedError } from './packageInstallFailedError.js';
 import {
   SolutionWorkerEmptyInputError,
   SolutionWorkerExitWithoutAnswerError,
@@ -14,7 +13,6 @@ import { RateLimitExceededError, SolvingWrongLevelError } from './apiErrors.js';
 
 export {
   RateLimitExceededError,
-  PackageInstallFailedError,
   UserError,
 
   SolutionWorkerEmptyInputError,
