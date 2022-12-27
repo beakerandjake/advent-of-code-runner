@@ -1,5 +1,5 @@
 import { exit } from 'node:process';
-import { UserError } from './errors/userError';
+import { UserError } from './errors/userError.js';
 import { logger } from './logger.js';
 
 /**
