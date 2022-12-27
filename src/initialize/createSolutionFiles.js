@@ -2,7 +2,6 @@ import { join } from 'node:path';
 import { getConfigValue } from '../config.js';
 import { logger } from '../logger.js';
 import {
-  clearDirectory,
   ensureDirectoriesExist,
   loadFileContents,
   saveFile,
@@ -26,7 +25,6 @@ export const createSolutionFiles = async ({ year }) => {
   // create directory if doesn't exist.
   const solutionsDir = getConfigValue('paths.solutionsDir');
   await ensureDirectoriesExist(solutionsDir);
-  await clearDirectory(solutionsDir);
 
   // load the contents of the template solution
   const templateSolutionFile = await loadFileContents(
