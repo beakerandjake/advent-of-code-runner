@@ -1,4 +1,3 @@
-import { LockedOrCompletedPuzzleError } from './lockedOrCompletedPuzzleError.js';
 import { PackageInstallFailedError } from './packageInstallFailedError.js';
 import {
   SolutionWorkerEmptyInputError,
@@ -14,7 +13,6 @@ import { UserError } from './userError.js';
 import { RateLimitExceededError, SolvingWrongLevelError } from './apiErrors.js';
 
 export {
-  LockedOrCompletedPuzzleError,
   RateLimitExceededError,
   PackageInstallFailedError,
   UserError,
@@ -27,6 +25,6 @@ export {
   UserSolutionMissingFunctionError,
   UserSolutionSyntaxError,
   UserSolutionThrewError,
-  
+
   SolvingWrongLevelError,
 };
