@@ -28,7 +28,7 @@ beforeEach(() => {
   jest.clearAllMocks();
 });
 
-describe('inputs', () => {
+describe('inputCache', () => {
   describe('cacheInput()', () => {
     test('saves input to file', async () => {
       const input = 'asdf';
