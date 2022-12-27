@@ -79,5 +79,5 @@ export const loadFileContents = async (fileName) => {
  */
 export const clearDirectory = async (path) => {
   logger.silly('clearing directory: %s', path);
-  await rm(path, { force: true, recurse: true });
+  await rm(path, { force: true, recursive: true });
 };
