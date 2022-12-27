@@ -16,6 +16,6 @@ export class RateLimitExceededError extends UserError {
 export class SolvingWrongLevelError extends UserError {
   constructor(...args) {
     super('You are attempting to solve the wrong level of this puzzle. Have you completed the requisite level?', ...args);
-    this.name = 'WrongLevelError';
+    this.name = 'SolvingWrongLevelError';
   }
 }

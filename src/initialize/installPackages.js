@@ -1,5 +1,4 @@
 import { spawn } from 'node:child_process';
-import { PackageInstallFailedError } from '../errors/index.js';
 import { getConfigValue } from '../config.js';
 import { logger } from '../logger.js';
 
@@ -40,7 +39,7 @@ export const installPackages = async () => {
       if (code === 0) {
         resolve();
       } else {
-        reject(new PackageInstallFailedError(errBuffer));
+        reject(new Error(`Failed to install npm packages: ${errBuffer}`));
       }
     });
   });

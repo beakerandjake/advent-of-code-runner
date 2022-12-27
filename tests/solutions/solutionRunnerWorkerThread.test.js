@@ -6,7 +6,7 @@ import {
   UserSolutionFileNotFoundError,
   UserSolutionMissingFunctionError,
   UserSolutionThrewError,
-} from '../../src/errors/index.js';
+} from '../../src/errors/solutionWorkerErrors.js';
 
 jest.unstable_mockModule('node:worker_threads', () => ({
   isMainThread: true,

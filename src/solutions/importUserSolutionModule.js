@@ -1,4 +1,4 @@
-import { UserSolutionFileNotFoundError, UserSolutionSyntaxError } from '../errors/index.js';
+import { UserSolutionFileNotFoundError, UserSolutionSyntaxError } from '../errors/solutionWorkerErrors.js';
 
 /**
  * Dynamically imports the users solution file and returns the loaded module

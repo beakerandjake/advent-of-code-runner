@@ -56,7 +56,7 @@ try {
         format: format.combine(
           // format.simple would be nice to use but we need more customization
           format.printf((info) => {
-            if (info[LEVEL] === 'error' && !info.useDefaultFormat) {
+            if (info[LEVEL] === 'error') {
               return info.simpleErrorFormat
                 ? `${info.level}: ${info.message}`
                 : `${info.level}: ${info.stack ? info.stack : info.message}`;

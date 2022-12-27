@@ -1,5 +1,4 @@
 import { isDate, isValid, parseISO } from 'date-fns';
-import { UserDataTranslationError } from '../errors/userDataTranslationError.js';
 import { getStoreValue, setStoreValue } from './jsonFileStore.js';
 
 /**
@@ -16,7 +15,7 @@ const isoStringToDate = (value) => {
   const parsed = parseISO(value);
 
   if (!isValid(parsed)) {
-    throw new UserDataTranslationError(`Failed to parse ISO8601 date string from value: "${value}"`);
+    throw new TypeError(`Failed to parse ISO8601 date string from value: "${value}"`);
   }
 
   return parsed;
@@ -40,7 +39,7 @@ export const getRateLimit = async (actionType) => {
  */
 export const setRateLimit = async (actionType, expiration) => {
   if (!isDate(expiration) || !isValid(expiration)) {
-    throw new UserDataTranslationError(`Attempted to set rate limit expiration to invalid date: "${expiration}"`);
+    throw new TypeError(`Attempted to set rate limit expiration to invalid date: "${expiration}"`);
   }
 
   const rateLimits = await getStoreValue(RATE_LIMITS_STORE_KEY, {});

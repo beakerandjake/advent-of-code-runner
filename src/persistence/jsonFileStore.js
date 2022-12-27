@@ -1,34 +1,28 @@
 import { getConfigValue } from '../config.js';
 import { logger } from '../logger.js';
-import { fileExists, loadFileContents, saveFile } from './io.js';
-import { CachedValue } from './cachedValue.js';
-import { DataFileIOError, DataFileParsingError } from '../errors/index.js';
 import { get } from '../util.js';
+import { CachedValue } from './cachedValue.js';
+import { fileExists, loadFileContents, saveFile } from './io.js';
 
 const dataFilePath = getConfigValue('paths.dataStoreFile');
 
-// The prevent unnecessary io the contents of the data file are cached.
-// This introduces a higher memory footprint at the cost of faster execution time.
-// Also introduces difficulties associated with caching and invalidating it.
-// But this is a single threaded application which is manually invoked via command line
-// So we don't expect anyone else to change the data file while the program is running
-// If the user does that then thats their fault and they can deal with cache being stale.
+/**
+ * Use caching to store the data file in memory.
+ * This gives a faster execution time at the const of a higher memory footprint.
+ * Also introduces difficulties associated with caching and invalidating it.
+ * But this is a single threaded application which is manually invoked via command line
+ * So we don't expect anyone else to change the data file while the program is running
+ * If the user does that then thats their fault and they can deal with cache being stale.
+ */
 const cachedData = new CachedValue();
 
 /**
  * Hit the file system and return the contents of the data file.
  */
 const loadDataFromFile = async () => {
-  try {
-    logger.silly('loading data store from file: %s', dataFilePath);
-    const contents = await loadFileContents(dataFilePath);
-    return contents ? JSON.parse(contents) : {};
-  } catch (error) {
-    if (error instanceof SyntaxError) {
-      throw new DataFileParsingError(dataFilePath, { cause: error });
-    }
-    throw new DataFileIOError(dataFilePath, { cause: error });
-  }
+  logger.silly('loading data store from file: %s', dataFilePath);
+  const contents = await loadFileContents(dataFilePath);
+  return contents ? JSON.parse(contents) : {};
 };
 
 /**
@@ -41,7 +35,6 @@ const loadData = async () => {
     logger.silly('setting data store cache for first time');
     cachedData.setValue(await loadDataFromFile());
   }
-
   return cachedData.value;
 };
 
@@ -52,15 +45,8 @@ const loadData = async () => {
  */
 const saveData = async (data) => {
   logger.silly('update data store cache and writing to file!');
-
-  // ensure the in-memory cache has the latest values.
   cachedData.setValue(data);
-
-  try {
-    await saveFile(dataFilePath, JSON.stringify(data));
-  } catch (error) {
-    throw new DataFileIOError(dataFilePath, { cause: error });
-  }
+  await saveFile(dataFilePath, JSON.stringify(data));
 };
 
 /**
