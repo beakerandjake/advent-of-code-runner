@@ -1,14 +1,15 @@
 import { join } from 'node:path';
 import { env } from 'node:process';
 import { Worker } from 'node:worker_threads';
-import { logger } from '../logger.js';
-import { getConfigValue, envOptions } from '../config.js';
-import { fileExists } from '../persistence/io.js';
+import { envOptions, getConfigValue } from '../config.js';
 import {
   SolutionWorkerEmptyInputError,
   SolutionWorkerExitWithoutAnswerError,
   UserSolutionFileNotFoundError,
 } from '../errors/index.js';
+import { splitLines } from '../inputs/parseInput';
+import { logger } from '../logger.js';
+import { fileExists } from '../persistence/io.js';
 import { workerMessageTypes } from './workerMessageTypes.js';
 
 /**
@@ -110,5 +111,12 @@ export const execute = async (day, part, input) => {
     throw new UserSolutionFileNotFoundError(solutionFileName);
   }
 
-  return spawnWorker(workerThreadFileName, { solutionFileName, functionToExecute, input });
+  const workerData = {
+    solutionFileName,
+    functionToExecute,
+    input,
+    lines: splitLines(input),
+  };
+
+  return spawnWorker(workerThreadFileName, workerData);
 };
