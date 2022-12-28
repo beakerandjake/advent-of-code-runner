@@ -12,7 +12,7 @@ export const getYear = async () => {
   const year = await getStoreValue(YEAR_STORE_KEY);
 
   if (!yearIsValid(year)) {
-    throw new RangeError(`The year: ${year} is invalid, this should have been set to a valid value during initialization.`);
+    throw new RangeError(`Could not get a valid year from your data file, this should have been set during initialization. Year was: "${year}"`);
   }
 
   logger.debug('got year value of: %s', year);
