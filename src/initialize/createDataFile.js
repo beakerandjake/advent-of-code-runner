@@ -8,19 +8,20 @@ import { logger } from '../logger.js';
  */
 const tokens = [
   { match: '{{version}}', key: 'version' },
+  { match: '{{year}}', key: 'year' },
 ];
 
 /**
  * Creates a aocr-data.json file in the cwd.
  */
-export const createDataFile = async () => {
+export const createDataFile = async ({ year }) => {
   logger.debug('creating data file');
 
   const { source, dest } = getConfigValue('paths.templates.dataStoreFile');
 
   const dataFile = replaceTokens(
     tokens,
-    { version: getConfigValue('meta.version') },
+    { version: getConfigValue('meta.version'), year },
     await loadFileContents(source),
   );
 

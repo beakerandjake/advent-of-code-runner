@@ -1,6 +1,6 @@
 {
   "version": "{{version}}",
-  "year": "{{year}}",
+  "year": {{year}},
   "description": "This file is where your progress is stored. It should be committed to source control. You shouldn't edit this file manually, it could cause unexpected errors.",
   "puzzles": []
 }
