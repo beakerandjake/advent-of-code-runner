@@ -1,2 +1,7 @@
+# This is an authentication token to advent of code.
+# It is a SECRET and should be treated like a password.
+# That means this .env file should NOT be committed to source control!
+#
+# If you created this project using advent-of-code-runner init, 
+# then your .gitignore already includes this file, your secret is safe.
 AOC_AUTHENTICATION_TOKEN={{authToken}}
-AOC_YEAR={{year}}
