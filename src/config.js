@@ -72,7 +72,6 @@ const CONFIG = {
     level: process.env[envOptions.logLevel] || 'warn',
   },
   aoc: {
-    year: parsePositiveInt(process.env[envOptions.year], new Date().getFullYear()),
     authenticationToken: process.env[envOptions.authenticationToken] || null,
     baseUrl: 'http://192.168.0.1', // 'https://adventofcode.com',
     userAgent:
