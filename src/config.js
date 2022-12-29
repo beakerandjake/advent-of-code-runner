@@ -132,7 +132,7 @@ const CONFIG = {
     ],
   },
   paths: {
-    rateLimitFile: join(cwd, '.ratelimits'),
+    rateLimitFile: join(cwd, '.ratelimits.json'),
     userDataFile: join(cwd, 'aocr-data.json'),
     inputsDir: join(cwd, 'inputs'),
     solutionsDir: join(cwd, 'src'),

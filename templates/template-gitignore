@@ -132,4 +132,4 @@ dist
 .pnp.*
 
 # advent of code api rate limit file
-.ratelimits
+.ratelimits.json
