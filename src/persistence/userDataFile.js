@@ -4,7 +4,7 @@ import { get } from '../util.js';
 import { CachedValue } from './cachedValue.js';
 import { fileExists, loadFileContents, saveFile } from './io.js';
 
-const dataFilePath = getConfigValue('paths.dataStoreFile');
+const dataFilePath = getConfigValue('paths.userDataFile');
 
 /**
  * Use caching to store the data file in memory.
