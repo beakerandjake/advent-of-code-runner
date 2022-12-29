@@ -1,7 +1,8 @@
+import { outputFile, pathExists } from 'fs-extra/esm';
+import { readFile } from 'node:fs/promises';
 import { join } from 'node:path';
-import { logger } from '../logger.js';
 import { getConfigValue } from '../config.js';
-import { fileExists, loadFileContents, saveFile } from '../persistence/io.js';
+import { logger } from '../logger.js';
 
 /**
  * Returns the file name for the input file for the given year and day
@@ -17,8 +18,9 @@ const getInputFileName = (year, day) => join(getConfigValue('paths.inputsDir'), 
  * @param {Number} day
  */
 export const cacheInput = async (year, day, input) => {
-  logger.verbose('caching input', { year, day });
-  return saveFile(getInputFileName(year, day), input);
+  const fileName = getInputFileName(year, day);
+  logger.debug('saving input to: %s', fileName);
+  await outputFile(fileName, input);
 };
 
 /**
@@ -27,8 +29,9 @@ export const cacheInput = async (year, day, input) => {
  * @param {Number} day
  */
 export const inputIsCached = async (year, day) => {
-  logger.debug('checking if input is cached', { year, day });
-  return fileExists(getInputFileName(year, day));
+  const fileName = getInputFileName(year, day);
+  logger.debug('checking if input file exists: %s', fileName);
+  return pathExists(fileName);
 };
 
 /**
@@ -37,6 +40,7 @@ export const inputIsCached = async (year, day) => {
  * @param {Number} day
  */
 export const getCachedInput = async (year, day) => {
-  logger.verbose('loading cached input', { year, day });
-  return loadFileContents(getInputFileName(year, day));
+  const fileName = getInputFileName(year, day);
+  logger.debug('loading cached input file: %s', fileName);
+  return readFile(fileName, { encoding: 'utf-8' });
 };

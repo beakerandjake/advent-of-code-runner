@@ -1,7 +1,8 @@
+import { outputFile } from 'fs-extra/esm';
+import { readFile } from 'node:fs/promises';
 import { getConfigValue } from '../config.js';
-import { replaceTokens } from './replaceTokens.js';
-import { loadFileContents, saveFile } from '../persistence/io.js';
 import { logger } from '../logger.js';
+import { replaceTokens } from './replaceTokens.js';
 
 /**
  * Maps tokens strings in the template env file to fields of the args.
@@ -16,16 +17,16 @@ const tokens = [
  */
 export const createDataFile = async ({ year }) => {
   logger.debug('creating data file');
-
   const { source, dest } = getConfigValue('paths.templates.userDataFile');
+  const templateFileContents = await readFile(source, { encoding: 'utf-8' });
 
-  const dataFile = replaceTokens(
+  // replace the tokens in the template file.
+  const dataFileContents = replaceTokens(
     tokens,
     { version: getConfigValue('meta.version'), year },
-    await loadFileContents(source),
+    templateFileContents,
   );
 
-  logger.debug('copying template data store file from: %s to: %s', source, dest);
-
-  await saveFile(dest, dataFile);
+  logger.debug('saving data file to: %s', dest);
+  await outputFile(dest, dataFileContents);
 };

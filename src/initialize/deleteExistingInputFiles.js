@@ -1,5 +1,5 @@
+import { emptyDir } from 'fs-extra/esm';
 import { getConfigValue } from '../config.js';
-import { clearDirectory } from '../persistence/io.js';
 import { logger } from '../logger.js';
 
 /**
@@ -8,5 +8,5 @@ import { logger } from '../logger.js';
 export const deleteExistingInputFiles = async () => {
   logger.debug('removing old input files.');
   const inputsDirectory = getConfigValue('paths.inputsDir');
-  await clearDirectory(inputsDirectory);
+  await emptyDir(inputsDirectory);
 };

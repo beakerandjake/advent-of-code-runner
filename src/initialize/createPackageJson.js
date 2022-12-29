@@ -1,6 +1,7 @@
 import { basename } from 'node:path';
+import { outputFile } from 'fs-extra/esm';
+import { readFile } from 'node:fs/promises';
 import { getConfigValue } from '../config.js';
-import { loadFileContents, saveFile } from '../persistence/io.js';
 import { logger } from '../logger.js';
 import { replaceTokens } from './replaceTokens.js';
 
@@ -19,27 +20,20 @@ const envFileTokens = [
  */
 export const createPackageJson = async ({ year }) => {
   logger.debug('creating package.json file');
-
   // might be better to run npm init in a child_process
   // but to keep it simple just copy the template
-
-  const args = {
-    year,
-    version: getConfigValue('meta.version'),
-    theirPackageName: basename(getConfigValue('cwd')),
-    ourPackageName: basename(getConfigValue('meta.name')),
-  };
-
   const { source, dest } = getConfigValue('paths.templates.packageJson');
-
-  // replace each token in the template package.json file with the arg values
+  const templatePackageJson = await readFile(source, { encoding: 'utf-8' });
   const packageJson = replaceTokens(
     envFileTokens,
-    args,
-    await loadFileContents(source),
+    {
+      year,
+      version: getConfigValue('meta.version'),
+      theirPackageName: basename(getConfigValue('cwd')),
+      ourPackageName: basename(getConfigValue('meta.name')),
+    },
+    templatePackageJson,
   );
-
   logger.debug('saving package.json file to: %s', dest);
-
-  await saveFile(dest, packageJson);
+  await outputFile(dest, packageJson);
 };

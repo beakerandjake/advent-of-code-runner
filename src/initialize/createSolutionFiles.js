@@ -1,11 +1,8 @@
+import { ensureDir } from 'fs-extra/esm';
+import { readFile, writeFile } from 'node:fs/promises';
 import { join } from 'node:path';
 import { getConfigValue } from '../config.js';
 import { logger } from '../logger.js';
-import {
-  ensureDirectoriesExist,
-  loadFileContents,
-  saveFile,
-} from '../persistence/io.js';
 import { replaceTokens } from './replaceTokens.js';
 
 /**
@@ -21,21 +18,22 @@ const tokens = [
  */
 export const createSolutionFiles = async ({ year }) => {
   logger.debug('creating Solution files');
-
   // create directory if doesn't exist.
   const solutionsDir = getConfigValue('paths.solutionsDir');
-  await ensureDirectoriesExist(solutionsDir);
+  await ensureDir(solutionsDir);
 
   // load the contents of the template solution
-  const templateSolutionFile = await loadFileContents(
+  const templateSolutionFile = await readFile(
     getConfigValue('paths.templates.solution'),
+    { encoding: 'utf-8' },
   );
 
   // create each template solution file.
   const createFilePromises = getConfigValue('aoc.validation.days').map(
-    (day) => saveFile(
+    (day) => writeFile(
       join(solutionsDir, `day_${day.toString().padStart(2, '0')}.js`),
       replaceTokens(tokens, { year, day }, templateSolutionFile),
+      'utf-8',
     ),
   );
 
