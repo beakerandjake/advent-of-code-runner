@@ -84,40 +84,40 @@ describe('userDataFile', () => {
       });
     });
 
-    //   describe('cache is not empty', () => {
-    //     // mock cache having been set for this whole block.
-    //     beforeEach(() => {
-    //       mockCache.value = {};
-    //       mockCache.hasValue.mockReturnValue(true);
-    //       // empty cache should set set value correctly.
-    //       mockCache.setValue.mockImplementation((x) => {
-    //         mockCache.value = x;
-    //       });
-    //     });
+    describe('cache is not empty', () => {
+      // mock cache having been set for this whole block.
+      beforeEach(() => {
+        mockCache.value = {};
+        mockCache.hasValue.mockReturnValue(true);
+        // empty cache should set set value correctly.
+        mockCache.setValue.mockImplementation((x) => {
+          mockCache.value = x;
+        });
+      });
 
-    //     afterEach(() => {
-    //       expect(loadFileContents).not.toHaveBeenCalled();
-    //       jest.clearAllMocks();
-    //     });
+      afterEach(() => {
+        expect(readJson).not.toHaveBeenCalled();
+        jest.clearAllMocks();
+      });
 
-    //     test('returns value if key found', async () => {
-    //       const key = 'test';
-    //       const value = 'ASDF';
-    //       mockCache.value = { [key]: value };
-    //       expect(await getValue(key)).toBe(value);
-    //     });
+      test('returns value if key found', async () => {
+        const key = 'test';
+        const value = 'ASDF';
+        mockCache.value = { [key]: value };
+        expect(await getValue(key)).toBe(value);
+      });
 
-    //     test('returns default value if key not found', async () => {
-    //       const expected = 'default';
-    //       mockCache.value = { 'not key': '1234' };
-    //       expect(await getValue('key', 'default')).toBe(expected);
-    //     });
+      test('returns default value if key not found', async () => {
+        const expected = 'default';
+        mockCache.value = { 'not key': '1234' };
+        expect(await getValue('key', 'default')).toBe(expected);
+      });
 
-  //     test('returns undefined if key not found and no default provided', async () => {
-  //       mockCache.value = { 'not key': '1234' };
-  //       expect(await getValue('key')).toBe(undefined);
-  //     });
-  //   });
+      test('returns undefined if key not found and no default provided', async () => {
+        mockCache.value = { 'not key': '1234' };
+        expect(await getValue('key')).toBe(undefined);
+      });
+    });
   });
 
   describe('setValue()', () => {
