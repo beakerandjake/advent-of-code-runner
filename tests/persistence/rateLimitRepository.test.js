@@ -4,12 +4,12 @@ import {
 
 // setup mocks.
 jest.unstable_mockModule('../../src/persistence/jsonFileStore.js', () => ({
-  getStoreValue: jest.fn(),
+  getValue: jest.fn(),
   setStoreValue: jest.fn(),
 }));
 
 // import after setting up the mock so the modules import the mocked version
-const { getStoreValue, setStoreValue } = await import('../../src/persistence/jsonFileStore.js');
+const { getValue, setStoreValue } = await import('../../src/persistence/jsonFileStore.js');
 const { getRateLimit, setRateLimit } = await import('../../src/persistence/rateLimitRepository.js');
 
 afterEach(() => {
@@ -19,32 +19,32 @@ afterEach(() => {
 describe('rateLimitRepository', () => {
   describe('getRateLimit()', () => {
     test('no stored data, returns null', async () => {
-      getStoreValue.mockResolvedValueOnce({});
+      getValue.mockResolvedValueOnce({});
       expect(await getRateLimit('ASDF')).toBe(null);
     });
 
     test('no date for action type, returns null', async () => {
       const key = 'cool';
-      getStoreValue.mockResolvedValueOnce({ notCool: '1234' });
+      getValue.mockResolvedValueOnce({ notCool: '1234' });
       expect(await getRateLimit(key)).toBe(null);
     });
 
     test('empty date for action type, returns null', async () => {
       const key = 'cool';
-      getStoreValue.mockResolvedValueOnce({ [key]: null });
+      getValue.mockResolvedValueOnce({ [key]: null });
       expect(await getRateLimit(key)).toEqual(null);
     });
 
     test('value date for action type, returns date', async () => {
       const expected = new Date();
       const key = 'cool';
-      getStoreValue.mockResolvedValueOnce({ [key]: expected.toISOString() });
+      getValue.mockResolvedValueOnce({ [key]: expected.toISOString() });
       expect(await getRateLimit(key)).toEqual(expected);
     });
 
     test('invalid date for action type, throws', async () => {
       const key = 'cool';
-      getStoreValue.mockResolvedValueOnce({ [key]: 'really not a date!' });
+      getValue.mockResolvedValueOnce({ [key]: 'really not a date!' });
       expect(async () => getRateLimit(key)).rejects.toThrow(TypeError);
     });
   });
@@ -84,7 +84,7 @@ describe('rateLimitRepository', () => {
       const key = 'cool';
       const value = new Date(2022, 11, 4);
       const orig = { notCool: new Date().toISOString() };
-      getStoreValue.mockResolvedValueOnce({ notCool: new Date().toISOString() });
+      getValue.mockResolvedValueOnce({ notCool: new Date().toISOString() });
       await setRateLimit(key, value);
       expect(setStoreValue).toHaveBeenCalledWith(
         expect.any(String),
@@ -96,7 +96,7 @@ describe('rateLimitRepository', () => {
       const key = 'cool';
       const value = new Date(2022, 11, 4);
       const orig = { notCool: new Date().toISOString(), [key]: value.toISOString() };
-      getStoreValue.mockResolvedValueOnce({ notCool: new Date().toISOString() });
+      getValue.mockResolvedValueOnce({ notCool: new Date().toISOString() });
       await setRateLimit(key, value);
       expect(setStoreValue).toHaveBeenCalledWith(
         expect.any(String),

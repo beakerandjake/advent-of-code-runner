@@ -1,5 +1,5 @@
 import { isDate, isValid, parseISO } from 'date-fns';
-import { getStoreValue, setStoreValue } from './jsonFileStore.js';
+import { getValue, setStoreValue } from './jsonFileStore.js';
 
 /**
  * The key to the data in the json file.
@@ -26,7 +26,7 @@ const isoStringToDate = (value) => {
  * @param {String} actionType - The key of the action to update
  */
 export const getRateLimit = async (actionType) => {
-  const rateLimits = await getStoreValue(RATE_LIMITS_STORE_KEY, {});
+  const rateLimits = await getValue(RATE_LIMITS_STORE_KEY, {});
   return rateLimits[actionType]
     ? isoStringToDate(rateLimits[actionType])
     : null;
@@ -42,7 +42,7 @@ export const setRateLimit = async (actionType, expiration) => {
     throw new TypeError(`Attempted to set rate limit expiration to invalid date: "${expiration}"`);
   }
 
-  const rateLimits = await getStoreValue(RATE_LIMITS_STORE_KEY, {});
+  const rateLimits = await getValue(RATE_LIMITS_STORE_KEY, {});
   const updated = { ...rateLimits, [actionType]: expiration.toISOString() };
   await setStoreValue(RATE_LIMITS_STORE_KEY, updated);
 };

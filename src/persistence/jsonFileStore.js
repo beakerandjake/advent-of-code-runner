@@ -55,7 +55,7 @@ const saveData = async (data) => {
  * @param {String} key
  * @param {any} defaultValue
  */
-export const getStoreValue = async (key, defaultValue = undefined) => {
+export const getValue = async (key, defaultValue = undefined) => {
   logger.silly('loading store value with key: "%s"', key);
   const data = await loadData();
   return get(data, key, defaultValue);

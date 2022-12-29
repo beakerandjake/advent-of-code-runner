@@ -25,14 +25,14 @@ jest.unstable_mockModule('../../src/persistence/cachedValue.js', () => ({
 // import after setting up the mock so the modules import the mocked version
 // const { CachedValue } = await import('../src/persistence/cachedValue.js');
 const { loadFileContents, saveFile, fileExists } = await import('../../src/persistence/io.js');
-const { getStoreValue, setStoreValue, dataStoreFileExists } = await import('../../src/persistence/jsonFileStore.js');
+const { getValue, setStoreValue, dataStoreFileExists } = await import('../../src/persistence/jsonFileStore.js');
 
 beforeEach(() => {
   jest.resetAllMocks();
 });
 
 describe('jsonFileStore', () => {
-  describe('getStoreValue()', () => {
+  describe('getValue()', () => {
     describe('cache is empty', () => {
       // mock empty cache for each test in this block.
       beforeEach(() => {
@@ -50,35 +50,35 @@ describe('jsonFileStore', () => {
       });
 
       test('loadFileContents is called', async () => {
-        await getStoreValue('1234');
+        await getValue('1234');
         expect(loadFileContents).toBeCalled();
       });
 
       test('throws if loadFileContents throws', async () => {
         loadFileContents.mockRejectedValue(new Error('Could not load file!'));
-        expect(async () => getStoreValue('2134')).rejects.toThrow();
+        expect(async () => getValue('2134')).rejects.toThrow();
       });
 
       test('throws if data file is invalid json', async () => {
         loadFileContents.mockResolvedValue('{COOL:1234,}');
-        expect(async () => getStoreValue('2134')).rejects.toThrow(SyntaxError);
+        expect(async () => getValue('2134')).rejects.toThrow(SyntaxError);
       });
 
       test('returns default value if user data file has no contents', async () => {
         const defaultValue = 45;
         loadFileContents.mockResolvedValue('');
-        expect(await getStoreValue('1234', defaultValue)).toEqual(defaultValue);
+        expect(await getValue('1234', defaultValue)).toEqual(defaultValue);
       });
 
       test('returns default value if key not found', async () => {
         const defaultValue = 45;
         loadFileContents.mockResolvedValue(JSON.stringify({ one: 1, two: 2, three: 3 }));
-        expect(await getStoreValue('four', defaultValue)).toEqual(defaultValue);
+        expect(await getValue('four', defaultValue)).toEqual(defaultValue);
       });
 
       test('returns undefined if key not found and no default provided', async () => {
         loadFileContents.mockResolvedValue(JSON.stringify({ one: 1, two: 2, three: 3 }));
-        expect(await getStoreValue('four')).toEqual(undefined);
+        expect(await getValue('four')).toEqual(undefined);
       });
 
       test('returns value if key found', async () => {
@@ -87,7 +87,7 @@ describe('jsonFileStore', () => {
         loadFileContents.mockResolvedValue(
           JSON.stringify({ one: 1, [key]: expected }),
         );
-        expect(await getStoreValue(key, 66)).toEqual(expected);
+        expect(await getValue(key, 66)).toEqual(expected);
       });
     });
 
@@ -111,18 +111,18 @@ describe('jsonFileStore', () => {
         const key = 'test';
         const value = 'ASDF';
         mockCache.value = { [key]: value };
-        expect(await getStoreValue(key)).toBe(value);
+        expect(await getValue(key)).toBe(value);
       });
 
       test('returns default value if key not found', async () => {
         const expected = 'default';
         mockCache.value = { 'not key': '1234' };
-        expect(await getStoreValue('key', 'default')).toBe(expected);
+        expect(await getValue('key', 'default')).toBe(expected);
       });
 
       test('returns undefined if key not found and no default provided', async () => {
         mockCache.value = { 'not key': '1234' };
-        expect(await getStoreValue('key')).toBe(undefined);
+        expect(await getValue('key')).toBe(undefined);
       });
     });
   });

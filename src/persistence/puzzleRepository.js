@@ -1,4 +1,4 @@
-import { getStoreValue, setStoreValue } from './jsonFileStore.js';
+import { getValue, setStoreValue } from './jsonFileStore.js';
 
 /**
  * This repository serves as an abstraction between how the data is stored
@@ -127,7 +127,7 @@ export const getId = (year, day, part) => {
  * @returns {Promise<Object[]>}
  */
 export const getPuzzles = async () => (
-  (await getStoreValue(PUZZLE_DATA_KEY, [])).map(translateToPuzzleFromData)
+  (await getValue(PUZZLE_DATA_KEY, [])).map(translateToPuzzleFromData)
 );
 
 /**
@@ -182,7 +182,7 @@ export const addOrEditPuzzle = async (puzzle) => {
 
   // could speed this up, but keeping it simple.
 
-  const puzzles = await getStoreValue(PUZZLE_DATA_KEY, []);
+  const puzzles = await getValue(PUZZLE_DATA_KEY, []);
 
   // edit if exists, add if doesn't
   const updated = puzzles.some((x) => x.id === puzzle.id)
