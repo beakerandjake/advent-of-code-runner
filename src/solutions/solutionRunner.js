@@ -1,3 +1,4 @@
+import { pathExists } from 'fs-extra/esm';
 import { join } from 'node:path';
 import { env } from 'node:process';
 import { Worker } from 'node:worker_threads';
@@ -9,7 +10,6 @@ import {
 } from '../errors/solutionWorkerErrors.js';
 import { splitLines } from '../inputs/parseInput.js';
 import { logger } from '../logger.js';
-import { fileExists } from '../persistence/io.js';
 import { workerMessageTypes } from './workerMessageTypes.js';
 
 /**
@@ -107,7 +107,7 @@ export const execute = async (day, part, input) => {
   const workerThreadFileName = getConfigValue('paths.solutionRunnerWorkerFile');
 
   // ensure the user actually has the file we're trying to execute.
-  if (!await fileExists(solutionFileName)) {
+  if (!await pathExists(solutionFileName)) {
     throw new UserSolutionFileNotFoundError(solutionFileName);
   }
 
