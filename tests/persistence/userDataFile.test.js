@@ -32,100 +32,93 @@ beforeEach(() => {
 });
 
 describe('userDataFile', () => {
-  // describe('getValue()', () => {
-  //   describe('cache is empty', () => {
-  //     // mock empty cache for each test in this block.
-  //     beforeEach(() => {
-  //       mockCache.value = null;
-  //       mockCache.hasValue.mockReturnValue(false);
-  //       // empty cache should set set value correctly.
-  //       mockCache.setValue.mockImplementation((x) => {
-  //         mockCache.value = x;
-  //       });
-  //     });
+  describe('getValue()', () => {
+    describe('cache is empty', () => {
+      // mock empty cache for each test in this block.
+      beforeEach(() => {
+        mockCache.value = null;
+        mockCache.hasValue.mockReturnValue(false);
+        // empty cache should set set value correctly.
+        mockCache.setValue.mockImplementation((x) => {
+          mockCache.value = x;
+        });
+      });
 
-  //     afterEach(() => {
-  //       expect(loadFileContents).toHaveBeenCalled();
-  //       jest.clearAllMocks();
-  //     });
+      afterEach(() => {
+        expect(readJson).toHaveBeenCalled();
+        jest.resetAllMocks();
+      });
 
-  //     test('loadFileContents is called', async () => {
-  //       await getValue('1234');
-  //       expect(loadFileContents).toBeCalled();
-  //     });
+      test('loadFileContents is called', async () => {
+        await getValue('1234');
+        expect(readJson).toBeCalled();
+      });
 
-  //     test('throws if loadFileContents throws', async () => {
-  //       loadFileContents.mockRejectedValue(new Error('Could not load file!'));
-  //       expect(async () => getValue('2134')).rejects.toThrow();
-  //     });
+      test('throws if load file fails', async () => {
+        readJson.mockRejectedValue(new Error('Could not load file!'));
+        expect(async () => getValue('2134')).rejects.toThrow();
+      });
 
-  //     test('throws if data file is invalid json', async () => {
-  //       loadFileContents.mockResolvedValue('{COOL:1234,}');
-  //       expect(async () => getValue('2134')).rejects.toThrow(SyntaxError);
-  //     });
+      test('returns default value if user data file has no contents', async () => {
+        const defaultValue = 45;
+        readJson.mockResolvedValue('');
+        expect(await getValue('1234', defaultValue)).toEqual(defaultValue);
+      });
 
-  //     test('returns default value if user data file has no contents', async () => {
-  //       const defaultValue = 45;
-  //       loadFileContents.mockResolvedValue('');
-  //       expect(await getValue('1234', defaultValue)).toEqual(defaultValue);
-  //     });
+      test('returns default value if key not found', async () => {
+        const defaultValue = 45;
+        readJson.mockResolvedValue({ one: 1, two: 2, three: 3 });
+        expect(await getValue('four', defaultValue)).toEqual(defaultValue);
+      });
 
-  //     test('returns default value if key not found', async () => {
-  //       const defaultValue = 45;
-  //       loadFileContents.mockResolvedValue(JSON.stringify({ one: 1, two: 2, three: 3 }));
-  //       expect(await getValue('four', defaultValue)).toEqual(defaultValue);
-  //     });
+      test('returns undefined if key not found and no default provided', async () => {
+        readJson.mockResolvedValue({ one: 1, two: 2, three: 3 });
+        expect(await getValue('four')).toEqual(undefined);
+      });
 
-  //     test('returns undefined if key not found and no default provided', async () => {
-  //       loadFileContents.mockResolvedValue(JSON.stringify({ one: 1, two: 2, three: 3 }));
-  //       expect(await getValue('four')).toEqual(undefined);
-  //     });
+      test('returns value if key found', async () => {
+        const expected = 4;
+        const key = 'four';
+        readJson.mockResolvedValue({ one: 1, [key]: expected });
+        expect(await getValue(key, 66)).toEqual(expected);
+      });
+    });
 
-  //     test('returns value if key found', async () => {
-  //       const expected = 4;
-  //       const key = 'four';
-  //       loadFileContents.mockResolvedValue(
-  //         JSON.stringify({ one: 1, [key]: expected }),
-  //       );
-  //       expect(await getValue(key, 66)).toEqual(expected);
-  //     });
-  //   });
+    //   describe('cache is not empty', () => {
+    //     // mock cache having been set for this whole block.
+    //     beforeEach(() => {
+    //       mockCache.value = {};
+    //       mockCache.hasValue.mockReturnValue(true);
+    //       // empty cache should set set value correctly.
+    //       mockCache.setValue.mockImplementation((x) => {
+    //         mockCache.value = x;
+    //       });
+    //     });
 
-  //   describe('cache is not empty', () => {
-  //     // mock cache having been set for this whole block.
-  //     beforeEach(() => {
-  //       mockCache.value = {};
-  //       mockCache.hasValue.mockReturnValue(true);
-  //       // empty cache should set set value correctly.
-  //       mockCache.setValue.mockImplementation((x) => {
-  //         mockCache.value = x;
-  //       });
-  //     });
+    //     afterEach(() => {
+    //       expect(loadFileContents).not.toHaveBeenCalled();
+    //       jest.clearAllMocks();
+    //     });
 
-  //     afterEach(() => {
-  //       expect(loadFileContents).not.toHaveBeenCalled();
-  //       jest.clearAllMocks();
-  //     });
+    //     test('returns value if key found', async () => {
+    //       const key = 'test';
+    //       const value = 'ASDF';
+    //       mockCache.value = { [key]: value };
+    //       expect(await getValue(key)).toBe(value);
+    //     });
 
-  //     test('returns value if key found', async () => {
-  //       const key = 'test';
-  //       const value = 'ASDF';
-  //       mockCache.value = { [key]: value };
-  //       expect(await getValue(key)).toBe(value);
-  //     });
-
-  //     test('returns default value if key not found', async () => {
-  //       const expected = 'default';
-  //       mockCache.value = { 'not key': '1234' };
-  //       expect(await getValue('key', 'default')).toBe(expected);
-  //     });
+    //     test('returns default value if key not found', async () => {
+    //       const expected = 'default';
+    //       mockCache.value = { 'not key': '1234' };
+    //       expect(await getValue('key', 'default')).toBe(expected);
+    //     });
 
   //     test('returns undefined if key not found and no default provided', async () => {
   //       mockCache.value = { 'not key': '1234' };
   //       expect(await getValue('key')).toBe(undefined);
   //     });
   //   });
-  // });
+  });
 
   describe('setValue()', () => {
     describe('cache is empty', () => {
