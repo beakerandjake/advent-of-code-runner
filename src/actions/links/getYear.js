@@ -1,6 +1,6 @@
 import { logger } from '../../logger.js';
 import { yearIsValid } from '../../validation/index.js';
-import { getStoreValue } from '../../persistence/jsonFileStore.js';
+import { getValue } from '../../persistence/userDataFile.js';
 
 const YEAR_STORE_KEY = 'year';
 
@@ -9,7 +9,7 @@ const YEAR_STORE_KEY = 'year';
  * @throws {RangeError} The year was not valid
  */
 export const getYear = async () => {
-  const year = await getStoreValue(YEAR_STORE_KEY);
+  const year = await getValue(YEAR_STORE_KEY);
 
   if (!yearIsValid(year)) {
     throw new RangeError(`Could not get a valid year from your data file, this should have been set during initialization. Year was: "${year}"`);

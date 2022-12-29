@@ -7,8 +7,8 @@ import { getRateLimit, setRateLimit } from '../persistence/rateLimitRepository.j
  * The type of aoc api requests that support rate limiting.
  */
 export const rateLimitedActions = {
-  downloadInput: 'INPUT',
-  submitAnswer: 'SUBMIT',
+  downloadInput: 'downloadInput',
+  submitAnswer: 'submitAnswer',
 };
 
 /**

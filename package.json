@@ -37,6 +37,7 @@
     "dom-serializer": "^2.0.0",
     "domutils": "^3.0.1",
     "dotenv": "^16.0.3",
+    "fs-extra": "^11.1.0",
     "htmlparser2": "^8.0.1",
     "inquirer": "^9.1.4",
     "ora": "^6.1.2",

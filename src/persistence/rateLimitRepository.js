@@ -1,10 +1,30 @@
 import { isDate, isValid, parseISO } from 'date-fns';
-import { getStoreValue, setStoreValue } from './jsonFileStore.js';
+import { readJson, outputJson } from 'fs-extra/esm';
+import { getConfigValue } from '../config.js';
 
 /**
- * The key to the data in the json file.
+ * Saving rate limit data to file, not using caching
+ * like user data file, don't expect to be writing/reading this file
+ * nearly as much as user data file. If performance becomes issue
+ * could perform similar caching.
  */
-const RATE_LIMITS_STORE_KEY = 'rateLimits';
+
+const rateLimitFilePath = getConfigValue('paths.rateLimitFile');
+
+/**
+ * Loads the rate limit data from file.
+ */
+const loadRateLimitData = async () => {
+  try {
+    return await readJson(rateLimitFilePath);
+  } catch (error) {
+    // if rate limit file does not exist then return empty object.
+    if (error.code === 'ENOENT') {
+      return {};
+    }
+    throw error;
+  }
+};
 
 /**
  * Parses a date from an ISO8601 string.
@@ -26,7 +46,7 @@ const isoStringToDate = (value) => {
  * @param {String} actionType - The key of the action to update
  */
 export const getRateLimit = async (actionType) => {
-  const rateLimits = await getStoreValue(RATE_LIMITS_STORE_KEY, {});
+  const rateLimits = await loadRateLimitData();
   return rateLimits[actionType]
     ? isoStringToDate(rateLimits[actionType])
     : null;
@@ -41,8 +61,7 @@ export const setRateLimit = async (actionType, expiration) => {
   if (!isDate(expiration) || !isValid(expiration)) {
     throw new TypeError(`Attempted to set rate limit expiration to invalid date: "${expiration}"`);
   }
-
-  const rateLimits = await getStoreValue(RATE_LIMITS_STORE_KEY, {});
+  const rateLimits = await loadRateLimitData();
   const updated = { ...rateLimits, [actionType]: expiration.toISOString() };
-  await setStoreValue(RATE_LIMITS_STORE_KEY, updated);
+  await outputJson(rateLimitFilePath, updated);
 };

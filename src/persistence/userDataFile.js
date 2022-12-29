@@ -1,10 +1,10 @@
+import { readJson, writeJson, pathExists } from 'fs-extra/esm';
 import { getConfigValue } from '../config.js';
 import { logger } from '../logger.js';
 import { get } from '../util.js';
 import { CachedValue } from './cachedValue.js';
-import { fileExists, loadFileContents, saveFile } from './io.js';
 
-const dataFilePath = getConfigValue('paths.dataStoreFile');
+const dataFilePath = getConfigValue('paths.userDataFile');
 
 /**
  * Use caching to store the data file in memory.
@@ -17,36 +17,25 @@ const dataFilePath = getConfigValue('paths.dataStoreFile');
 const cachedData = new CachedValue();
 
 /**
- * Hit the file system and return the contents of the data file.
- */
-const loadDataFromFile = async () => {
-  logger.silly('loading data store from file: %s', dataFilePath);
-  const contents = await loadFileContents(dataFilePath);
-  return contents ? JSON.parse(contents) : {};
-};
-
-/**
- * Returns the entire data store.
- * If this is the first query then the data store file is loaded from disk.
- * After first load the in-memory cached version is returned.
+ * Returns the contents of the user data store.
  */
 const loadData = async () => {
   if (!cachedData.hasValue()) {
-    logger.silly('setting data store cache for first time');
-    cachedData.setValue(await loadDataFromFile());
+    // populate cache with file contents on first load.
+    logger.silly('loading data store from file: %s', dataFilePath);
+    const fileContents = await readJson(dataFilePath);
+    cachedData.setValue(fileContents);
   }
   return cachedData.value;
 };
 
 /**
- * Overwrite the entire data store with the new data.
- * This will write the data contents to disk.
- * It will also update the in-memory cache with the new data.
+ * Write the data to the user data file. Also updates the in-memory cache.
  */
 const saveData = async (data) => {
   logger.silly('update data store cache and writing to file!');
   cachedData.setValue(data);
-  await saveFile(dataFilePath, JSON.stringify(data));
+  await writeJson(dataFilePath, data);
 };
 
 /**
@@ -55,7 +44,7 @@ const saveData = async (data) => {
  * @param {String} key
  * @param {any} defaultValue
  */
-export const getStoreValue = async (key, defaultValue = undefined) => {
+export const getValue = async (key, defaultValue = undefined) => {
   logger.silly('loading store value with key: "%s"', key);
   const data = await loadData();
   return get(data, key, defaultValue);
@@ -66,7 +55,7 @@ export const getStoreValue = async (key, defaultValue = undefined) => {
  * @param {String} key
  * @param {Any} value
  */
-export const setStoreValue = async (key, value) => {
+export const setValue = async (key, value) => {
   logger.silly('setting store value with key: "%s" to: %s', key, value);
   const data = await loadData();
   const updated = { ...data, [key]: value };
@@ -74,6 +63,6 @@ export const setStoreValue = async (key, value) => {
 };
 
 /**
- * Returns true if the user data store file exists.
+ * Returns true if the user data file exists.
  */
-export const dataStoreFileExists = async () => fileExists(dataFilePath);
+export const userDataFileExists = async () => pathExists(dataFilePath);

@@ -2,14 +2,14 @@ import {
   describe, jest, test, afterEach,
 } from '@jest/globals';
 
-// setup jsonFileStore so it can be mocked.
-jest.unstable_mockModule('../../src/persistence/jsonFileStore.js', () => ({
-  getStoreValue: jest.fn(),
-  setStoreValue: jest.fn(),
+// setup userDataFile so it can be mocked.
+jest.unstable_mockModule('../../src/persistence/userDataFile.js', () => ({
+  getValue: jest.fn(),
+  setValue: jest.fn(),
 }));
 
 // import after setting up the mock so the modules import the mocked version
-const { getStoreValue, setStoreValue } = await import('../../src/persistence/jsonFileStore.js');
+const { getValue, setValue } = await import('../../src/persistence/userDataFile.js');
 const {
   translateToPuzzleFromData,
   translateToDataFromPuzzle,
@@ -426,7 +426,7 @@ describe('puzzleRepository', () => {
     test('returns puzzle when exists', async () => {
       const matchingPuzzleId = '20221201';
 
-      getStoreValue.mockReturnValueOnce([
+      getValue.mockReturnValueOnce([
         {
           id: '20221202',
           correctAnswer: 'ASDF',
@@ -455,7 +455,7 @@ describe('puzzleRepository', () => {
     });
 
     test('returns null when puzzle does not exist', async () => {
-      getStoreValue.mockReturnValueOnce([
+      getValue.mockReturnValueOnce([
         {
           id: '20221202',
           correctAnswer: 'ASDF',
@@ -474,14 +474,14 @@ describe('puzzleRepository', () => {
     });
 
     test('returns null on empty array', async () => {
-      getStoreValue.mockReturnValueOnce([]);
+      getValue.mockReturnValueOnce([]);
       expect(await findPuzzle(2022, 1, 1)).toBeNull();
     });
   });
 
   describe('getPuzzles()', () => {
     test('returns expected values', async () => {
-      getStoreValue.mockReturnValueOnce([
+      getValue.mockReturnValueOnce([
         {
           id: '20221202',
           correctAnswer: 'ASDF',
@@ -521,7 +521,7 @@ describe('puzzleRepository', () => {
     });
 
     test('returns empty array as default', async () => {
-      getStoreValue.mockReturnValueOnce([]);
+      getValue.mockReturnValueOnce([]);
       expect(await getPuzzles()).toEqual([]);
     });
   });
@@ -567,7 +567,7 @@ describe('puzzleRepository', () => {
       await setPuzzles(input);
 
       // get the value of the puzzle array that was pass to the store by set puzzles
-      const valuePassedToStore = setStoreValue.mock.lastCall[1];
+      const valuePassedToStore = setValue.mock.lastCall[1];
 
       expect(valuePassedToStore).toStrictEqual(expected);
     });
@@ -576,7 +576,7 @@ describe('puzzleRepository', () => {
       await setPuzzles([]);
 
       // get the value of the puzzle array that was pass to the store by set puzzles
-      const valuePassedToStore = setStoreValue.mock.lastCall[1];
+      const valuePassedToStore = setValue.mock.lastCall[1];
 
       expect(valuePassedToStore).toStrictEqual([]);
     });
@@ -609,7 +609,7 @@ describe('puzzleRepository', () => {
         },
       ];
 
-      getStoreValue.mockReturnValueOnce(orig);
+      getValue.mockReturnValueOnce(orig);
 
       await addOrEditPuzzle(doesNotExist);
 
@@ -620,13 +620,13 @@ describe('puzzleRepository', () => {
         incorrectAnswers: doesNotExist.incorrectAnswers,
       }];
 
-      expect(setStoreValue.mock.lastCall[1]).toStrictEqual(expected);
+      expect(setValue.mock.lastCall[1]).toStrictEqual(expected);
     });
 
     test('edits correct answer', async () => {
       const newAnswer = 'NEW ANSWER!';
 
-      getStoreValue.mockReturnValueOnce([
+      getValue.mockReturnValueOnce([
         { id: '20221202' },
         { id: '20221201' },
         { id: '20221301', correctAnswer: 'OLD ANSWER' },
@@ -642,7 +642,7 @@ describe('puzzleRepository', () => {
         part: 1,
       });
 
-      expect(setStoreValue.mock.lastCall[1]).toStrictEqual([
+      expect(setValue.mock.lastCall[1]).toStrictEqual([
         { id: '20221202' },
         { id: '20221201' },
         {
@@ -657,7 +657,7 @@ describe('puzzleRepository', () => {
     test('edits correct fastestExecutionTimeNs', async () => {
       const newValue = 4567;
 
-      getStoreValue.mockReturnValueOnce([
+      getValue.mockReturnValueOnce([
         { id: '20221202' },
         { id: '20221201' },
         { id: '20221301', fastestExecutionTimeNs: 1234 },
@@ -673,7 +673,7 @@ describe('puzzleRepository', () => {
         part: 1,
       });
 
-      expect(setStoreValue.mock.lastCall[1]).toStrictEqual([
+      expect(setValue.mock.lastCall[1]).toStrictEqual([
         { id: '20221202' },
         { id: '20221201' },
         {
@@ -688,7 +688,7 @@ describe('puzzleRepository', () => {
     test('edits incorrectAnswers', async () => {
       const newValue = ['ASDF', 'QWERTY'];
 
-      getStoreValue.mockReturnValueOnce([
+      getValue.mockReturnValueOnce([
         { id: '20221202' },
         { id: '20221201' },
         { id: '20221301', incorrectAnswers: ['ASDF'] },
@@ -704,7 +704,7 @@ describe('puzzleRepository', () => {
         part: 1,
       });
 
-      expect(setStoreValue.mock.lastCall[1]).toStrictEqual([
+      expect(setValue.mock.lastCall[1]).toStrictEqual([
         { id: '20221202' },
         { id: '20221201' },
         {

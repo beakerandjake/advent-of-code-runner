@@ -17,7 +17,7 @@ const tokens = [
 export const createDataFile = async ({ year }) => {
   logger.debug('creating data file');
 
-  const { source, dest } = getConfigValue('paths.templates.dataStoreFile');
+  const { source, dest } = getConfigValue('paths.templates.userDataFile');
 
   const dataFile = replaceTokens(
     tokens,

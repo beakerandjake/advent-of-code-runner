@@ -1,5 +1,5 @@
 import { logger } from '../../logger.js';
-import { dataStoreFileExists } from '../../persistence/jsonFileStore.js';
+import { userDataFileExists } from '../../persistence/userDataFile.js';
 
 /**
  * Asserts that the user has ran an init command in the cwd.
@@ -10,7 +10,7 @@ export const assertInitialized = async () => {
    * not worth it to check packages installed or src files exist etc.
    * we can be pretty sure they have ran init if the data store file is there.
    */
-  if (!await dataStoreFileExists()) {
+  if (!await userDataFileExists()) {
     logger.error('This directory does not appear to have been initialized. Please run the "init" command.');
     return false;
   }

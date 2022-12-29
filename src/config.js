@@ -132,7 +132,8 @@ const CONFIG = {
     ],
   },
   paths: {
-    dataStoreFile: join(cwd, 'aocr-data.json'),
+    rateLimitFile: join(cwd, '.ratelimits.json'),
+    userDataFile: join(cwd, 'aocr-data.json'),
     inputsDir: join(cwd, 'inputs'),
     solutionsDir: join(cwd, 'src'),
     solutionRunnerWorkerFile: join(__dirname, 'solutions', 'solutionRunnerWorkerThread.js'),
@@ -153,7 +154,7 @@ const CONFIG = {
         source: join(__dirname, '..', 'templates', 'template-package.json'),
         dest: join(cwd, 'package.json'),
       },
-      dataStoreFile: {
+      userDataFile: {
         source: join(__dirname, '..', 'templates', 'template-dataFile.json'),
         dest: join(cwd, 'aocr-data.json'),
       },
