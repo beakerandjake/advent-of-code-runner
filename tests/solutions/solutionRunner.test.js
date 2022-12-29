@@ -11,13 +11,10 @@ import { workerMessageTypes } from '../../src/solutions/workerMessageTypes.js';
 import { mockConfig, mockLogger } from '../mocks.js';
 
 // setup mocks.
-mockConfig();
+const { getConfigValue } = mockConfig();
 const loggerMockInstance = mockLogger();
-
-jest.unstable_mockModule('../../src/persistence/io.js', () => ({
-  fileExists: jest.fn(),
-  loadFileContents: jest.fn(),
-}));
+jest.unstable_mockModule('path', () => ({ join: jest.fn() }));
+jest.unstable_mockModule('fs-extra/esm', () => ({ pathExists: jest.fn() }));
 
 const workerOnMock = jest.fn();
 jest.unstable_mockModule('node:worker_threads', () => ({
@@ -26,18 +23,9 @@ jest.unstable_mockModule('node:worker_threads', () => ({
   })),
 }));
 
-jest.unstable_mockModule('../../src/solutions/solutionRunnerWorkerThread.js', () => ({
-  workerMessageTypes: jest.fn(),
-}));
-
-jest.unstable_mockModule('path', () => ({
-  join: jest.fn(),
-}));
-
 const { Worker } = await import('node:worker_threads');
 const { join } = await import('path');
-const { getConfigValue } = await import('../../src/config.js');
-const { fileExists, loadFileContents } = await import('../../src/persistence/io.js');
+const { pathExists } = await import('fs-extra/esm');
 const {
   execute, getSolutionFileName, getFunctionNameForPart, spawnWorker,
 } = await import('../../src/solutions/solutionRunner.js');
@@ -199,16 +187,8 @@ describe('solutionRunner', () => {
     test('throws if user solution file not found', async () => {
       const part = 1;
       setConfigMocks(part);
-      fileExists.mockResolvedValue(false);
+      pathExists.mockResolvedValue(false);
       expect(async () => execute(1, 1, 'asdf')).rejects.toThrow(UserSolutionFileNotFoundError);
-    });
-
-    test('throws if worker file not found', async () => {
-      const part = 1;
-      setConfigMocks(part);
-      loadFileContents.mockRejectedValue(new Error('Could not load file!'));
-
-      expect(async () => execute(1, 1, 'asdf')).rejects.toThrow();
     });
 
     test('passes worker data to worker', async () => {
@@ -219,8 +199,8 @@ describe('solutionRunner', () => {
         input: 'ASDF\nASDF',
         lines: ['ASDF', 'ASDF'],
       };
+      pathExists.mockResolvedValue(true);
       setConfigMocks(part, { partFunctions: [{ key: part, name: expected.functionToExecute }] });
-      fileExists.mockResolvedValue(true);
 
       // hacky way to ensure worker constructor is called.
       // cant await execute cause that promise never resolves.
@@ -238,7 +218,7 @@ describe('solutionRunner', () => {
       const authToken = 'ASDF';
       process.env = { ...process.env, authToken };
       setConfigMocks(1, { authToken });
-      fileExists.mockResolvedValue(true);
+      pathExists.mockResolvedValue(true);
       // hacky way to ensure worker constructor is called.
       // cant await execute cause that promise never resolves.
       // so await a different promise to ensure constructor is called
