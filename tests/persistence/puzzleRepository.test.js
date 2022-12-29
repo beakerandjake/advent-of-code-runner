@@ -5,11 +5,11 @@ import {
 // setup jsonFileStore so it can be mocked.
 jest.unstable_mockModule('../../src/persistence/jsonFileStore.js', () => ({
   getValue: jest.fn(),
-  setStoreValue: jest.fn(),
+  setValue: jest.fn(),
 }));
 
 // import after setting up the mock so the modules import the mocked version
-const { getValue, setStoreValue } = await import('../../src/persistence/jsonFileStore.js');
+const { getValue, setValue } = await import('../../src/persistence/jsonFileStore.js');
 const {
   translateToPuzzleFromData,
   translateToDataFromPuzzle,
@@ -567,7 +567,7 @@ describe('puzzleRepository', () => {
       await setPuzzles(input);
 
       // get the value of the puzzle array that was pass to the store by set puzzles
-      const valuePassedToStore = setStoreValue.mock.lastCall[1];
+      const valuePassedToStore = setValue.mock.lastCall[1];
 
       expect(valuePassedToStore).toStrictEqual(expected);
     });
@@ -576,7 +576,7 @@ describe('puzzleRepository', () => {
       await setPuzzles([]);
 
       // get the value of the puzzle array that was pass to the store by set puzzles
-      const valuePassedToStore = setStoreValue.mock.lastCall[1];
+      const valuePassedToStore = setValue.mock.lastCall[1];
 
       expect(valuePassedToStore).toStrictEqual([]);
     });
@@ -620,7 +620,7 @@ describe('puzzleRepository', () => {
         incorrectAnswers: doesNotExist.incorrectAnswers,
       }];
 
-      expect(setStoreValue.mock.lastCall[1]).toStrictEqual(expected);
+      expect(setValue.mock.lastCall[1]).toStrictEqual(expected);
     });
 
     test('edits correct answer', async () => {
@@ -642,7 +642,7 @@ describe('puzzleRepository', () => {
         part: 1,
       });
 
-      expect(setStoreValue.mock.lastCall[1]).toStrictEqual([
+      expect(setValue.mock.lastCall[1]).toStrictEqual([
         { id: '20221202' },
         { id: '20221201' },
         {
@@ -673,7 +673,7 @@ describe('puzzleRepository', () => {
         part: 1,
       });
 
-      expect(setStoreValue.mock.lastCall[1]).toStrictEqual([
+      expect(setValue.mock.lastCall[1]).toStrictEqual([
         { id: '20221202' },
         { id: '20221201' },
         {
@@ -704,7 +704,7 @@ describe('puzzleRepository', () => {
         part: 1,
       });
 
-      expect(setStoreValue.mock.lastCall[1]).toStrictEqual([
+      expect(setValue.mock.lastCall[1]).toStrictEqual([
         { id: '20221202' },
         { id: '20221201' },
         {

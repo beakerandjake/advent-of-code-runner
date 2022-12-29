@@ -25,7 +25,7 @@ jest.unstable_mockModule('../../src/persistence/cachedValue.js', () => ({
 // import after setting up the mock so the modules import the mocked version
 // const { CachedValue } = await import('../src/persistence/cachedValue.js');
 const { loadFileContents, saveFile, fileExists } = await import('../../src/persistence/io.js');
-const { getValue, setStoreValue, dataStoreFileExists } = await import('../../src/persistence/jsonFileStore.js');
+const { getValue, setValue, dataStoreFileExists } = await import('../../src/persistence/jsonFileStore.js');
 
 beforeEach(() => {
   jest.resetAllMocks();
@@ -127,7 +127,7 @@ describe('jsonFileStore', () => {
     });
   });
 
-  describe('setStoreValue()', () => {
+  describe('setValue()', () => {
     describe('cache is empty', () => {
       // mock empty cache for each test in this block.
       beforeEach(() => {
@@ -152,7 +152,7 @@ describe('jsonFileStore', () => {
         const value = false;
         loadFileContents.mockResolvedValue(JSON.stringify(orig));
 
-        await setStoreValue(key, value);
+        await setValue(key, value);
 
         expect(saveFile).toHaveBeenCalledWith(
           undefined,
@@ -166,7 +166,7 @@ describe('jsonFileStore', () => {
         const orig = { asdf: true, [key]: 'original' };
         loadFileContents.mockResolvedValue(JSON.stringify(orig));
 
-        await setStoreValue(key, value);
+        await setValue(key, value);
 
         expect(saveFile).toHaveBeenCalledWith(
           undefined,
@@ -178,7 +178,7 @@ describe('jsonFileStore', () => {
         saveFile.mockImplementationOnce(async () => {
           throw new Error('Could not save file!');
         });
-        expect(async () => setStoreValue('1234', false)).rejects.toThrow();
+        expect(async () => setValue('1234', false)).rejects.toThrow();
       });
     });
 
@@ -207,7 +207,7 @@ describe('jsonFileStore', () => {
         const expected = { ...orig, [key]: value };
         mockCache.value = { ...orig };
 
-        await setStoreValue(key, value);
+        await setValue(key, value);
         expect(saveFile).toHaveBeenCalledWith(undefined, JSON.stringify(expected));
         expect(mockCache.setValue).toHaveBeenCalledWith(expected);
       });
@@ -219,14 +219,14 @@ describe('jsonFileStore', () => {
         const expected = { ...orig, [key]: value };
         mockCache.value = { ...orig };
 
-        await setStoreValue(key, value);
+        await setValue(key, value);
         expect(saveFile).toHaveBeenCalledWith(undefined, JSON.stringify(expected));
         expect(mockCache.setValue).toHaveBeenCalledWith(expected);
       });
 
       test('throws if could not save file', async () => {
         saveFile.mockRejectedValue(new Error('Could not save file!'));
-        expect(async () => setStoreValue('1234', false)).rejects.toThrow();
+        expect(async () => setValue('1234', false)).rejects.toThrow();
       });
     });
   });

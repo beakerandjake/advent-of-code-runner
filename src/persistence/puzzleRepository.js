@@ -1,4 +1,4 @@
-import { getValue, setStoreValue } from './jsonFileStore.js';
+import { getValue, setValue } from './jsonFileStore.js';
 
 /**
  * This repository serves as an abstraction between how the data is stored
@@ -135,7 +135,7 @@ export const getPuzzles = async () => (
  * @param {Object[]} puzzles
  */
 export const setPuzzles = async (puzzles = []) => (
-  setStoreValue(PUZZLE_DATA_KEY, puzzles.map(translateToDataFromPuzzle))
+  setValue(PUZZLE_DATA_KEY, puzzles.map(translateToDataFromPuzzle))
 );
 
 /**
@@ -189,5 +189,5 @@ export const addOrEditPuzzle = async (puzzle) => {
     ? puzzles.map((x) => (x.id === puzzle.id ? translateToDataFromPuzzle(puzzle) : x))
     : [...puzzles, translateToDataFromPuzzle(puzzle)];
 
-  await setStoreValue(PUZZLE_DATA_KEY, updated);
+  await setValue(PUZZLE_DATA_KEY, updated);
 };

@@ -66,7 +66,7 @@ export const getValue = async (key, defaultValue = undefined) => {
  * @param {String} key
  * @param {Any} value
  */
-export const setStoreValue = async (key, value) => {
+export const setValue = async (key, value) => {
   logger.silly('setting store value with key: "%s" to: %s', key, value);
   const data = await loadData();
   const updated = { ...data, [key]: value };

@@ -1,5 +1,5 @@
 import { isDate, isValid, parseISO } from 'date-fns';
-import { getValue, setStoreValue } from './jsonFileStore.js';
+import { getValue, setValue } from './jsonFileStore.js';
 
 /**
  * The key to the data in the json file.
@@ -44,5 +44,5 @@ export const setRateLimit = async (actionType, expiration) => {
 
   const rateLimits = await getValue(RATE_LIMITS_STORE_KEY, {});
   const updated = { ...rateLimits, [actionType]: expiration.toISOString() };
-  await setStoreValue(RATE_LIMITS_STORE_KEY, updated);
+  await setValue(RATE_LIMITS_STORE_KEY, updated);
 };

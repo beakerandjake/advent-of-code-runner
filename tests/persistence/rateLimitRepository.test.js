@@ -5,11 +5,11 @@ import {
 // setup mocks.
 jest.unstable_mockModule('../../src/persistence/jsonFileStore.js', () => ({
   getValue: jest.fn(),
-  setStoreValue: jest.fn(),
+  setValue: jest.fn(),
 }));
 
 // import after setting up the mock so the modules import the mocked version
-const { getValue, setStoreValue } = await import('../../src/persistence/jsonFileStore.js');
+const { getValue, setValue } = await import('../../src/persistence/jsonFileStore.js');
 const { getRateLimit, setRateLimit } = await import('../../src/persistence/rateLimitRepository.js');
 
 afterEach(() => {
@@ -86,7 +86,7 @@ describe('rateLimitRepository', () => {
       const orig = { notCool: new Date().toISOString() };
       getValue.mockResolvedValueOnce({ notCool: new Date().toISOString() });
       await setRateLimit(key, value);
-      expect(setStoreValue).toHaveBeenCalledWith(
+      expect(setValue).toHaveBeenCalledWith(
         expect.any(String),
         { ...orig, [key]: value.toISOString() },
       );
@@ -98,7 +98,7 @@ describe('rateLimitRepository', () => {
       const orig = { notCool: new Date().toISOString(), [key]: value.toISOString() };
       getValue.mockResolvedValueOnce({ notCool: new Date().toISOString() });
       await setRateLimit(key, value);
-      expect(setStoreValue).toHaveBeenCalledWith(
+      expect(setValue).toHaveBeenCalledWith(
         expect.any(String),
         { ...orig, [key]: value.toISOString() },
       );
