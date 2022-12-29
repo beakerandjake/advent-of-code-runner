@@ -13,7 +13,7 @@ const { copy } = await import('fs-extra/esm');
 const { createGitIgnore } = await import('../../src/initialize/createGitIgnore.js');
 
 describe('initialize', () => {
-  describe('createReadme()', () => {
+  describe('createGitIgnore()', () => {
     beforeEach(() => {
       jest.resetAllMocks();
     });
