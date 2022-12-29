@@ -17,7 +17,7 @@ const dataFilePath = getConfigValue('paths.userDataFile');
 const cachedData = new CachedValue();
 
 /**
- * Hit the file system and return the contents of the data file.
+ * Loads the user data from disk
  */
 const loadDataFromFile = async () => {
   logger.silly('loading data store from file: %s', dataFilePath);
@@ -26,9 +26,8 @@ const loadDataFromFile = async () => {
 };
 
 /**
- * Returns the entire data store.
- * If this is the first query then the data store file is loaded from disk.
- * After first load the in-memory cached version is returned.
+ * Returns the contents of the user data store.
+ * The first call loads the data from disk, subsequent calls return the cached data.
  */
 const loadData = async () => {
   if (!cachedData.hasValue()) {
@@ -39,9 +38,7 @@ const loadData = async () => {
 };
 
 /**
- * Overwrite the entire data store with the new data.
- * This will write the data contents to disk.
- * It will also update the in-memory cache with the new data.
+ * Write the data to the user data file. Also updates the in-memory cache.
  */
 const saveData = async (data) => {
   logger.silly('update data store cache and writing to file!');
