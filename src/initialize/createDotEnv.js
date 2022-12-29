@@ -1,5 +1,6 @@
+import { outputFile } from 'fs-extra/esm';
+import { readFile } from 'node:fs/promises';
 import { getConfigValue } from '../config.js';
-import { loadFileContents, saveFile } from '../persistence/io.js';
 import { logger } from '../logger.js';
 import { replaceTokens } from './replaceTokens.js';
 
@@ -23,15 +24,8 @@ export const createDotEnv = async ({ authToken }) => {
   }
 
   const { source, dest } = getConfigValue('paths.templates.dotenv');
-
-  // replace each token in the template env file with the arg values
-  const envFile = replaceTokens(
-    envFileTokens,
-    { authToken },
-    await loadFileContents(source),
-  );
-
+  const templateEnvFileContents = await readFile(source, { encoding: 'utf-8' });
+  const envFile = replaceTokens(envFileTokens, { authToken }, templateEnvFileContents);
   logger.debug('saving .env file to: %s', dest);
-
-  await saveFile(dest, envFile);
+  await outputFile(dest, envFile);
 };

@@ -1,8 +1,8 @@
-import { readFile } from 'node:fs/promises';
 import { outputFile } from 'fs-extra/esm';
+import { readFile } from 'node:fs/promises';
 import { getConfigValue } from '../config.js';
-import { replaceTokens } from './replaceTokens.js';
 import { logger } from '../logger.js';
+import { replaceTokens } from './replaceTokens.js';
 
 /**
  * Maps tokens strings in the template env file to fields of the args.
