@@ -1,8 +1,8 @@
+import { readJson, writeJson, pathExists } from 'fs-extra/esm';
 import { getConfigValue } from '../config.js';
 import { logger } from '../logger.js';
 import { get } from '../util.js';
 import { CachedValue } from './cachedValue.js';
-import { fileExists, loadFileContents, saveFile } from './io.js';
 
 const dataFilePath = getConfigValue('paths.userDataFile');
 
@@ -17,22 +17,14 @@ const dataFilePath = getConfigValue('paths.userDataFile');
 const cachedData = new CachedValue();
 
 /**
- * Loads the user data from disk
- */
-const loadDataFromFile = async () => {
-  logger.silly('loading data store from file: %s', dataFilePath);
-  const contents = await loadFileContents(dataFilePath);
-  return contents ? JSON.parse(contents) : {};
-};
-
-/**
  * Returns the contents of the user data store.
- * The first call loads the data from disk, subsequent calls return the cached data.
  */
 const loadData = async () => {
   if (!cachedData.hasValue()) {
-    logger.silly('setting data store cache for first time');
-    cachedData.setValue(await loadDataFromFile());
+    // populate cache with file contents on first load.
+    logger.silly('loading data store from file: %s', dataFilePath);
+    const fileContents = await readJson(dataFilePath);
+    cachedData.setValue(fileContents);
   }
   return cachedData.value;
 };
@@ -43,7 +35,7 @@ const loadData = async () => {
 const saveData = async (data) => {
   logger.silly('update data store cache and writing to file!');
   cachedData.setValue(data);
-  await saveFile(dataFilePath, JSON.stringify(data));
+  await writeJson(dataFilePath, data);
 };
 
 /**
@@ -73,4 +65,4 @@ export const setValue = async (key, value) => {
 /**
  * Returns true if the user data file exists.
  */
-export const userDataFileExists = async () => fileExists(dataFilePath);
+export const userDataFileExists = async () => pathExists(dataFilePath);
