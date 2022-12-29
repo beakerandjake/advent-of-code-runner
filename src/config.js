@@ -161,6 +161,14 @@ const CONFIG = {
       solution: join(__dirname, '..', 'templates', 'template-solution.js'),
     },
   },
+  initialize: {
+    emptyCwdWhitelist: [
+      '.git',
+      '.DS_Store',
+      'LICENSE',
+      'node_modules',
+    ],
+  },
 };
 
 /**
