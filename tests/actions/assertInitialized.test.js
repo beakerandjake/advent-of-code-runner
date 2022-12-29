@@ -5,10 +5,10 @@ import { mockLogger } from '../mocks.js';
 
 // setup mocks
 mockLogger();
-jest.unstable_mockModule('src/persistence/jsonFileStore.js', () => ({ userDataFileExists: jest.fn() }));
+jest.unstable_mockModule('src/persistence/userDataFile.js', () => ({ userDataFileExists: jest.fn() }));
 
 // import after mocks set up
-const { userDataFileExists } = await import('../../src/persistence/jsonFileStore');
+const { userDataFileExists } = await import('../../src/persistence/userDataFile.js');
 const { assertInitialized } = await import('../../src/actions/links/assertInitialized.js');
 
 afterEach(() => {

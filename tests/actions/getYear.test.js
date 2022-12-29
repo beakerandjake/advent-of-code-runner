@@ -5,11 +5,11 @@ import { mockLogger } from '../mocks.js';
 
 // setup mocks
 mockLogger();
-jest.unstable_mockModule('src/persistence/jsonFileStore.js', () => ({ getValue: jest.fn() }));
+jest.unstable_mockModule('src/persistence/userDataFile.js', () => ({ getValue: jest.fn() }));
 jest.unstable_mockModule('src/validation/index.js', () => ({ yearIsValid: jest.fn() }));
 
 // import after mocks set up
-const { getValue } = await import('../../src/persistence/jsonFileStore.js');
+const { getValue } = await import('../../src/persistence/userDataFile.js');
 const { yearIsValid } = await import('../../src/validation/index.js');
 const { getYear } = await import('../../src/actions/links/getYear.js');
 

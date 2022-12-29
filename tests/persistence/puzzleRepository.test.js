@@ -2,14 +2,14 @@ import {
   describe, jest, test, afterEach,
 } from '@jest/globals';
 
-// setup jsonFileStore so it can be mocked.
-jest.unstable_mockModule('../../src/persistence/jsonFileStore.js', () => ({
+// setup userDataFile so it can be mocked.
+jest.unstable_mockModule('../../src/persistence/userDataFile.js', () => ({
   getValue: jest.fn(),
   setValue: jest.fn(),
 }));
 
 // import after setting up the mock so the modules import the mocked version
-const { getValue, setValue } = await import('../../src/persistence/jsonFileStore.js');
+const { getValue, setValue } = await import('../../src/persistence/userDataFile.js');
 const {
   translateToPuzzleFromData,
   translateToDataFromPuzzle,
