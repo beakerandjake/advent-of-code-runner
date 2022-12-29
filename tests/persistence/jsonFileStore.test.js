@@ -25,7 +25,7 @@ jest.unstable_mockModule('../../src/persistence/cachedValue.js', () => ({
 // import after setting up the mock so the modules import the mocked version
 // const { CachedValue } = await import('../src/persistence/cachedValue.js');
 const { loadFileContents, saveFile, fileExists } = await import('../../src/persistence/io.js');
-const { getValue, setValue, dataStoreFileExists } = await import('../../src/persistence/jsonFileStore.js');
+const { getValue, setValue, userDataFileExists } = await import('../../src/persistence/jsonFileStore.js');
 
 beforeEach(() => {
   jest.resetAllMocks();
@@ -231,16 +231,16 @@ describe('jsonFileStore', () => {
     });
   });
 
-  describe('dataStoreFileExists()', () => {
+  describe('userDataFileExists()', () => {
     test('returns true if file exists', async () => {
       fileExists.mockResolvedValue(true);
-      const result = await dataStoreFileExists();
+      const result = await userDataFileExists();
       expect(result).toBe(true);
     });
 
     test('returns false if file does not exist', async () => {
       fileExists.mockResolvedValue(false);
-      const result = await dataStoreFileExists();
+      const result = await userDataFileExists();
       expect(result).toBe(false);
     });
   });

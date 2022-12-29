@@ -74,6 +74,6 @@ export const setValue = async (key, value) => {
 };
 
 /**
- * Returns true if the user data store file exists.
+ * Returns true if the user data file exists.
  */
-export const dataStoreFileExists = async () => fileExists(dataFilePath);
+export const userDataFileExists = async () => fileExists(dataFilePath);
