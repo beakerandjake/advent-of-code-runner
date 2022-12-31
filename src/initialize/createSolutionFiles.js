@@ -16,8 +16,13 @@ const tokens = [
 /**
  * Creates the solution files in the cwd.
  */
-export const createSolutionFiles = async ({ year }) => {
+export const createSolutionFiles = async ({ year } = {}) => {
   logger.debug('creating Solution files');
+
+  if (year == null) {
+    throw new Error('null or undefined year');
+  }
+
   // create directory if doesn't exist.
   const solutionsDir = getConfigValue('paths.solutionsDir');
   await ensureDir(solutionsDir);
