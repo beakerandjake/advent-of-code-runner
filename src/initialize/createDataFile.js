@@ -15,8 +15,13 @@ const tokens = [
 /**
  * Creates a aocr-data.json file in the cwd.
  */
-export const createDataFile = async ({ year }) => {
+export const createDataFile = async ({ year } = {}) => {
   logger.debug('creating data file');
+
+  if (year == null) {
+    throw new Error('null or undefined year');
+  }
+
   const { source, dest } = getConfigValue('paths.templates.userDataFile');
   const templateFileContents = await readFile(source, { encoding: 'utf-8' });
 
