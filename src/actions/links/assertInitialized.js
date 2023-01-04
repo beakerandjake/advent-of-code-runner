@@ -5,8 +5,6 @@ import { userDataFileExists } from '../../persistence/userDataFile.js';
  * Asserts that the user has ran an init command in the cwd.
  */
 export const assertInitialized = async () => {
-  logger.verbose('checking if current directory is initialized');
-
   /**
    * it's probably enough to check if the data store file exists
    * not worth it to check packages installed or src files exist etc.
@@ -17,6 +15,5 @@ export const assertInitialized = async () => {
     return false;
   }
 
-  logger.verbose('cwd appears to be initialized');
   return true;
 };
