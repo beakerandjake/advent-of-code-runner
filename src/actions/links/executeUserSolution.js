@@ -1,6 +1,6 @@
 import { humanizeDuration } from '../../formatting.js';
 import { logger } from '../../logger.js';
-import { executeUserSolution as execute } from '../../solutions/index.js';
+import { execute } from '../../solutions/index.js';
 
 /**
  * Execute the users code for this puzzle and output the results.

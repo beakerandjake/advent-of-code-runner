@@ -1,39 +1,63 @@
-import { basename } from 'node:path';
-import { outputFile } from 'fs-extra/esm';
-import { readFile } from 'node:fs/promises';
+import { readJson, writeJson } from 'fs-extra/esm';
+import { join } from 'node:path';
+import { exec } from 'node:child_process';
 import { getConfigValue } from '../config.js';
 import { logger } from '../logger.js';
-import { replaceTokens } from './replaceTokens.js';
 
 /**
- * Maps tokens strings in the template project json file to fields of the args.
+ * Runs the npm init command to create a package.json file.
+ * @param {String} cwd
  */
-const envFileTokens = [
-  { match: '{{theirPackageName}}', key: 'theirPackageName' },
-  { match: '{{ourPackageName}}', key: 'ourPackageName' },
-  { match: '{{year}}', key: 'year' },
-  { match: '{{version}}', key: 'version' },
-];
+const execNpmInit = async (cwd) => new Promise((resolve, reject) => {
+  exec('npm init -y', { cwd }, (error) => {
+    if (error) {
+      reject(new Error(`Failed to run npm init, exit code: ${error.code}`, { cause: error }));
+    } else {
+      logger.debug('created package.json file');
+      resolve();
+    }
+  });
+});
 
 /**
  * Creates a package.json file in the cwd.
  */
-export const createPackageJson = async ({ year }) => {
+export const createPackageJson = async ({ year } = {}) => {
   logger.debug('creating package.json file');
-  // might be better to run npm init in a child_process
-  // but to keep it simple just copy the template
-  const { source, dest } = getConfigValue('paths.templates.packageJson');
-  const templatePackageJson = await readFile(source, { encoding: 'utf-8' });
-  const packageJson = replaceTokens(
-    envFileTokens,
-    {
-      year,
-      version: getConfigValue('meta.version'),
-      theirPackageName: basename(getConfigValue('cwd')),
-      ourPackageName: basename(getConfigValue('meta.name')),
+
+  if (year == null) {
+    throw new Error('null or undefined year');
+  }
+
+  const cwd = getConfigValue('cwd');
+
+  // create the package json file.
+  await execNpmInit(cwd);
+
+  // now that the package json exists, load it, then modify it, then save it.
+  logger.debug('updating package.json file');
+  const packageJsonPath = join(cwd, 'package.json');
+  const originalPackageJson = await readJson(packageJsonPath);
+
+  // update the original package json with values the user will need to run our cli
+  const { main, ...updatedPackageJson } = {
+    ...originalPackageJson,
+    type: 'module',
+    description: `Solutions to Advent of Code ${year}`,
+    scripts: {
+      ...originalPackageJson.scripts,
+      solve: 'advent-of-code-runner solve',
+      autosolve: 'advent-of-code-runner autosolve',
+      autosubmit: 'advent-of-code-runner autosubmit',
+      submit: 'advent-of-code-runner submit',
+      help: 'advent-of-code-runner help',
     },
-    templatePackageJson,
-  );
-  logger.debug('saving package.json file to: %s', dest);
-  await outputFile(dest, packageJson);
+    dependencies: {
+      ...originalPackageJson.dependencies,
+      [getConfigValue('meta.name')]: `^${getConfigValue('meta.version')}`,
+    },
+  };
+
+  // save the updated package json file.
+  await writeJson(packageJsonPath, updatedPackageJson, { spaces: '\t' });
 };

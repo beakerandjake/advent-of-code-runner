@@ -12,4 +12,4 @@ import { execute } from './solutionRunner.js';
  * @param {Number} day
  * @param {Number} part
  */
-export const executeUserSolution = execute;
+export { execute };

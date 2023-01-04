@@ -1,3 +1,4 @@
+/* istanbul ignore file */
 /* eslint-disable no-unused-vars */
 import { getConfigValue } from '../config.js';
 import { logger } from '../logger.js';

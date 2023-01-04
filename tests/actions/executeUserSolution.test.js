@@ -6,7 +6,7 @@ import { mockLogger } from '../mocks.js';
 // setup mocks
 mockLogger();
 const mockExecuter = jest.fn();
-jest.unstable_mockModule('src/solutions/index.js', () => ({ executeUserSolution: mockExecuter }));
+jest.unstable_mockModule('src/solutions/index.js', () => ({ execute: mockExecuter }));
 
 // import after mocks set up
 const { executeUserSolution } = await import('../../src/actions/links/executeUserSolution.js');
