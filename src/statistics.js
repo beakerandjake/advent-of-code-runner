@@ -1,5 +1,6 @@
 import { addOrEditPuzzle, createPuzzle, findPuzzle } from './persistence/puzzleRepository.js';
 import { parsePositiveInt } from './validation/validationUtils.js';
+import { logger } from './logger.js';
 
 /**
  * Returns the fastest execution time for the puzzle.
@@ -24,5 +25,6 @@ export const setFastestExecutionTime = async (year, day, part, timeNs) => {
   const parsed = parsePositiveInt(timeNs);
   const puzzle = await findPuzzle(year, day, part) || createPuzzle(year, day, part);
   const updated = { ...puzzle, fastestExecutionTimeNs: parsed };
+  logger.debug('setting fastest execution time to: %s', timeNs, { year, day, part });
   return addOrEditPuzzle(updated);
 };
