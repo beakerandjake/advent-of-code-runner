@@ -76,7 +76,7 @@ export const runWorker = async ({
     throw new SolutionWorkerMissingDataError();
   }
 
-  logFromWorker('debug', 'worker loading user module: %s', solutionFileName);
+  logFromWorker('debug', 'worker thread loading user solution module: %s', solutionFileName);
   const userSolutionModule = await importUserSolutionModule(solutionFileName);
   const userSolutionFunction = get(userSolutionModule, functionToExecute);
 
@@ -85,7 +85,7 @@ export const runWorker = async ({
     throw new UserSolutionMissingFunctionError(functionToExecute);
   }
 
-  logFromWorker('debug', 'worker loading executing user function: %s', functionToExecute);
+  logFromWorker('debug', 'worker thread executing user function: %s', functionToExecute);
   await executeUserSolution(userSolutionFunction, input, lines);
 };
 
