@@ -42,6 +42,7 @@ export const createPackageJson = async ({ year } = {}) => {
   // update the original package json with values the user will need to run our cli
   const { main, ...updatedPackageJson } = {
     ...originalPackageJson,
+    type: 'module',
     description: `Solutions to Advent of Code ${year}`,
     scripts: {
       ...originalPackageJson.scripts,
