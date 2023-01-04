@@ -17,7 +17,7 @@ import { logger } from '../logger.js';
  * @private
  */
 export const executeChain = async (links, args = {}) => {
-  logger.actionchain('executing action chain (length: %s)', links.length);
+  logger.info('executing action chain (length: %s)', links.length);
   let currentArgs = args;
   let iterations = 0;
 
@@ -26,14 +26,14 @@ export const executeChain = async (links, args = {}) => {
     iterations += 1;
 
     try {
-      logger.actionchain('executing link (%s/%s): %s', iterations, links.length, link.name);
+      logger.info('executing link (%s/%s): %s', iterations, links.length, link.name);
 
       // eslint-disable-next-line no-await-in-loop
       const result = await link(currentArgs);
 
       // if false is explicitly returned, that means the link wants the chain to halt.
       if (result === false) {
-        logger.actionchain('link: %s has halted execution', link.name);
+        logger.info('link: %s has halted execution', link.name);
         break;
       }
 
@@ -42,16 +42,16 @@ export const executeChain = async (links, args = {}) => {
       // undefined is ignored to support void links.
       if (result !== true && result !== undefined) {
         // not logging the actual args on purpose, could contain secrets...
-        logger.actionchain('link: %s has updated the args', link.name);
+        logger.verbose('link: %s has updated the args', link.name);
         currentArgs = { ...currentArgs, ...result };
       }
     } catch (error) {
-      logger.actionchain('executing halted because error was raised by link: %s', link.name);
+      logger.info('executing halted because error was raised by link: %s', link.name);
       throw error;
     }
   }
 
-  logger.actionchain('successfully executed (%s/%s)', iterations, links.length);
+  logger.info('successfully executed action chain (%s/%s)', iterations, links.length);
   return iterations === links.length;
 };
 
