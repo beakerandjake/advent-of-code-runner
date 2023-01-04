@@ -31,6 +31,6 @@ export const assertAnswerCorrect = async ({
     return false;
   }
 
-  logger.verbose('answer is correct: %s matches correct answer: %s', answer, correctAnswer);
+  logger.verbose('answer is correct: %s matches saved answer: %s', answer, correctAnswer);
   return true;
 };
