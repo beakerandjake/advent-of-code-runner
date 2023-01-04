@@ -42,7 +42,7 @@ export const executeChain = async (links, args = {}) => {
       // undefined is ignored to support void links.
       if (result !== true && result !== undefined) {
         // not logging the actual args on purpose, could contain secrets...
-        logger.verbose('link: %s has updated the args', link.name);
+        logger.debug('link: %s has updated the action chain args', link.name);
         currentArgs = { ...currentArgs, ...result };
       }
     } catch (error) {
