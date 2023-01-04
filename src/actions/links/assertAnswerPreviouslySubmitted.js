@@ -7,6 +7,8 @@ import { answerHasBeenSubmitted } from '../../answers.js';
 export const assertAnswerPreviouslySubmitted = async ({
   year, day, part, answer,
 } = {}) => {
+  logger.verbose('checking if answer: "%s" has been previously submitted', answer);
+
   if (answer == null) {
     throw new Error('null or undefined answer');
   }
@@ -15,6 +17,6 @@ export const assertAnswerPreviouslySubmitted = async ({
     logger.error('You have already submitted this answer for this puzzle!');
     return true;
   }
-  logger.verbose('answer: %s has not been previously submitted', answer);
+  logger.verbose('answer has not been previously submitted');
   return false;
 };
