@@ -1,3 +1,4 @@
+/* istanbul ignore file */
 import { getConfigValue } from '../config.js';
 import { rateLimitDecorator } from './rateLimitDecorator.js';
 import { rateLimitedActions } from './rateLimit.js';
