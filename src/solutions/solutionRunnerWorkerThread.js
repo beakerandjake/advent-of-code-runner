@@ -40,14 +40,14 @@ export const logFromWorker = (level, message, ...args) => {
  * @private
  * @param {Function} userSolutionFn
  */
-export const executeUserSolution = (userSolutionFn, input, lines) => {
+export const executeUserSolution = async (userSolutionFn, input, lines) => {
   let start;
   let end;
   let answer;
 
   try {
     start = hrtime.bigint();
-    answer = userSolutionFn({ input, lines });
+    answer = await userSolutionFn({ input, lines });
     end = hrtime.bigint();
   } catch (error) {
     throw new UserSolutionThrewError(error);
@@ -86,7 +86,7 @@ export const runWorker = async ({
   }
 
   logFromWorker('debug', 'worker loading executing user function: %s', functionToExecute);
-  executeUserSolution(userSolutionFunction, input, lines);
+  await executeUserSolution(userSolutionFunction, input, lines);
 };
 
 // Only run the worker on a child thread, not on the main thread!
