@@ -1,8 +1,11 @@
 import {
   describe, jest, test, afterEach,
 } from '@jest/globals';
+import { mockLogger } from '../mocks.js';
 
-// setup userDataFile so it can be mocked.
+// setup mocks.
+mockLogger();
+
 jest.unstable_mockModule('../../src/persistence/userDataFile.js', () => ({
   getValue: jest.fn(),
   setValue: jest.fn(),

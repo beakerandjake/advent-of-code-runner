@@ -1,3 +1,4 @@
+import { logger } from '../logger.js';
 import { getValue, setValue } from './userDataFile.js';
 
 /**
@@ -183,11 +184,17 @@ export const addOrEditPuzzle = async (puzzle) => {
   // could speed this up, but keeping it simple.
 
   const puzzles = await getValue(PUZZLE_DATA_KEY, []);
+  let updated;
 
-  // edit if exists, add if doesn't
-  const updated = puzzles.some((x) => x.id === puzzle.id)
-    ? puzzles.map((x) => (x.id === puzzle.id ? translateToDataFromPuzzle(puzzle) : x))
-    : [...puzzles, translateToDataFromPuzzle(puzzle)];
+  if (puzzles.some((x) => x.id === puzzle.id)) {
+    // update if exists
+    logger.debug('puzzle data already exists, updating entry', { year: puzzle.year, day: puzzle.day, part: puzzle.part });
+    updated = puzzles.map((x) => (x.id === puzzle.id ? translateToDataFromPuzzle(puzzle) : x));
+  } else {
+  // add if does not exist
+    logger.debug('puzzle data does not exist, creating entry', { year: puzzle.year, day: puzzle.day, part: puzzle.part });
+    updated = [...puzzles, translateToDataFromPuzzle(puzzle)];
+  }
 
   await setValue(PUZZLE_DATA_KEY, updated);
 };
