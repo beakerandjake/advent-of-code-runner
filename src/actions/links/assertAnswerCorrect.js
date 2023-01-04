@@ -9,6 +9,8 @@ import { logger } from '../../logger.js';
 export const assertAnswerCorrect = async ({
   year, day, part, answer,
 } = {}) => {
+  logger.verbose('checking if answer is correct');
+
   if (answer == null) {
     throw new Error('null or undefined answer');
   }
@@ -17,7 +19,7 @@ export const assertAnswerCorrect = async ({
 
   // if there isn't a correct answer stored, then this puzzle hasn't been solved.
   if (!correctAnswer) {
-    logger.verbose('could not find a stored correct answer for this puzzle');
+    logger.verbose('unknown if answer is correct, could not find a stored correct answer for this puzzle');
     return false;
   }
 
@@ -29,6 +31,6 @@ export const assertAnswerCorrect = async ({
     return false;
   }
 
-  logger.verbose('answer: %s matches correct answer: %s', answer, correctAnswer);
+  logger.verbose('answer is correct: %s matches correct answer: %s', answer, correctAnswer);
   return true;
 };

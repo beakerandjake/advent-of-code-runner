@@ -61,7 +61,6 @@ export const puzzleHasBeenSolved = async (year, day, part) => {
  */
 export const getCorrectAnswer = async (year, day, part) => {
   const { correctAnswer = null } = await findPuzzle(year, day, part) || {};
-  logger.debug('got correct answer for puzzle: %s', correctAnswer, { year, day, part });
   return correctAnswer;
 };
 
@@ -115,17 +114,11 @@ export const addIncorrectAnswer = async (year, day, part, incorrectAnswer) => {
 export const answerHasBeenSubmitted = async (year, day, part, answer) => {
   const { correctAnswer = null, incorrectAnswers = [] } = await findPuzzle(year, day, part) || {};
 
-  if (!correctAnswer && incorrectAnswers.length === 0) {
-    logger.debug('answer has not been submitted because puzzle has not been saved', { year, day, part });
-    return false;
+  if (incorrectAnswers.some((x) => answersEqual(x, answer))) {
+    return true;
   }
 
-  const toReturn = (correctAnswer && answersEqual(correctAnswer, answer))
-    || incorrectAnswers.some((x) => answersEqual(x, answer));
-
-  logger.debug('answer has been submitted: %s', answer, { year, day, part });
-
-  return toReturn;
+  return !!correctAnswer && answersEqual(correctAnswer, answer);
 };
 
 /**
