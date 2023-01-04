@@ -1,4 +1,3 @@
-import { logger } from '../../logger.js';
 import { setFastestExecutionTime as doSetFastestExecutionTime } from '../../statistics.js';
 
 /**
@@ -11,6 +10,5 @@ export const storeFastestExecutionTime = async ({
     throw new Error('null or undefined execution time');
   }
 
-  logger.verbose('setting fastest execution time to: %s', executionTimeNs);
   await doSetFastestExecutionTime(year, day, part, executionTimeNs);
 };
