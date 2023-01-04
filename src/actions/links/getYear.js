@@ -15,6 +15,6 @@ export const getYear = async () => {
     throw new RangeError(`Could not get a valid year from your data file, this should have been set during initialization. Year was: "${year}"`);
   }
 
-  logger.verbose('using year: %s', year);
+  logger.verbose('loaded year value of: %s', year);
   return { year };
 };
