@@ -22,7 +22,7 @@ const cachedData = new CachedValue();
 const loadData = async () => {
   if (!cachedData.hasValue()) {
     // populate cache with file contents on first load.
-    logger.silly('loading data store from file: %s', dataFilePath);
+    logger.silly('loading user data from file: %s', dataFilePath);
     const fileContents = await readJson(dataFilePath);
     cachedData.setValue(fileContents);
   }
@@ -33,7 +33,7 @@ const loadData = async () => {
  * Write the data to the user data file. Also updates the in-memory cache.
  */
 const saveData = async (data) => {
-  logger.silly('update data store cache and writing to file!');
+  logger.silly('update user data cache and writing file!');
   cachedData.setValue(data);
   await writeJson(dataFilePath, data);
 };
@@ -45,7 +45,7 @@ const saveData = async (data) => {
  * @param {any} defaultValue
  */
 export const getValue = async (key, defaultValue = undefined) => {
-  logger.silly('loading store value with key: "%s"', key);
+  logger.silly('loading user data value with key: "%s"', key);
   const data = await loadData();
   return get(data, key, defaultValue);
 };
@@ -56,7 +56,7 @@ export const getValue = async (key, defaultValue = undefined) => {
  * @param {Any} value
  */
 export const setValue = async (key, value) => {
-  logger.silly('setting store value with key: "%s" to: %s', key, value);
+  logger.silly('setting user data value with key: "%s" to', key, value);
   const data = await loadData();
   const updated = { ...data, [key]: value };
   await saveData(updated);
