@@ -46,9 +46,8 @@ export const answersEqual = (lhs, rhs) => (
  * @param {Number} part
  */
 export const puzzleHasBeenSolved = async (year, day, part) => {
-  const solved = !!(await findPuzzle(year, day, part))?.correctAnswer;
-  logger.debug('puzzle is solved: %s', solved, { year, day, part });
-  return !!solved;
+  const { correctAnswer } = await findPuzzle(year, day, part) || {};
+  return !!correctAnswer;
 };
 
 /**
