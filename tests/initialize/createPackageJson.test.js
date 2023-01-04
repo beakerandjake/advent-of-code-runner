@@ -15,12 +15,6 @@ const { exec } = await import('node:child_process');
 const { readJson, writeJson } = await import('fs-extra/esm');
 const { createPackageJson } = await import('../../src/initialize/createPackageJson.js');
 
-// import { readJson, writeJson } from 'fs-extra/esm';
-// import { join } from 'node:path';
-// import { exec } from 'node:child_process';
-// import { getConfigValue } from '../config.js';
-// import { logger } from '../logger.js';
-
 describe('initialize', () => {
   describe('createPackageJson()', () => {
     beforeEach(() => {
