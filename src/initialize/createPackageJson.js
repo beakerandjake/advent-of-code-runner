@@ -1,8 +1,9 @@
 // import { basename } from 'node:path';
 // import { outputFile } from 'fs-extra/esm';
 // import { readFile } from 'node:fs/promises';
-// import { getConfigValue } from '../config.js';
-// import { logger } from '../logger.js';
+import { exec } from 'node:child_process';
+import { getConfigValue } from '../config.js';
+import { logger } from '../logger.js';
 // import { replaceTokens } from './replaceTokens.js';
 
 /**
@@ -38,8 +39,22 @@ const envFileTokens = [
 //   await outputFile(dest, packageJson);
 // };
 
-export const createPackageJson = ({ year } = {}) => {
+const execNpmInit = async () => new Promise((resolve, reject) => {
+  exec('npm init -y', { cwd: getConfigValue('cwd') }, (error) => {
+    if (error) {
+      reject(new Error(`Failed to run npm init, exit code: ${error.code}`, { cause: error }));
+    } else {
+      resolve();
+    }
+  });
+});
+
+export const createPackageJson = async ({ year } = {}) => {
+  logger.debug('creating package.json file');
+
   if (year == null) {
     throw new Error('null or undefined year');
   }
+
+  await execNpmInit();
 };
