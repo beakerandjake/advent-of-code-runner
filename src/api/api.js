@@ -28,7 +28,7 @@ const getBaseUrl = (year, day) => `${getConfigValue('aoc.baseUrl')}/${year}/day/
  * @param {String} authenticationToken - Token to authenticate with aoc.
  */
 export const downloadInput = async (year, day, authenticationToken) => {
-  logger.verbose('downloading input file for year: %s, day: %s', year, day);
+  logger.debug('downloading input file for year: %s, day: %s', year, day);
 
   if (!authenticationToken) {
     throw new Error('Authentication Token is required to query advent of code.');
@@ -74,7 +74,7 @@ export const downloadInput = async (year, day, authenticationToken) => {
  * @param {String} authenticationToken - Token to authenticate with aoc.
  */
 export const submitSolution = async (year, day, part, solution, authenticationToken) => {
-  logger.verbose('submitting solution to advent of code for year: %s, day: %s, part: %s', year, day, part);
+  logger.debug('submitting solution to advent of code for year: %s, day: %s, part: %s', year, day, part);
 
   if (!authenticationToken) {
     throw new Error('Authentication Token is required to query advent of code.');
