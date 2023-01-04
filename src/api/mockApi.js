@@ -14,7 +14,7 @@ export const downloadInput = async (
   day,
   authenticationToken,
 ) => {
-  logger.verbose('downloading mock input file for year: %s, day: %s', year, day);
+  logger.debug('downloading mock input file for year: %s, day: %s', year, day);
   return [...Array(100).keys()].map((x) => x + 1).join('\n');
 };
 

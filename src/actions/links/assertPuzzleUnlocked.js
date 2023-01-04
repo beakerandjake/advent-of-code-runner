@@ -10,6 +10,5 @@ export const assertPuzzleUnlocked = ({ year, day } = {}) => {
     logger.error(`You cannot attempt this puzzle because it is not unlocked yet, check back on December ${day} at midnight EST`);
     return false;
   }
-  logger.debug('puzzle is unlocked', { year, day });
   return true;
 };

@@ -15,6 +15,5 @@ export const assertInitialized = async () => {
     return false;
   }
 
-  logger.debug('cwd is initialized');
   return true;
 };

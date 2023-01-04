@@ -44,6 +44,7 @@ export const sanitizeMessage = (message = '') => {
  * @param {String} message - The sanitized message extracted from the response body.
  */
 export const parseResponseMessage = (message = '') => {
+  logger.debug('parsing api response message');
   const matchers = getConfigValue('aoc.responseParsing');
 
   // check solution was correct

@@ -25,12 +25,9 @@ export const isRateLimited = async (actionType) => {
   if (!actionIsValid(actionType)) {
     throw new Error(`Unknown rate limit action type: ${actionType}`);
   }
-
   const expiration = await getRateLimit(actionType);
   const limited = !!(expiration && isValid(expiration) && isFuture(expiration));
-
   logger.debug('action: %s is rate limited: %s, expires: %s', actionType, limited, expiration);
-
   return { limited, expiration: isValid(expiration) ? expiration : null };
 };
 

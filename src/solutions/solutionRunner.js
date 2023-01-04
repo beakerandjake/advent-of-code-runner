@@ -94,7 +94,7 @@ export const spawnWorker = async (workerThreadFileName, workerData) => (
  * @throws {SolutionWorkerExitWithoutAnswerError}
  */
 export const execute = async (day, part, input) => {
-  logger.verbose('spawning worker to execute solution', { day, part });
+  logger.debug('spawning worker thread to execute user solution', { day, part });
 
   if (!input) {
     throw new SolutionWorkerEmptyInputError();

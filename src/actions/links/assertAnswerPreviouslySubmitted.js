@@ -15,6 +15,6 @@ export const assertAnswerPreviouslySubmitted = async ({
     logger.error('You have already submitted this answer for this puzzle!');
     return true;
   }
-  logger.debug('answer: %s has not been previously submitted', answer);
+
   return false;
 };

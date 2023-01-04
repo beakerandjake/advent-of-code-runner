@@ -19,7 +19,7 @@ export const tryToUpdateFastestExecutionTime = async ({
   const fastestExecutionTime = await getFastestExecutionTime(year, day, part);
 
   if (fastestExecutionTime != null && executionTimeNs >= fastestExecutionTime) {
-    logger.debug('not setting fastest execution time, %s is slower than record: %s', executionTimeNs, fastestExecutionTime);
+    logger.verbose('not setting fastest execution time, %s is slower than record: %s', executionTimeNs, fastestExecutionTime);
     return;
   }
 

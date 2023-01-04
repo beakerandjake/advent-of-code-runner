@@ -30,7 +30,7 @@ export const cacheInput = async (year, day, input) => {
  */
 export const inputIsCached = async (year, day) => {
   const fileName = getInputFileName(year, day);
-  logger.debug('checking if input file exists: %s', fileName);
+  logger.debug('checking if input file is cached at: %s', fileName);
   return pathExists(fileName);
 };
 
