@@ -11,6 +11,6 @@ export const storeFastestExecutionTime = async ({
     throw new Error('null or undefined execution time');
   }
 
-  logger.debug('setting fastest execution time to: %s', executionTimeNs);
+  logger.verbose('setting fastest execution time to: %s', executionTimeNs);
   await doSetFastestExecutionTime(year, day, part, executionTimeNs);
 };

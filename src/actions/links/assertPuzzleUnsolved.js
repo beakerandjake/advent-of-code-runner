@@ -10,6 +10,6 @@ export const assertPuzzleUnsolved = async ({ year, day, part } = {}) => {
     logger.error('You have already solved and submitted the correct answer this puzzle!');
     return false;
   }
-  logger.debug('puzzle has not been previously solved');
+  logger.verbose('puzzle has not been previously solved');
   return true;
 };

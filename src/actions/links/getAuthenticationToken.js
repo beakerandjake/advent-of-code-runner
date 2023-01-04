@@ -12,6 +12,6 @@ export const getAuthenticationToken = () => {
     throw new Error('Could not get authentication token from .env file, this should have been set during the "init" command');
   }
 
-  logger.debug('loaded authentication token');
+  logger.verbose('loaded authentication token');
   return { authToken };
 };

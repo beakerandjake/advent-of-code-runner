@@ -16,10 +16,10 @@ export const storeSubmittedAnswer = async ({
   }
 
   if (correct) {
-    logger.debug('storing correct answer: %s', answer);
+    logger.verbose('storing correct answer: %s', answer);
     await setCorrectAnswer(year, day, part, answer);
   } else {
-    logger.debug('storing incorrect answer: %s', answer);
+    logger.verbose('storing incorrect answer: %s', answer);
     await addIncorrectAnswer(year, day, part, answer);
   }
 };
