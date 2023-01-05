@@ -1,34 +1,38 @@
-import { table } from 'table';
 import chalk from 'chalk';
-import { average } from '../../util.js';
+import { table } from 'table';
 import { humanizeDuration } from '../../formatting.js';
 import { getPuzzleCompletionData, summarizeCompletionData } from '../../statistics.js';
 
 /**
  * Returns text for the "Puzzle" column.
- * @param {Number} day
- * @param {Number} part
  */
 const puzzleNameText = (day, part) => `${day}.${part}`;
 
 /**
  * Returns text for the "Solved" column.
- * @param {Boolean} solved
  */
-const solvedText = (solved) => `${solved ? '✓' : ''}`;
+const solvedText = (solved) => `${solved ? chalk.green('✓') : ''}`;
 
+/**
+ * Returns text for the "# of Attempts" column.
+ */
 const numberOfAttemptsText = (numberOfAttempts, maxNumberOfAttempts) => {
   if (numberOfAttempts == null) {
     return '';
   }
 
+  const fixed = numberOfAttempts.toFixed(2);
+
   if (maxNumberOfAttempts > 1 && numberOfAttempts === maxNumberOfAttempts) {
-    return `${numberOfAttempts} (worst)`;
+    return `${fixed} (worst)`;
   }
 
-  return numberOfAttempts;
+  return fixed;
 };
 
+/**
+ * Returns text for the "Execution Time" column.
+ */
 const executionTimeText = (executionTimeNs, slowest, fastest) => {
   if (executionTimeNs == null) {
     return '';
@@ -47,52 +51,69 @@ const executionTimeText = (executionTimeNs, slowest, fastest) => {
 };
 
 /**
+ * Converts a row of puzzle completion data to the format expected by our table
+ */
+const toTableRow = (completionRow, completionSummary) => ([
+  puzzleNameText(completionRow.day, completionRow.part),
+  solvedText(completionRow.solved),
+  numberOfAttemptsText(completionRow.numberOfAttempts, completionSummary.maxAttempts),
+  executionTimeText(
+    completionRow.executionTimeNs,
+    completionSummary.minExecutionTime,
+    completionSummary.maxExecutionTime,
+  ),
+]);
+
+/**
  * Outputs a table to the cli which shows the users progress for the year.
- * @param {Number} year
  */
 export const outputCompletionTable = async ({ year } = {}) => {
   if (year == null) {
     throw new Error('null or undefined year');
   }
 
-  const completionData = (await getPuzzleCompletionData(year));
-  const summary = summarizeCompletionData(completionData);
-  console.log(summary);
+  const completionData = await getPuzzleCompletionData(year);
+  const summaryData = summarizeCompletionData(completionData);
 
-  const tableData = [
+  const headerRows = [
     [`Advent of Code ${year}`, '', '', ''],
-    ['Puzzle', 'Solved', 'Execution Time', '# of Attempts'],
-    ...completionData.map(({
-      day, part, solved, executionTimeNs, numberOfAttempts,
-    }) => [
-      puzzleNameText(day, part),
-      solvedText(solved),
-      executionTimeText(executionTimeNs, summary.minExecutionTime, summary.maxExecutionTime),
-      numberOfAttemptsText(numberOfAttempts, summary.maxAttempts),
-    ]),
+    ['Puzzle', 'Solved', 'Attempts', 'Execution Time'],
+  ];
+
+  const puzzleRows = completionData.map((x) => toTableRow(x, summaryData));
+
+  const summaryRows = [
     [
       'Average',
       '',
-      executionTimeText(summary.averageExecutionTimeNs),
-      numberOfAttemptsText(summary.averageNumberOfAttempts.toFixed(2)),
+      numberOfAttemptsText(summaryData.averageNumberOfAttempts),
+      executionTimeText(summaryData.averageExecutionTimeNs),
     ],
-    [`Solved ${summary.numberSolved}/${summary.totalPuzzles} (${(summary.percentSolved * 100).toFixed()}%)`, '', '', ''],
+    [`Solved ${summaryData.numberSolved}/${summaryData.totalPuzzles} (${(summaryData.percentSolved * 100).toFixed()}%)`, '', '', ''],
   ];
 
-  const config = {
+  const tableConfig = {
     columnDefault: { alignment: 'left' },
+    columns: [
+      { alignment: 'right' },
+      { alignment: 'center' },
+    ],
     spanningCells: [
+      // Header Row
       {
         col: 0, row: 0, colSpan: 4, alignment: 'center',
       },
-      // { col: 0, row: 1, colSpan: 2 },
-      { col: 0, row: 2 + completionData.length, colSpan: 2 },
+      // Average Row
+      { col: 0, row: headerRows.length + puzzleRows.length, colSpan: 2 },
+      // Solved Row
       {
-        col: 0, row: 3 + completionData.length, colSpan: 4, alignment: 'center',
+        col: 0, row: 1 + headerRows.length + puzzleRows.length, colSpan: 4, alignment: 'center',
       },
     ],
-    drawHorizontalLine: (lineIndex) => lineIndex <= 2 || lineIndex >= 2 + completionData.length,
+    drawHorizontalLine: (lineIndex) => (
+      lineIndex <= headerRows.length || lineIndex >= headerRows.length + puzzleRows.length
+    ),
   };
 
-  console.log(table(tableData, config));
+  console.log(table([...headerRows, ...puzzleRows, ...summaryRows], tableConfig));
 };
