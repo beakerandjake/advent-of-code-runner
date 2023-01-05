@@ -26,4 +26,4 @@ const actionChain = createChain(solveLinks);
  * @param {Number} day
  * @param {Number} part
  */
-export const solve = (day, part) => actionChain({ day, part });
+export const solve = async (day, part) => actionChain({ day, part });

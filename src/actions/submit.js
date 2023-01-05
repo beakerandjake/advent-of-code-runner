@@ -30,4 +30,4 @@ const actionChain = createChain(submitLinks);
  * @param {Number} day
  * @param {Number} part
  */
-export const submit = (day, part) => actionChain({ day, part });
+export const submit = async (day, part) => actionChain({ day, part });

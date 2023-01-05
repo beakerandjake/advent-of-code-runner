@@ -15,4 +15,4 @@ const actionChain = createChain([...new Set([
  * @param {Number} day
  * @param {Number} part
  */
-export const autoSubmit = () => actionChain({});
+export const autoSubmit = async () => actionChain({});
