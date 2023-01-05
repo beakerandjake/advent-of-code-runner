@@ -1,26 +1,46 @@
-import { getBorderCharacters, table } from 'table';
+import { table } from 'table';
 import chalk from 'chalk';
 import { average } from '../../util.js';
 import { humanizeDuration } from '../../formatting.js';
-import { getPuzzleCompletionData } from '../../statistics.js';
+import { getPuzzleCompletionData, summarizeCompletionData } from '../../statistics.js';
 
-const puzzleName = (day, part) => `${day}.${part}`;
-const solvedText = (solved) => `${solved ? chalk.green('✓') : ''}`;
-const numberOfAttemptsText = (numberOfAttempts) => (numberOfAttempts === 1 ? chalk.greenBright.bold(numberOfAttempts) : numberOfAttempts);
-const executionTimeText = (executionTimeNs, fastest, slowest) => {
+/**
+ * Returns text for the "Puzzle" column.
+ * @param {Number} day
+ * @param {Number} part
+ */
+const puzzleNameText = (day, part) => `${day}.${part}`;
+
+/**
+ * Returns text for the "Solved" column.
+ * @param {Boolean} solved
+ */
+const solvedText = (solved) => `${solved ? '✓' : ''}`;
+
+const numberOfAttemptsText = (numberOfAttempts, maxNumberOfAttempts) => {
+  if (numberOfAttempts == null) {
+    return '';
+  }
+
+  if (maxNumberOfAttempts > 1 && numberOfAttempts === maxNumberOfAttempts) {
+    return `${numberOfAttempts} (worst)`;
+  }
+
+  return numberOfAttempts;
+};
+
+const executionTimeText = (executionTimeNs, slowest, fastest) => {
   if (executionTimeNs == null) {
     return '';
   }
   const text = humanizeDuration(executionTimeNs);
 
-  console.log(fastest, slowest, executionTimeNs);
-
-  if (executionTimeNs === fastest) {
-    return chalk.italic.greenBright(`${text} (fastest)`);
+  if (fastest > 0 && executionTimeNs === fastest) {
+    return `${text} (best)`;
   }
 
-  if (executionTimeNs === slowest) {
-    return chalk.italic.yellow(`${text} (slowest)`);
+  if (slowest > 0 && executionTimeNs === slowest) {
+    return `${text} (worst)`;
   }
 
   return text;
@@ -36,9 +56,8 @@ export const outputCompletionTable = async ({ year } = {}) => {
   }
 
   const completionData = (await getPuzzleCompletionData(year));
-  console.log(completionData);
-  const fastestExecutionTime = Math.min(...completionData.map((x) => x.executionTimeNs).filter((x) => x > 0));
-  const slowestExecutionTime = Math.max(...completionData.map((x) => x.executionTimeNs));
+  const summary = summarizeCompletionData(completionData);
+  console.log(summary);
 
   const tableData = [
     [`Advent of Code ${year}`, '', '', ''],
@@ -46,19 +65,18 @@ export const outputCompletionTable = async ({ year } = {}) => {
     ...completionData.map(({
       day, part, solved, executionTimeNs, numberOfAttempts,
     }) => [
-      puzzleName(day, part),
+      puzzleNameText(day, part),
       solvedText(solved),
-      executionTimeText(executionTimeNs, fastestExecutionTime, slowestExecutionTime),
-      numberOfAttemptsText(numberOfAttempts),
+      executionTimeText(executionTimeNs, summary.minExecutionTime, summary.maxExecutionTime),
+      numberOfAttemptsText(numberOfAttempts, summary.maxAttempts),
     ]),
     [
       'Average',
       '',
-      humanizeDuration(average(completionData.map((x) => x.executionTimeNs))),
-      average(completionData.map((x) => x.numberOfAttempts)).toFixed(2),
+      executionTimeText(summary.averageExecutionTimeNs),
+      numberOfAttemptsText(summary.averageNumberOfAttempts.toFixed(2)),
     ],
-    ['Solved 4/50 (5%)', '', '', ''],
-    // ['Count', '', 'Percentage', ''],
+    [`Solved ${summary.numberSolved}/${summary.totalPuzzles} (${(summary.percentSolved * 100).toFixed()}%)`, '', '', ''],
   ];
 
   const config = {

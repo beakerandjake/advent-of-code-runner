@@ -3,6 +3,8 @@ import {
 } from './persistence/puzzleRepository.js';
 import { parsePositiveInt } from './validation/validationUtils.js';
 import { logger } from './logger.js';
+import { getConfigValue } from './config.js';
+import { average } from './util.js';
 
 /**
  * Returns the fastest execution time for the puzzle.
@@ -46,3 +48,20 @@ export const getPuzzleCompletionData = async (year) => (await getPuzzles())
     executionTimeNs: correctAnswer ? fastestExecutionTimeNs : null,
     numberOfAttempts: correctAnswer ? incorrectAnswers.length + 1 : incorrectAnswers.length,
   }));
+
+export const summarizeCompletionData = (completionData) => {
+  const totalPuzzles = getConfigValue('aoc.validation.days').length * getConfigValue('aoc.validation.parts').length;
+  const attempts = completionData.map((x) => x.numberOfAttempts).filter((x) => x != null);
+  const executionTimes = completionData.map((x) => x.executionTimeNs).filter((x) => x != null);
+  const numberSolved = completionData.filter((x) => x.solved);
+  return {
+    averageNumberOfAttempts: attempts.length ? average(attempts) : null,
+    maxAttempts: attempts.length ? Math.max(...attempts) : null,
+    averageExecutionTimeNs: executionTimes.length ? average(executionTimes) : null,
+    minExecutionTime: executionTimes.length ? Math.min(...executionTimes) : null,
+    maxExecutionTime: executionTimes.length ? Math.max(...executionTimes) : null,
+    numberSolved: numberSolved.length,
+    percentSolved: numberSolved.length ? (numberSolved.length / totalPuzzles) : 0,
+    totalPuzzles,
+  };
+};
