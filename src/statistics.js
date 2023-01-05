@@ -1,4 +1,6 @@
-import { addOrEditPuzzle, createPuzzle, findPuzzle } from './persistence/puzzleRepository.js';
+import {
+  addOrEditPuzzle, createPuzzle, findPuzzle, getPuzzles,
+} from './persistence/puzzleRepository.js';
 import { parsePositiveInt } from './validation/validationUtils.js';
 import { logger } from './logger.js';
 
@@ -28,3 +30,19 @@ export const setFastestExecutionTime = async (year, day, part, timeNs) => {
   logger.debug('setting fastest execution time to: %s', timeNs, { year, day, part });
   return addOrEditPuzzle(updated);
 };
+
+/**
+ * Returns information about each puzzles completion
+ * @param {Number} year
+ */
+export const getPuzzleCompletionData = async (year) => (await getPuzzles())
+  .filter((x) => x.year === year)
+  .map(({
+    day, part, correctAnswer, fastestExecutionTimeNs, incorrectAnswers,
+  }) => ({
+    day,
+    part,
+    solved: !!correctAnswer,
+    executionTimeNs: correctAnswer ? fastestExecutionTimeNs : null,
+    numberOfAttempts: correctAnswer ? incorrectAnswers.length + 1 : incorrectAnswers.length,
+  }));
