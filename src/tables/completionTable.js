@@ -16,6 +16,8 @@ export const getTableTitle = (year) => {
 
 /**
  * Returns text for the "Puzzle" column.
+ * @param {Number} day
+ * @param {Number} part
  */
 export const getPuzzleColumnText = (day, part) => {
   if (day == null || day === '') {
@@ -31,5 +33,23 @@ export const getPuzzleColumnText = (day, part) => {
 
 /**
  * Returns text for the "Solved" column.
+ * @param {Boolean} solved
  */
 export const getSolvedColumnText = (solved) => (solved ? '✓' : '');
+
+/**
+ * Returns text for the "# of Attempts" column.
+ * @param {Number} numberOfAttempts
+ * @param {Number} maxNumberOfAttempts
+ */
+export const getNumberOfAttemptsColumnText = (numberOfAttempts, maxNumberOfAttempts) => {
+  if (numberOfAttempts == null) {
+    return '';
+  }
+
+  if (maxNumberOfAttempts > 1 && numberOfAttempts === maxNumberOfAttempts) {
+    return `${numberOfAttempts} (worst)`;
+  }
+
+  return `${numberOfAttempts}`;
+};
