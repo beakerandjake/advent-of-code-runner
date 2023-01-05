@@ -11,6 +11,7 @@ import {
   submitCommand,
   exitOverride,
 } from './cli/index.js';
+import { statsCommand } from './cli/commands.js';
 
 const program = new Command();
 
@@ -27,6 +28,7 @@ program.addCommand(solveCommand);
 program.addCommand(autoSubmitCommand);
 program.addCommand(submitCommand);
 program.addCommand(initializeCommand);
+program.addCommand(statsCommand);
 
 try {
   await program.parseAsync();

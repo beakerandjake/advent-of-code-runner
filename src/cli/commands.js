@@ -4,6 +4,7 @@ import {
   autoSubmit,
   initialize,
   solve,
+  stats,
   submit,
 } from '../actions/index.js';
 import { dayArgument, partArgument } from './arguments.js';
@@ -51,3 +52,11 @@ export const initializeCommand = new Command()
   .name('init')
   .description('Initialize a directory so advent-of-code-runner can run solutions.')
   .action(initialize);
+
+/**
+ * Command to output user statistics.
+ */
+export const statsCommand = new Command()
+  .name('stats')
+  .description('Output your completion progress for the years advent-of-code.')
+  .action(stats);
