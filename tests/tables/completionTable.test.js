@@ -1,7 +1,19 @@
-import { describe, test } from '@jest/globals';
-import {
-  getPuzzleColumnText, getTableTitle, getSolvedColumnText, getNumberOfAttemptsColumnText,
-} from '../../src/tables/completionTable.js';
+import { describe, test, jest } from '@jest/globals';
+
+// setup mocks
+jest.unstable_mockModule('../../src/formatting.js', () => ({
+  humanizeDuration: jest.fn(),
+}));
+
+// import after mocks are set up
+const { humanizeDuration } = await import('../../src/formatting.js');
+const {
+  getPuzzleColumnText,
+  getTableTitle,
+  getSolvedColumnText,
+  getNumberOfAttemptsColumnText,
+  getExecutionTimeColumnText,
+} = await import('../../src/tables/completionTable.js');
 
 describe('completionTable', () => {
   describe('getTableTitle()', () => {
@@ -83,6 +95,63 @@ describe('completionTable', () => {
       const result = getNumberOfAttemptsColumnText(input, input);
       expect(result).toContain(input.toString());
       expect(result).toContain('worst');
+    });
+  });
+
+  describe('getExecutionTimeColumnText()', () => {
+    beforeEach(() => {
+      jest.resetAllMocks();
+    });
+
+    test.each([
+      null, undefined, '',
+    ])('returns empty string if provided: "%s"', (executionTimeNs) => {
+      const result = getExecutionTimeColumnText(executionTimeNs);
+      expect(result).toBe('');
+    });
+
+    test('returns value if no min or no max', () => {
+      const input = 1234;
+      humanizeDuration.mockReturnValue(input.toString());
+      const result = getExecutionTimeColumnText(input);
+      expect(result).toBe(input.toString());
+    });
+
+    test('returns value if min but no max', () => {
+      const input = 1234;
+      humanizeDuration.mockReturnValue(input.toString());
+      const result = getExecutionTimeColumnText(input, input - 1);
+      expect(result).toBe(input.toString());
+    });
+
+    test('returns value if max but no min', () => {
+      const input = 1234;
+      humanizeDuration.mockReturnValue(input.toString());
+      const result = getExecutionTimeColumnText(input, undefined, input + 1);
+      expect(result).toBe(input.toString());
+    });
+
+    test('returns value if not equal to max or min', () => {
+      const input = 1234;
+      humanizeDuration.mockReturnValue(input.toString());
+      const result = getExecutionTimeColumnText(input, input - 1, input + 1);
+      expect(result).toBe(input.toString());
+    });
+
+    test('adds worst if equal to min', () => {
+      const input = 1234;
+      humanizeDuration.mockReturnValue(input.toString());
+      const result = getExecutionTimeColumnText(input, input, input + 1);
+      expect(result).toContain(input.toString());
+      expect(result).toContain('worst');
+    });
+
+    test('adds best if equal to max', () => {
+      const input = 1234;
+      humanizeDuration.mockReturnValue(input.toString());
+      const result = getExecutionTimeColumnText(input, input - 1, input);
+      expect(result).toContain(input.toString());
+      expect(result).toContain('best');
     });
   });
 });

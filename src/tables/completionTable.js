@@ -1,3 +1,5 @@
+import { humanizeDuration } from '../formatting.js';
+
 /**
  * The names of the puzzle columns in the completion table.
  */
@@ -52,4 +54,27 @@ export const getNumberOfAttemptsColumnText = (numberOfAttempts, maxNumberOfAttem
   }
 
   return `${numberOfAttempts}`;
+};
+
+/**
+ * Returns text for the "Execution Time" column.
+ * @param {Number} executionTimeNs
+ * @param {Number} slowest
+ * @param {Number} fastest
+ */
+export const getExecutionTimeColumnText = (executionTimeNs, slowest, fastest) => {
+  if (executionTimeNs == null || executionTimeNs === '') {
+    return '';
+  }
+  const text = humanizeDuration(executionTimeNs);
+
+  if (fastest > 0 && executionTimeNs === fastest) {
+    return `${text} (best)`;
+  }
+
+  if (slowest > 0 && executionTimeNs === slowest) {
+    return `${text} (worst)`;
+  }
+
+  return `${text}`;
 };
