@@ -1,5 +1,5 @@
 import { createChain } from './actionChain.js';
-import { assertInitialized, getYear } from './links/index.js';
+import { assertInitialized, getYear, outputCompletionTable } from './links/index.js';
 
 /**
  * The links which together make up the stats action.
@@ -7,6 +7,7 @@ import { assertInitialized, getYear } from './links/index.js';
 export const statsLinks = [
   assertInitialized,
   getYear,
+  outputCompletionTable,
 ];
 
 /**
