@@ -21,13 +21,15 @@ const numberOfAttemptsText = (numberOfAttempts, maxNumberOfAttempts) => {
     return '';
   }
 
-  const fixed = numberOfAttempts.toFixed(2);
-
   if (maxNumberOfAttempts > 1 && numberOfAttempts === maxNumberOfAttempts) {
-    return `${fixed} (worst)`;
+    return chalk.yellow(`${numberOfAttempts} (worst)`);
   }
 
-  return fixed;
+  if (numberOfAttempts === 1) {
+    return chalk.green(numberOfAttempts);
+  }
+
+  return numberOfAttempts;
 };
 
 /**
@@ -40,11 +42,11 @@ const executionTimeText = (executionTimeNs, slowest, fastest) => {
   const text = humanizeDuration(executionTimeNs);
 
   if (fastest > 0 && executionTimeNs === fastest) {
-    return `${text} (best)`;
+    return chalk.green(`${text} (best)`);
   }
 
   if (slowest > 0 && executionTimeNs === slowest) {
-    return `${text} (worst)`;
+    return chalk.yellow(`${text} (worst)`);
   }
 
   return text;
@@ -65,6 +67,13 @@ const toTableRow = (completionRow, completionSummary) => ([
 ]);
 
 /**
+ * Generates text for the solved row.
+ */
+const solvedRowText = ({ numberSolved, totalPuzzles, percentSolved }) => (
+  `Solved ${numberSolved}/${totalPuzzles} (${(percentSolved * 100).toFixed()}%)`
+);
+
+/**
  * Outputs a table to the cli which shows the users progress for the year.
  */
 export const outputCompletionTable = async ({ year } = {}) => {
@@ -76,20 +85,19 @@ export const outputCompletionTable = async ({ year } = {}) => {
   const summaryData = summarizeCompletionData(completionData);
 
   const headerRows = [
-    [`Advent of Code ${year}`, '', '', ''],
-    ['Puzzle', 'Solved', 'Attempts', 'Execution Time'],
+    [chalk.green(`Advent of Code ${year}`), '', '', ''],
+    ['Puzzle', 'Solved', 'Attempts', 'Execution Time'].map((x) => chalk.blue(x)),
   ];
 
   const puzzleRows = completionData.map((x) => toTableRow(x, summaryData));
 
   const summaryRows = [
-    [
-      'Average',
+    ['Average',
       '',
-      numberOfAttemptsText(summaryData.averageNumberOfAttempts),
+      numberOfAttemptsText(summaryData.averageNumberOfAttempts.toFixed(2)),
       executionTimeText(summaryData.averageExecutionTimeNs),
     ],
-    [`Solved ${summaryData.numberSolved}/${summaryData.totalPuzzles} (${(summaryData.percentSolved * 100).toFixed()}%)`, '', '', ''],
+    [solvedRowText(summaryData), '', '', ''],
   ];
 
   const tableConfig = {
@@ -110,6 +118,7 @@ export const outputCompletionTable = async ({ year } = {}) => {
         col: 0, row: 1 + headerRows.length + puzzleRows.length, colSpan: 4, alignment: 'center',
       },
     ],
+    // don't draw lines between puzzle rows (makes table more compact)
     drawHorizontalLine: (lineIndex) => (
       lineIndex <= headerRows.length || lineIndex >= headerRows.length + puzzleRows.length
     ),
