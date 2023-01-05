@@ -19,6 +19,10 @@ export const sizeOfStringInKb = (value, encoding = 'utf-8') => (Buffer.byteLengt
  * @param {Number} nanoseconds
  */
 export const humanizeDuration = (nanoseconds) => {
+  if (nanoseconds == null) {
+    return '';
+  }
+
   const seconds = Number(nanoseconds) / (1000 * 1000 * 1000);
 
   if (seconds >= 1) {
