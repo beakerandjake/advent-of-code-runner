@@ -1,8 +1,8 @@
-import { logger } from '../logger.js';
 import { getConfigValue } from '../config.js';
 import { sizeOfStringInKb } from '../formatting.js';
-import { extractTextContentOfMain, sanitizeMessage, parseResponseMessage } from './parseSubmissionResponse.js';
-
+import { logger } from '../logger.js';
+import { extractTextContentOfMain, parseResponseMessage, sanitizeMessage } from './parseSubmissionResponse.js';
+import { puzzleAnswerUrl, puzzleInputUrl } from './urls.js';
 /**
  * Creates a headers object which can be passed to fetch.
  * Contains the headers necessary to interact with the aoc api.
@@ -12,14 +12,6 @@ const getHeaders = (authenticationToken) => ({
   Cookie: `session=${authenticationToken}`,
   'User-Agent': getConfigValue('aoc.userAgent'),
 });
-
-/**
- * Generates the base url for the puzzle
- * from this base url we can download input or submit solution
- * @param {Number} year
- * @param {Number} day
- */
-const getBaseUrl = (year, day) => `${getConfigValue('aoc.baseUrl')}/${year}/day/${day}`;
 
 /**
  * Queries the Advent of Code website for the input for a given year and day.
@@ -35,7 +27,7 @@ export const downloadInput = async (year, day, authenticationToken) => {
   }
 
   // query api
-  const url = `${getBaseUrl(year, day)}/input`;
+  const url = puzzleInputUrl(year, day);
   logger.debug('querying url for input: %s', url);
   const response = await fetch(url, {
     headers: getHeaders(authenticationToken),
@@ -81,7 +73,7 @@ export const submitSolution = async (year, day, part, solution, authenticationTo
   }
 
   // post to api
-  const url = `${getBaseUrl(year, day)}/answer`;
+  const url = puzzleAnswerUrl(year, day);
   logger.debug('posting to url: %s', url);
   const response = await fetch(url, {
     method: 'POST',
