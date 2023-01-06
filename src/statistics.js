@@ -66,7 +66,7 @@ export const summarizeCompletionData = (completionData = []) => {
 
   const attempts = completionData.map((x) => x.numberOfAttempts).filter((x) => x != null);
   const executionTimes = completionData.map((x) => x.executionTimeNs).filter((x) => x != null);
-  const numberSolved = completionData.filter((x) => x.solved);
+  const numberSolved = completionData.filter((x) => x.solved).length;
 
   return {
     averageNumberOfAttempts: attempts.length ? average(attempts) : null,
@@ -74,8 +74,8 @@ export const summarizeCompletionData = (completionData = []) => {
     averageExecutionTimeNs: executionTimes.length ? average(executionTimes) : null,
     minExecutionTime: executionTimes.length ? Math.min(...executionTimes) : null,
     maxExecutionTime: executionTimes.length ? Math.max(...executionTimes) : null,
-    numberSolved: numberSolved.length,
-    percentSolved: numberSolved.length ? (numberSolved.length / totalPuzzles) : 0,
+    numberSolved,
+    percentSolved: numberSolved ? (numberSolved / totalPuzzles) : 0,
     totalPuzzles,
   };
 };
