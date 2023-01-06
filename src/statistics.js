@@ -49,11 +49,25 @@ export const getPuzzleCompletionData = async (year) => (await getPuzzles())
     numberOfAttempts: correctAnswer ? incorrectAnswers.length + 1 : incorrectAnswers.length,
   }));
 
-export const summarizeCompletionData = (completionData) => {
+/**
+ * Summarizes the results returned by getPuzzleCompletionData()
+ * @param {Object[]} completionData
+ */
+export const summarizeCompletionData = (completionData = []) => {
+  if (!Array.isArray(completionData)) {
+    throw new TypeError('expected completion data to be an array');
+  }
+
   const totalPuzzles = getConfigValue('aoc.validation.days').length * getConfigValue('aoc.validation.parts').length;
+
+  if (totalPuzzles <= 0) {
+    throw new RangeError('expected total puzzles to be a positive number');
+  }
+
   const attempts = completionData.map((x) => x.numberOfAttempts).filter((x) => x != null);
   const executionTimes = completionData.map((x) => x.executionTimeNs).filter((x) => x != null);
   const numberSolved = completionData.filter((x) => x.solved);
+
   return {
     averageNumberOfAttempts: attempts.length ? average(attempts) : null,
     maxAttempts: attempts.length ? Math.max(...attempts) : null,

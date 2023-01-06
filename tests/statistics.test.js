@@ -1,10 +1,11 @@
 import {
   describe, jest, test, afterEach,
 } from '@jest/globals';
-import { mockLogger } from './mocks.js';
+import { mockLogger, mockConfig } from './mocks.js';
 
 // setup mocks.
 mockLogger();
+const { getConfigValue } = mockConfig();
 
 jest.unstable_mockModule('src/persistence/puzzleRepository.js', () => ({
   findPuzzle: jest.fn(),
@@ -22,7 +23,12 @@ const {
   addOrEditPuzzle, findPuzzle, createPuzzle, getPuzzles,
 } = await import('../src/persistence/puzzleRepository.js');
 const { parsePositiveInt } = await import('../src/validation/validationUtils.js');
-const { getFastestExecutionTime, setFastestExecutionTime, getPuzzleCompletionData } = await import('../src/statistics.js');
+const {
+  getFastestExecutionTime,
+  setFastestExecutionTime,
+  getPuzzleCompletionData,
+  summarizeCompletionData,
+} = await import('../src/statistics.js');
 
 describe('statistics', () => {
   afterEach(() => {
@@ -190,6 +196,48 @@ describe('statistics', () => {
       getPuzzles.mockResolvedValue([mockPuzzle(year, 1, 1, null, wrongAnswers)]);
       const result = await getPuzzleCompletionData(year);
       expect(result[0]?.numberOfAttempts).toBe(wrongAnswers.length);
+    });
+  });
+
+  describe('summarizeCompletionData()', () => {
+    // mock the getConfigValues for calculating total puzzles.
+    const mockTotalPuzzles = (days, parts) => {
+      getConfigValue.mockImplementation((key) => {
+        switch (key) {
+          case 'aoc.validation.days':
+            return days;
+          case 'aoc.validation.parts':
+            return parts;
+          default:
+            return undefined;
+        }
+      });
+    };
+
+    test.each([
+      null, {}, '', 1234, Promise.resolve(true), () => {},
+    ])('throws if given: "%s"', (completionData) => {
+      expect(() => summarizeCompletionData(completionData)).toThrow(TypeError);
+    });
+
+    test('throws if can\'t get total puzzle count', () => {
+      mockTotalPuzzles(5, undefined);
+      expect(() => summarizeCompletionData([]).toThrow(RangeError));
+    });
+
+    test('calculates averageNumberOfAttempts', () => {
+      mockTotalPuzzles(5, 5);
+      const attempts = [5, 4, 3, 2, 1, 6, 7, 8, 9, 10];
+      const expected = attempts.reduce((acc, x) => acc + x, 0) / attempts.length;
+      const input = attempts.map((x) => ({ numberOfAttempts: x }));
+      const { averageNumberOfAttempts } = summarizeCompletionData(input);
+      expect(averageNumberOfAttempts).toBe(expected);
+    });
+
+    test('averageNumberOfAttempts is null for empty input', () => {
+      mockTotalPuzzles(5, 5);
+      const { averageNumberOfAttempts } = summarizeCompletionData([]);
+      expect(averageNumberOfAttempts).toBe(null);
     });
   });
 });
