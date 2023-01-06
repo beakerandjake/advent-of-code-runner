@@ -89,8 +89,6 @@ export const getExecutionTimeColumnText = (executionTimeNs, slowest, fastest) =>
 export const getSolvedSummaryText = (numberSolved, totalPuzzles) => {
   const percentSolved = (numberSolved / totalPuzzles) * 100;
 
-  console.log('percent solved', percentSolved);
-
   if (!Number.isFinite(percentSolved)) {
     throw new Error('could not calculate percent from arguments');
   }
