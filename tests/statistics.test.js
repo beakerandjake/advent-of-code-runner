@@ -32,6 +32,7 @@ const {
   getAverageRuntime,
   getMaxAttempts,
   getAverageAttempts,
+  getSolvedCount,
 } = await import('../src/statistics.js');
 
 describe('statistics', () => {
@@ -243,6 +244,40 @@ describe('statistics', () => {
       getPuzzlesForYear.mockResolvedValue(data);
       const result = await getAverageAttempts(2022);
       expect(result).toBe(expected);
+    });
+  });
+
+  describe('getSolvedCount()', () => {
+    test('returns 0 if no puzzles for year', async () => {
+      getPuzzlesForYear.mockResolvedValue([]);
+      const result = await getSolvedCount(2022);
+      expect(result).toBe(0);
+    });
+
+    test('returns 0 if no solved puzzles for year', async () => {
+      getPuzzlesForYear.mockResolvedValue([
+        { correctAnswer: null, incorrectAnswers: ['ASDF', '1234'] },
+        { correctAnswer: null, incorrectAnswers: ['ASDF', 'asdf', 'zxcv'] },
+        { correctAnswer: null, incorrectAnswers: ['ASDF'] },
+      ]);
+      const result = await getSolvedCount(2022);
+      expect(result).toBe(0);
+    });
+
+    test('calculates solved count', async () => {
+      const puzzles = [
+        { correctAnswer: 'ASDF', incorrectAnswers: ['ASDF', '1234'] },
+        { correctAnswer: null, incorrectAnswers: ['ASDF', 'asdf', 'zxcv'] },
+        { correctAnswer: null, incorrectAnswers: ['ASDF'] },
+        { correctAnswer: 'ASDF', incorrectAnswers: [] },
+        { correctAnswer: 'ASDF', incorrectAnswers: [] },
+        { correctAnswer: 'ASDF', incorrectAnswers: [] },
+        { correctAnswer: 'ASDF', incorrectAnswers: [] },
+      ];
+
+      getPuzzlesForYear.mockResolvedValue(puzzles);
+      const result = await getSolvedCount(2022);
+      expect(result).toBe(puzzles.filter((x) => !!x.correctAnswer).length);
     });
   });
 
