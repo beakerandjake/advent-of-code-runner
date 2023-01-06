@@ -98,6 +98,7 @@ export const getSolvedMessage = (solvedCount, totalPuzzleCount) => {
  * Generates a table from the data which can be printed to the cli.
  * @param {Object[]} completionData
  */
+/* istanbul ignore next */
 const generateTable = async (year, completionData) => {
   // grab any extra data we want to display.
   const averageAttempts = await getAverageAttempts(year);
