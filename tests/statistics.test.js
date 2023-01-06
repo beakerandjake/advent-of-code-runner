@@ -31,6 +31,7 @@ const {
   getSlowestRuntime,
   getAverageRuntime,
   getMaxAttempts,
+  getAverageAttempts,
 } = await import('../src/statistics.js');
 
 describe('statistics', () => {
@@ -214,24 +215,35 @@ describe('statistics', () => {
       const result = await getMaxAttempts(2022);
       expect(result).toBe(answers.length + 1);
     });
+  });
 
-    // test('returns value if only one puzzle for year', async () => {
-    //   const expected = 1234;
-    //   getPuzzlesForYear.mockResolvedValue([{ fastestExecutionTimeNs: expected }]);
-    //   const result = await getMaxAttempts(2022);
-    //   expect(result).toBe(expected);
-    // });
+  describe('getAverageAttempts()', () => {
+    test('returns null if no puzzles for year', async () => {
+      getPuzzlesForYear.mockResolvedValue([]);
+      const result = await getAverageAttempts(2022);
+      expect(result).toBe(null);
+    });
 
-    // test('returns min value', async () => {
-    //   const expected = 1234;
-    //   getPuzzlesForYear.mockResolvedValue([
-    //     { fastestExecutionTimeNs: expected },
-    //     { fastestExecutionTimeNs: expected + 2 },
-    //     { fastestExecutionTimeNs: expected + 10 },
-    //   ]);
-    //   const result = await getMaxAttempts(2022);
-    //   expect(result).toBe(expected);
-    // });
+    test('calculates average', async () => {
+      const data = [
+        { correctAnswer: 'ASDF', incorrectAnswers: [] },
+        { correctAnswer: 'ASDF', incorrectAnswers: ['ASDF', '1234', 'zxcv'] },
+        { correctAnswer: null, incorrectAnswers: ['ASDF', 'zxcv'] },
+        { correctAnswer: 'ASDF', incorrectAnswers: ['ASDF', '1234', 'zxcv', 'ASDF'] },
+        { correctAnswer: 'ASDF', incorrectAnswers: [] },
+        { correctAnswer: 'ASDF', incorrectAnswers: ['12324'] },
+        { correctAnswer: 'ASDF', incorrectAnswers: [] },
+      ];
+
+      const expected = data.reduce(
+        (acc, x) => acc + x.incorrectAnswers.length + (x.correctAnswer ? 1 : 0),
+        0,
+      ) / data.length;
+
+      getPuzzlesForYear.mockResolvedValue(data);
+      const result = await getAverageAttempts(2022);
+      expect(result).toBe(expected);
+    });
   });
 
   // describe('getPuzzleCompletionData()', () => {
