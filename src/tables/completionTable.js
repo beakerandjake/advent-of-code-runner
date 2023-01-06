@@ -78,3 +78,22 @@ export const getExecutionTimeColumnText = (executionTimeNs, slowest, fastest) =>
 
   return `${text}`;
 };
+
+/**
+ * Returns a text summary of the users solved puzzles.
+ * @param {Object} args
+ * @param {Number} args.numberSolved
+ * @param {Number} args.totalPuzzles
+ * @param {Number} args.percentSolved
+ */
+export const getSolvedSummaryText = (numberSolved, totalPuzzles) => {
+  const percentSolved = (numberSolved / totalPuzzles) * 100;
+
+  console.log('percent solved', percentSolved);
+
+  if (!Number.isFinite(percentSolved)) {
+    throw new Error('could not calculate percent from arguments');
+  }
+
+  return `Solved ${numberSolved}/${totalPuzzles} (${percentSolved.toFixed()}%)`;
+};

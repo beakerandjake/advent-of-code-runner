@@ -13,6 +13,7 @@ const {
   getSolvedColumnText,
   getNumberOfAttemptsColumnText,
   getExecutionTimeColumnText,
+  getSolvedSummaryText,
 } = await import('../../src/tables/completionTable.js');
 
 describe('completionTable', () => {
@@ -152,6 +153,32 @@ describe('completionTable', () => {
       const result = getExecutionTimeColumnText(input, input - 1, input);
       expect(result).toContain(input.toString());
       expect(result).toContain('best');
+    });
+  });
+
+  describe('getSolvedSummaryText()', () => {
+    test.each([
+      undefined, () => {}, Promise.resolve(10), NaN, Infinity,
+    ])('throws if solved count is: "%s"', (solvedCount) => {
+      expect(() => getSolvedSummaryText(solvedCount, 10)).toThrow();
+    });
+
+    test.each([
+      undefined, () => {}, Promise.resolve(10), NaN,
+    ])('throws if total count is: "%s"', (totalCount) => {
+      expect(() => getSolvedSummaryText(10, totalCount)).toThrow();
+    });
+
+    test('handles divide by zero', () => {
+      expect(() => getSolvedSummaryText(10, 0)).toThrow();
+    });
+
+    test('calculates percentage correctly', () => {
+      const solved = 10;
+      const total = 50;
+      const expected = ((solved / total) * 100).toFixed();
+      const result = getSolvedSummaryText(solved, total);
+      expect(result).toContain(expected);
     });
   });
 });
