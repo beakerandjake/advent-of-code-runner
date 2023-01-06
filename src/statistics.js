@@ -1,5 +1,5 @@
 import {
-  addOrEditPuzzle, createPuzzle, findPuzzle, getPuzzles, getPuzzlesForYear,
+  addOrEditPuzzle, createPuzzle, findPuzzle, getPuzzlesForYear,
 } from './persistence/puzzleRepository.js';
 import { parsePositiveInt } from './validation/validationUtils.js';
 import { logger } from './logger.js';
@@ -96,9 +96,9 @@ export const getSolvedCount = async (year) => {
  * Returns information about each puzzles completion
  * @param {Number} year
  */
-export const getPuzzleCompletionData = async (year) => (await getPuzzles())
-  .filter((x) => x.year === year)
-  .map(({
+export const getPuzzleCompletionData = async (year) => {
+  const puzzles = await getPuzzlesForYear(year);
+  return puzzles.map(({
     day, part, correctAnswer, fastestExecutionTimeNs, incorrectAnswers,
   }) => ({
     day,
@@ -107,6 +107,7 @@ export const getPuzzleCompletionData = async (year) => (await getPuzzles())
     executionTimeNs: correctAnswer ? fastestExecutionTimeNs : null,
     numberOfAttempts: correctAnswer ? incorrectAnswers.length + 1 : incorrectAnswers.length,
   }));
+};
 
 /**
  * Summarizes the results returned by getPuzzleCompletionData()

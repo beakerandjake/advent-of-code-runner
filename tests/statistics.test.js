@@ -11,7 +11,6 @@ jest.unstable_mockModule('src/persistence/puzzleRepository.js', () => ({
   findPuzzle: jest.fn(),
   addOrEditPuzzle: jest.fn(),
   createPuzzle: jest.fn(),
-  getPuzzles: jest.fn(),
   getPuzzlesForYear: jest.fn(),
 }));
 
@@ -33,6 +32,7 @@ const {
   getMaxAttempts,
   getAverageAttempts,
   getSolvedCount,
+  getPuzzleCompletionData,
 } = await import('../src/statistics.js');
 
 describe('statistics', () => {
@@ -281,108 +281,102 @@ describe('statistics', () => {
     });
   });
 
-  // describe('getPuzzleCompletionData()', () => {
-  //   const mockPuzzle = (year, day, part, correctAnswer = '', incorrectAnswers = [], fastestExecutionTimeNs = null) => ({
-  //     year,
-  //     day,
-  //     part,
-  //     correctAnswer,
-  //     incorrectAnswers,
-  //     fastestExecutionTimeNs,
-  //   });
+  describe('getPuzzleCompletionData()', () => {
+    const mockPuzzle = (year, day, part, correctAnswer = '', incorrectAnswers = [], fastestExecutionTimeNs = null) => ({
+      year,
+      day,
+      part,
+      correctAnswer,
+      incorrectAnswers,
+      fastestExecutionTimeNs,
+    });
 
-  //   test('returns empty array if no puzzles', async () => {
-  //     getPuzzles.mockResolvedValue([]);
-  //     const result = await getPuzzleCompletionData(2022);
-  //     expect(result).toEqual([]);
-  //   });
+    test('returns empty array if no puzzles for year', async () => {
+      getPuzzlesForYear.mockResolvedValue([]);
+      const result = await getPuzzleCompletionData(2022);
+      expect(result).toEqual([]);
+    });
 
-  //   test('returns empty array if no puzzles matching year', async () => {
-  //     getPuzzles.mockResolvedValue([{ year: 2010 }, { year: 2011 }, { year: 2003 }]);
-  //     const result = await getPuzzleCompletionData(2022);
-  //     expect(result).toEqual([]);
-  //   });
+    test('returns each puzzle for year', async () => {
+      const year = 2022;
+      const expected = [
+        mockPuzzle(year, 1, 1),
+        mockPuzzle(year, 1, 2),
+        mockPuzzle(year, 2, 1),
+        mockPuzzle(year, 2, 2),
+      ];
+      getPuzzlesForYear.mockResolvedValue(expected);
+      const result = await getPuzzleCompletionData(year);
+      expect(result).toHaveLength(expected.length);
+    });
 
-  //   test('returns each matching puzzle', async () => {
-  //     const year = 2022;
-  //     const expected = [
-  //       mockPuzzle(year, 1, 1),
-  //       mockPuzzle(year, 1, 2),
-  //       mockPuzzle(year, 2, 1),
-  //       mockPuzzle(year, 2, 2),
-  //     ];
-  //     getPuzzles.mockResolvedValue([...expected, mockPuzzle(2011, 1, 1), mockPuzzle(2015, 1, 2)]);
-  //     const result = await getPuzzleCompletionData(year);
-  //     expect(result).toHaveLength(expected.length);
-  //   });
+    test('calculates solved correctly', async () => {
+      const year = 2022;
+      const expected = [
+        mockPuzzle(year, 1, 1, 'ASDF'),
+        mockPuzzle(year, 1, 2, '1234'),
+        mockPuzzle(year, 2, 1),
+        mockPuzzle(year, 2, 2),
+      ];
+      getPuzzlesForYear.mockResolvedValue(expected);
+      const result = await getPuzzleCompletionData(year);
+      expected.forEach(
+        (x, index) => expect(result[index].solved).toBe(!!x.correctAnswer),
+      );
+    });
 
-  //   test('calculates solved correctly', async () => {
-  //     const year = 2022;
-  //     const expected = [
-  //       mockPuzzle(year, 1, 1, 'ASDF'),
-  //       mockPuzzle(year, 1, 2, '1234'),
-  //       mockPuzzle(year, 2, 1),
-  //       mockPuzzle(year, 2, 2),
-  //     ];
-  //     getPuzzles.mockResolvedValue(expected);
-  //     const result = await getPuzzleCompletionData(year);
-  //     expected.forEach(
-  //       (x, index) => expect(result[index].solved).toBe(!!x.correctAnswer),
-  //     );
-  //   });
+    test('only returns execution time if solved', async () => {
+      const year = 2022;
+      const puzzles = [
+        mockPuzzle(year, 1, 1, 'ASDF', [], 1234),
+        mockPuzzle(year, 1, 2, '1234', [], 5432),
+        mockPuzzle(year, 2, 1, null, [], 1234),
+        mockPuzzle(year, 2, 2),
+      ];
+      getPuzzlesForYear.mockResolvedValue(puzzles);
+      const result = await getPuzzleCompletionData(year);
+      puzzles.forEach((x, index) => {
+        const expected = x.correctAnswer ? x.fastestExecutionTimeNs : null;
+        expect(result[index].executionTimeNs).toBe(expected);
+      });
+    });
 
-  //   test('only returns execution time if solved', async () => {
-  //     const year = 2022;
-  //     const puzzles = [
-  //       mockPuzzle(year, 1, 1, 'ASDF', [], 1234),
-  //       mockPuzzle(year, 1, 2, '1234', [], 5432),
-  //       mockPuzzle(year, 2, 1, null, [], 1234),
-  //       mockPuzzle(year, 2, 2),
-  //     ];
-  //     getPuzzles.mockResolvedValue(puzzles);
-  //     const result = await getPuzzleCompletionData(year);
-  //     puzzles.forEach((x, index) => {
-  //       const expected = x.correctAnswer ? x.fastestExecutionTimeNs : null;
-  //       expect(result[index].executionTimeNs).toBe(expected);
-  //     });
-  //   });
+    test('numberOfAttempts is 1 if solved with no wrong answers', async () => {
+      const year = 2022;
+      const puzzles = [
+        mockPuzzle(year, 1, 1, 'ASDF', [], 1234),
+      ];
+      getPuzzlesForYear.mockResolvedValue(puzzles);
+      const result = await getPuzzleCompletionData(year);
+      expect(result[0]?.numberOfAttempts).toBe(1);
+    });
 
-  //   test('numberOfAttempts is 1 if solved with no wrong answers', async () => {
-  //     const year = 2022;
-  //     const puzzles = [
-  //       mockPuzzle(year, 1, 1, 'ASDF', [], 1234),
-  //     ];
-  //     getPuzzles.mockResolvedValue(puzzles);
-  //     const result = await getPuzzleCompletionData(year);
-  //     expect(result[0]?.numberOfAttempts).toBe(1);
-  //   });
+    test('numberOfAttempts is correct if solved with wrong answers', async () => {
+      const year = 2022;
+      const wrongAnswers = ['1234', 'sadf', 'zxcv', 'qwer'];
+      const puzzles = [
+        mockPuzzle(year, 1, 1, 'ASDF', wrongAnswers, 1234),
+      ];
+      getPuzzlesForYear.mockResolvedValue(puzzles);
+      const result = await getPuzzleCompletionData(year);
+      expect(result[0]?.numberOfAttempts).toBe(wrongAnswers.length + 1);
+    });
 
-  //   test('numberOfAttempts is correct if solved with wrong answers', async () => {
-  //     const year = 2022;
-  //     const wrongAnswers = ['1234', 'sadf', 'zxcv', 'qwer'];
-  //     const puzzles = [
-  //       mockPuzzle(year, 1, 1, 'ASDF', wrongAnswers, 1234),
-  //     ];
-  //     getPuzzles.mockResolvedValue(puzzles);
-  //     const result = await getPuzzleCompletionData(year);
-  //     expect(result[0]?.numberOfAttempts).toBe(wrongAnswers.length + 1);
-  //   });
+    test('numberOfAttempts is zero if unsolved and no wrong answers', async () => {
+      const year = 2022;
+      getPuzzlesForYear.mockResolvedValue([mockPuzzle(year, 1, 1)]);
+      const result = await getPuzzleCompletionData(year);
+      expect(result[0]?.numberOfAttempts).toBe(0);
+    });
 
-  //   test('numberOfAttempts is zero if unsolved and no wrong answers', async () => {
-  //     const year = 2022;
-  //     getPuzzles.mockResolvedValue([mockPuzzle(year, 1, 1)]);
-  //     const result = await getPuzzleCompletionData(year);
-  //     expect(result[0]?.numberOfAttempts).toBe(0);
-  //   });
-
-  //   test('numberOfAttempts is correct if unsolved with wrong answers', async () => {
-  //     const year = 2022;
-  //     const wrongAnswers = ['1234', 'sadf', 'zxcv', 'qwer', 'cvbx', 'rety'];
-  //     getPuzzles.mockResolvedValue([mockPuzzle(year, 1, 1, null, wrongAnswers)]);
-  //     const result = await getPuzzleCompletionData(year);
-  //     expect(result[0]?.numberOfAttempts).toBe(wrongAnswers.length);
-  //   });
-  // });
+    test('numberOfAttempts is correct if unsolved with wrong answers', async () => {
+      const year = 2022;
+      const wrongAnswers = ['1234', 'sadf', 'zxcv', 'qwer', 'cvbx', 'rety'];
+      getPuzzlesForYear.mockResolvedValue([mockPuzzle(year, 1, 1, null, wrongAnswers)]);
+      const result = await getPuzzleCompletionData(year);
+      expect(result[0]?.numberOfAttempts).toBe(wrongAnswers.length);
+    });
+  });
 
   // describe('summarizeCompletionData()', () => {
   //   // mock the getConfigValues for calculating total puzzles.
