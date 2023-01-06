@@ -25,7 +25,7 @@ const {
 const { parsePositiveInt } = await import('../src/validation/validationUtils.js');
 const {
   getPuzzlesFastestRuntime,
-  setFastestExecutionTime,
+  setPuzzlesFastestRuntime,
   getPuzzleCompletionData,
   summarizeCompletionData,
 } = await import('../src/statistics.js');
@@ -56,10 +56,10 @@ describe('statistics', () => {
     });
   });
 
-  describe('setFastestExecutionTime()', () => {
+  describe('setPuzzlesFastestRuntime()', () => {
     test('throws if not positive int', async () => {
       parsePositiveInt.mockImplementation(() => { throw new RangeError('NOPE'); });
-      await expect(async () => setFastestExecutionTime(2022, 1, 1)).rejects.toThrow(RangeError);
+      await expect(async () => setPuzzlesFastestRuntime(2022, 1, 1)).rejects.toThrow(RangeError);
       expect(addOrEditPuzzle).not.toHaveBeenCalled();
     });
 
@@ -67,7 +67,7 @@ describe('statistics', () => {
       const time = 123213;
       parsePositiveInt.mockReturnValue(time);
       findPuzzle.mockResolvedValue(null);
-      await setFastestExecutionTime(2022, 1, 1, time);
+      await setPuzzlesFastestRuntime(2022, 1, 1, time);
       expect(createPuzzle).toHaveBeenCalledTimes(1);
     });
 
@@ -75,7 +75,7 @@ describe('statistics', () => {
       const time = 123213;
       parsePositiveInt.mockReturnValue(time);
       findPuzzle.mockResolvedValue(null);
-      await setFastestExecutionTime(2022, 1, 1, time);
+      await setPuzzlesFastestRuntime(2022, 1, 1, time);
       expect(createPuzzle).toHaveBeenCalledTimes(1);
     });
 
@@ -83,7 +83,7 @@ describe('statistics', () => {
       const time = 123213;
       parsePositiveInt.mockReturnValue(time);
       findPuzzle.mockResolvedValue({ fastestExecutionTimeNs: null });
-      await setFastestExecutionTime(2022, 1, 1, time);
+      await setPuzzlesFastestRuntime(2022, 1, 1, time);
       expect(createPuzzle).not.toHaveBeenCalled();
     });
 
@@ -91,7 +91,7 @@ describe('statistics', () => {
       const time = 123213;
       parsePositiveInt.mockReturnValue(time);
       findPuzzle.mockResolvedValue({ fastestExecutionTimeNs: null });
-      await setFastestExecutionTime(2022, 1, 1, time);
+      await setPuzzlesFastestRuntime(2022, 1, 1, time);
       expect(addOrEditPuzzle).toHaveBeenCalledWith({ fastestExecutionTimeNs: time });
     });
   });

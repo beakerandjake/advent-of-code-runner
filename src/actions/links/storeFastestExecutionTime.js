@@ -1,4 +1,4 @@
-import { setFastestExecutionTime as doSetFastestExecutionTime } from '../../statistics.js';
+import { setPuzzlesFastestRuntime } from '../../statistics.js';
 
 /**
  * Update the fastest execution time for this puzzle with the new value.
@@ -10,5 +10,5 @@ export const storeFastestExecutionTime = async ({
     throw new Error('null or undefined execution time');
   }
 
-  await doSetFastestExecutionTime(year, day, part, executionTimeNs);
+  await setPuzzlesFastestRuntime(year, day, part, executionTimeNs);
 };

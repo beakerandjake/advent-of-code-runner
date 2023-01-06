@@ -1,5 +1,5 @@
 import { logger } from '../../logger.js';
-import { getPuzzlesFastestRuntime, setFastestExecutionTime } from '../../statistics.js';
+import { getPuzzlesFastestRuntime, setPuzzlesFastestRuntime } from '../../statistics.js';
 
 /**
  * Compares the puzzles latest execution time to the fastest stored execution time.
@@ -24,5 +24,5 @@ export const tryToUpdateFastestExecutionTime = async ({
   }
 
   logger.festive('That\'s your fastest execution time ever for this puzzle!');
-  await setFastestExecutionTime(year, day, part, executionTimeNs);
+  await setPuzzlesFastestRuntime(year, day, part, executionTimeNs);
 };

@@ -7,7 +7,7 @@ import { getConfigValue } from './config.js';
 import { average } from './util.js';
 
 /**
- * Returns the fastest execution time for the puzzle.
+ * Returns the fastest runtime for the puzzle.
  * Returns null if the puzzle has not been correctly solved.
  * @param {Number} year
  * @param {Number} day
@@ -19,13 +19,13 @@ export const getPuzzlesFastestRuntime = async (year, day, part) => {
 };
 
 /**
- * Sets the fastest execution time for the puzzle.
+ * Sets the fastest runtime for the puzzle.
  * @param {Number} year
  * @param {Number} day
  * @param {Number} part
  * @param {Number} timeNs
  */
-export const setFastestExecutionTime = async (year, day, part, timeNs) => {
+export const setPuzzlesFastestRuntime = async (year, day, part, timeNs) => {
   const parsed = parsePositiveInt(timeNs);
   const puzzle = await findPuzzle(year, day, part) || createPuzzle(year, day, part);
   const updated = { ...puzzle, fastestExecutionTimeNs: parsed };

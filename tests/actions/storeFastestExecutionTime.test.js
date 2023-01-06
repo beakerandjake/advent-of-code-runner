@@ -5,10 +5,10 @@ import { mockLogger } from '../mocks.js';
 
 // setup mocks
 mockLogger();
-jest.unstable_mockModule('src/statistics.js', () => ({ setFastestExecutionTime: jest.fn() }));
+jest.unstable_mockModule('src/statistics.js', () => ({ setPuzzlesFastestRuntime: jest.fn() }));
 
 // import after mocks set up
-const { setFastestExecutionTime } = await import('../../src/statistics.js');
+const { setPuzzlesFastestRuntime } = await import('../../src/statistics.js');
 const { storeFastestExecutionTime } = await import('../../src/actions/links/storeFastestExecutionTime.js');
 
 afterEach(() => {
@@ -30,7 +30,7 @@ describe('actions', () => {
         await storeFastestExecutionTime({
           year: 2022, day: 1, part: 1, executionTimeNs: 1234,
         });
-        expect(setFastestExecutionTime).toHaveBeenCalled();
+        expect(setPuzzlesFastestRuntime).toHaveBeenCalled();
       });
     });
   });
