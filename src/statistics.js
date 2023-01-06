@@ -75,7 +75,6 @@ export const summarizeCompletionData = (completionData = []) => {
     minExecutionTime: executionTimes.length ? Math.min(...executionTimes) : null,
     maxExecutionTime: executionTimes.length ? Math.max(...executionTimes) : null,
     numberSolved,
-    percentSolved: numberSolved ? (numberSolved / totalPuzzles) : 0,
     totalPuzzles,
   };
 };

@@ -314,22 +314,6 @@ describe('statistics', () => {
       expect(numberSolved).toBe(0);
     });
 
-    test('calculates percentSolved', () => {
-      const days = 5;
-      const parts = 5;
-      mockTotalPuzzles(days, parts);
-      const solved = [false, true, true, false, false, false, true];
-      const input = solved.map((x) => ({ solved: x }));
-      const { percentSolved } = summarizeCompletionData(input);
-      expect(percentSolved).toBe(solved.filter(Boolean).length / (days * parts));
-    });
-
-    test('percentSolved is 0 for empty input', () => {
-      mockTotalPuzzles(5, 5);
-      const { percentSolved } = summarizeCompletionData([]);
-      expect(percentSolved).toBe(0);
-    });
-
     test('calculates totalPuzzles', () => {
       const days = 5;
       const parts = 5;
