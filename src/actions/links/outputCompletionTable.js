@@ -82,8 +82,9 @@ export const mapRuntimeColumn = ({ executionTimeNs }, fastest, slowest) => {
 
 /**
  * Generates the text for the solved count summary row.
+ * @private
  */
-const getSolvedMessage = (solvedCount, totalPuzzleCount) => {
+export const getSolvedMessage = (solvedCount, totalPuzzleCount) => {
   const solvedPercent = (solvedCount / totalPuzzleCount) * 100;
 
   if (!Number.isFinite(solvedPercent)) {

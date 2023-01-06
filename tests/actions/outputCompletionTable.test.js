@@ -23,12 +23,14 @@ jest.unstable_mockModule('src/statistics.js', () => ({
 // import after mocks set up
 const { table } = await import('table');
 const { getPuzzleCompletionData } = await import('../../src/statistics.js');
-// const { generateTable } = await import('../../src/tables/cliCompletionTable.js');
+const { humanizeDuration } = await import('../../src/formatting.js');
 const {
   outputCompletionTable,
   mapNamedColumn,
   mapSolvedColumn,
   mapAttemptColumns,
+  mapRuntimeColumn,
+  getSolvedMessage,
 } = await import('../../src/actions/links/outputCompletionTable.js');
 
 describe('actions', () => {
@@ -148,6 +150,86 @@ describe('actions', () => {
         ], 4);
         const marked = result.filter((x) => x?.includes('worst'));
         expect(marked.length).toBe(1);
+      });
+    });
+
+    describe('mapRuntimeColumn()', () => {
+      test.each([
+        null, undefined,
+      ])('returns empty string if runtime is: "%s"', (runtime) => {
+        const result = mapRuntimeColumn({ executionTimeNs: runtime });
+        expect(result).toBe('');
+      });
+
+      test('returns value if no fastest or slowest', () => {
+        humanizeDuration.mockImplementation((x) => x.toString());
+        const executionTimeNs = 1234;
+        const result = mapRuntimeColumn({ executionTimeNs });
+        expect(result).toBe(executionTimeNs.toString());
+      });
+
+      test('does not highlight or mark if not fastest', () => {
+        humanizeDuration.mockImplementation((x) => x.toString());
+        const executionTimeNs = 1234;
+        const result = mapRuntimeColumn({ executionTimeNs }, executionTimeNs - 10);
+        expect(mockChalk.green).not.toHaveBeenCalled();
+        expect(result).not.toContain('best');
+      });
+
+      test('highlight and marks if fastest', () => {
+        humanizeDuration.mockImplementation((x) => x.toString());
+        mockChalk.green.mockImplementation((x) => x.toString());
+        const executionTimeNs = 1234;
+        const result = mapRuntimeColumn({ executionTimeNs }, executionTimeNs);
+        expect(mockChalk.green).toHaveBeenCalled();
+        expect(result).toContain('best');
+      });
+
+      test('does not highlight or mark if not slowest', () => {
+        humanizeDuration.mockImplementation((x) => x.toString());
+        const executionTimeNs = 1234;
+        const result = mapRuntimeColumn(
+          { executionTimeNs },
+          executionTimeNs - 10,
+          executionTimeNs + 10,
+        );
+        expect(mockChalk.yellow).not.toHaveBeenCalled();
+        expect(result).not.toContain('worst');
+      });
+
+      test('highlight and marks if slowest', () => {
+        humanizeDuration.mockImplementation((x) => x.toString());
+        mockChalk.yellow.mockImplementation((x) => x.toString());
+        const executionTimeNs = 1234;
+        const result = mapRuntimeColumn({ executionTimeNs }, executionTimeNs - 10, executionTimeNs);
+        expect(mockChalk.yellow).toHaveBeenCalled();
+        expect(result).toContain('worst');
+      });
+    });
+
+    describe('getSolvedMessage()', () => {
+      test.each([
+        undefined, () => {}, Promise.resolve(10), NaN, Infinity,
+      ])('throws if solved count is: "%s"', (solvedCount) => {
+        expect(() => getSolvedMessage(solvedCount, 10)).toThrow();
+      });
+
+      test.each([
+        undefined, () => {}, Promise.resolve(10), NaN,
+      ])('throws if total count is: "%s"', (totalCount) => {
+        expect(() => getSolvedMessage(10, totalCount)).toThrow();
+      });
+
+      test('handles divide by zero', () => {
+        expect(() => getSolvedMessage(10, 0)).toThrow();
+      });
+
+      test('calculates percentage correctly', () => {
+        const solved = 10;
+        const total = 50;
+        const expected = ((solved / total) * 100).toFixed();
+        const result = getSolvedMessage(solved, total);
+        expect(result).toContain(expected);
       });
     });
   });
