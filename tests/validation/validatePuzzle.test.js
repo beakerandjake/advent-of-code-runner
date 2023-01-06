@@ -108,8 +108,8 @@ describe('validatePuzzle', () => {
 
   describe('getTotalPuzzleCount()', () => {
     test('calculates correctly', () => {
-      const days = 5;
-      const parts = 10;
+      const days = [1, 2, 3, 4, 5, 6];
+      const parts = [1, 2, 3, 4];
       getConfigValue.mockImplementation((key) => {
         if (key === 'aoc.validation.days') {
           return days;
@@ -120,7 +120,7 @@ describe('validatePuzzle', () => {
         throw new Error('unexpected getConfigValue call in test');
       });
       const result = getTotalPuzzleCount();
-      expect(result).toBe(days * parts);
+      expect(result).toBe(days.length * parts.length);
     });
   });
 });
