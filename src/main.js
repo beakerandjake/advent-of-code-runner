@@ -19,8 +19,7 @@ program
   .name(getConfigValue('meta.name'))
   .description(getConfigValue('meta.description'))
   .version(getConfigValue('meta.version'))
-  .addHelpText('beforeAll', printFestiveTitle)
-  .hook('preAction', printFestiveTitle)
+  .addHelpText('before', printFestiveTitle)
   .exitOverride(exitOverride);
 
 program.addCommand(autoSolveCommand);

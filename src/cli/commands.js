@@ -1,4 +1,5 @@
 import { Command } from 'commander';
+import { printFestiveTitle } from '../festive.js';
 import {
   autoSolve,
   autoSubmit,
@@ -50,6 +51,7 @@ export const autoSubmitCommand = new Command()
  */
 export const initializeCommand = new Command()
   .name('init')
+  .hook('preAction', printFestiveTitle)
   .description('Initialize a directory so advent-of-code-runner can run solutions.')
   .action(initialize);
 
