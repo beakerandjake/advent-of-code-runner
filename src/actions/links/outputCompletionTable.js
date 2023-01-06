@@ -102,12 +102,14 @@ export const getSolvedMessage = (solvedCount, totalPuzzleCount) => {
 const generateTable = async (year, completionData) => {
   // grab any extra data we want to display.
   const averageAttempts = await getAverageAttempts(year);
-  const maxAttempts = await getMaxAttempts(year);
   const averageRuntime = await getAverageRuntime(year);
-  const fastestRuntime = await getFastestRuntime(year);
-  const slowestRuntime = await getSlowestRuntime(year);
   const solvedCount = await getSolvedCount(year);
   const totalPuzzleCount = getTotalPuzzleCount();
+  // only apply highlighting if more than two puzzles have been solved.
+  // with 2 or less it's kind of obvious, there isn't a need to highlight.
+  const maxAttempts = completionData.length > 2 ? await getMaxAttempts(year) : null;
+  const fastestRuntime = completionData.length > 2 ? await getFastestRuntime(year) : null;
+  const slowestRuntime = completionData.length > 2 ? await getSlowestRuntime(year) : null;
 
   // generate the columns for the puzzle data.
   const names = completionData.map(mapNamedColumn);
