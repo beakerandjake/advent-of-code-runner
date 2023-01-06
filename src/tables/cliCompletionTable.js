@@ -2,95 +2,124 @@ import chalk from 'chalk';
 import { table } from 'table';
 import { humanizeDuration } from '../formatting.js';
 import {
-  getPuzzleColumnText,
-  getSolvedColumnText,
-  getNumberOfAttemptsColumnText,
-  getExecutionTimeColumnText,
-  getSolvedSummaryText,
-} from './completionTable.js';
+  getAverageAttempts,
+  getAverageRuntime,
+  getFastestRuntime,
+  getMaxAttempts,
+  getSlowestRuntime,
+  getSolvedCount,
+} from '../statistics.js';
+import { getTotalPuzzleCount } from '../validation/validatePuzzle.js';
 
 /**
- * Add a color to the solved check.
- * @param {String} text
+ * Generates the text for the name column.
  */
-const colorizeSolved = (text) => (text ? chalk.green(text) : text);
-
-/**
- * Add color to the number of attempts text.
- * @param {String} text
- * @param {Boolean} solved
- */
-const colorizeAttempts = (text, solved) => {
-  // highlight highest number of attempts
-  if (text.includes('worst')) {
-    return chalk.yellow(text);
-  }
-
-  // highlight solved on first attempt.
-  if (text === '1' && solved) {
-    return chalk.green(text);
-  }
-
-  return text;
+const mapNamedColumn = ({ day, part, solved }) => {
+  const text = `${day}.${part}`;
+  return solved ? chalk.green(text) : text;
 };
 
 /**
- * Add color to the execution time text.
- * @param {String} text
- * @param {Boolean} solved
+ * Generates the text for the solved column.
  */
-const colorizeExecutionTime = (text) => {
-  // highlight slowest time
-  if (text.includes('worst')) {
-    return chalk.yellow(text);
-  }
-  // highlight fastest time
-  if (text.includes('best')) {
-    return chalk.green(text);
-  }
+const mapSolvedColumn = ({ solved }) => (solved ? chalk.green('✓') : '');
 
-  return text;
+/**
+ * Generates the text for the attempts column.
+ */
+const mapAttemptColumns = (completionData, maxAttempts) => {
+  let markedMax = false;
+  return completionData.map(({ numberOfAttempts, solved }) => {
+    if (numberOfAttempts == null) {
+      return '';
+    }
+
+    // highlight highest number of attempts.
+    if (maxAttempts > 1 && numberOfAttempts === maxAttempts) {
+      // it's possible multiple puzzles match the max attempt.
+      // only add descriptive text to the first match.
+      const message = markedMax ? numberOfAttempts : `${numberOfAttempts} (worst)`;
+      markedMax = true;
+      return chalk.yellow(message);
+    }
+
+    // highlight perfect solves
+    if (solved && numberOfAttempts === 1) {
+      return chalk.green(`${numberOfAttempts}`);
+    }
+
+    return `${numberOfAttempts}`;
+  });
 };
 
 /**
- * Converts a row of puzzle completion data to the format expected by our table
+ * Generates the text for the runtime column.
  */
-const toTableRow = ({
-  day, part, solved, numberOfAttempts, executionTimeNs,
-}, {
-  maxAttempts, minExecutionTime, maxExecutionTime,
-}) => ([
-  getPuzzleColumnText(day, part),
-  colorizeSolved(getSolvedColumnText(solved)),
-  colorizeAttempts(getNumberOfAttemptsColumnText(numberOfAttempts, maxAttempts), solved),
-  colorizeExecutionTime(
-    getExecutionTimeColumnText(executionTimeNs, maxExecutionTime, minExecutionTime),
-  ),
-]);
+const mapRuntimeColumn = ({ executionTimeNs }, fastest, slowest) => {
+  if (executionTimeNs == null || executionTimeNs === '') {
+    return '';
+  }
+  const text = humanizeDuration(executionTimeNs);
+
+  // highlight fastest runtime
+  if (fastest > 0 && executionTimeNs === fastest) {
+    return chalk.green(`${text} (best)`);
+  }
+
+  // highlight slowest runtime
+  if (slowest > 0 && executionTimeNs === slowest) {
+    return chalk.yellow(`${text} (worst)`);
+  }
+
+  return `${text}`;
+};
+
+/**
+ * Generates the text for the solved count summary row.
+ */
+const getSolvedMessage = (solvedCount, totalPuzzleCount) => {
+  const solvedPercent = (solvedCount / totalPuzzleCount) * 100;
+
+  if (!Number.isFinite(solvedPercent)) {
+    throw new Error('could not calculate solved percent from arguments');
+  }
+
+  return `Solved ${solvedCount}/${totalPuzzleCount} (${solvedPercent.toFixed()}%)`;
+};
 
 /**
  * Generates a table from the data which can be printed to the cli.
  * @param {Object[]} completionData
- * @param {Object} summaryData
  */
-export const generateTable = (year, completionData, summaryData) => {
+export const generateTable = async (year, completionData) => {
+  // grab any extra data we want to display.
+  const averageAttempts = await getAverageAttempts(year);
+  const maxAttempts = await getMaxAttempts(year);
+  const averageRuntime = await getAverageRuntime(year);
+  const fastestRuntime = await getFastestRuntime(year);
+  const slowestRuntime = await getSlowestRuntime(year);
+  const solvedCount = await getSolvedCount(year);
+  const totalPuzzleCount = getTotalPuzzleCount();
+
+  // generate the columns for the puzzle data.
+  const names = completionData.map(mapNamedColumn);
+  const solved = completionData.map(mapSolvedColumn);
+  const attempts = mapAttemptColumns(completionData, maxAttempts);
+  const runtimes = completionData.map((x) => mapRuntimeColumn(x, fastestRuntime, slowestRuntime));
+
   const headerRows = [
     [`Advent of Code ${year}`, '', '', ''],
-    ['Puzzle', 'Solved', 'Attempts', 'Execution Time'],
+    ['Puzzle', 'Solved', 'Attempts', 'Runtime'],
   ];
-
-  const puzzleRows = completionData.map((x) => toTableRow(x, summaryData));
-
+  const puzzleRows = completionData.map(
+    (_, index) => [names[index], solved[index], attempts[index], runtimes[index]],
+  );
   const summaryRows = [
-    ['Average',
-      '',
-      summaryData.averageNumberOfAttempts.toFixed(2),
-      humanizeDuration(summaryData.averageExecutionTimeNs),
-    ],
-    [getSolvedSummaryText(summaryData.numberSolved, summaryData.totalPuzzles), '', '', ''],
+    ['Average', '', averageAttempts.toFixed(2), humanizeDuration(averageRuntime)],
+    [getSolvedMessage(solvedCount, totalPuzzleCount), '', '', ''],
   ];
 
-  const tableConfig = {
+  const config = {
     columnDefault: { alignment: 'left' },
     columns: [
       { alignment: 'right' },
@@ -114,5 +143,5 @@ export const generateTable = (year, completionData, summaryData) => {
     ),
   };
 
-  return table([...headerRows, ...puzzleRows, ...summaryRows], tableConfig);
+  return table([...headerRows, ...puzzleRows, ...summaryRows], config);
 };

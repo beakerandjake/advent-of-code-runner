@@ -16,8 +16,7 @@ export const outputCompletionTable = async ({ year } = {}) => {
     return false;
   }
 
-  const summaryData = summarizeCompletionData(completionData);
-  const table = generateTable(year, completionData, summaryData);
+  const table = await generateTable(year, completionData);
   console.log(table);
   return true;
 };
