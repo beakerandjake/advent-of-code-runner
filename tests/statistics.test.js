@@ -28,6 +28,8 @@ const {
   getPuzzlesFastestRuntime,
   setPuzzlesFastestRuntime,
   getFastestRuntime,
+  getSlowestRuntime,
+  getAverageRuntime,
 } = await import('../src/statistics.js');
 
 describe('statistics', () => {
@@ -119,6 +121,56 @@ describe('statistics', () => {
       ]);
       const result = await getFastestRuntime(2022);
       expect(result).toBe(expected);
+    });
+  });
+
+  describe('getSlowestRuntime()', () => {
+    test('returns null if no puzzles for year', async () => {
+      getPuzzlesForYear.mockResolvedValue([]);
+      const result = await getSlowestRuntime(2022);
+      expect(result).toBe(null);
+    });
+
+    test('returns value if only one puzzle for year', async () => {
+      const expected = 1234;
+      getPuzzlesForYear.mockResolvedValue([{ fastestExecutionTimeNs: expected }]);
+      const result = await getSlowestRuntime(2022);
+      expect(result).toBe(expected);
+    });
+
+    test('returns min value', async () => {
+      const expected = 1234;
+      getPuzzlesForYear.mockResolvedValue([
+        { fastestExecutionTimeNs: expected },
+        { fastestExecutionTimeNs: expected - 2 },
+        { fastestExecutionTimeNs: expected - 10 },
+      ]);
+      const result = await getSlowestRuntime(2022);
+      expect(result).toBe(expected);
+    });
+  });
+
+  describe('getAverageRuntime()', () => {
+    test('returns null if no puzzles for year', async () => {
+      getPuzzlesForYear.mockResolvedValue([]);
+      const result = await getAverageRuntime(2022);
+      expect(result).toBe(null);
+    });
+
+    test('returns value if only one puzzle for year', async () => {
+      const expected = 1234;
+      getPuzzlesForYear.mockResolvedValue([{ fastestExecutionTimeNs: expected }]);
+      const result = await getAverageRuntime(2022);
+      expect(result).toBe(expected);
+    });
+
+    test('calculates average', async () => {
+      const runtimes = [1234, 345634, 238, 12394];
+      getPuzzlesForYear.mockResolvedValue(
+        runtimes.map((x) => ({ fastestExecutionTimeNs: x })),
+      );
+      const result = await getAverageRuntime(2022);
+      expect(result).toBe(runtimes.reduce((acc, x) => acc + x, 0) / runtimes.length);
     });
   });
 
