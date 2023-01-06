@@ -30,6 +30,7 @@ const {
   getFastestRuntime,
   getSlowestRuntime,
   getAverageRuntime,
+  getMaxAttempts,
 } = await import('../src/statistics.js');
 
 describe('statistics', () => {
@@ -172,6 +173,65 @@ describe('statistics', () => {
       const result = await getAverageRuntime(2022);
       expect(result).toBe(runtimes.reduce((acc, x) => acc + x, 0) / runtimes.length);
     });
+  });
+
+  describe('getMaxAttempts()', () => {
+    test('returns null if no puzzles for year', async () => {
+      getPuzzlesForYear.mockResolvedValue([]);
+      const result = await getMaxAttempts(2022);
+      expect(result).toBe(null);
+    });
+
+    test('counts correct answer', async () => {
+      getPuzzlesForYear.mockResolvedValue([{ correctAnswer: 'ASDF', incorrectAnswers: [] }]);
+      const result = await getMaxAttempts(2022);
+      expect(result).toBe(1);
+    });
+
+    test('counts incorrect answers', async () => {
+      const answers = ['ASDF', '1234', 'fdsa'];
+      getPuzzlesForYear.mockResolvedValue([{ correctAnswer: null, incorrectAnswers: answers }]);
+      const result = await getMaxAttempts(2022);
+      expect(result).toBe(answers.length);
+    });
+
+    test('counts correct and incorrect answers', async () => {
+      const answers = ['ASDF', '1234', 'fdsa'];
+      getPuzzlesForYear.mockResolvedValue([{ correctAnswer: 'ASDF', incorrectAnswers: answers }]);
+      const result = await getMaxAttempts(2022);
+      expect(result).toBe(answers.length + 1);
+    });
+
+    test('finds max', async () => {
+      const answers = ['ASDF', '1234', 'fdsa', '1432', '45645'];
+      getPuzzlesForYear.mockResolvedValue([
+        { correctAnswer: 'ASDF', incorrectAnswers: [] },
+        { correctAnswer: 'ASDF', incorrectAnswers: ['ASDF'] },
+        { correctAnswer: null, incorrectAnswers: [] },
+        { correctAnswer: null, incorrectAnswers: ['!@#$', 'ASDF', 'ZXCV'] },
+        { correctAnswer: 'ASDF', incorrectAnswers: answers },
+      ]);
+      const result = await getMaxAttempts(2022);
+      expect(result).toBe(answers.length + 1);
+    });
+
+    // test('returns value if only one puzzle for year', async () => {
+    //   const expected = 1234;
+    //   getPuzzlesForYear.mockResolvedValue([{ fastestExecutionTimeNs: expected }]);
+    //   const result = await getMaxAttempts(2022);
+    //   expect(result).toBe(expected);
+    // });
+
+    // test('returns min value', async () => {
+    //   const expected = 1234;
+    //   getPuzzlesForYear.mockResolvedValue([
+    //     { fastestExecutionTimeNs: expected },
+    //     { fastestExecutionTimeNs: expected + 2 },
+    //     { fastestExecutionTimeNs: expected + 10 },
+    //   ]);
+    //   const result = await getMaxAttempts(2022);
+    //   expect(result).toBe(expected);
+    // });
   });
 
   // describe('getPuzzleCompletionData()', () => {
