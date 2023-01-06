@@ -14,6 +14,10 @@ export const outputPuzzleLink = ({ year, day, part } = {}) => {
     throw new Error('null or undefined day');
   }
 
+  if (part == null) {
+    throw new Error('null or undefined part');
+  }
+
   const clickableLink = terminalLink(
     'Puzzle',
     puzzleBaseUrl(year, day),
