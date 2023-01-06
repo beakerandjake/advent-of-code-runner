@@ -13,6 +13,6 @@ export const getNextUnsolvedPuzzle = async ({ year } = {}) => {
   }
 
   const { day, part } = nextPuzzle;
-  logger.festive(`Your next unsolved puzzle is (day: ${day}, level: ${part})`);
+  logger.verbose(`next unsolved puzzle is (day: ${day}, level: ${part})`);
   return { day, part };
 };
