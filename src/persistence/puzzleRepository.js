@@ -132,6 +132,15 @@ export const getPuzzles = async () => (
 );
 
 /**
+ * Returns all of the puzzles for the year.
+ * @param {Number} year
+ */
+export const getPuzzlesForYear = async (year) => {
+  const puzzles = await getPuzzles();
+  return puzzles.filter((x) => x.year === year);
+};
+
+/**
  * Updates the stored puzzles array.
  * @param {Object[]} puzzles
  */
