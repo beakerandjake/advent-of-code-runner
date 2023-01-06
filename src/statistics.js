@@ -1,5 +1,5 @@
 import {
-  addOrEditPuzzle, createPuzzle, findPuzzle, getPuzzles,
+  addOrEditPuzzle, createPuzzle, findPuzzle, getPuzzles, getPuzzlesForYear,
 } from './persistence/puzzleRepository.js';
 import { parsePositiveInt } from './validation/validationUtils.js';
 import { logger } from './logger.js';
@@ -31,6 +31,65 @@ export const setPuzzlesFastestRuntime = async (year, day, part, timeNs) => {
   const updated = { ...puzzle, fastestExecutionTimeNs: parsed };
   logger.debug('setting fastest execution time to: %s', timeNs, { year, day, part });
   return addOrEditPuzzle(updated);
+};
+
+/**
+ * Returns the fastest runtime across across all the years puzzles.
+ * @param {Number} year
+ */
+export const getFastestRuntime = async (year) => {
+  const puzzles = await getPuzzlesForYear(year);
+  const runtimes = puzzles.map((x) => x.fastestExecutionTimeNs);
+  return runtimes.length ? Math.min(...runtimes) : null;
+};
+
+/**
+ * Returns the slowest runtime across all the years puzzles.
+ * @param {Number} year
+ */
+export const getSlowestRuntime = async (year) => {
+  const puzzles = await getPuzzlesForYear(year);
+  const runtimes = puzzles.map((x) => x.fastestExecutionTimeNs);
+  return runtimes.length ? Math.max(...runtimes) : null;
+};
+
+/**
+ * Returns the average runtime across all the years puzzles.
+ * @param {Number} year
+ */
+export const getAverageRuntime = async (year) => {
+  const puzzles = await getPuzzlesForYear(year);
+  const runtimes = puzzles.map((x) => x.fastestExecutionTimeNs);
+  return runtimes.length ? average(runtimes) : null;
+};
+
+/**
+ * Returns the max number of attempts across all the years puzzles.
+ * @param {Number} year
+ */
+export const getMaxAttempts = async (year) => {
+  const puzzles = await getPuzzlesForYear(year);
+  const attempts = puzzles.map((x) => x.incorrectAnswers.length + (x.correctAnswer ? 1 : 0));
+  return attempts.length ? Math.max(...attempts) : null;
+};
+
+/**
+ * Returns the average number of attempts across all the years puzzles.
+ * @param {Number} year
+ */
+export const getAverageAttempts = async (year) => {
+  const puzzles = await getPuzzlesForYear(year);
+  const attempts = puzzles.map((x) => x.incorrectAnswers.length + (x.correctAnswer ? 1 : 0));
+  return attempts.length ? average(attempts) : null;
+};
+
+/**
+ * Returns the number solved across all the years puzzles.
+ * @param {Number} year
+ */
+export const getSolvedCount = async (year) => {
+  const puzzles = await getPuzzlesForYear(year);
+  return puzzles.filter((x) => !!x.correctAnswer).length;
 };
 
 /**
