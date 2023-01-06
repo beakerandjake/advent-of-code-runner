@@ -1,5 +1,7 @@
 import { describe, test } from '@jest/globals';
-import { get, has, getType } from '../src/util.js';
+import {
+  get, has, getType, average,
+} from '../src/util.js';
 
 describe('util', () => {
   describe('get()', () => {
@@ -104,6 +106,24 @@ describe('util', () => {
       [Promise.resolve(true), 'Promise'],
     ])('"%s" returns "%s"', (value, expected) => {
       expect(getType(value).toLowerCase()).toBe(expected.toLocaleLowerCase());
+    });
+  });
+
+  describe('average()', () => {
+    test.each([
+      null, undefined, [], [1, 2, 3, 'CATS'],
+    ])('returns NaN if items are: "%s"', (items) => {
+      const result = average(items);
+      expect(result).toBe(NaN);
+    });
+
+    test.each([
+      { nums: [1, 2, 2, 3, 4, 7, 9], expected: 4 },
+      { nums: [10, 4, 6, 88, 22], expected: 26 },
+      { nums: [0, -22, 45, 122, 54, 2], expected: 33.5 },
+    ])('returns $expected for values: $nums', ({ nums, expected }) => {
+      const result = average(nums);
+      expect(result).toBe(expected);
     });
   });
 });

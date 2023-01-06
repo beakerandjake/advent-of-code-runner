@@ -55,3 +55,9 @@ export const getType = (value) => {
 
   return value.constructor.name;
 };
+
+/**
+ * Returns the average of the elements in the array.
+ * @param {Number[]} items
+ */
+export const average = (items = []) => items?.reduce((m, x, i) => m + (x - m) / (i + 1), 0) || NaN;

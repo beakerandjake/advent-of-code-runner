@@ -11,6 +11,7 @@ import {
   submitCommand,
   exitOverride,
 } from './cli/index.js';
+import { statsCommand } from './cli/commands.js';
 
 const program = new Command();
 
@@ -18,8 +19,7 @@ program
   .name(getConfigValue('meta.name'))
   .description(getConfigValue('meta.description'))
   .version(getConfigValue('meta.version'))
-  .addHelpText('beforeAll', printFestiveTitle)
-  .hook('preAction', printFestiveTitle)
+  .addHelpText('before', printFestiveTitle)
   .exitOverride(exitOverride);
 
 program.addCommand(autoSolveCommand);
@@ -27,6 +27,7 @@ program.addCommand(solveCommand);
 program.addCommand(autoSubmitCommand);
 program.addCommand(submitCommand);
 program.addCommand(initializeCommand);
+program.addCommand(statsCommand);
 
 try {
   await program.parseAsync();

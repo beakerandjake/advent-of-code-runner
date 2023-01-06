@@ -19,16 +19,17 @@ const {
   getId,
   findPuzzle,
   getPuzzles,
+  getPuzzlesForYear,
   setPuzzles,
   addOrEditPuzzle,
   createPuzzle,
 } = await import('../../src/persistence/puzzleRepository.js');
 
-afterEach(() => {
-  jest.clearAllMocks();
-});
-
 describe('puzzleRepository', () => {
+  afterEach(() => {
+    jest.clearAllMocks();
+  });
+
   describe('translateToPuzzleFromData()', () => {
     test('throws with null value', () => {
       expect(() => translateToPuzzleFromData(null)).toThrow(TypeError);
@@ -526,6 +527,37 @@ describe('puzzleRepository', () => {
     test('returns empty array as default', async () => {
       getValue.mockReturnValueOnce([]);
       expect(await getPuzzles()).toEqual([]);
+    });
+  });
+
+  describe('getPuzzlesForYear()', () => {
+    const mockGetPuzzles = (puzzles) => {
+      getValue.mockImplementation(async (key) => {
+        if (key === 'puzzles') {
+          return puzzles;
+        }
+        throw Error('unexpected getValue call in test');
+      });
+    };
+
+    test('returns empty array if no stored data', async () => {
+      mockGetPuzzles([]);
+      const result = await getPuzzlesForYear(2022);
+      expect(result).toEqual([]);
+    });
+
+    test('returns empty array if no puzzles for year', async () => {
+      mockGetPuzzles([{ id: '20200101' }, { id: '20210101' }, { id: '20230101' }]);
+      const result = await getPuzzlesForYear(2022);
+      expect(result).toEqual([]);
+    });
+
+    test('returns all puzzles for year', async () => {
+      const year = 2022;
+      const expected = [{ id: `${year}0101` }, { id: `${year}0102` }, { id: `${year}0201` }];
+      mockGetPuzzles([...expected, { id: `${year - 2}0101` }, { id: `${year - 1}0101` }, { id: `${year + 1}0101` }]);
+      const result = await getPuzzlesForYear(year);
+      result.forEach((x) => expect(x.year).toBe(year));
     });
   });
 

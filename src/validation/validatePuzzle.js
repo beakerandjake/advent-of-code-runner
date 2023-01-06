@@ -25,3 +25,12 @@ export const getAllPuzzlesForYear = (year) => {
   const parts = getConfigValue('aoc.validation.parts');
   return days.reduce((acc, day) => [...acc, ...parts.map((part) => ({ year, day, part }))], []);
 };
+
+/**
+ * Returns the total number of puzzles in advent of code.
+ */
+export const getTotalPuzzleCount = () => {
+  const days = getConfigValue('aoc.validation.days');
+  const parts = getConfigValue('aoc.validation.parts');
+  return days.length * parts.length;
+};
