@@ -98,15 +98,17 @@ export const getSolvedCount = async (year) => {
  */
 export const getPuzzleCompletionData = async (year) => {
   const puzzles = await getPuzzlesForYear(year);
-  return puzzles.map(({
-    day, part, correctAnswer, fastestExecutionTimeNs, incorrectAnswers,
-  }) => ({
-    day,
-    part,
-    solved: !!correctAnswer,
-    executionTimeNs: correctAnswer ? fastestExecutionTimeNs : null,
-    numberOfAttempts: correctAnswer ? incorrectAnswers.length + 1 : incorrectAnswers.length,
-  }));
+  return puzzles
+    .sort((a, b) => a.id.localeCompare(b.id))
+    .map(({
+      day, part, correctAnswer, fastestExecutionTimeNs, incorrectAnswers,
+    }) => ({
+      day,
+      part,
+      solved: !!correctAnswer,
+      executionTimeNs: correctAnswer ? fastestExecutionTimeNs : null,
+      numberOfAttempts: correctAnswer ? incorrectAnswers.length + 1 : incorrectAnswers.length,
+    }));
 };
 
 /**

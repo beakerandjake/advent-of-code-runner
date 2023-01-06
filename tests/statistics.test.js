@@ -283,6 +283,7 @@ describe('statistics', () => {
 
   describe('getPuzzleCompletionData()', () => {
     const mockPuzzle = (year, day, part, correctAnswer = '', incorrectAnswers = [], fastestExecutionTimeNs = null) => ({
+      id: `${year}${day}${part}`,
       year,
       day,
       part,
@@ -375,6 +376,23 @@ describe('statistics', () => {
       getPuzzlesForYear.mockResolvedValue([mockPuzzle(year, 1, 1, null, wrongAnswers)]);
       const result = await getPuzzleCompletionData(year);
       expect(result[0]?.numberOfAttempts).toBe(wrongAnswers.length);
+    });
+
+    test('sorts puzzles by id', async () => {
+      const year = 2022;
+      const input = [
+        mockPuzzle(year, 6, 8),
+        mockPuzzle(year, 4, 2),
+        mockPuzzle(year, 4, 1),
+        mockPuzzle(year, 2, 2),
+        mockPuzzle(year, 1, 1),
+      ];
+      const expected = input.reverse().map(({ day, part }) => ({
+        day, part, solved: false, executionTimeNs: null, numberOfAttempts: 0,
+      }));
+      getPuzzlesForYear.mockResolvedValue(input);
+      const result = await getPuzzleCompletionData(year);
+      expect(result).toStrictEqual(expected);
     });
   });
 
