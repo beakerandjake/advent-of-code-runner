@@ -13,7 +13,7 @@ import { average } from './util.js';
  * @param {Number} day
  * @param {Number} part
  */
-export const getFastestExecutionTime = async (year, day, part) => {
+export const getPuzzlesFastestRuntime = async (year, day, part) => {
   const puzzle = await findPuzzle(year, day, part);
   return puzzle?.fastestExecutionTimeNs || null;
 };
