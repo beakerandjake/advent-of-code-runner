@@ -32,5 +32,5 @@ export const getAllPuzzlesForYear = (year) => {
 export const getTotalPuzzleCount = () => {
   const days = getConfigValue('aoc.validation.days');
   const parts = getConfigValue('aoc.validation.parts');
-  return days * parts;
+  return days.length * parts.length;
 };
