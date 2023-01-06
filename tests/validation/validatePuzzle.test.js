@@ -1,24 +1,24 @@
 import {
   describe, jest, test, afterEach,
 } from '@jest/globals';
-import { mockLogger } from '../mocks.js';
+import { mockConfig, mockLogger } from '../mocks.js';
 
 // set up mocks
 mockLogger();
-
-jest.unstable_mockModule('../../src/config.js', () => ({
-  getConfigValue: jest.fn(),
-}));
+const { getConfigValue } = mockConfig();
 
 // import after setting up the mock so the modules import the mocked version
-const { getConfigValue } = await import('../../src/config.js');
-const { getAllPuzzlesForYear, puzzleIsInFuture } = await import('../../src/validation/validatePuzzle.js');
+const { getAllPuzzlesForYear, puzzleIsInFuture, getTotalPuzzleCount } = await import('../../src/validation/validatePuzzle.js');
 
 afterEach(() => {
   jest.resetAllMocks();
 });
 
 describe('validatePuzzle', () => {
+  afterEach(() => {
+    jest.resetAllMocks();
+  });
+
   describe('puzzleIsInFuture()', () => {
     beforeAll(() => {
       jest.useFakeTimers();
@@ -103,6 +103,24 @@ describe('validatePuzzle', () => {
       ];
 
       expect(getAllPuzzlesForYear(year)).toStrictEqual(expected);
+    });
+  });
+
+  describe('getTotalPuzzleCount()', () => {
+    test('calculates correctly', () => {
+      const days = 5;
+      const parts = 10;
+      getConfigValue.mockImplementation((key) => {
+        if (key === 'aoc.validation.days') {
+          return days;
+        }
+        if (key === 'aoc.validation.parts') {
+          return parts;
+        }
+        throw new Error('unexpected getConfigValue call in test');
+      });
+      const result = getTotalPuzzleCount();
+      expect(result).toBe(days * parts);
     });
   });
 });
