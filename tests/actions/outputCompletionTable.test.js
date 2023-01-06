@@ -5,21 +5,39 @@ import { mockLogger } from '../mocks.js';
 
 // setup mocks
 mockLogger();
-jest.unstable_mockModule('src/statistics.js', () => ({ getPuzzleCompletionData: jest.fn(), summarizeCompletionData: jest.fn() }));
-jest.unstable_mockModule('src/tables/cliCompletionTable.js', () => ({ generateTable: jest.fn() }));
+const mockChalk = { green: jest.fn((x) => x.toString()), yellow: jest.fn((x) => x?.toString() || '') };
+jest.unstable_mockModule('chalk', () => ({ default: mockChalk }));
+jest.unstable_mockModule('table', () => ({ table: jest.fn() }));
+jest.unstable_mockModule('src/formatting.js', () => ({ humanizeDuration: jest.fn() }));
+jest.unstable_mockModule('src/validation/validatePuzzle.js', () => ({ getTotalPuzzleCount: jest.fn() }));
+jest.unstable_mockModule('src/statistics.js', () => ({
+  getAverageAttempts: jest.fn(),
+  getAverageRuntime: jest.fn(),
+  getFastestRuntime: jest.fn(),
+  getMaxAttempts: jest.fn(),
+  getPuzzleCompletionData: jest.fn(),
+  getSlowestRuntime: jest.fn(),
+  getSolvedCount: jest.fn(),
+}));
 
 // import after mocks set up
-const { getPuzzleCompletionData, summarizeCompletionData } = await import('../../src/statistics.js');
-const { generateTable } = await import('../../src/tables/cliCompletionTable.js');
-const { outputCompletionTable } = await import('../../src/actions/links/outputCompletionTable.js');
+const { table } = await import('table');
+const { getPuzzleCompletionData } = await import('../../src/statistics.js');
+// const { generateTable } = await import('../../src/tables/cliCompletionTable.js');
+const {
+  outputCompletionTable,
+  mapNamedColumn,
+  mapSolvedColumn,
+  mapAttemptColumns,
+} = await import('../../src/actions/links/outputCompletionTable.js');
 
 describe('actions', () => {
   describe('links', () => {
-    describe('outputCompletionTable()', () => {
-      afterEach(() => {
-        jest.resetAllMocks();
-      });
+    afterEach(() => {
+      jest.resetAllMocks();
+    });
 
+    describe('outputCompletionTable()', () => {
       test.each([
         null, undefined,
       ])('throws if year is: "%s"', async (year) => {
@@ -35,7 +53,101 @@ describe('actions', () => {
       test('does not generate table if no completion data', async () => {
         getPuzzleCompletionData.mockResolvedValue([]);
         await outputCompletionTable({ year: 2022 });
-        expect(generateTable).not.toHaveBeenCalled();
+        expect(table).not.toHaveBeenCalled();
+      });
+    });
+
+    describe('mapNamedColumn()', () => {
+      test('colorizes if solved', () => {
+        mapNamedColumn({ day: 1, part: 1, solved: true });
+        expect(mockChalk.green).toHaveBeenCalled();
+      });
+
+      test('does not colorize if not solved', () => {
+        mapNamedColumn({ day: 1, part: 1, solved: false });
+        expect(mockChalk.green).not.toHaveBeenCalled();
+      });
+    });
+
+    describe('mapSolvedColumn()', () => {
+      test('colorizes if solved', () => {
+        mapSolvedColumn({ solved: true });
+        expect(mockChalk.green).toHaveBeenCalled();
+      });
+
+      test('does not colorize if not solved', () => {
+        mapSolvedColumn({ solved: false });
+        expect(mockChalk.green).not.toHaveBeenCalled();
+      });
+    });
+
+    describe('mapAttemptColumns()', () => {
+      test.each([
+        null, undefined,
+      ])('returns empty string if numberOfAttempts is: "%s"', (numberOfAttempts) => {
+        const result = mapAttemptColumns([{ numberOfAttempts }]);
+        expect(result[0]).toBe('');
+      });
+
+      test('does not highlight perfect solve if not solved', () => {
+        const numberOfAttempts = 1;
+        const result = mapAttemptColumns([{ numberOfAttempts, solved: false }]);
+        expect(result[0]).toBe(numberOfAttempts.toString());
+        expect(mockChalk.green).not.toHaveBeenCalled();
+      });
+
+      test('does not highlight perfect solve if too many attempts', () => {
+        const numberOfAttempts = 10;
+        const result = mapAttemptColumns([{ numberOfAttempts, solved: true }]);
+        expect(result[0]).toBe(numberOfAttempts.toString());
+        expect(mockChalk.green).not.toHaveBeenCalled();
+      });
+
+      test('highlights perfect solve', () => {
+        const numberOfAttempts = 1;
+        mockChalk.green.mockImplementation((x) => x.toString());
+        const result = mapAttemptColumns([{ numberOfAttempts, solved: true }]);
+        expect(mockChalk.green).toHaveBeenCalled();
+        expect(result[0]).toBe(numberOfAttempts.toString());
+      });
+
+      test('does not highlight or mark worst if none match', () => {
+        mockChalk.green.mockImplementation((x) => x.toString());
+        const result = mapAttemptColumns([
+          { numberOfAttempts: 1, solved: true },
+          { numberOfAttempts: 2, solved: true },
+          { numberOfAttempts: 3, solved: true },
+          { numberOfAttempts: 4, solved: true },
+        ], 5);
+        expect(mockChalk.yellow).not.toHaveBeenCalled();
+        result.forEach((x) => expect(x).not.toContain('worst'));
+      });
+
+      test('highlights each matching worst', () => {
+        mockChalk.yellow.mockImplementation((x) => x.toString());
+        mapAttemptColumns([
+          { numberOfAttempts: 1, solved: true },
+          { numberOfAttempts: 2, solved: true },
+          { numberOfAttempts: 3, solved: true },
+          { numberOfAttempts: 4, solved: true },
+          { numberOfAttempts: 4, solved: true },
+          { numberOfAttempts: 4, solved: true },
+        ], 4);
+        expect(mockChalk.yellow).toHaveBeenCalledTimes(3);
+      });
+
+      test('only marks first matching worst', () => {
+        mockChalk.yellow.mockImplementation((x) => x.toString());
+        const result = mapAttemptColumns([
+          { numberOfAttempts: 1, solved: true },
+          { numberOfAttempts: 2, solved: true },
+          { numberOfAttempts: 3, solved: true },
+          { numberOfAttempts: 4, solved: true },
+          { numberOfAttempts: 4, solved: true },
+          { numberOfAttempts: 4, solved: true },
+        ], 4);
+        const marked = result.filter((x) => x?.includes('worst'));
+        expect(marked.length).toBe(1);
       });
     });
   });

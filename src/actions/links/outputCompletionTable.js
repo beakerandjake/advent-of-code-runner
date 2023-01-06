@@ -59,8 +59,9 @@ export const mapAttemptColumns = (completionData, maxAttempts) => {
 
 /**
  * Generates the text for the runtime column.
+ * @private
  */
-const mapRuntimeColumn = ({ executionTimeNs }, fastest, slowest) => {
+export const mapRuntimeColumn = ({ executionTimeNs }, fastest, slowest) => {
   if (executionTimeNs == null || executionTimeNs === '') {
     return '';
   }
