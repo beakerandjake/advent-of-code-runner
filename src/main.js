@@ -3,15 +3,13 @@ import { Command } from 'commander';
 import { getConfigValue } from './config.js';
 import { printFestiveTitle } from './festive.js';
 import { handleError } from './errorHandler.js';
-import {
-  autoSubmitCommand,
-  exitOverride,
-} from './cli/index.js';
 import { statsCommand } from './cli/commands/stats.js';
 import { initializeCommand } from './cli/commands/initialize.js';
 import { solveCommand } from './cli/commands/solve.js';
 import { autoSolveCommand } from './cli/commands/autoSolve.js';
 import { submitCommand } from './cli/commands/submit.js';
+import { autoSubmitCommand } from './cli/commands/autoSubmit.js';
+import { exitOverride } from './cli/exitOverride.js';
 
 const program = new Command();
 
