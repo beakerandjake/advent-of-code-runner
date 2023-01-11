@@ -6,12 +6,12 @@ import { handleError } from './errorHandler.js';
 import {
   autoSolveCommand,
   autoSubmitCommand,
-  solveCommand,
   submitCommand,
   exitOverride,
 } from './cli/index.js';
 import { statsCommand } from './cli/commands/stats.js';
 import { initializeCommand } from './cli/commands/initialize.js';
+import { solveCommand } from './cli/commands/solve.js';
 
 const program = new Command();
 

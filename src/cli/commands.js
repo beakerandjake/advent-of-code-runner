@@ -2,20 +2,10 @@ import { Command } from 'commander';
 import {
   autoSolve,
   autoSubmit,
-  solve,
   submit,
 } from '../actions/index.js';
 import { dayArgument, partArgument } from './arguments.js';
 
-/**
- * Command which lets the user solve a specific puzzle
- */
-export const solveCommand = new Command()
-  .name('solve')
-  .description('Solve the puzzle, benchmark the execution time, and output the result.')
-  .addArgument(dayArgument)
-  .addArgument(partArgument)
-  .action(solve);
 
 /**
  * Command to solve the next unsolved puzzle.
