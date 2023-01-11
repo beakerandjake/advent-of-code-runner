@@ -11,17 +11,17 @@ jest.unstable_mockModule('node:fs/promises', () => ({ readFile: jest.fn() }));
 jest.unstable_mockModule('src/initialize/replaceTokens.js', () => ({ replaceTokens: jest.fn() }));
 
 // import after mocks set up
-const { outputFile } = await import('fs-extra/esm');
+const { outputFile, pathExists } = await import('fs-extra/esm');
 const { readFile } = await import('node:fs/promises');
 const { replaceTokens } = await import('../../src/initialize/replaceTokens.js');
-const { createDotEnv } = await import('../../src/initialize/dotEnv.js');
+const { createDotEnv, dotEnvFileExists } = await import('../../src/initialize/dotEnv.js');
 
 describe('initialize', () => {
-  describe('createDotEnv()', () => {
-    beforeEach(() => {
-      jest.resetAllMocks();
-    });
+  beforeEach(() => {
+    jest.resetAllMocks();
+  });
 
+  describe('createDotEnv()', () => {
     test.each([
       null, undefined, '',
     ])('throws if auth token is: "%s"', async (authToken) => {
@@ -52,6 +52,22 @@ describe('initialize', () => {
       replaceTokens.mockReturnValue(contents);
       await createDotEnv({ authToken: 1234 });
       expect(outputFile).toHaveBeenCalledWith(paths.dest, contents);
+    });
+  });
+
+  describe('dotEnvFileExists()', () => {
+    test('returns true if exists', async () => {
+      getConfigValue.mockImplementation((key) => (key === 'paths.templates.dotenv.dest' ? 'asdf' : undefined));
+      pathExists.mockResolvedValue(true);
+      const result = await dotEnvFileExists();
+      expect(result).toBe(true);
+    });
+
+    test('returns false if does not exist', async () => {
+      getConfigValue.mockImplementation((key) => (key === 'paths.templates.dotenv.dest' ? 'asdf' : undefined));
+      pathExists.mockResolvedValue(false);
+      const result = await dotEnvFileExists();
+      expect(result).toBe(false);
     });
   });
 });
