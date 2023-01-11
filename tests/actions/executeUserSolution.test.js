@@ -1,22 +1,24 @@
 import {
   describe, jest, test, afterEach,
 } from '@jest/globals';
-import { mockLogger } from '../mocks.js';
+import { mockConfig, mockLogger } from '../mocks.js';
 
 // setup mocks
 mockLogger();
+const { getConfigValue } = mockConfig();
 const mockExecuter = jest.fn();
 jest.unstable_mockModule('src/solutions/index.js', () => ({ execute: mockExecuter }));
 
 // import after mocks set up
 const { executeUserSolution } = await import('../../src/actions/links/executeUserSolution.js');
 
-afterEach(() => {
-  jest.resetAllMocks();
-});
-
 describe('actions', () => {
   describe('links', () => {
+    afterEach(() => {
+      jest.useFakeTimers();
+      jest.resetAllMocks();
+    });
+
     describe('executeUserSolution()', () => {
       test('returns results', async () => {
         const args = { day: 1, part: 1, input: 'ASDF' };
