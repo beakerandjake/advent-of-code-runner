@@ -1,5 +1,5 @@
-import { getNextUnansweredPuzzle } from '../../answers.js';
-import { logger } from '../../logger.js';
+import { getNextUnansweredPuzzle } from '../answers.js';
+import { logger } from '../logger.js';
 
 /**
  * Finds and returns the next puzzle the user has not successfully solved.

@@ -1,5 +1,5 @@
-import { logger } from '../../logger.js';
-import { puzzleIsInFuture } from '../../validation/validatePuzzle.js';
+import { logger } from '../logger.js';
+import { puzzleIsInFuture } from '../validation/validatePuzzle.js';
 
 /**
  * Halts execution if the puzzle is not yet unlocked on advent of code.

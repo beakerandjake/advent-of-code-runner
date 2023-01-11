@@ -1,4 +1,4 @@
-import { addIncorrectAnswer, setCorrectAnswer } from '../../answers.js';
+import { addIncorrectAnswer, setCorrectAnswer } from '../answers.js';
 
 /**
  * Store the answer (and its correctness) so it cannot be re-submitted to this puzzle in the future.

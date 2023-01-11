@@ -9,7 +9,7 @@ jest.unstable_mockModule('src/answers.js', () => ({ answerHasBeenSubmitted: jest
 
 // import after mocks set up
 const { answerHasBeenSubmitted } = await import('../../src/answers.js');
-const { assertAnswerPreviouslySubmitted } = await import('../../src/actions/links/assertAnswerPreviouslySubmitted.js');
+const { assertAnswerPreviouslySubmitted } = await import('../../src/actions/assertAnswerPreviouslySubmitted.js');
 
 afterEach(() => {
   jest.resetAllMocks();

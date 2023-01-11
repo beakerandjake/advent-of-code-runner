@@ -1,5 +1,5 @@
-import { requiredPartsHaveBeenSolved } from '../../answers.js';
-import { logger } from '../../logger.js';
+import { requiredPartsHaveBeenSolved } from '../answers.js';
+import { logger } from '../logger.js';
 
 /**
  * Asserts that the user has solved the requisite levels leading up to this puzzles level.

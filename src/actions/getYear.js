@@ -1,6 +1,6 @@
-import { logger } from '../../logger.js';
-import { yearIsValid } from '../../validation/index.js';
-import { getValue } from '../../persistence/userDataFile.js';
+import { logger } from '../logger.js';
+import { yearIsValid } from '../validation/index.js';
+import { getValue } from '../persistence/userDataFile.js';
 
 const YEAR_STORE_KEY = 'year';
 

@@ -9,7 +9,7 @@ jest.unstable_mockModule('src/answers.js', () => ({ puzzleHasBeenSolved: jest.fn
 
 // import after mocks set up
 const { puzzleHasBeenSolved } = await import('../../src/answers.js');
-const { assertPuzzleUnsolved } = await import('../../src/actions/links/assertPuzzleUnsolved.js');
+const { assertPuzzleUnsolved } = await import('../../src/actions/assertPuzzleUnsolved.js');
 
 afterEach(() => {
   jest.resetAllMocks();

@@ -1,5 +1,8 @@
+import { Command } from 'commander';
+import { createChainWithReporting } from '../actions/actionChainWithProgress.js';
+import { assertUserConfirmation, getAnswersFromUser } from '../actions/index.js';
 import { getConfigValue } from '../config.js';
-import { festiveEmoji, festiveStyle } from '../festive.js';
+import { festiveEmoji, festiveStyle, printFestiveTitle } from '../festive.js';
 import {
   createDataFile,
   createDotEnv,
@@ -11,13 +14,11 @@ import {
   deleteExistingInputFiles,
   installPackages,
 } from '../initialize/index.js';
-import { createChainWithReporting } from './actionChainWithProgress.js';
-import { assertUserConfirmation, getAnswersFromUser } from './links/index.js';
 
 /**
  * inquirer.js question which makes the user confirm the initialize operation.
  */
-export const confirmInitializeQuestion = {
+const confirmInitializeQuestion = {
   type: 'confirm',
   name: 'confirmed',
   message: festiveStyle(
@@ -31,7 +32,7 @@ export const confirmInitializeQuestion = {
  * Array of inquirer questions which will be asked in order.
  * The answers will provide us all of the information we need to initialize.
  */
-export const initializeQuestions = [
+const initializeQuestions = [
   {
     // in future if list of years becomes too large the change to raw input.
     type: 'list',
@@ -72,7 +73,7 @@ const createFiles = async ({ answers }) => {
 /**
  * Scaffolds the cwd with all files required to use this cli.
  */
-export const initialize = async () => {
+const initialize = async () => {
   // if there are files in the cwd, get confirmation with the user that they want to proceed.
   if (!await cwdIsEmpty() && !await assertUserConfirmation(confirmInitializeQuestion)()) {
     return;
@@ -89,3 +90,12 @@ export const initialize = async () => {
 
   await actionChain({ answers });
 };
+
+/**
+ * Command to initialize the users repository so it can run our cli.
+ */
+export const initializeCommand = new Command()
+  .name('init')
+  .hook('preAction', printFestiveTitle)
+  .description('Initialize a directory so advent-of-code-runner can run solutions.')
+  .action(initialize);

@@ -1,4 +1,4 @@
-import { getConfigValue } from '../../config.js';
+import { getConfigValue } from '../config.js';
 
 /**
  * Grabs the authentication token value from the config, validates it, then adds it to the args.

@@ -13,7 +13,7 @@ jest.unstable_mockModule('src/statistics.js', () => ({
 
 // import mocks after setting up mocks
 const { getPuzzlesFastestRuntime, setPuzzlesFastestRuntime } = await import('../../src/statistics.js');
-const { tryToUpdateFastestExecutionTime } = await import('../../src/actions/links/tryToUpdateFastestExecutionTime.js');
+const { tryToUpdateFastestExecutionTime } = await import('../../src/actions/tryToUpdateFastestExecutionTime.js');
 
 beforeEach(() => {
   jest.resetAllMocks();

@@ -9,7 +9,7 @@ jest.unstable_mockModule('src/persistence/userDataFile.js', () => ({ userDataFil
 
 // import after mocks set up
 const { userDataFileExists } = await import('../../src/persistence/userDataFile.js');
-const { assertInitialized } = await import('../../src/actions/links/assertInitialized.js');
+const { assertInitialized } = await import('../../src/actions/assertInitialized.js');
 
 afterEach(() => {
   jest.resetAllMocks();

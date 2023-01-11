@@ -1,5 +1,5 @@
-import { logger } from '../../logger.js';
-import { answerHasBeenSubmitted } from '../../answers.js';
+import { logger } from '../logger.js';
+import { answerHasBeenSubmitted } from '../answers.js';
 
 /**
  * Halts execution if the puzzle has not already been submitted to advent of code.

@@ -11,7 +11,7 @@ jest.unstable_mockModule('inquirer', () => ({
 }));
 
 // import after setting up mocks
-const { assertUserConfirmation } = await import('../../src/actions/links/assertUserConfirmation.js');
+const { assertUserConfirmation } = await import('../../src/actions/assertUserConfirmation.js');
 
 beforeEach(() => {
   jest.resetAllMocks();

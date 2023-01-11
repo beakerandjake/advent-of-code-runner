@@ -1,5 +1,5 @@
-import { logger } from '../../logger.js';
-import { userDataFileExists } from '../../persistence/userDataFile.js';
+import { logger } from '../logger.js';
+import { userDataFileExists } from '../persistence/userDataFile.js';
 
 /**
  * Asserts that the user has ran an init command in the cwd.
