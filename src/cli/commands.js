@@ -1,19 +1,9 @@
 import { Command } from 'commander';
 import {
-  autoSolve,
   autoSubmit,
   submit,
 } from '../actions/index.js';
 import { dayArgument, partArgument } from './arguments.js';
-
-
-/**
- * Command to solve the next unsolved puzzle.
- */
-export const autoSolveCommand = new Command()
-  .name('autosolve')
-  .description('Find the next unsolved puzzle, execute it, benchmark the execution time and output the result.')
-  .action(autoSolve);
 
 /**
  * Command which allows the user to submit a puzzles answer to advent of code.

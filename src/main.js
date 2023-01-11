@@ -4,7 +4,6 @@ import { getConfigValue } from './config.js';
 import { printFestiveTitle } from './festive.js';
 import { handleError } from './errorHandler.js';
 import {
-  autoSolveCommand,
   autoSubmitCommand,
   submitCommand,
   exitOverride,
@@ -12,6 +11,7 @@ import {
 import { statsCommand } from './cli/commands/stats.js';
 import { initializeCommand } from './cli/commands/initialize.js';
 import { solveCommand } from './cli/commands/solve.js';
+import { autoSolveCommand } from './cli/commands/autoSolve.js';
 
 const program = new Command();
 
