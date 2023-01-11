@@ -1,7 +1,7 @@
 import { Command } from 'commander';
 import { solveLinks } from './solve.js';
-import { assertInitialized, getNextUnsolvedPuzzle, getYear } from '../../actions/links/index.js';
-import { createChain } from '../../actions/actionChain.js';
+import { assertInitialized, getNextUnsolvedPuzzle, getYear } from '../actions/links/index.js';
+import { createChain } from '../actions/actionChain.js';
 
 /**
  * Append our links to the front of solves links, but be sure to remove duplicates.

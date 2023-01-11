@@ -1,6 +1,6 @@
 import { Command } from 'commander';
-import { createChain } from '../../actions/actionChain.js';
-import { assertInitialized, getNextUnsolvedPuzzle, getYear } from '../../actions/links/index.js';
+import { createChain } from '../actions/actionChain.js';
+import { assertInitialized, getNextUnsolvedPuzzle, getYear } from '../actions/links/index.js';
 import { submitLinks } from './submit.js';
 
 /**

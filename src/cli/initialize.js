@@ -1,8 +1,8 @@
 import { Command } from 'commander';
-import { createChainWithReporting } from '../../actions/actionChainWithProgress.js';
-import { assertUserConfirmation, getAnswersFromUser } from '../../actions/links/index.js';
-import { getConfigValue } from '../../config.js';
-import { festiveEmoji, festiveStyle, printFestiveTitle } from '../../festive.js';
+import { createChainWithReporting } from '../actions/actionChainWithProgress.js';
+import { assertUserConfirmation, getAnswersFromUser } from '../actions/links/index.js';
+import { getConfigValue } from '../config.js';
+import { festiveEmoji, festiveStyle, printFestiveTitle } from '../festive.js';
 import {
   createDataFile,
   createDotEnv,
@@ -13,7 +13,7 @@ import {
   cwdIsEmpty,
   deleteExistingInputFiles,
   installPackages,
-} from '../../initialize/index.js';
+} from '../initialize/index.js';
 
 /**
  * inquirer.js question which makes the user confirm the initialize operation.

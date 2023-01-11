@@ -1,6 +1,6 @@
 import { Command } from 'commander';
-import { createChain } from '../../actions/actionChain.js';
-import { assertInitialized, getYear, outputCompletionTable } from '../../actions/links/index.js';
+import { createChain } from '../actions/actionChain.js';
+import { assertInitialized, getYear, outputCompletionTable } from '../actions/links/index.js';
 
 /**
  * "compile" the links into the stats action.

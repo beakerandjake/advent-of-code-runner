@@ -1,7 +1,7 @@
 import { Command } from 'commander';
-import { createChain } from '../../actions/actionChain.js';
-import * as links from '../../actions/links/index.js';
-import { dayArgument, partArgument } from '../arguments.js';
+import { createChain } from '../actions/actionChain.js';
+import * as links from '../actions/links/index.js';
+import { dayArgument, partArgument } from './arguments.js';
 
 /**
  * The links which together make up the solve action.
