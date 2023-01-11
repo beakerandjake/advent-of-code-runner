@@ -5,13 +5,13 @@ import { printFestiveTitle } from './festive.js';
 import { handleError } from './errorHandler.js';
 import {
   autoSubmitCommand,
-  submitCommand,
   exitOverride,
 } from './cli/index.js';
 import { statsCommand } from './cli/commands/stats.js';
 import { initializeCommand } from './cli/commands/initialize.js';
 import { solveCommand } from './cli/commands/solve.js';
 import { autoSolveCommand } from './cli/commands/autoSolve.js';
+import { submitCommand } from './cli/commands/submit.js';
 
 const program = new Command();
 
