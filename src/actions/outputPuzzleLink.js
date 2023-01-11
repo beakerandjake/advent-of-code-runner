@@ -1,6 +1,6 @@
 import terminalLink from 'terminal-link';
-import { puzzleBaseUrl } from '../../api/urls.js';
-import { logger } from '../../logger.js';
+import { puzzleBaseUrl } from '../api/urls.js';
+import { logger } from '../logger.js';
 
 /**
  * Outputs a clickable url to the terminal which links to the advent of code puzzle.

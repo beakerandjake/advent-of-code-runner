@@ -1,7 +1,7 @@
 import chalk from 'chalk';
 import { table } from 'table';
-import { humanizeDuration } from '../../formatting.js';
-import { logger } from '../../logger.js';
+import { humanizeDuration } from '../formatting.js';
+import { logger } from '../logger.js';
 import {
   getAverageAttempts,
   getAverageRuntime,
@@ -10,8 +10,8 @@ import {
   getPuzzleCompletionData,
   getSlowestRuntime,
   getSolvedCount,
-} from '../../statistics.js';
-import { getTotalPuzzleCount } from '../../validation/validatePuzzle.js';
+} from '../statistics.js';
+import { getTotalPuzzleCount } from '../validation/validatePuzzle.js';
 
 /**
  * Generates the text for the name column.

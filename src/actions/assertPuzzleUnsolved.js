@@ -1,5 +1,5 @@
-import { puzzleHasBeenSolved } from '../../answers.js';
-import { logger } from '../../logger.js';
+import { puzzleHasBeenSolved } from '../answers.js';
+import { logger } from '../logger.js';
 
 /**
  * Returns true if the user has not solved the puzzle

@@ -1,6 +1,6 @@
 import { Command } from 'commander';
 import { createChain } from '../actions/actionChain.js';
-import * as links from '../actions/links/index.js';
+import * as links from '../actions/index.js';
 import { dayArgument, partArgument } from './arguments.js';
 
 /**

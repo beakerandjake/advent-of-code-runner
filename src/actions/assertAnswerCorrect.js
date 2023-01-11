@@ -1,5 +1,5 @@
-import { getCorrectAnswer, answersEqual } from '../../answers.js';
-import { logger } from '../../logger.js';
+import { getCorrectAnswer, answersEqual } from '../answers.js';
+import { logger } from '../logger.js';
 
 /**
  * Compares the answer to the *previously* solved and stored answer

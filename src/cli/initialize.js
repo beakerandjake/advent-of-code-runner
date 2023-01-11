@@ -1,6 +1,6 @@
 import { Command } from 'commander';
 import { createChainWithReporting } from '../actions/actionChainWithProgress.js';
-import { assertUserConfirmation, getAnswersFromUser } from '../actions/links/index.js';
+import { assertUserConfirmation, getAnswersFromUser } from '../actions/index.js';
 import { getConfigValue } from '../config.js';
 import { festiveEmoji, festiveStyle, printFestiveTitle } from '../festive.js';
 import {

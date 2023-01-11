@@ -1,7 +1,7 @@
-import { downloadInput } from '../../api/index.js';
-import { cacheInput, getCachedInput, inputIsCached } from '../../inputs/inputCache.js';
-import { logger } from '../../logger.js';
-import { inputIsValid } from '../../validation/validateInput.js';
+import { downloadInput } from '../api/index.js';
+import { cacheInput, getCachedInput, inputIsCached } from '../inputs/inputCache.js';
+import { logger } from '../logger.js';
+import { inputIsValid } from '../validation/validateInput.js';
 import { getAuthenticationToken } from './getAuthenticationToken.js';
 
 /**

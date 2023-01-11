@@ -1,4 +1,4 @@
-import { setPuzzlesFastestRuntime } from '../../statistics.js';
+import { setPuzzlesFastestRuntime } from '../statistics.js';
 
 /**
  * Update the fastest execution time for this puzzle with the new value.

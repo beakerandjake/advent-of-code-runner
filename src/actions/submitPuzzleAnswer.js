@@ -1,5 +1,5 @@
-import { submitSolution } from '../../api/index.js';
-import { logger } from '../../logger.js';
+import { submitSolution } from '../api/index.js';
+import { logger } from '../logger.js';
 
 /**
  * Submit the answer to advent of code and returns the submission result.

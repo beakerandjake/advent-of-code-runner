@@ -1,5 +1,5 @@
-import { logger } from '../../logger.js';
-import { getPuzzlesFastestRuntime, setPuzzlesFastestRuntime } from '../../statistics.js';
+import { logger } from '../logger.js';
+import { getPuzzlesFastestRuntime, setPuzzlesFastestRuntime } from '../statistics.js';
 
 /**
  * Compares the puzzles latest execution time to the fastest stored execution time.

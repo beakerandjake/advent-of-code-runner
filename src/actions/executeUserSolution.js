@@ -1,7 +1,7 @@
-import { getConfigValue } from '../../config.js';
-import { humanizeDuration } from '../../formatting.js';
-import { logger } from '../../logger.js';
-import { execute } from '../../solutions/index.js';
+import { getConfigValue } from '../config.js';
+import { humanizeDuration } from '../formatting.js';
+import { logger } from '../logger.js';
+import { execute } from '../solutions/index.js';
 
 /**
  * Execute the users code for this puzzle and output the results.
