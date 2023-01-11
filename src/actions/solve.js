@@ -10,7 +10,6 @@ export const solveLinks = [
   links.outputPuzzleLink,
   links.assertPuzzleUnlocked,
   links.assertPuzzleLevelMet,
-  links.getAuthenticationToken,
   links.getPuzzleInput,
   links.executeUserSolution,
   links.assertAnswerCorrect,
