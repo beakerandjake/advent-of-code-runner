@@ -130,6 +130,7 @@ const CONFIG = {
       { key: 1, name: 'partOne' },
       { key: 2, name: 'partTwo' },
     ],
+    cancelMessageDelayMs: 3000,
   },
   paths: {
     rateLimitFile: join(cwd, '.ratelimits.json'),
