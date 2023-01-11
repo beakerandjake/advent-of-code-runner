@@ -1,12 +1,33 @@
 import { Command } from 'commander';
-import { printFestiveTitle } from '../festive.js';
+import { getAnswersFromUser } from '../actions/getAnswersFromUser.js';
+import { festiveEmoji, festiveStyle, printFestiveTitle } from '../festive.js';
+import { cwdIsEmpty, createDotEnv } from '../initialize/index.js';
+import { logger } from '../logger.js';
+
+/**
+ * inquirer question which prompts the user for their auth token.
+ */
+export const authTokenQuestion = {
+  type: 'password',
+  name: 'authToken',
+  message: festiveStyle('Enter your advent of code authentication token'),
+  prefix: festiveEmoji(),
+  validate: (input) => (input ? true : 'Token cannot be empty!'),
+  filter: (input) => input.trim(),
+};
 
 const auth = async () => {
-  console.log('auth it!');
+  if (!await cwdIsEmpty()) {
+    logger.error('This directory does not appear to be initialized, please run the "init" command instead');
+    return;
+  }
+
+  const { answers } = await getAnswersFromUser([authTokenQuestion])();
+  await createDotEnv(answers);
 };
 
 /**
- * Command to initialize the users repository so it can run our cli.
+ * Adds or updates the .env file with the users auth token.
  */
 export const authCommand = new Command()
   .name('auth')

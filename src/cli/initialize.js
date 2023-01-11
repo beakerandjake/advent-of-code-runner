@@ -14,6 +14,7 @@ import {
   deleteExistingInputFiles,
   installPackages,
 } from '../initialize/index.js';
+import { authTokenQuestion } from './auth.js';
 
 /**
  * inquirer.js question which makes the user confirm the initialize operation.
@@ -42,17 +43,7 @@ const initializeQuestions = [
     choices: getConfigValue('aoc.validation.years').reverse(),
     loop: false,
   },
-  {
-    // in future if list of years becomes too large the change to raw input.
-    type: 'password',
-    name: 'authToken',
-    message: festiveStyle('Enter your advent of code authentication token'),
-    prefix: festiveEmoji(),
-    choices: getConfigValue('aoc.validation.years'),
-    loop: false,
-    validate: (input) => (input ? true : 'Token cannot be empty!'),
-    filter: (input) => input.trim(),
-  },
+  authTokenQuestion,
 ];
 
 /**
