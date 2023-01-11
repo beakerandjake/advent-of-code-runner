@@ -1,15 +1,16 @@
 #!/usr/bin/env node
 import { Command } from 'commander';
-import { getConfigValue } from './config.js';
-import { printFestiveTitle } from './festive.js';
-import { handleError } from './errorHandler.js';
-import { statsCommand } from './cli/stats.js';
-import { initializeCommand } from './cli/initialize.js';
-import { solveCommand } from './cli/solve.js';
+import { authCommand } from './cli/auth.js';
 import { autoSolveCommand } from './cli/autoSolve.js';
-import { submitCommand } from './cli/submit.js';
 import { autoSubmitCommand } from './cli/autoSubmit.js';
 import { exitOverride } from './cli/exitOverride.js';
+import { initializeCommand } from './cli/initialize.js';
+import { solveCommand } from './cli/solve.js';
+import { statsCommand } from './cli/stats.js';
+import { submitCommand } from './cli/submit.js';
+import { getConfigValue } from './config.js';
+import { handleError } from './errorHandler.js';
+import { printFestiveTitle } from './festive.js';
 
 const program = new Command();
 
@@ -20,11 +21,12 @@ program
   .addHelpText('before', printFestiveTitle)
   .exitOverride(exitOverride);
 
+program.addCommand(authCommand);
+program.addCommand(initializeCommand);
 program.addCommand(autoSolveCommand);
 program.addCommand(solveCommand);
 program.addCommand(autoSubmitCommand);
 program.addCommand(submitCommand);
-program.addCommand(initializeCommand);
 program.addCommand(statsCommand);
 
 try {

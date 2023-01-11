@@ -23,5 +23,5 @@ const stats = async () => actionChain();
  */
 export const statsCommand = new Command()
   .name('stats')
-  .description('Output your completion progress for the years advent-of-code.')
+  .description('Output your completion progress for the years advent of code.')
   .action(stats);
