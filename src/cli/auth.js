@@ -33,8 +33,9 @@ const confirmOverwriteQuestion = {
 
 /**
  * Updates or creates the .env file and writes the users auth token to it.
+ * @private
  */
-const auth = async () => {
+export const auth = async () => {
   // don't let the user run this command if they haven't ran the "init" command.
   if (!await assertInitialized()) {
     return;
