@@ -9,6 +9,7 @@ import { logger } from '../logger.js';
 /**
  * inquirer question which prompts the user for their auth token.
  */
+/* istanbul ignore next */
 export const authTokenQuestion = {
   type: 'password',
   name: 'authToken',
