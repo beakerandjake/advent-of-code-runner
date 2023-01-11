@@ -6,7 +6,7 @@ import { mockConfig, mockLogger } from '../mocks.js';
 // setup mocks
 mockLogger();
 const { getConfigValue } = mockConfig();
-jest.unstable_mockModule('fs-extra/esm', () => ({ outputFile: jest.fn() }));
+jest.unstable_mockModule('fs-extra/esm', () => ({ outputFile: jest.fn(), pathExists: jest.fn() }));
 jest.unstable_mockModule('node:fs/promises', () => ({ readFile: jest.fn() }));
 jest.unstable_mockModule('src/initialize/replaceTokens.js', () => ({ replaceTokens: jest.fn() }));
 
@@ -14,7 +14,7 @@ jest.unstable_mockModule('src/initialize/replaceTokens.js', () => ({ replaceToke
 const { outputFile } = await import('fs-extra/esm');
 const { readFile } = await import('node:fs/promises');
 const { replaceTokens } = await import('../../src/initialize/replaceTokens.js');
-const { createDotEnv } = await import('../../src/initialize/createDotEnv.js');
+const { createDotEnv } = await import('../../src/initialize/dotEnv.js');
 
 describe('initialize', () => {
   describe('createDotEnv()', () => {
