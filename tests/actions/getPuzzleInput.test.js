@@ -13,14 +13,14 @@ jest.unstable_mockModule('src/inputs/inputCache.js', () => ({
   cacheInput: jest.fn(),
 }));
 jest.unstable_mockModule('src/validation/validateInput.js', () => ({ inputIsValid: jest.fn() }));
-jest.unstable_mockModule('src/actions/links/getAuthenticationToken.js', () => ({ getAuthenticationToken: jest.fn() }));
+jest.unstable_mockModule('src/actions/getAuthenticationToken.js', () => ({ getAuthenticationToken: jest.fn() }));
 
 // import mocks after setting up mocks
 const { downloadInput } = await import('../../src/api/index.js');
 const { inputIsCached, getCachedInput, cacheInput } = await import('../../src/inputs/inputCache.js');
 const { inputIsValid } = await import('../../src/validation/validateInput.js');
-const { getAuthenticationToken } = await import('../../src/actions/links/getAuthenticationToken.js');
-const { getPuzzleInput } = await import('../../src/actions/links/getPuzzleInput.js');
+const { getAuthenticationToken } = await import('../../src/actions/getAuthenticationToken.js');
+const { getPuzzleInput } = await import('../../src/actions/getPuzzleInput.js');
 
 beforeEach(() => {
   jest.resetAllMocks();

@@ -12,7 +12,7 @@ jest.unstable_mockModule('src/answers.js', () => ({
 
 // import after mocks set up
 const { getCorrectAnswer, answersEqual } = await import('../../src/answers.js');
-const { assertAnswerCorrect } = await import('../../src/actions/links/assertAnswerCorrect.js');
+const { assertAnswerCorrect } = await import('../../src/actions/assertAnswerCorrect.js');
 
 afterEach(() => {
   jest.resetAllMocks();

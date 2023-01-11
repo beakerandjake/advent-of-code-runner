@@ -11,7 +11,7 @@ jest.unstable_mockModule('inquirer', () => ({
 }));
 
 // import after setting up mocks
-const { getAnswersFromUser } = await import('../../src/actions/links/getAnswersFromUser.js');
+const { getAnswersFromUser } = await import('../../src/actions/getAnswersFromUser.js');
 
 beforeEach(() => {
   jest.resetAllMocks();

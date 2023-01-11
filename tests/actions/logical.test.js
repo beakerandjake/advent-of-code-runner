@@ -1,7 +1,7 @@
 import {
   describe, jest, test, afterEach,
 } from '@jest/globals';
-import { or, not, and } from '../../src/actions/links/logical.js';
+import { or, not, and } from '../../src/actions/logical.js';
 
 describe('actions', () => {
   describe('links', () => {

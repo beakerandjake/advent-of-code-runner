@@ -9,7 +9,7 @@ jest.unstable_mockModule('src/api/index.js', () => ({ submitSolution: jest.fn() 
 
 // import after mocks set up
 const { submitSolution } = await import('../../src/api/index.js');
-const { submitPuzzleAnswer } = await import('../../src/actions/links/submitPuzzleAnswer.js');
+const { submitPuzzleAnswer } = await import('../../src/actions/submitPuzzleAnswer.js');
 
 afterEach(() => {
   jest.resetAllMocks();

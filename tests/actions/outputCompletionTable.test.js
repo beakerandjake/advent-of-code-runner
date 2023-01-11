@@ -31,7 +31,7 @@ const {
   mapAttemptColumns,
   mapRuntimeColumn,
   getSolvedMessage,
-} = await import('../../src/actions/links/outputCompletionTable.js');
+} = await import('../../src/actions/outputCompletionTable.js');
 
 describe('actions', () => {
   describe('links', () => {

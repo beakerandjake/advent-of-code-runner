@@ -9,7 +9,7 @@ jest.unstable_mockModule('terminal-link', () => ({ default: jest.fn() }));
 jest.unstable_mockModule('src/api/urls.js', () => ({ puzzleBaseUrl: jest.fn() }));
 
 // import after setting up mocks
-const { outputPuzzleLink } = await import('../../src/actions/links/outputPuzzleLink.js');
+const { outputPuzzleLink } = await import('../../src/actions/outputPuzzleLink.js');
 
 afterEach(() => {
   jest.resetAllMocks();
