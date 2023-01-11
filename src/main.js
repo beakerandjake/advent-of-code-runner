@@ -11,7 +11,7 @@ import {
   submitCommand,
   exitOverride,
 } from './cli/index.js';
-import { statsCommand } from './cli/commands.js';
+import { statsCommand } from './cli/commands/index.js';
 
 const program = new Command();
 
