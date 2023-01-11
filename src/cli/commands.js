@@ -1,9 +1,7 @@
 import { Command } from 'commander';
-import { printFestiveTitle } from '../festive.js';
 import {
   autoSolve,
   autoSubmit,
-  initialize,
   solve,
   submit,
 } from '../actions/index.js';
@@ -44,12 +42,3 @@ export const autoSubmitCommand = new Command()
   .name('autosubmit')
   .description('Find the next unsolved puzzle, execute it, then submit the answer to advent of code.')
   .action(autoSubmit);
-
-/**
- * Command to initialize the users repository so it can run our cli.
- */
-export const initializeCommand = new Command()
-  .name('init')
-  .hook('preAction', printFestiveTitle)
-  .description('Initialize a directory so advent-of-code-runner can run solutions.')
-  .action(initialize);

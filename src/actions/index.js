@@ -1,6 +1,5 @@
 import { autoSolve } from './autoSolve.js';
 import { autoSubmit } from './autoSubmit.js';
-import { initialize } from './initialize.js';
 import { solve } from './solve.js';
 import { submit } from './submit.js';
 
@@ -11,7 +10,6 @@ import { submit } from './submit.js';
 export {
   autoSolve,
   autoSubmit,
-  initialize,
   solve,
   submit,
 };
