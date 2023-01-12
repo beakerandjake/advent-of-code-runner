@@ -55,11 +55,11 @@ export const puzzleHasBeenSolved = async (year, day, level) => {
  * Returns null if the puzzle has not been solved yet.
  * @param {Number} year
  * @param {Number} day
- * @param {Number} part
+ * @param {Number} level
  * @returns {Promise<String>}
  */
-export const getCorrectAnswer = async (year, day, part) => {
-  const { correctAnswer = null } = await findPuzzle(year, day, part) || {};
+export const getCorrectAnswer = async (year, day, level) => {
+  const { correctAnswer = null } = await findPuzzle(year, day, level) || {};
   return correctAnswer;
 };
 
