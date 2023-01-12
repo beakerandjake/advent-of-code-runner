@@ -6,7 +6,7 @@ import { getPuzzlesFastestRuntime, setPuzzlesFastestRuntime } from '../statistic
  * If the latest time is faster that the stored, the new value will be stored.
  */
 export const tryToUpdateFastestExecutionTime = async ({
-  year, day, part, executionTimeNs,
+  year, day, level, executionTimeNs,
 } = {}) => {
   if (executionTimeNs == null) {
     throw new Error('null or undefined execution time');
@@ -16,7 +16,7 @@ export const tryToUpdateFastestExecutionTime = async ({
     throw new RangeError('execution time cannot be negative');
   }
 
-  const fastestExecutionTime = await getPuzzlesFastestRuntime(year, day, part);
+  const fastestExecutionTime = await getPuzzlesFastestRuntime(year, day, level);
 
   if (fastestExecutionTime != null && executionTimeNs >= fastestExecutionTime) {
     logger.verbose('not setting fastest execution time, %s is slower than record: %s', executionTimeNs, fastestExecutionTime);
@@ -24,5 +24,5 @@ export const tryToUpdateFastestExecutionTime = async ({
   }
 
   logger.festive('That\'s your fastest execution time ever for this puzzle!');
-  await setPuzzlesFastestRuntime(year, day, part, executionTimeNs);
+  await setPuzzlesFastestRuntime(year, day, level, executionTimeNs);
 };
