@@ -129,7 +129,7 @@ export const getNextUnansweredPuzzle = async (year) => {
   const allPuzzles = getAllPuzzlesForYear(year);
   const answeredPuzzles = (await getPuzzles()).filter((x) => !!x.correctAnswer);
   const toReturn = allPuzzles.find((x) => !answeredPuzzles.some(
-    (puzzle) => puzzle.year === x.year && puzzle.day === x.day && puzzle.part === x.level,
+    (puzzle) => puzzle.year === x.year && puzzle.day === x.day && puzzle.level === x.level,
   ));
   return toReturn ? { day: toReturn.day, level: toReturn.level } : null;
 };
@@ -150,7 +150,7 @@ export const requiredLevelsHaveBeenSolved = async (year, day, level) => {
   // get all levels for this day that the user has solved.
   const solvedParts = (await getPuzzles())
     .filter((x) => x.year === year && x.day === day && !!x.correctAnswer)
-    .map((x) => x.part);
+    .map((x) => x.level);
   // check every required level has been solved
   return requiredParts.every((required) => solvedParts.includes(required));
 };

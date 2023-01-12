@@ -301,7 +301,7 @@ describe('answers', () => {
         { year, day: 4, level: 1 },
       ];
       getAllPuzzlesForYear.mockReturnValueOnce(puzzlesForYear);
-      getPuzzles.mockReturnValueOnce(puzzlesForYear.map((x) => ({ ...x, part: x.level, correctAnswer: '1234' })));
+      getPuzzles.mockReturnValueOnce(puzzlesForYear.map((x) => ({ ...x, correctAnswer: '1234' })));
       expect(await getNextUnansweredPuzzle(year)).toStrictEqual(null);
     });
 
@@ -321,25 +321,25 @@ describe('answers', () => {
       ]);
       getPuzzles.mockReturnValueOnce([
         {
-          year, day: 1, part: 1, correctAnswer: 'asdf',
+          year, day: 1, level: 1, correctAnswer: 'asdf',
         },
         {
-          year, day: 1, part: 2, correctAnswer: 'asdf',
+          year, day: 1, level: 2, correctAnswer: 'asdf',
         },
         {
-          year, day: 2, part: 1, correctAnswer: 'asdf',
+          year, day: 2, level: 1, correctAnswer: 'asdf',
         },
         {
-          year, day: 2, part: 2, correctAnswer: 'asdf',
+          year, day: 2, level: 2, correctAnswer: 'asdf',
         },
         {
-          year, day: 3, part: 1, correctAnswer: 'asdf',
+          year, day: 3, level: 1, correctAnswer: 'asdf',
         },
         {
-          year, day: 3, part: 2, correctAnswer: 'asdf',
+          year, day: 3, level: 2, correctAnswer: 'asdf',
         },
         {
-          year, day: 4, part: 1, correctAnswer: 'asdf',
+          year, day: 4, level: 1, correctAnswer: 'asdf',
         },
       ]);
       expect(await getNextUnansweredPuzzle(year)).toStrictEqual({ day: 4, level: 2 });
@@ -357,19 +357,19 @@ describe('answers', () => {
       ]);
       getPuzzles.mockReturnValueOnce([
         {
-          year, day: 1, part: 1, correctAnswer: 'asdf',
+          year, day: 1, level: 1, correctAnswer: 'asdf',
         },
         {
-          year, day: 1, part: 2, correctAnswer: 'asdf',
+          year, day: 1, level: 2, correctAnswer: 'asdf',
         },
         {
-          year, day: 2, part: 1, correctAnswer: 'asdf',
+          year, day: 2, level: 1, correctAnswer: 'asdf',
         },
         {
-          year, day: 2, part: 2, correctAnswer: 'asdf',
+          year, day: 2, level: 2, correctAnswer: 'asdf',
         },
         {
-          year, day: 3, part: 2, correctAnswer: 'asdf',
+          year, day: 3, level: 2, correctAnswer: 'asdf',
         },
       ]);
       expect(await getNextUnansweredPuzzle(year)).toStrictEqual({ day: 3, level: 1 });
@@ -377,24 +377,24 @@ describe('answers', () => {
   });
 
   describe('requiredLevelsHaveBeenSolved()', () => {
-    test('returns true on part 1', async () => {
+    test('returns true on level 1', async () => {
       const result = await requiredLevelsHaveBeenSolved(2022, 1, 1);
       expect(result).toBe(true);
     });
 
-    test('returns true when required parts solved', async () => {
+    test('returns true when required levels solved', async () => {
       const year = 2022;
       const day = 1;
       const level = 4;
       getPuzzles.mockReturnValue([
         {
-          year, day, part: 1, correctAnswer: 'ASDF',
+          year, day, level: 1, correctAnswer: 'ASDF',
         },
         {
-          year, day, part: 2, correctAnswer: 'QWER',
+          year, day, level: 2, correctAnswer: 'QWER',
         },
         {
-          year, day, part: 3, correctAnswer: 1234,
+          year, day, level: 3, correctAnswer: 1234,
         },
       ]);
       const result = await requiredLevelsHaveBeenSolved(year, day, level);
@@ -407,13 +407,13 @@ describe('answers', () => {
       const level = 3;
       getPuzzles.mockReturnValue([
         {
-          year, day, part: 1, correctAnswer: 'ASDF',
+          year, day, level: 1, correctAnswer: 'ASDF',
         },
         {
-          year, day, part: 2, correctAnswer: 'QWER',
+          year, day, level: 2, correctAnswer: 'QWER',
         },
         {
-          year, day, part: 3, correctAnswer: 1234,
+          year, day, level: 3, correctAnswer: 1234,
         },
       ]);
       const result = await requiredLevelsHaveBeenSolved(year, day, level);
@@ -426,13 +426,13 @@ describe('answers', () => {
       const level = 2;
       getPuzzles.mockReturnValue([
         {
-          year, day, part: 1, correctAnswer: null,
+          year, day, level: 1, correctAnswer: null,
         },
         {
-          year, day, part: 2, correctAnswer: null,
+          year, day, level: 2, correctAnswer: null,
         },
         {
-          year, day, part: 3, correctAnswer: null,
+          year, day, level: 3, correctAnswer: null,
         },
       ]);
       const result = await requiredLevelsHaveBeenSolved(year, day, level);
@@ -445,13 +445,13 @@ describe('answers', () => {
       const level = 4;
       getPuzzles.mockReturnValue([
         {
-          year, day, part: 1, correctAnswer: 'ASDF',
+          year, day, level: 1, correctAnswer: 'ASDF',
         },
         {
-          year, day, part: 2, correctAnswer: 'ASDF',
+          year, day, level: 2, correctAnswer: 'ASDF',
         },
         {
-          year, day, part: 3, correctAnswer: null,
+          year, day, level: 3, correctAnswer: null,
         },
       ]);
       const result = await requiredLevelsHaveBeenSolved(year, day, level);
@@ -464,13 +464,13 @@ describe('answers', () => {
       const level = 4;
       getPuzzles.mockReturnValue([
         {
-          year, day, part: 1, correctAnswer: 'ASDF',
+          year, day, level: 1, correctAnswer: 'ASDF',
         },
         {
-          year, day, part: 2, correctAnswer: null,
+          year, day, level: 2, correctAnswer: null,
         },
         {
-          year, day, part: 3, correctAnswer: null,
+          year, day, level: 3, correctAnswer: null,
         },
       ]);
       const result = await requiredLevelsHaveBeenSolved(year, day, level);
