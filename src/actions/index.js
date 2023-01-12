@@ -17,7 +17,7 @@ import { outputPuzzleLink } from './outputPuzzleLink.js';
 import { storeFastestRuntime } from './storeFastestRuntime.js';
 import { storeSubmittedAnswer } from './storeSubmittedAnswer.js';
 import { submitPuzzleAnswer } from './submitPuzzleAnswer.js';
-import { tryToUpdateFastestExecutionTime } from './tryToUpdateFastestExecutionTime.js';
+import { tryToUpdateFastestRuntime } from './tryToUpdateFastestRuntime.js';
 
 /**
  * barrel for "link" functions which are used to compose action chains.
@@ -40,7 +40,7 @@ export {
   storeFastestRuntime,
   storeSubmittedAnswer,
   submitPuzzleAnswer,
-  tryToUpdateFastestExecutionTime,
+  tryToUpdateFastestRuntime,
   or,
   not,
   and,

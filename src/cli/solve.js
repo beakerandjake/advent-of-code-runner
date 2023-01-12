@@ -15,7 +15,7 @@ export const solveLinks = [
   links.getPuzzleInput,
   links.executeUserSolution,
   links.assertAnswerCorrect,
-  links.tryToUpdateFastestExecutionTime,
+  links.tryToUpdateFastestRuntime,
 ];
 
 /**
