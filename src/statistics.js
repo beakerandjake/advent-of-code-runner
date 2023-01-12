@@ -101,10 +101,10 @@ export const getPuzzleCompletionData = async (year) => {
   return puzzles
     .sort((a, b) => a.id.localeCompare(b.id))
     .map(({
-      day, part, correctAnswer, fastestExecutionTimeNs, incorrectAnswers,
+      day, level, correctAnswer, fastestExecutionTimeNs, incorrectAnswers,
     }) => ({
       day,
-      level: part,
+      level,
       solved: !!correctAnswer,
       executionTimeNs: correctAnswer ? fastestExecutionTimeNs : null,
       numberOfAttempts: correctAnswer ? incorrectAnswers.length + 1 : incorrectAnswers.length,

@@ -282,11 +282,11 @@ describe('statistics', () => {
   });
 
   describe('getPuzzleCompletionData()', () => {
-    const mockPuzzle = (year, day, part, correctAnswer = '', incorrectAnswers = [], fastestExecutionTimeNs = null) => ({
-      id: `${year}${day}${part}`,
+    const mockPuzzle = (year, day, level, correctAnswer = '', incorrectAnswers = [], fastestExecutionTimeNs = null) => ({
+      id: `${year}${day}${level}`,
       year,
       day,
-      part,
+      level,
       correctAnswer,
       incorrectAnswers,
       fastestExecutionTimeNs,
@@ -387,8 +387,8 @@ describe('statistics', () => {
         mockPuzzle(year, 2, 2),
         mockPuzzle(year, 1, 1),
       ];
-      const expected = input.reverse().map(({ day, part }) => ({
-        day, level: part, solved: false, executionTimeNs: null, numberOfAttempts: 0,
+      const expected = input.reverse().map(({ day, level }) => ({
+        day, level, solved: false, executionTimeNs: null, numberOfAttempts: 0,
       }));
       getPuzzlesForYear.mockResolvedValue(input);
       const result = await getPuzzleCompletionData(year);
