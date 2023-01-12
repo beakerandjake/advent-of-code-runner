@@ -41,7 +41,7 @@ const levelRange = betweenMessage(getConfigValue('aoc.validation.levels'));
  * Argument for the puzzles level, returns an integer.
  * @throws {InvalidArgumentError} The level was invalid
  */
-export const partArgument = new Argument('<level>', `The the level of the puzzle to solve (${levelRange}).`)
+export const levelArgument = new Argument('<level>', `The the level of the puzzle to solve (${levelRange}).`)
   .argParser((value) => parseArgument(
     value,
     partIsValid,

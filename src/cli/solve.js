@@ -1,7 +1,7 @@
 import { Command } from 'commander';
 import { createChain } from '../actions/actionChain.js';
 import * as links from '../actions/index.js';
-import { dayArgument, partArgument } from './arguments.js';
+import { dayArgument, levelArgument } from './arguments.js';
 
 /**
  * The links which together make up the solve action.
@@ -37,5 +37,5 @@ export const solveCommand = new Command()
   .name('solve')
   .description('Solve the puzzle, benchmark the execution time, and output the result.')
   .addArgument(dayArgument)
-  .addArgument(partArgument)
+  .addArgument(levelArgument)
   .action(solve);
