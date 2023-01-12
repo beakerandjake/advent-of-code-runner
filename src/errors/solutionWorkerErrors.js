@@ -1,3 +1,5 @@
+import { pathToFileURL } from 'url';
+
 /**
  * Error raised if the Solution Worker thread exits without posting an answer message.
  */
@@ -32,8 +34,11 @@ export class SolutionWorkerMissingDataError extends Error {
  * Error raised if users solution returns an answer of the wrong type.
  */
 export class UserSolutionAnswerInvalidError extends Error {
-  constructor(answerType, ...args) {
-    super(`Unsupported answer type, answer must be a string or number. You provided: "${answerType}".`, ...args);
+  constructor(answerType, fileName, functionName, ...args) {
+    super([
+      `Your code returned an invalid answer of type: "${answerType}". Answer must be a string or a number.`,
+      `at ${functionName} (${pathToFileURL(fileName)})`,
+    ].join('\n    '), ...args);
     this.name = 'UserSolutionAnswerInvalidError';
   }
 }
