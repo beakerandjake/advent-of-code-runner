@@ -26,9 +26,9 @@ describe('executeUserSolution()', () => {
 
   test('returns results', async () => {
     const args = { day: 1, level: 1, input: 'ASDF' };
-    const executionResult = { answer: '1234', executionTimeNs: 1234 };
-    mockExecuter.mockResolvedValue(executionResult);
+    const expected = { answer: '1234', executionTimeNs: 1234 };
+    mockExecuter.mockResolvedValue(expected);
     const result = await executeUserSolution(args);
-    expect(result).toEqual(executionResult);
+    expect(result).toEqual({ answer: expected.answer, runtimeNs: expected.executionTimeNs });
   });
 });
