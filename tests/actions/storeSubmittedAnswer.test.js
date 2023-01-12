@@ -14,52 +14,48 @@ jest.unstable_mockModule('src/answers.js', () => ({
 const { addIncorrectAnswer, setCorrectAnswer } = await import('../../src/answers.js');
 const { storeSubmittedAnswer } = await import('../../src/actions/storeSubmittedAnswer.js');
 
-afterEach(() => {
-  jest.resetAllMocks();
-});
+describe('storeSubmittedAnswer()', () => {
+  afterEach(() => {
+    jest.resetAllMocks();
+  });
 
-describe('actions', () => {
-  describe('links', () => {
-    describe('storeSubmittedAnswer()', () => {
-      test.each([
-        null, undefined,
-      ])('throws if answer is %s', async (answer) => {
-        await expect(async () => storeSubmittedAnswer({
-          year: 2022, day: 1, part: 1, answer, submissionResult: { success: true },
-        })).rejects.toThrow();
-      });
+  test.each([
+    null, undefined,
+  ])('throws if answer is %s', async (answer) => {
+    await expect(async () => storeSubmittedAnswer({
+      year: 2022, day: 1, level: 1, answer, submissionResult: { success: true },
+    })).rejects.toThrow();
+  });
 
-      test.each([
-        null, undefined,
-      ])('throws if submissionResult is %s', async (submissionResult) => {
-        await expect(async () => storeSubmittedAnswer({
-          year: 2022, day: 1, part: 1, answer: 'SADF', submissionResult,
-        })).rejects.toThrow();
-      });
+  test.each([
+    null, undefined,
+  ])('throws if submissionResult is %s', async (submissionResult) => {
+    await expect(async () => storeSubmittedAnswer({
+      year: 2022, day: 1, level: 1, answer: 'SADF', submissionResult,
+    })).rejects.toThrow();
+  });
 
-      test.each([
-        null, undefined,
-      ])('throws if submissionResult.correct is %s', async (correct) => {
-        await expect(async () => storeSubmittedAnswer({
-          year: 2022, day: 1, part: 1, answer: 'SADF', submissionResult: { correct },
-        })).rejects.toThrow();
-      });
+  test.each([
+    null, undefined,
+  ])('throws if submissionResult.correct is %s', async (correct) => {
+    await expect(async () => storeSubmittedAnswer({
+      year: 2022, day: 1, level: 1, answer: 'SADF', submissionResult: { correct },
+    })).rejects.toThrow();
+  });
 
-      test('sets correct answer if submission was correct', async () => {
-        await storeSubmittedAnswer({
-          year: 2022, day: 1, part: 1, answer: 'ASDF', submissionResult: { correct: true },
-        });
-        expect(setCorrectAnswer).toHaveBeenCalled();
-        expect(addIncorrectAnswer).not.toHaveBeenCalled();
-      });
-
-      test('adds incorrect answer if submission was not correct', async () => {
-        await storeSubmittedAnswer({
-          year: 2022, day: 1, part: 1, answer: 'ASDF', submissionResult: { correct: false },
-        });
-        expect(setCorrectAnswer).not.toHaveBeenCalled();
-        expect(addIncorrectAnswer).toHaveBeenCalled();
-      });
+  test('sets correct answer if submission was correct', async () => {
+    await storeSubmittedAnswer({
+      year: 2022, day: 1, level: 1, answer: 'ASDF', submissionResult: { correct: true },
     });
+    expect(setCorrectAnswer).toHaveBeenCalled();
+    expect(addIncorrectAnswer).not.toHaveBeenCalled();
+  });
+
+  test('adds incorrect answer if submission was not correct', async () => {
+    await storeSubmittedAnswer({
+      year: 2022, day: 1, part: 1, answer: 'ASDF', submissionResult: { correct: false },
+    });
+    expect(setCorrectAnswer).not.toHaveBeenCalled();
+    expect(addIncorrectAnswer).toHaveBeenCalled();
   });
 });
