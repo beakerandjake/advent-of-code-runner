@@ -34,7 +34,7 @@ export const getSolutionFileName = (day) => join(getConfigValue('paths.solutions
  * @param {Number} part
  */
 export const getFunctionNameForPart = (part) => {
-  const functionName = getConfigValue('solutionRunner.partFunctions').find((x) => x.key === part)?.name;
+  const functionName = getConfigValue('solutionRunner.levelFunctions').find((x) => x.key === part)?.name;
 
   if (!functionName) {
     throw new Error(`Unknown solution part: ${part}`);

@@ -126,9 +126,9 @@ const CONFIG = {
     },
   },
   solutionRunner: {
-    partFunctions: [
-      { key: 1, name: 'partOne' },
-      { key: 2, name: 'partTwo' },
+    levelFunctions: [
+      { key: 1, name: 'levelOne' },
+      { key: 2, name: 'levelTwo' },
     ],
     cancelMessageDelayMs: 3000,
   },
