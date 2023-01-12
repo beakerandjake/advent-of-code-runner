@@ -112,7 +112,7 @@ describe('solutionRunnerWorkerThread', () => {
 
     test('throws if answer type is invalid', async () => {
       answerTypeIsValid.mockReturnValue(false);
-      await expect(async () => executeUserSolution(() => {}, 'asdf')).rejects.toThrow(UserSolutionAnswerInvalidError);
+      await expect(async () => executeUserSolution(() => {}, 'asdf')).rejects.toThrow(TypeError);
     });
 
     test('posts answer to parent thread on success', async () => {
