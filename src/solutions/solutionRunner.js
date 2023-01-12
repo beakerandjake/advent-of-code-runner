@@ -29,15 +29,15 @@ import { workerMessageTypes } from './workerMessageTypes.js';
 export const getSolutionFileName = (day) => join(getConfigValue('paths.solutionsDir'), `day_${day.toString().padStart(2, '0')}.js`);
 
 /**
- * Returns the name of the function to execute for the puzzles part.
+ * Returns the name of the function to execute for level.
  * @private
- * @param {Number} part
+ * @param {Number} level
  */
-export const getFunctionNameForPart = (part) => {
-  const functionName = getConfigValue('solutionRunner.levelFunctions').find((x) => x.key === part)?.name;
+export const getFunctionNameForLevel = (level) => {
+  const functionName = getConfigValue('solutionRunner.levelFunctions').find((x) => x.key === level)?.name;
 
   if (!functionName) {
-    throw new Error(`Unknown solution part: ${part}`);
+    throw new Error(`Unknown solution level: ${level}`);
   }
 
   return functionName;
@@ -103,7 +103,7 @@ export const execute = async (day, part, input) => {
   // grab values which could fail before spawning the worker thread.
   // makes debugging the worker easier, reduces the amount of things that can fail
   const solutionFileName = getSolutionFileName(day);
-  const functionToExecute = getFunctionNameForPart(part);
+  const functionToExecute = getFunctionNameForLevel(part);
   const workerThreadFileName = getConfigValue('paths.solutionRunnerWorkerFile');
 
   // ensure the user actually has the file we're trying to execute.

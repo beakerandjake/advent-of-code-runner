@@ -27,7 +27,7 @@ const { Worker } = await import('node:worker_threads');
 const { join } = await import('path');
 const { pathExists } = await import('fs-extra/esm');
 const {
-  execute, getSolutionFileName, getFunctionNameForPart, spawnWorker,
+  execute, getSolutionFileName, getFunctionNameForLevel, spawnWorker,
 } = await import('../../src/solutions/solutionRunner.js');
 
 describe('solutionRunner', () => {
@@ -56,7 +56,7 @@ describe('solutionRunner', () => {
     });
   });
 
-  describe('getFunctionNameForPart()', () => {
+  describe('getFunctionNameForLevel()', () => {
     test('returns value if level is found', () => {
       const level = 10;
       const name = 'CATS';
@@ -68,7 +68,7 @@ describe('solutionRunner', () => {
         { key: level, name },
       ]);
 
-      const result = getFunctionNameForPart(level);
+      const result = getFunctionNameForLevel(level);
 
       expect(result).toBe(name);
     });
@@ -82,7 +82,7 @@ describe('solutionRunner', () => {
         { key: 55, name: 'ASDF' },
       ]);
 
-      expect(() => getFunctionNameForPart(10)).toThrow();
+      expect(() => getFunctionNameForLevel(10)).toThrow();
     });
   });
 
