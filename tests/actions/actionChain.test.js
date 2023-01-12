@@ -9,11 +9,11 @@ mockLogger();
 // import after mocks setup
 const { createChain, executeChain } = await import('../../src/actions/actionChain.js');
 
-afterEach(() => {
-  jest.resetAllMocks();
-});
-
 describe('actionChain', () => {
+  afterEach(() => {
+    jest.resetAllMocks();
+  });
+
   describe('createChain()', () => {
     test.each([
       null, true, Promise.resolve(false), 'ASDF', { cats: true }, 1234,

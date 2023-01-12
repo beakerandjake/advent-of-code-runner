@@ -1,5 +1,5 @@
 import {
-  describe, jest, test, beforeEach,
+  describe, jest, test, afterEach,
 } from '@jest/globals';
 import { mockLogger } from '../mocks';
 
@@ -16,7 +16,7 @@ const { getPuzzlesFastestRuntime, setPuzzlesFastestRuntime } = await import('../
 const { tryToUpdateFastestExecutionTime } = await import('../../src/actions/tryToUpdateFastestExecutionTime.js');
 
 describe('tryToUpdateFastestExecutionTime()', () => {
-  beforeEach(() => {
+  afterEach(() => {
     jest.resetAllMocks();
   });
 

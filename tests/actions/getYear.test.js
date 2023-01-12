@@ -13,26 +13,22 @@ const { getValue } = await import('../../src/persistence/userDataFile.js');
 const { yearIsValid } = await import('../../src/validation/index.js');
 const { getYear } = await import('../../src/actions/getYear.js');
 
-afterEach(() => {
-  jest.resetAllMocks();
-});
+describe('getYear()', () => {
+  afterEach(() => {
+    jest.resetAllMocks();
+  });
 
-describe('actions', () => {
-  describe('links', () => {
-    describe('getYear()', () => {
-      test('throws if not valid', async () => {
-        getValue.mockReturnValue(1988);
-        yearIsValid.mockReturnValue(false);
-        await expect(async () => getYear()).rejects.toThrow(RangeError);
-      });
+  test('throws if not valid', async () => {
+    getValue.mockReturnValue(1988);
+    yearIsValid.mockReturnValue(false);
+    await expect(async () => getYear()).rejects.toThrow(RangeError);
+  });
 
-      test('returns year', async () => {
-        const year = 2022;
-        getValue.mockReturnValue(year);
-        yearIsValid.mockReturnValue(true);
-        const result = await getYear();
-        expect(result).toEqual({ year });
-      });
-    });
+  test('returns year', async () => {
+    const year = 2022;
+    getValue.mockReturnValue(year);
+    yearIsValid.mockReturnValue(true);
+    const result = await getYear();
+    expect(result).toEqual({ year });
   });
 });

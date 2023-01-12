@@ -11,24 +11,20 @@ jest.unstable_mockModule('src/persistence/userDataFile.js', () => ({ userDataFil
 const { userDataFileExists } = await import('../../src/persistence/userDataFile.js');
 const { assertInitialized } = await import('../../src/actions/assertInitialized.js');
 
-afterEach(() => {
-  jest.resetAllMocks();
-});
+describe('assertInitialized()', () => {
+  afterEach(() => {
+    jest.resetAllMocks();
+  });
 
-describe('actions', () => {
-  describe('links', () => {
-    describe('assertInitialized()', () => {
-      test('returns true if data store file exists', async () => {
-        userDataFileExists.mockResolvedValue(true);
-        const result = await assertInitialized();
-        expect(result).toBe(true);
-      });
+  test('returns true if data store file exists', async () => {
+    userDataFileExists.mockResolvedValue(true);
+    const result = await assertInitialized();
+    expect(result).toBe(true);
+  });
 
-      test('returns false if data store file does not exist', async () => {
-        userDataFileExists.mockResolvedValue(false);
-        const result = await assertInitialized();
-        expect(result).toBe(false);
-      });
-    });
+  test('returns false if data store file does not exist', async () => {
+    userDataFileExists.mockResolvedValue(false);
+    const result = await assertInitialized();
+    expect(result).toBe(false);
   });
 });
