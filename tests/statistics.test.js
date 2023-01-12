@@ -403,7 +403,7 @@ describe('statistics', () => {
   //       switch (key) {
   //         case 'aoc.validation.days':
   //           return Array(days).fill(0);
-  //         case 'aoc.validation.parts':
+  //         case 'aoc.validation.levels':
   //           return Array(parts).fill(0);
   //         default:
   //           return undefined;

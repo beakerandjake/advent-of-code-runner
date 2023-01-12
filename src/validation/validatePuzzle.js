@@ -22,7 +22,7 @@ export const puzzleIsInFuture = (year, day) => {
  */
 export const getAllPuzzlesForYear = (year) => {
   const days = getConfigValue('aoc.validation.days');
-  const parts = getConfigValue('aoc.validation.parts');
+  const parts = getConfigValue('aoc.validation.levels');
   return days.reduce((acc, day) => [...acc, ...parts.map((part) => ({ year, day, part }))], []);
 };
 
@@ -31,6 +31,6 @@ export const getAllPuzzlesForYear = (year) => {
  */
 export const getTotalPuzzleCount = () => {
   const days = getConfigValue('aoc.validation.days');
-  const parts = getConfigValue('aoc.validation.parts');
+  const parts = getConfigValue('aoc.validation.levels');
   return days.length * parts.length;
 };

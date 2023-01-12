@@ -16,4 +16,4 @@ export const dayIsValid = (day) => getConfigValue('aoc.validation.days').include
  * Is the part of the puzzle a valid value?
  * @param {Number} part
  */
-export const partIsValid = (part) => getConfigValue('aoc.validation.parts').includes(part);
+export const partIsValid = (part) => getConfigValue('aoc.validation.levels').includes(part);

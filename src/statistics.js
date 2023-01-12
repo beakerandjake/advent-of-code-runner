@@ -120,7 +120,7 @@ export const summarizeCompletionData = (completionData = []) => {
     throw new TypeError('expected completion data to be an array');
   }
 
-  const totalPuzzles = getConfigValue('aoc.validation.days').length * getConfigValue('aoc.validation.parts').length;
+  const totalPuzzles = getConfigValue('aoc.validation.days').length * getConfigValue('aoc.validation.levels').length;
 
   if (totalPuzzles <= 0) {
     throw new RangeError('expected total puzzles to be a positive number');

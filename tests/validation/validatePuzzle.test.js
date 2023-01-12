@@ -114,7 +114,7 @@ describe('validatePuzzle', () => {
         if (key === 'aoc.validation.days') {
           return days;
         }
-        if (key === 'aoc.validation.parts') {
+        if (key === 'aoc.validation.levels') {
           return parts;
         }
         throw new Error('unexpected getConfigValue call in test');
