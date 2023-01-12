@@ -5,7 +5,7 @@ import { logger } from '../logger.js';
 /**
  * Outputs a clickable url to the terminal which links to the advent of code puzzle.
  */
-export const outputPuzzleLink = ({ year, day, part } = {}) => {
+export const outputPuzzleLink = ({ year, day, level } = {}) => {
   if (year == null) {
     throw new Error('null or undefined year');
   }
@@ -14,8 +14,8 @@ export const outputPuzzleLink = ({ year, day, part } = {}) => {
     throw new Error('null or undefined day');
   }
 
-  if (part == null) {
-    throw new Error('null or undefined part');
+  if (level == null) {
+    throw new Error('null or undefined level');
   }
 
   const clickableLink = terminalLink(
@@ -23,5 +23,5 @@ export const outputPuzzleLink = ({ year, day, part } = {}) => {
     puzzleBaseUrl(year, day),
   );
 
-  logger.festive(`${clickableLink} (Year: ${year} Day: ${day} Level: ${part}) `);
+  logger.festive(`${clickableLink} (Year: ${year} Day: ${day} Level: ${level}) `);
 };
