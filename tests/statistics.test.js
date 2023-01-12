@@ -1,11 +1,10 @@
 import {
   describe, jest, test, afterEach,
 } from '@jest/globals';
-import { mockLogger, mockConfig } from './mocks.js';
+import { mockLogger } from './mocks.js';
 
 // setup mocks.
 mockLogger();
-const { getConfigValue } = mockConfig();
 
 jest.unstable_mockModule('src/persistence/puzzleRepository.js', () => ({
   findPuzzle: jest.fn(),

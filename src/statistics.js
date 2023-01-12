@@ -3,7 +3,6 @@ import {
 } from './persistence/puzzleRepository.js';
 import { parsePositiveInt } from './validation/validationUtils.js';
 import { logger } from './logger.js';
-import { getConfigValue } from './config.js';
 import { average } from './util.js';
 
 /**
