@@ -67,13 +67,13 @@ export const getCorrectAnswer = async (year, day, level) => {
  * Stores the correct answer for this puzzle.
  * @param {Number} year
  * @param {Number} day
- * @param {Number} part
+ * @param {Number} level
  * @param {String} correctAnswer
  */
-export const setCorrectAnswer = async (year, day, part, correctAnswer) => {
-  logger.debug('saving correct answer: "%s"', correctAnswer, { year, day, part });
+export const setCorrectAnswer = async (year, day, level, correctAnswer) => {
+  logger.debug('saving correct answer: "%s"', correctAnswer, { year, day, part: level });
   const parsedAnswer = parseAnswer(correctAnswer);
-  const puzzle = await findPuzzle(year, day, part) || createPuzzle(year, day, part);
+  const puzzle = await findPuzzle(year, day, level) || createPuzzle(year, day, level);
   const updatedPuzzle = { ...puzzle, correctAnswer: parsedAnswer };
   await addOrEditPuzzle(updatedPuzzle);
 };
