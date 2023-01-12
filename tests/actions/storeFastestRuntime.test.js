@@ -18,15 +18,15 @@ describe('storeFastestRuntime()', () => {
 
   test.each([
     null, undefined,
-  ])('throws if execution time is: %s', async (executionTimeNs) => {
+  ])('throws if runtime is: %s', async (runtimeNs) => {
     await expect(async () => storeFastestRuntime({
-      year: 2022, day: 1, level: 1, executionTimeNs,
+      year: 2022, day: 1, level: 1, runtimeNs,
     })).rejects.toThrow();
   });
 
   test('sets value', async () => {
     await storeFastestRuntime({
-      year: 2022, day: 1, level: 1, executionTimeNs: 1234,
+      year: 2022, day: 1, level: 1, runtimeNs: 1234,
     });
     expect(setPuzzlesFastestRuntime).toHaveBeenCalled();
   });
