@@ -289,7 +289,7 @@ describe('answers', () => {
       ];
       getAllPuzzlesForYear.mockReturnValueOnce(puzzlesForYear);
       getPuzzles.mockReturnValueOnce([]);
-      expect(await getNextUnansweredPuzzle(year)).toStrictEqual({ day: 1, part: 1 });
+      expect(await getNextUnansweredPuzzle(year)).toStrictEqual({ day: 1, level: 1 });
     });
 
     test('returns null if all answered', async () => {
@@ -342,7 +342,7 @@ describe('answers', () => {
           year, day: 4, part: 1, correctAnswer: 'asdf',
         },
       ]);
-      expect(await getNextUnansweredPuzzle(year)).toStrictEqual({ day: 4, part: 2 });
+      expect(await getNextUnansweredPuzzle(year)).toStrictEqual({ day: 4, level: 2 });
     });
 
     test('returns next (gaps)', async () => {
@@ -372,7 +372,7 @@ describe('answers', () => {
           year, day: 3, part: 2, correctAnswer: 'asdf',
         },
       ]);
-      expect(await getNextUnansweredPuzzle(year)).toStrictEqual({ day: 3, part: 1 });
+      expect(await getNextUnansweredPuzzle(year)).toStrictEqual({ day: 3, level: 1 });
     });
   });
 

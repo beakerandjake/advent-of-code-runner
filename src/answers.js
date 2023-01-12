@@ -71,7 +71,7 @@ export const getCorrectAnswer = async (year, day, level) => {
  * @param {String} correctAnswer
  */
 export const setCorrectAnswer = async (year, day, level, correctAnswer) => {
-  logger.debug('saving correct answer: "%s"', correctAnswer, { year, day, part: level });
+  logger.debug('saving correct answer: "%s"', correctAnswer, { year, day, level });
   const parsedAnswer = parseAnswer(correctAnswer);
   const puzzle = await findPuzzle(year, day, level) || createPuzzle(year, day, level);
   const updatedPuzzle = { ...puzzle, correctAnswer: parsedAnswer };
@@ -131,7 +131,7 @@ export const getNextUnansweredPuzzle = async (year) => {
   const toReturn = allPuzzles.find((x) => !answeredPuzzles.some(
     (puzzle) => puzzle.year === x.year && puzzle.day === x.day && puzzle.part === x.level,
   ));
-  return toReturn ? { day: toReturn.day, part: toReturn.level } : null;
+  return toReturn ? { day: toReturn.day, level: toReturn.level } : null;
 };
 
 /**

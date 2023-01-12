@@ -23,9 +23,9 @@ describe('getNextUnsolvedPuzzle()', () => {
   });
 
   test('returns next unanswered puzzle', async () => {
-    const expected = { day: 1, part: 20 };
+    const expected = { day: 1, level: 20 };
     getNextUnansweredPuzzle.mockResolvedValue(expected);
     const result = await getNextUnsolvedPuzzle({ year: 2022 });
-    expect(result).toEqual({ day: expected.day, level: expected.part });
+    expect(result).toEqual(expected);
   });
 });
