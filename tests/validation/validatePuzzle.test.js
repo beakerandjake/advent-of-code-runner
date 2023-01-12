@@ -85,21 +85,21 @@ describe('validatePuzzle', () => {
       getConfigValue.mockReturnValueOnce([1, 2, 3, 4, 5]);
       getConfigValue.mockReturnValueOnce([1, 2, 3]);
       const expected = [
-        { year, day: 1, part: 1 },
-        { year, day: 1, part: 2 },
-        { year, day: 1, part: 3 },
-        { year, day: 2, part: 1 },
-        { year, day: 2, part: 2 },
-        { year, day: 2, part: 3 },
-        { year, day: 3, part: 1 },
-        { year, day: 3, part: 2 },
-        { year, day: 3, part: 3 },
-        { year, day: 4, part: 1 },
-        { year, day: 4, part: 2 },
-        { year, day: 4, part: 3 },
-        { year, day: 5, part: 1 },
-        { year, day: 5, part: 2 },
-        { year, day: 5, part: 3 },
+        { year, day: 1, level: 1 },
+        { year, day: 1, level: 2 },
+        { year, day: 1, level: 3 },
+        { year, day: 2, level: 1 },
+        { year, day: 2, level: 2 },
+        { year, day: 2, level: 3 },
+        { year, day: 3, level: 1 },
+        { year, day: 3, level: 2 },
+        { year, day: 3, level: 3 },
+        { year, day: 4, level: 1 },
+        { year, day: 4, level: 2 },
+        { year, day: 4, level: 3 },
+        { year, day: 5, level: 1 },
+        { year, day: 5, level: 2 },
+        { year, day: 5, level: 3 },
       ];
 
       expect(getAllPuzzlesForYear(year)).toStrictEqual(expected);
