@@ -60,7 +60,7 @@ export const executeUserSolution = async (userSolutionFn, input, lines) => {
   parentPort.postMessage({
     type: workerMessageTypes.answer,
     answer,
-    executionTimeNs: Number(end - start),
+    runtimeNs: Number(end - start),
   });
 };
 

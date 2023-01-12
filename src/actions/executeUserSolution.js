@@ -17,10 +17,10 @@ export const executeUserSolution = async ({ day, level, input } = {}) => {
     logger.festive('Your code is still running, press Ctrl+C to cancel...');
   }, getConfigValue('solutionRunner.cancelMessageDelayMs'));
 
-  const { answer, executionTimeNs } = await execute(day, level, input);
+  const { answer, runtimeNs } = await execute(day, level, input);
 
   clearTimeout(timeout);
 
-  logger.festive('You answered: %s (solved in %s)', answer, humanizeDuration(executionTimeNs));
-  return { answer, runtimeNs: executionTimeNs };
+  logger.festive('You answered: %s (solved in %s)', answer, humanizeDuration(runtimeNs));
+  return { answer, runtimeNs };
 };

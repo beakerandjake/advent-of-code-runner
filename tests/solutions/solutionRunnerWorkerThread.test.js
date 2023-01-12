@@ -139,7 +139,7 @@ describe('solutionRunnerWorkerThread', () => {
 
       expect(parentPort.postMessage).toHaveBeenCalledTimes(1);
       expect(parentPort.postMessage).toHaveBeenCalledWith(
-        expect.objectContaining({ executionTimeNs: endTime - startTime }),
+        expect.objectContaining({ runtimeNs: endTime - startTime }),
       );
     });
   });
