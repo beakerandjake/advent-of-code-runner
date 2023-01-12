@@ -138,19 +138,19 @@ export const getNextUnansweredPuzzle = async (year) => {
  * Has the user completed the parts required to attempt this puzzle?
  * @param {Number} year
  * @param {Number} day
- * @param {Number} part
+ * @param {Number} level
  */
-export const requiredPartsHaveBeenSolved = async (year, day, part) => {
+export const requiredPartsHaveBeenSolved = async (year, day, level) => {
   // part 1 doesn't have any requirements.
-  if (part === 1) {
+  if (level === 1) {
     return true;
   }
   // generate array of all numbers leading up to part.
-  const requiredParts = [...Array(part - 1).keys()].map((x) => x + 1);
-  // get all parts for this day that the user has solved.
+  const requiredParts = [...Array(level - 1).keys()].map((x) => x + 1);
+  // get all levels for this day that the user has solved.
   const solvedParts = (await getPuzzles())
     .filter((x) => x.year === year && x.day === day && !!x.correctAnswer)
     .map((x) => x.part);
-  // check every required part has been solved
+  // check every required level has been solved
   return requiredParts.every((required) => solvedParts.includes(required));
 };

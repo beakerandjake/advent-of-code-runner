@@ -385,7 +385,7 @@ describe('answers', () => {
     test('returns true when required parts solved', async () => {
       const year = 2022;
       const day = 1;
-      const part = 4;
+      const level = 4;
       getPuzzles.mockReturnValue([
         {
           year, day, part: 1, correctAnswer: 'ASDF',
@@ -397,14 +397,14 @@ describe('answers', () => {
           year, day, part: 3, correctAnswer: 1234,
         },
       ]);
-      const result = await requiredPartsHaveBeenSolved(year, day, part);
+      const result = await requiredPartsHaveBeenSolved(year, day, level);
       expect(result).toBe(true);
     });
 
-    test('returns true when when re-solving already part', async () => {
+    test('returns true when when re-solving already level', async () => {
       const year = 2022;
       const day = 1;
-      const part = 3;
+      const level = 3;
       getPuzzles.mockReturnValue([
         {
           year, day, part: 1, correctAnswer: 'ASDF',
@@ -416,14 +416,14 @@ describe('answers', () => {
           year, day, part: 3, correctAnswer: 1234,
         },
       ]);
-      const result = await requiredPartsHaveBeenSolved(year, day, part);
+      const result = await requiredPartsHaveBeenSolved(year, day, level);
       expect(result).toBe(true);
     });
 
     test('returns false on none solved', async () => {
       const year = 2022;
       const day = 1;
-      const part = 2;
+      const level = 2;
       getPuzzles.mockReturnValue([
         {
           year, day, part: 1, correctAnswer: null,
@@ -435,14 +435,14 @@ describe('answers', () => {
           year, day, part: 3, correctAnswer: null,
         },
       ]);
-      const result = await requiredPartsHaveBeenSolved(year, day, part);
+      const result = await requiredPartsHaveBeenSolved(year, day, level);
       expect(result).toBe(false);
     });
 
-    test('returns false on required part not solved (consecutive)', async () => {
+    test('returns false on required level not solved (consecutive)', async () => {
       const year = 2022;
       const day = 1;
-      const part = 4;
+      const level = 4;
       getPuzzles.mockReturnValue([
         {
           year, day, part: 1, correctAnswer: 'ASDF',
@@ -454,14 +454,14 @@ describe('answers', () => {
           year, day, part: 3, correctAnswer: null,
         },
       ]);
-      const result = await requiredPartsHaveBeenSolved(year, day, part);
+      const result = await requiredPartsHaveBeenSolved(year, day, level);
       expect(result).toBe(false);
     });
 
-    test('returns false on required part not solved (non-consecutive)', async () => {
+    test('returns false on required level not solved (non-consecutive)', async () => {
       const year = 2022;
       const day = 1;
-      const part = 4;
+      const level = 4;
       getPuzzles.mockReturnValue([
         {
           year, day, part: 1, correctAnswer: 'ASDF',
@@ -473,7 +473,7 @@ describe('answers', () => {
           year, day, part: 3, correctAnswer: null,
         },
       ]);
-      const result = await requiredPartsHaveBeenSolved(year, day, part);
+      const result = await requiredPartsHaveBeenSolved(year, day, level);
       expect(result).toBe(false);
     });
 
