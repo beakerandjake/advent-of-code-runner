@@ -11,36 +11,32 @@ jest.unstable_mockModule('src/answers.js', () => ({ answerHasBeenSubmitted: jest
 const { answerHasBeenSubmitted } = await import('../../src/answers.js');
 const { assertAnswerPreviouslySubmitted } = await import('../../src/actions/assertAnswerPreviouslySubmitted.js');
 
-afterEach(() => {
-  jest.resetAllMocks();
-});
+describe('assertAnswerPreviouslySubmitted()', () => {
+  afterEach(() => {
+    jest.resetAllMocks();
+  });
 
-describe('actions', () => {
-  describe('links', () => {
-    describe('assertAnswerPreviouslySubmitted()', () => {
-      test.each([
-        null, undefined,
-      ])('throws if answer is %s', async (answer) => {
-        await expect(async () => assertAnswerPreviouslySubmitted({
-          year: 2022, day: 1, part: 5, answer,
-        })).rejects.toThrow();
-      });
+  test.each([
+    null, undefined,
+  ])('throws if answer is %s', async (answer) => {
+    await expect(async () => assertAnswerPreviouslySubmitted({
+      year: 2022, day: 1, level: 5, answer,
+    })).rejects.toThrow();
+  });
 
-      test('returns true if answer has been submitted', async () => {
-        answerHasBeenSubmitted.mockResolvedValue(true);
-        const result = await assertAnswerPreviouslySubmitted({
-          year: 2022, day: 1, part: 1, answer: 'ASDF',
-        });
-        expect(result).toBe(true);
-      });
-
-      test('returns false if answer has not been submitted', async () => {
-        answerHasBeenSubmitted.mockResolvedValue(false);
-        const result = await assertAnswerPreviouslySubmitted({
-          year: 2022, day: 1, part: 1, answer: 'ASDF',
-        });
-        expect(result).toBe(false);
-      });
+  test('returns true if answer has been submitted', async () => {
+    answerHasBeenSubmitted.mockResolvedValue(true);
+    const result = await assertAnswerPreviouslySubmitted({
+      year: 2022, day: 1, level: 1, answer: 'ASDF',
     });
+    expect(result).toBe(true);
+  });
+
+  test('returns false if answer has not been submitted', async () => {
+    answerHasBeenSubmitted.mockResolvedValue(false);
+    const result = await assertAnswerPreviouslySubmitted({
+      year: 2022, day: 1, level: 1, answer: 'ASDF',
+    });
+    expect(result).toBe(false);
   });
 });
