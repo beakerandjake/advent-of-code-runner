@@ -48,7 +48,7 @@ export class UserSolutionAnswerInvalidError extends Error {
  */
 export class UserSolutionFileNotFoundError extends Error {
   constructor(fileName, ...args) {
-    super(`Could not import your solution file, ensure file exits: ${fileName}`, ...args);
+    super(`Could not load your solution file, ensure file exits (${pathToFileURL(fileName)})`, ...args);
     this.name = 'UserSolutionFileNotFoundError';
   }
 }
@@ -69,7 +69,7 @@ const withOriginalErrorStack = (message, originalError) => [
  */
 export class UserSolutionThrewError extends Error {
   constructor(cause) {
-    super('Your function threw the following Error:', { cause });
+    super('Your code raised the following Error:', { cause });
     this.message = withOriginalErrorStack(this.message, cause);
     this.name = 'UserSolutionThrewError';
   }
@@ -81,7 +81,7 @@ export class UserSolutionThrewError extends Error {
 export class UserSolutionSyntaxError extends Error {
   constructor(cause) {
     super('Your solution file has the following Syntax Error:', { cause });
-    this.stack = withOriginalErrorStack(this.message, cause);
+    this.message = withOriginalErrorStack(this.message, cause);
     this.name = 'UserSolutionSyntaxError';
   }
 }
