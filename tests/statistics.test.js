@@ -337,7 +337,7 @@ describe('statistics', () => {
       const result = await getPuzzleCompletionData(year);
       puzzles.forEach((x, index) => {
         const expected = x.correctAnswer ? x.fastestExecutionTimeNs : null;
-        expect(result[index].executionTimeNs).toBe(expected);
+        expect(result[index].runtimeNs).toBe(expected);
       });
     });
 
@@ -387,7 +387,7 @@ describe('statistics', () => {
         mockPuzzle(year, 1, 1),
       ];
       const expected = input.reverse().map(({ day, level }) => ({
-        day, level, solved: false, executionTimeNs: null, numberOfAttempts: 0,
+        day, level, solved: false, runtimeNs: null, numberOfAttempts: 0,
       }));
       getPuzzlesForYear.mockResolvedValue(input);
       const result = await getPuzzleCompletionData(year);

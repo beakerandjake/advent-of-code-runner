@@ -105,7 +105,7 @@ export const getPuzzleCompletionData = async (year) => {
       day,
       level,
       solved: !!correctAnswer,
-      executionTimeNs: correctAnswer ? fastestExecutionTimeNs : null,
+      runtimeNs: correctAnswer ? fastestExecutionTimeNs : null,
       numberOfAttempts: correctAnswer ? incorrectAnswers.length + 1 : incorrectAnswers.length,
     }));
 };
