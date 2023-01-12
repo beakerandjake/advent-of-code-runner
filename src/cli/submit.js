@@ -31,9 +31,9 @@ const actionChain = createChain(submitLinks);
 /**
  * Execute the users solution then submit their answer to advent of code
  * @param {Number} day
- * @param {Number} part
+ * @param {Number} level
  */
-const submit = async (day, part) => actionChain({ day, part });
+const submit = async (day, level) => actionChain({ day, level });
 
 /**
  * Command which allows the user to submit a puzzles answer to advent of code.

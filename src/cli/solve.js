@@ -26,9 +26,9 @@ const actionChain = createChain(solveLinks);
 /**
  * Downloads or loads the input to the puzzle, executes the users solution and outputs results.
  * @param {Number} day
- * @param {Number} part
+ * @param {Number} level
  */
-const solve = async (day, part) => actionChain({ day, part });
+const solve = async (day, level) => actionChain({ day, level });
 
 /**
  * Command which lets the user solve a specific puzzle
