@@ -7,7 +7,6 @@ import { getConfigValue } from '../config.js';
  * @param {Number} day
  */
 export const puzzleIsInFuture = (year, day) => {
-  // can easily check for past or future years, but current year is where the hard part is.
   if (year !== new Date().getFullYear()) {
     return year > new Date().getFullYear();
   }
