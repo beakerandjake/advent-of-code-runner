@@ -61,12 +61,12 @@ describe('actions', () => {
 
     describe('mapNamedColumn()', () => {
       test('colorizes if solved', () => {
-        mapNamedColumn({ day: 1, part: 1, solved: true });
+        mapNamedColumn({ day: 1, level: 1, solved: true });
         expect(mockChalk.green).toHaveBeenCalled();
       });
 
       test('does not colorize if not solved', () => {
-        mapNamedColumn({ day: 1, part: 1, solved: false });
+        mapNamedColumn({ day: 1, level: 1, solved: false });
         expect(mockChalk.green).not.toHaveBeenCalled();
       });
     });

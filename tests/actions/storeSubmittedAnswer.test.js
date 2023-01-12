@@ -53,7 +53,7 @@ describe('storeSubmittedAnswer()', () => {
 
   test('adds incorrect answer if submission was not correct', async () => {
     await storeSubmittedAnswer({
-      year: 2022, day: 1, part: 1, answer: 'ASDF', submissionResult: { correct: false },
+      year: 2022, day: 1, level: 1, answer: 'ASDF', submissionResult: { correct: false },
     });
     expect(setCorrectAnswer).not.toHaveBeenCalled();
     expect(addIncorrectAnswer).toHaveBeenCalled();
