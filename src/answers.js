@@ -43,10 +43,10 @@ export const answersEqual = (lhs, rhs) => (
  * Has this puzzle already been solved?
  * @param {Number} year
  * @param {Number} day
- * @param {Number} part
+ * @param {Number} level
  */
-export const puzzleHasBeenSolved = async (year, day, part) => {
-  const { correctAnswer } = await findPuzzle(year, day, part) || {};
+export const puzzleHasBeenSolved = async (year, day, level) => {
+  const { correctAnswer } = await findPuzzle(year, day, level) || {};
   return !!correctAnswer;
 };
 
