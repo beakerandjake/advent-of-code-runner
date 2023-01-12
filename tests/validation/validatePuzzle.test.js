@@ -109,18 +109,18 @@ describe('validatePuzzle', () => {
   describe('getTotalPuzzleCount()', () => {
     test('calculates correctly', () => {
       const days = [1, 2, 3, 4, 5, 6];
-      const parts = [1, 2, 3, 4];
+      const levels = [1, 2, 3, 4];
       getConfigValue.mockImplementation((key) => {
         if (key === 'aoc.validation.days') {
           return days;
         }
         if (key === 'aoc.validation.levels') {
-          return parts;
+          return levels;
         }
         throw new Error('unexpected getConfigValue call in test');
       });
       const result = getTotalPuzzleCount();
-      expect(result).toBe(days.length * parts.length);
+      expect(result).toBe(days.length * levels.length);
     });
   });
 });
