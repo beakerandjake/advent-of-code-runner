@@ -11,10 +11,10 @@ import { average } from './util.js';
  * Returns null if the puzzle has not been correctly solved.
  * @param {Number} year
  * @param {Number} day
- * @param {Number} part
+ * @param {Number} level
  */
-export const getPuzzlesFastestRuntime = async (year, day, part) => {
-  const puzzle = await findPuzzle(year, day, part);
+export const getPuzzlesFastestRuntime = async (year, day, level) => {
+  const puzzle = await findPuzzle(year, day, level);
   return puzzle?.fastestExecutionTimeNs || null;
 };
 
@@ -22,14 +22,14 @@ export const getPuzzlesFastestRuntime = async (year, day, part) => {
  * Sets the fastest runtime for the puzzle.
  * @param {Number} year
  * @param {Number} day
- * @param {Number} part
+ * @param {Number} level
  * @param {Number} timeNs
  */
-export const setPuzzlesFastestRuntime = async (year, day, part, timeNs) => {
+export const setPuzzlesFastestRuntime = async (year, day, level, timeNs) => {
   const parsed = parsePositiveInt(timeNs);
-  const puzzle = await findPuzzle(year, day, part) || createPuzzle(year, day, part);
+  const puzzle = await findPuzzle(year, day, level) || createPuzzle(year, day, level);
   const updated = { ...puzzle, fastestExecutionTimeNs: parsed };
-  logger.debug('setting fastest execution time to: %s', timeNs, { year, day, part });
+  logger.debug('setting fastest execution time to: %s', timeNs, { year, day, level });
   return addOrEditPuzzle(updated);
 };
 
