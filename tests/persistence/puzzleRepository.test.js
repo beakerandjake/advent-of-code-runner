@@ -107,7 +107,7 @@ describe('puzzleRepository', () => {
       expect(() => translateToPuzzleFromData(puzzle)).toThrow(TypeError);
     });
 
-    test('translates year, day, part from id', () => {
+    test('translates year, day, level from id', () => {
       const data = {
         id: '20220201',
         fastestExecutionTimeNs: null,
@@ -118,7 +118,7 @@ describe('puzzleRepository', () => {
       const expected = {
         year: 2022,
         day: 2,
-        part: 1,
+        level: 1,
       };
 
       expect(translateToPuzzleFromData(data)).toMatchObject(expected);
@@ -206,7 +206,7 @@ describe('puzzleRepository', () => {
         correctAnswer: null,
         year: 2022,
         day: 20,
-        part: 1,
+        level: 1,
       };
       expect(() => translateToDataFromPuzzle(puzzle)).toThrow(TypeError);
     });
@@ -219,7 +219,7 @@ describe('puzzleRepository', () => {
         correctAnswer: null,
         year: 2022,
         day: 20,
-        part: 1,
+        level: 1,
       };
       expect(() => translateToDataFromPuzzle(puzzle)).toThrow(TypeError);
     });
@@ -232,7 +232,7 @@ describe('puzzleRepository', () => {
         correctAnswer: null,
         year: 2022,
         day: 20,
-        part: 1,
+        level: 1,
       };
       expect(() => translateToDataFromPuzzle(puzzle)).toThrow(TypeError);
     });
@@ -245,7 +245,7 @@ describe('puzzleRepository', () => {
         correctAnswer: null,
         year: 2022,
         day: 20,
-        part: 1,
+        level: 1,
       };
       expect(() => translateToDataFromPuzzle(puzzle)).toThrow(TypeError);
     });
@@ -258,7 +258,7 @@ describe('puzzleRepository', () => {
         correctAnswer: null,
         year: 2022,
         day: 20,
-        part: 1,
+        level: 1,
       };
       expect(() => translateToDataFromPuzzle(puzzle)).toThrow(TypeError);
     });
@@ -271,12 +271,12 @@ describe('puzzleRepository', () => {
         correctAnswer: null,
         year: 2022,
         day: 20,
-        part: 1,
+        level: 1,
       };
       expect(() => translateToDataFromPuzzle(puzzle)).toThrow(TypeError);
     });
 
-    test('strips properties (year, day, part)', () => {
+    test('strips properties (year, day, level)', () => {
       const data = {
         id: '20220201',
         fastestExecutionTimeNs: 2343455,
@@ -284,14 +284,14 @@ describe('puzzleRepository', () => {
         correctAnswer: 'asdf',
         year: 2022,
         day: 20,
-        part: 1,
+        level: 1,
       };
 
       const translated = translateToDataFromPuzzle(data);
 
       expect(translated).not.toHaveProperty('year');
       expect(translated).not.toHaveProperty('day');
-      expect(translated).not.toHaveProperty('part');
+      expect(translated).not.toHaveProperty('level');
     });
 
     test('translates id', () => {
@@ -357,7 +357,7 @@ describe('puzzleRepository', () => {
       expect(id.substring(4, 6)).toEqual('01');
     });
 
-    test('part is padded', () => {
+    test('level is padded', () => {
       const id = getId(2022, 1, 2);
       expect(id.substring(6)).toEqual('02');
     });
@@ -372,7 +372,7 @@ describe('puzzleRepository', () => {
       expect(id.substring(4, 6)).toEqual('12');
     });
 
-    test('part in correct position', () => {
+    test('level in correct position', () => {
       const id = getId(2022, 5, 1);
       expect(id.substring(6)).toEqual('01');
     });
@@ -409,19 +409,19 @@ describe('puzzleRepository', () => {
       expect(() => getId(2022, 'Y', 2)).toThrow(TypeError);
     });
 
-    test('throws when part is null', () => {
+    test('throws when level is null', () => {
       expect(() => getId(2022, null, 2)).toThrow(TypeError);
     });
 
-    test('throws when part length > 2', () => {
+    test('throws when level length > 2', () => {
       expect(() => getId(2022, 1, 111)).toThrow(TypeError);
     });
 
-    test('throws when part is negative', () => {
+    test('throws when level is negative', () => {
       expect(() => getId(2022, 2, -2)).toThrow(TypeError);
     });
 
-    test('throws when part is non-numeric', () => {
+    test('throws when level is non-numeric', () => {
       expect(() => getId(2022, 1, 'H')).toThrow(TypeError);
     });
   });
@@ -452,7 +452,7 @@ describe('puzzleRepository', () => {
         incorrectAnswers: ['NOPE', 'NOPE AGAIN!'],
         year: 2022,
         day: 12,
-        part: 1,
+        level: 1,
       };
 
       expect(await findPuzzle(2022, 12, 1)).toEqual(expected);
@@ -508,7 +508,7 @@ describe('puzzleRepository', () => {
           incorrectAnswers: ['WRONG', 'WRONG AGAIN!'],
           year: 2022,
           day: 12,
-          part: 2,
+          level: 2,
         },
         {
           id: '20221201',
@@ -517,7 +517,7 @@ describe('puzzleRepository', () => {
           incorrectAnswers: ['NOPE', 'NOPE AGAIN!'],
           year: 2022,
           day: 12,
-          part: 1,
+          level: 1,
         },
       ];
 
@@ -571,7 +571,7 @@ describe('puzzleRepository', () => {
           incorrectAnswers: ['WRONG', 'WRONG AGAIN!'],
           year: 2022,
           day: 12,
-          part: 2,
+          level: 2,
         },
         {
           id: '20221201',
@@ -580,7 +580,7 @@ describe('puzzleRepository', () => {
           incorrectAnswers: ['NOPE', 'NOPE AGAIN!'],
           year: 2022,
           day: 12,
-          part: 1,
+          level: 1,
         },
       ];
 
@@ -626,7 +626,7 @@ describe('puzzleRepository', () => {
         incorrectAnswers: [],
         year: 2022,
         day: 13,
-        part: 1,
+        level: 1,
       };
 
       const orig = [
@@ -674,7 +674,7 @@ describe('puzzleRepository', () => {
         incorrectAnswers: [],
         year: 2022,
         day: 13,
-        part: 1,
+        level: 1,
       });
 
       expect(setValue.mock.lastCall[1]).toStrictEqual([
@@ -705,7 +705,7 @@ describe('puzzleRepository', () => {
         incorrectAnswers: [],
         year: 2022,
         day: 13,
-        part: 1,
+        level: 1,
       });
 
       expect(setValue.mock.lastCall[1]).toStrictEqual([
@@ -736,7 +736,7 @@ describe('puzzleRepository', () => {
         incorrectAnswers: newValue,
         year: 2022,
         day: 13,
-        part: 1,
+        level: 1,
       });
 
       expect(setValue.mock.lastCall[1]).toStrictEqual([
@@ -761,10 +761,10 @@ describe('puzzleRepository', () => {
         correctAnswer: null,
         year: 2022,
         day: 1,
-        part: 1,
+        level: 1,
       };
 
-      expect(createPuzzle(expected.year, expected.day, expected.part)).toStrictEqual(expected);
+      expect(createPuzzle(expected.year, expected.day, expected.level)).toStrictEqual(expected);
     });
   });
 });
