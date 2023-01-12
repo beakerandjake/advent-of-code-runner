@@ -54,7 +54,7 @@ export const executeUserSolution = async (userSolutionFn, input, lines) => {
   }
 
   if (!answerTypeIsValid(answer)) {
-    throw new UserSolutionAnswerInvalidError(getType(answer));
+    throw new TypeError(getType(answer));
   }
 
   parentPort.postMessage({
@@ -86,7 +86,14 @@ export const runWorker = async ({
   }
 
   logFromWorker('debug', 'worker thread executing user function: %s', functionToExecute);
-  await executeUserSolution(userSolutionFunction, input, lines);
+  try {
+    await executeUserSolution(userSolutionFunction, input, lines);
+  } catch (error) {
+    if (error instanceof TypeError) {
+      throw new UserSolutionAnswerInvalidError(error.message, solutionFileName, functionToExecute);
+    }
+    throw error;
+  }
 };
 
 // Only run the worker on a child thread, not on the main thread!

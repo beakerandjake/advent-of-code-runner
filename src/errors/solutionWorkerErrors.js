@@ -1,3 +1,5 @@
+import { pathToFileURL } from 'url';
+
 /**
  * Error raised if the Solution Worker thread exits without posting an answer message.
  */
@@ -32,8 +34,11 @@ export class SolutionWorkerMissingDataError extends Error {
  * Error raised if users solution returns an answer of the wrong type.
  */
 export class UserSolutionAnswerInvalidError extends Error {
-  constructor(answerType, ...args) {
-    super(`Unsupported answer type, answer must be a string or number. You provided: "${answerType}".`, ...args);
+  constructor(answerType, fileName, functionName, ...args) {
+    super([
+      `Your code returned an invalid answer of type: "${answerType}". Answer must be a string or a number.`,
+      `at ${functionName} (${pathToFileURL(fileName)})`,
+    ].join('\n    '), ...args);
     this.name = 'UserSolutionAnswerInvalidError';
   }
 }
@@ -43,7 +48,7 @@ export class UserSolutionAnswerInvalidError extends Error {
  */
 export class UserSolutionFileNotFoundError extends Error {
   constructor(fileName, ...args) {
-    super(`Could not import your solution file, ensure file exits: ${fileName}`, ...args);
+    super(`Could not load your solution file, ensure file exits (${pathToFileURL(fileName)})`, ...args);
     this.name = 'UserSolutionFileNotFoundError';
   }
 }
@@ -64,7 +69,7 @@ const withOriginalErrorStack = (message, originalError) => [
  */
 export class UserSolutionThrewError extends Error {
   constructor(cause) {
-    super('Your function threw the following Error:', { cause });
+    super('Your code raised the following Error:', { cause });
     this.message = withOriginalErrorStack(this.message, cause);
     this.name = 'UserSolutionThrewError';
   }
@@ -76,7 +81,7 @@ export class UserSolutionThrewError extends Error {
 export class UserSolutionSyntaxError extends Error {
   constructor(cause) {
     super('Your solution file has the following Syntax Error:', { cause });
-    this.stack = withOriginalErrorStack(this.message, cause);
+    this.message = withOriginalErrorStack(this.message, cause);
     this.name = 'UserSolutionSyntaxError';
   }
 }

@@ -24,7 +24,7 @@ export const getPuzzleInput = async ({ year, day } = {}) => {
 
   // even though we loaded the input file, the contents could be invalid
   if (!inputIsValid(input)) {
-    logger.error('The input that was loaded is invalid, it must be a non empty string.');
+    logger.error('Failed to load data from the input file. Loaded value was an empty string.');
     return false;
   }
 

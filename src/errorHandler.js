@@ -7,7 +7,7 @@ import { logger } from './logger.js';
  * @param {Error} error
  */
 export const handleError = (error) => {
-  if (error instanceof UserError) {
+  if (error instanceof UserError || error.name.includes('User')) {
     logger.error(error, { simpleErrorFormat: true });
   } else {
     logger.error(error);
