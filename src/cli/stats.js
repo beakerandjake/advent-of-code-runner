@@ -13,8 +13,6 @@ const actionChain = createChain([
 
 /**
  * Outputs stats about user progress.
- * @param {Number} day
- * @param {Number} part
  */
 const stats = async () => actionChain();
 
