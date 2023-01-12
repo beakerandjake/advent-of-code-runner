@@ -35,7 +35,7 @@ const solve = async (day, level) => actionChain({ day, level });
  */
 export const solveCommand = new Command()
   .name('solve')
-  .description('Solve the puzzle, benchmark the execution time, and output the result.')
+  .description('Solve the puzzle, benchmark the runtime, and output the result.')
   .addArgument(dayArgument)
   .addArgument(levelArgument)
   .action(solve);

@@ -128,7 +128,7 @@ describe('solutionRunnerWorkerThread', () => {
       );
     });
 
-    test('correctly calculates execution time on success', async () => {
+    test('correctly calculates runtime time on success', async () => {
       const startTime = 4567;
       const endTime = 6789;
       answerTypeIsValid.mockReturnValueOnce(true);

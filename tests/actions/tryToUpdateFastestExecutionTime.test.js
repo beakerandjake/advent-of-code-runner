@@ -22,7 +22,7 @@ describe('tryToUpdateFastestRuntime()', () => {
 
   test.each([
     null, undefined, -1,
-  ])('throws if execution time is: %s', async (runtimeNs) => {
+  ])('throws if runtime is: %s', async (runtimeNs) => {
     await expect(async () => tryToUpdateFastestRuntime({
       year: 2022, day: 11, level: 1, runtimeNs,
     })).rejects.toThrow();
