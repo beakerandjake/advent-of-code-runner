@@ -129,9 +129,9 @@ export const getNextUnansweredPuzzle = async (year) => {
   const allPuzzles = getAllPuzzlesForYear(year);
   const answeredPuzzles = (await getPuzzles()).filter((x) => !!x.correctAnswer);
   const toReturn = allPuzzles.find((x) => !answeredPuzzles.some(
-    (puzzle) => puzzle.year === x.year && puzzle.day === x.day && puzzle.part === x.part,
+    (puzzle) => puzzle.year === x.year && puzzle.day === x.day && puzzle.part === x.level,
   ));
-  return toReturn ? { day: toReturn.day, part: toReturn.part } : null;
+  return toReturn ? { day: toReturn.day, part: toReturn.level } : null;
 };
 
 /**

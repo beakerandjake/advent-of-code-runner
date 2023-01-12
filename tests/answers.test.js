@@ -282,10 +282,10 @@ describe('answers', () => {
     test('returns first if none answered', async () => {
       const year = 1950;
       const puzzlesForYear = [
-        { year, day: 1, part: 1 },
-        { year, day: 2, part: 1 },
-        { year, day: 3, part: 1 },
-        { year, day: 4, part: 1 },
+        { year, day: 1, level: 1 },
+        { year, day: 2, level: 1 },
+        { year, day: 3, level: 1 },
+        { year, day: 4, level: 1 },
       ];
       getAllPuzzlesForYear.mockReturnValueOnce(puzzlesForYear);
       getPuzzles.mockReturnValueOnce([]);
@@ -295,29 +295,29 @@ describe('answers', () => {
     test('returns null if all answered', async () => {
       const year = 1950;
       const puzzlesForYear = [
-        { year, day: 1, part: 1 },
-        { year, day: 2, part: 1 },
-        { year, day: 3, part: 1 },
-        { year, day: 4, part: 1 },
+        { year, day: 1, level: 1 },
+        { year, day: 2, level: 1 },
+        { year, day: 3, level: 1 },
+        { year, day: 4, level: 1 },
       ];
       getAllPuzzlesForYear.mockReturnValueOnce(puzzlesForYear);
-      getPuzzles.mockReturnValueOnce(puzzlesForYear.map((x) => ({ ...x, correctAnswer: '1234' })));
+      getPuzzles.mockReturnValueOnce(puzzlesForYear.map((x) => ({ ...x, part: x.level, correctAnswer: '1234' })));
       expect(await getNextUnansweredPuzzle(year)).toStrictEqual(null);
     });
 
     test('returns next (no gaps)', async () => {
       const year = 1950;
       getAllPuzzlesForYear.mockReturnValueOnce([
-        { year, day: 1, part: 1 },
-        { year, day: 1, part: 2 },
-        { year, day: 2, part: 1 },
-        { year, day: 2, part: 2 },
-        { year, day: 3, part: 1 },
-        { year, day: 3, part: 2 },
-        { year, day: 4, part: 1 },
-        { year, day: 4, part: 2 },
-        { year, day: 5, part: 1 },
-        { year, day: 5, part: 2 },
+        { year, day: 1, level: 1 },
+        { year, day: 1, level: 2 },
+        { year, day: 2, level: 1 },
+        { year, day: 2, level: 2 },
+        { year, day: 3, level: 1 },
+        { year, day: 3, level: 2 },
+        { year, day: 4, level: 1 },
+        { year, day: 4, level: 2 },
+        { year, day: 5, level: 1 },
+        { year, day: 5, level: 2 },
       ]);
       getPuzzles.mockReturnValueOnce([
         {
@@ -348,12 +348,12 @@ describe('answers', () => {
     test('returns next (gaps)', async () => {
       const year = 1950;
       getAllPuzzlesForYear.mockReturnValueOnce([
-        { year, day: 1, part: 1 },
-        { year, day: 1, part: 2 },
-        { year, day: 2, part: 1 },
-        { year, day: 2, part: 2 },
-        { year, day: 3, part: 1 },
-        { year, day: 3, part: 2 },
+        { year, day: 1, level: 1 },
+        { year, day: 1, level: 2 },
+        { year, day: 2, level: 1 },
+        { year, day: 2, level: 2 },
+        { year, day: 3, level: 1 },
+        { year, day: 3, level: 2 },
       ]);
       getPuzzles.mockReturnValueOnce([
         {
