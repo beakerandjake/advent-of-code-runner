@@ -1,7 +1,7 @@
 import { Argument, InvalidArgumentError } from 'commander';
 import { getConfigValue } from '../config.js';
 import { betweenMessage } from '../formatting.js';
-import { dayIsValid, partIsValid, parsePositiveInt } from '../validation/index.js';
+import { dayIsValid, levelIsValid, parsePositiveInt } from '../validation/index.js';
 
 /**
  * Parses a positive int from the arg value, then validates and returns the parsed value.
@@ -44,6 +44,6 @@ const levelRange = betweenMessage(getConfigValue('aoc.validation.levels'));
 export const levelArgument = new Argument('<level>', `The the level of the puzzle to solve (${levelRange}).`)
   .argParser((value) => parseArgument(
     value,
-    partIsValid,
+    levelIsValid,
     `Allowed levels ${levelRange}.`,
   ));

@@ -12,7 +12,7 @@ jest.unstable_mockModule('../../src/config.js', () => ({
 
 // import after setting up the mock so the modules import the mocked version
 const { getConfigValue } = await import('../../src/config.js');
-const { dayIsValid, partIsValid, yearIsValid } = await import('../../src/validation/validateArgs.js');
+const { dayIsValid, levelIsValid, yearIsValid } = await import('../../src/validation/validateArgs.js');
 
 afterEach(() => {
   jest.clearAllMocks();
@@ -47,17 +47,17 @@ describe('validateArgs', () => {
     });
   });
 
-  describe('partIsValid()', () => {
+  describe('levelIsValid()', () => {
     test('true when part is valid', () => {
       const part = 16;
       getConfigValue.mockReturnValue([1, 2, 3, 4, part, 5, 6, 7]);
-      expect(partIsValid(part)).toBe(true);
+      expect(levelIsValid(part)).toBe(true);
     });
 
     test('false when part is valid', () => {
       const part = 16;
       getConfigValue.mockReturnValue([1, 2, 3, 4, 5, 6, 7]);
-      expect(partIsValid(part)).toBe(false);
+      expect(levelIsValid(part)).toBe(false);
     });
   });
 });
