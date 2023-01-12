@@ -107,11 +107,11 @@ export const addIncorrectAnswer = async (year, day, level, incorrectAnswer) => {
  * Has the user previously submitted this answer to advent of code?
  * @param {Number} year
  * @param {Number} day
- * @param {Number} part
+ * @param {Number} level
  * @param {String} incorrectAnswer
  */
-export const answerHasBeenSubmitted = async (year, day, part, answer) => {
-  const { correctAnswer = null, incorrectAnswers = [] } = await findPuzzle(year, day, part) || {};
+export const answerHasBeenSubmitted = async (year, day, level, answer) => {
+  const { correctAnswer = null, incorrectAnswers = [] } = await findPuzzle(year, day, level) || {};
 
   if (incorrectAnswers.some((x) => answersEqual(x, answer))) {
     return true;
