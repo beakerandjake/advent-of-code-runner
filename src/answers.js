@@ -82,18 +82,18 @@ export const setCorrectAnswer = async (year, day, level, correctAnswer) => {
  * Stores an incorrect answer for this puzzle.
  * @param {Number} year
  * @param {Number} day
- * @param {Number} part
+ * @param {Number} level
  * @param {String} incorrectAnswer
  */
-export const addIncorrectAnswer = async (year, day, part, incorrectAnswer) => {
-  logger.debug('saving incorrect answer: "%s"', incorrectAnswer, { year, day, part });
+export const addIncorrectAnswer = async (year, day, level, incorrectAnswer) => {
+  logger.debug('saving incorrect answer: "%s"', incorrectAnswer, { year, day, level });
 
   const parsedAnswer = parseAnswer(incorrectAnswer);
-  const puzzle = await findPuzzle(year, day, part) || createPuzzle(year, day, part);
+  const puzzle = await findPuzzle(year, day, level) || createPuzzle(year, day, level);
 
   // bail if incorrect answer is already stored
   if (puzzle.incorrectAnswers.some((x) => answersEqual(x, parsedAnswer))) {
-    logger.warn('Attempted to save incorrect answer: "%s" which was already stored', incorrectAnswer, { year, day, part });
+    logger.warn('Attempted to save incorrect answer: "%s" which was already stored', incorrectAnswer, { year, day, level });
     return;
   }
 
