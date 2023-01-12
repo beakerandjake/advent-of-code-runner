@@ -1,9 +1,9 @@
 import { ensureDir } from 'fs-extra/esm';
 import { readFile, writeFile } from 'node:fs/promises';
-import { join } from 'node:path';
 import { getConfigValue } from '../config.js';
 import { logger } from '../logger.js';
 import { replaceTokens } from './replaceTokens.js';
+import { getSolutionFileName } from '../solutions/solutionRunner.js';
 
 /**
  * Maps tokens strings in the template project json file to fields of the args.
@@ -36,7 +36,7 @@ export const createSolutionFiles = async ({ year } = {}) => {
   // create each template solution file.
   const createFilePromises = getConfigValue('aoc.validation.days').map(
     (day) => writeFile(
-      join(solutionsDir, `day_${day.toString().padStart(2, '0')}.js`),
+      getSolutionFileName(day),
       replaceTokens(tokens, { year, day }, templateSolutionFile),
       'utf-8',
     ),

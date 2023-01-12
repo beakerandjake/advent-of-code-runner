@@ -9,6 +9,7 @@ const { getConfigValue } = mockConfig();
 jest.unstable_mockModule('fs-extra/esm', () => ({ ensureDir: jest.fn() }));
 jest.unstable_mockModule('node:fs/promises', () => ({ readFile: jest.fn(), writeFile: jest.fn() }));
 jest.unstable_mockModule('src/initialize/replaceTokens.js', () => ({ replaceTokens: jest.fn() }));
+jest.unstable_mockModule('src/solutions/solutionRunner.js', () => ({ getSolutionFileName: jest.fn() }));
 
 // import after mocks set up
 const { ensureDir } = await import('fs-extra/esm');
