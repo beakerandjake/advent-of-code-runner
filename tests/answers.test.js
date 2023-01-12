@@ -32,7 +32,7 @@ const {
   answerHasBeenSubmitted,
   getNextUnansweredPuzzle,
   answersEqual,
-  requiredPartsHaveBeenSolved,
+  requiredLevelsHaveBeenSolved,
 } = await import('../src/answers.js');
 
 afterEach(() => {
@@ -376,9 +376,9 @@ describe('answers', () => {
     });
   });
 
-  describe('requiredPartsHaveBeenSolved()', () => {
+  describe('requiredLevelsHaveBeenSolved()', () => {
     test('returns true on part 1', async () => {
-      const result = await requiredPartsHaveBeenSolved(2022, 1, 1);
+      const result = await requiredLevelsHaveBeenSolved(2022, 1, 1);
       expect(result).toBe(true);
     });
 
@@ -397,7 +397,7 @@ describe('answers', () => {
           year, day, part: 3, correctAnswer: 1234,
         },
       ]);
-      const result = await requiredPartsHaveBeenSolved(year, day, level);
+      const result = await requiredLevelsHaveBeenSolved(year, day, level);
       expect(result).toBe(true);
     });
 
@@ -416,7 +416,7 @@ describe('answers', () => {
           year, day, part: 3, correctAnswer: 1234,
         },
       ]);
-      const result = await requiredPartsHaveBeenSolved(year, day, level);
+      const result = await requiredLevelsHaveBeenSolved(year, day, level);
       expect(result).toBe(true);
     });
 
@@ -435,7 +435,7 @@ describe('answers', () => {
           year, day, part: 3, correctAnswer: null,
         },
       ]);
-      const result = await requiredPartsHaveBeenSolved(year, day, level);
+      const result = await requiredLevelsHaveBeenSolved(year, day, level);
       expect(result).toBe(false);
     });
 
@@ -454,7 +454,7 @@ describe('answers', () => {
           year, day, part: 3, correctAnswer: null,
         },
       ]);
-      const result = await requiredPartsHaveBeenSolved(year, day, level);
+      const result = await requiredLevelsHaveBeenSolved(year, day, level);
       expect(result).toBe(false);
     });
 
@@ -473,13 +473,13 @@ describe('answers', () => {
           year, day, part: 3, correctAnswer: null,
         },
       ]);
-      const result = await requiredPartsHaveBeenSolved(year, day, level);
+      const result = await requiredLevelsHaveBeenSolved(year, day, level);
       expect(result).toBe(false);
     });
 
     test('returns false on no data for day', async () => {
       getPuzzles.mockReturnValue([]);
-      const result = await requiredPartsHaveBeenSolved(2022, 1, 2);
+      const result = await requiredLevelsHaveBeenSolved(2022, 1, 2);
       expect(result).toBe(false);
     });
   });

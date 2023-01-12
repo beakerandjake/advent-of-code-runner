@@ -135,17 +135,17 @@ export const getNextUnansweredPuzzle = async (year) => {
 };
 
 /**
- * Has the user completed the parts required to attempt this puzzle?
+ * Has the user completed the requisite levels for the puzzle?
  * @param {Number} year
  * @param {Number} day
  * @param {Number} level
  */
-export const requiredPartsHaveBeenSolved = async (year, day, level) => {
-  // part 1 doesn't have any requirements.
+export const requiredLevelsHaveBeenSolved = async (year, day, level) => {
+  // level 1 doesn't have any requirements.
   if (level === 1) {
     return true;
   }
-  // generate array of all numbers leading up to part.
+  // generate array of all numbers leading up to level.
   const requiredParts = [...Array(level - 1).keys()].map((x) => x + 1);
   // get all levels for this day that the user has solved.
   const solvedParts = (await getPuzzles())
