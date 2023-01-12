@@ -11,27 +11,23 @@ jest.unstable_mockModule('src/statistics.js', () => ({ setPuzzlesFastestRuntime:
 const { setPuzzlesFastestRuntime } = await import('../../src/statistics.js');
 const { storeFastestExecutionTime } = await import('../../src/actions/storeFastestExecutionTime.js');
 
-afterEach(() => {
-  jest.resetAllMocks();
-});
+describe('storeFastestExecutionTime()', () => {
+  afterEach(() => {
+    jest.resetAllMocks();
+  });
 
-describe('actions', () => {
-  describe('links', () => {
-    describe('storeFastestExecutionTime()', () => {
-      test.each([
-        null, undefined,
-      ])('throws if execution time is: %s', async (executionTimeNs) => {
-        await expect(async () => storeFastestExecutionTime({
-          year: 2022, day: 1, part: 1, executionTimeNs,
-        })).rejects.toThrow();
-      });
+  test.each([
+    null, undefined,
+  ])('throws if execution time is: %s', async (executionTimeNs) => {
+    await expect(async () => storeFastestExecutionTime({
+      year: 2022, day: 1, level: 1, executionTimeNs,
+    })).rejects.toThrow();
+  });
 
-      test('sets value', async () => {
-        await storeFastestExecutionTime({
-          year: 2022, day: 1, part: 1, executionTimeNs: 1234,
-        });
-        expect(setPuzzlesFastestRuntime).toHaveBeenCalled();
-      });
+  test('sets value', async () => {
+    await storeFastestExecutionTime({
+      year: 2022, day: 1, level: 1, executionTimeNs: 1234,
     });
+    expect(setPuzzlesFastestRuntime).toHaveBeenCalled();
   });
 });

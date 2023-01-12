@@ -19,14 +19,14 @@ export const downloadInput = async (
 };
 
 /**
- * Post a solution for the problem of the given year / day / part.
+ * Post a solution for the problem of the given year / day / level.
  * @param {Number} year - The year of the puzzle
  * @param {Number} day - The day of the puzzle.
- * @param {1|2} part - Is this part one or part two of the puzzle?
+ * @param {1|2} level - The level of the puzzle
  * @param {String|Number} solution - The solution to test.
  * @param {String} authenticationToken - Token to authenticate with aoc.
  */
-export const submitSolution = async (year, day, part, solution, authenticationToken) => {
+export const submitSolution = async (year, day, level, solution, authenticationToken) => {
   logger.debug('submitting answer to mock api');
   const correct = getConfigValue('aoc.mockApi.answerCorrect');
   return { correct, message: correct ? 'Great Job you answered correct!' : 'That\'s the wrong answer!' };

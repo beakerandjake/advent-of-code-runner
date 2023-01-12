@@ -13,7 +13,7 @@ export const yearIsValid = (year) => getConfigValue('aoc.validation.years').incl
 export const dayIsValid = (day) => getConfigValue('aoc.validation.days').includes(day);
 
 /**
- * Is the part of the puzzle a valid value?
- * @param {Number} part
+ * Is the level of the puzzle a valid value?
+ * @param {Number} level
  */
-export const partIsValid = (part) => getConfigValue('aoc.validation.parts').includes(part);
+export const levelIsValid = (level) => getConfigValue('aoc.validation.levels').includes(level);

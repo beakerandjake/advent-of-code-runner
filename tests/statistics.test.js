@@ -1,11 +1,10 @@
 import {
   describe, jest, test, afterEach,
 } from '@jest/globals';
-import { mockLogger, mockConfig } from './mocks.js';
+import { mockLogger } from './mocks.js';
 
 // setup mocks.
 mockLogger();
-const { getConfigValue } = mockConfig();
 
 jest.unstable_mockModule('src/persistence/puzzleRepository.js', () => ({
   findPuzzle: jest.fn(),
@@ -282,11 +281,11 @@ describe('statistics', () => {
   });
 
   describe('getPuzzleCompletionData()', () => {
-    const mockPuzzle = (year, day, part, correctAnswer = '', incorrectAnswers = [], fastestExecutionTimeNs = null) => ({
-      id: `${year}${day}${part}`,
+    const mockPuzzle = (year, day, level, correctAnswer = '', incorrectAnswers = [], fastestExecutionTimeNs = null) => ({
+      id: `${year}${day}${level}`,
       year,
       day,
-      part,
+      level,
       correctAnswer,
       incorrectAnswers,
       fastestExecutionTimeNs,
@@ -387,136 +386,12 @@ describe('statistics', () => {
         mockPuzzle(year, 2, 2),
         mockPuzzle(year, 1, 1),
       ];
-      const expected = input.reverse().map(({ day, part }) => ({
-        day, part, solved: false, executionTimeNs: null, numberOfAttempts: 0,
+      const expected = input.reverse().map(({ day, level }) => ({
+        day, level, solved: false, executionTimeNs: null, numberOfAttempts: 0,
       }));
       getPuzzlesForYear.mockResolvedValue(input);
       const result = await getPuzzleCompletionData(year);
       expect(result).toStrictEqual(expected);
     });
   });
-
-  // describe('summarizeCompletionData()', () => {
-  //   // mock the getConfigValues for calculating total puzzles.
-  //   const mockTotalPuzzles = (days, parts) => {
-  //     getConfigValue.mockImplementation((key) => {
-  //       switch (key) {
-  //         case 'aoc.validation.days':
-  //           return Array(days).fill(0);
-  //         case 'aoc.validation.parts':
-  //           return Array(parts).fill(0);
-  //         default:
-  //           return undefined;
-  //       }
-  //     });
-  //   };
-
-  //   test.each([
-  //     null, {}, '', 1234, Promise.resolve(true), () => {},
-  //   ])('throws if given: "%s"', (completionData) => {
-  //     expect(() => summarizeCompletionData(completionData)).toThrow(TypeError);
-  //   });
-
-  //   test('throws if can\'t get total puzzle count', () => {
-  //     mockTotalPuzzles(5, undefined);
-  //     expect(() => summarizeCompletionData([]).toThrow(RangeError));
-  //   });
-
-  //   test('calculates averageNumberOfAttempts', () => {
-  //     mockTotalPuzzles(5, 5);
-  //     const attempts = [5, 4, 3, 2, 1, 6, 7, 8, 9, 10];
-  //     const expected = attempts.reduce((acc, x) => acc + x, 0) / attempts.length;
-  //     const input = attempts.map((x) => ({ numberOfAttempts: x }));
-  //     const { averageNumberOfAttempts } = summarizeCompletionData(input);
-  //     expect(averageNumberOfAttempts).toBe(expected);
-  //   });
-
-  //   test('averageNumberOfAttempts is null for empty input', () => {
-  //     mockTotalPuzzles(5, 5);
-  //     const { averageNumberOfAttempts } = summarizeCompletionData([]);
-  //     expect(averageNumberOfAttempts).toBe(null);
-  //   });
-
-  //   test('calculates maxAttempts', () => {
-  //     mockTotalPuzzles(5, 5);
-  //     const attempts = [5, 4, 3, 2, 1, 6, 7, 8, 9, 10];
-  //     const expected = Math.max(...attempts);
-  //     const input = attempts.map((x) => ({ numberOfAttempts: x }));
-  //     const { maxAttempts } = summarizeCompletionData(input);
-  //     expect(maxAttempts).toBe(expected);
-  //   });
-
-  //   test('maxAttempts is null for empty input', () => {
-  //     mockTotalPuzzles(5, 5);
-  //     const { maxAttempts } = summarizeCompletionData([]);
-  //     expect(maxAttempts).toBe(null);
-  //   });
-
-  //   test('calculates averageExecutionTimeNs', () => {
-  //     mockTotalPuzzles(5, 5);
-  //     const executionTimes = [5, 4, 3, 2, 1, 6, 7, 8, 9, 10];
-  //     const expected = executionTimes.reduce((acc, x) => acc + x, 0) / executionTimes.length;
-  //     const input = executionTimes.map((x) => ({ executionTimeNs: x }));
-  //     const { averageExecutionTimeNs } = summarizeCompletionData(input);
-  //     expect(averageExecutionTimeNs).toBe(expected);
-  //   });
-
-  //   test('averageExecutionTimeNs is null for empty input', () => {
-  //     mockTotalPuzzles(5, 5);
-  //     const { averageExecutionTimeNs } = summarizeCompletionData([]);
-  //     expect(averageExecutionTimeNs).toBe(null);
-  //   });
-
-  //   test('calculates minExecutionTime', () => {
-  //     mockTotalPuzzles(5, 5);
-  //     const executionTimes = [5, 4, 3, 2, 1, 6, 7, 8, 9, 10];
-  //     const expected = Math.min(...executionTimes);
-  //     const input = executionTimes.map((x) => ({ executionTimeNs: x }));
-  //     const { minExecutionTime } = summarizeCompletionData(input);
-  //     expect(minExecutionTime).toBe(expected);
-  //   });
-
-  //   test('minExecutionTime is null for empty input', () => {
-  //     mockTotalPuzzles(5, 5);
-  //     const { minExecutionTime } = summarizeCompletionData([]);
-  //     expect(minExecutionTime).toBe(null);
-  //   });
-
-  //   test('calculates maxExecutionTime', () => {
-  //     mockTotalPuzzles(5, 5);
-  //     const executionTimes = [5, 4, 3, 2, 1, 6, 7, 8, 9, 10];
-  //     const expected = Math.max(...executionTimes);
-  //     const input = executionTimes.map((x) => ({ executionTimeNs: x }));
-  //     const { maxExecutionTime } = summarizeCompletionData(input);
-  //     expect(maxExecutionTime).toBe(expected);
-  //   });
-
-  //   test('maxExecutionTime is null for empty input', () => {
-  //     mockTotalPuzzles(5, 5);
-  //     const { maxExecutionTime } = summarizeCompletionData([]);
-  //     expect(maxExecutionTime).toBe(null);
-  //   });
-
-  //   test('calculates numberSolved', () => {
-  //     mockTotalPuzzles(5, 5);
-  //     const solved = [false, true, true, false, false, false, true];
-  //     const input = solved.map((x) => ({ solved: x }));
-  //     const { numberSolved } = summarizeCompletionData(input);
-  //     expect(numberSolved).toBe(solved.filter(Boolean).length);
-  //   });
-
-  //   test('numberSolved is 0 for empty input', () => {
-  //     mockTotalPuzzles(5, 5);
-  //     const { numberSolved } = summarizeCompletionData([]);
-  //     expect(numberSolved).toBe(0);
-  //   });
-
-  //   test('calculates totalPuzzles', () => {
-  //     const days = 5;
-  //     const parts = 5;
-  //     mockTotalPuzzles(days, parts);
-  //     const { totalPuzzles } = summarizeCompletionData([]);
-  //     expect(totalPuzzles).toBe(days * parts);
-  //   });
-  // });
 });

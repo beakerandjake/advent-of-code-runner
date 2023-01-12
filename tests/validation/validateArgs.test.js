@@ -12,7 +12,7 @@ jest.unstable_mockModule('../../src/config.js', () => ({
 
 // import after setting up the mock so the modules import the mocked version
 const { getConfigValue } = await import('../../src/config.js');
-const { dayIsValid, partIsValid, yearIsValid } = await import('../../src/validation/validateArgs.js');
+const { dayIsValid, levelIsValid, yearIsValid } = await import('../../src/validation/validateArgs.js');
 
 afterEach(() => {
   jest.clearAllMocks();
@@ -26,7 +26,7 @@ describe('validateArgs', () => {
       expect(yearIsValid(year)).toBe(true);
     });
 
-    test('false when year is valid', () => {
+    test('false when year is not valid', () => {
       const year = 2022;
       getConfigValue.mockReturnValue([1234, 9999, 2783, 3737]);
       expect(yearIsValid(year)).toBe(false);
@@ -40,24 +40,24 @@ describe('validateArgs', () => {
       expect(dayIsValid(day)).toBe(true);
     });
 
-    test('false when day is valid', () => {
+    test('false when day is not valid', () => {
       const day = 16;
       getConfigValue.mockReturnValue([1, 2, 3, 4, 5, 6, 7]);
       expect(dayIsValid(day)).toBe(false);
     });
   });
 
-  describe('partIsValid()', () => {
-    test('true when part is valid', () => {
-      const part = 16;
-      getConfigValue.mockReturnValue([1, 2, 3, 4, part, 5, 6, 7]);
-      expect(partIsValid(part)).toBe(true);
+  describe('levelIsValid()', () => {
+    test('true when level is valid', () => {
+      const level = 16;
+      getConfigValue.mockReturnValue([1, 2, 3, 4, level, 5, 6, 7]);
+      expect(levelIsValid(level)).toBe(true);
     });
 
-    test('false when part is valid', () => {
-      const part = 16;
+    test('false when level is not valid', () => {
+      const level = 16;
       getConfigValue.mockReturnValue([1, 2, 3, 4, 5, 6, 7]);
-      expect(partIsValid(part)).toBe(false);
+      expect(levelIsValid(level)).toBe(false);
     });
   });
 });

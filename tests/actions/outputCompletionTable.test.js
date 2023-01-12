@@ -33,204 +33,202 @@ const {
   getSolvedMessage,
 } = await import('../../src/actions/outputCompletionTable.js');
 
-describe('actions', () => {
-  describe('links', () => {
-    afterEach(() => {
-      jest.resetAllMocks();
+describe('outputCompletionTable()', () => {
+  afterEach(() => {
+    jest.resetAllMocks();
+  });
+
+  describe('outputCompletionTable()', () => {
+    test.each([
+      null, undefined,
+    ])('throws if year is: "%s"', async (year) => {
+      await expect(async () => outputCompletionTable({ year })).rejects.toThrow();
     });
 
-    describe('outputCompletionTable()', () => {
-      test.each([
-        null, undefined,
-      ])('throws if year is: "%s"', async (year) => {
-        await expect(async () => outputCompletionTable({ year })).rejects.toThrow();
-      });
-
-      test('halts chain if no completion data', async () => {
-        getPuzzleCompletionData.mockResolvedValue([]);
-        const result = await outputCompletionTable({ year: 2022 });
-        expect(result).toBe(false);
-      });
-
-      test('does not generate table if no completion data', async () => {
-        getPuzzleCompletionData.mockResolvedValue([]);
-        await outputCompletionTable({ year: 2022 });
-        expect(table).not.toHaveBeenCalled();
-      });
+    test('halts chain if no completion data', async () => {
+      getPuzzleCompletionData.mockResolvedValue([]);
+      const result = await outputCompletionTable({ year: 2022 });
+      expect(result).toBe(false);
     });
 
-    describe('mapNamedColumn()', () => {
-      test('colorizes if solved', () => {
-        mapNamedColumn({ day: 1, part: 1, solved: true });
-        expect(mockChalk.green).toHaveBeenCalled();
-      });
+    test('does not generate table if no completion data', async () => {
+      getPuzzleCompletionData.mockResolvedValue([]);
+      await outputCompletionTable({ year: 2022 });
+      expect(table).not.toHaveBeenCalled();
+    });
+  });
 
-      test('does not colorize if not solved', () => {
-        mapNamedColumn({ day: 1, part: 1, solved: false });
-        expect(mockChalk.green).not.toHaveBeenCalled();
-      });
+  describe('mapNamedColumn()', () => {
+    test('colorizes if solved', () => {
+      mapNamedColumn({ day: 1, level: 1, solved: true });
+      expect(mockChalk.green).toHaveBeenCalled();
     });
 
-    describe('mapSolvedColumn()', () => {
-      test('colorizes if solved', () => {
-        mapSolvedColumn({ solved: true });
-        expect(mockChalk.green).toHaveBeenCalled();
-      });
+    test('does not colorize if not solved', () => {
+      mapNamedColumn({ day: 1, level: 1, solved: false });
+      expect(mockChalk.green).not.toHaveBeenCalled();
+    });
+  });
 
-      test('does not colorize if not solved', () => {
-        mapSolvedColumn({ solved: false });
-        expect(mockChalk.green).not.toHaveBeenCalled();
-      });
+  describe('mapSolvedColumn()', () => {
+    test('colorizes if solved', () => {
+      mapSolvedColumn({ solved: true });
+      expect(mockChalk.green).toHaveBeenCalled();
     });
 
-    describe('mapAttemptColumns()', () => {
-      test.each([
-        null, undefined,
-      ])('returns empty string if numberOfAttempts is: "%s"', (numberOfAttempts) => {
-        const result = mapAttemptColumns([{ numberOfAttempts }]);
-        expect(result[0]).toBe('');
-      });
+    test('does not colorize if not solved', () => {
+      mapSolvedColumn({ solved: false });
+      expect(mockChalk.green).not.toHaveBeenCalled();
+    });
+  });
 
-      test('does not highlight perfect solve if not solved', () => {
-        const numberOfAttempts = 1;
-        const result = mapAttemptColumns([{ numberOfAttempts, solved: false }]);
-        expect(result[0]).toBe(numberOfAttempts.toString());
-        expect(mockChalk.green).not.toHaveBeenCalled();
-      });
-
-      test('does not highlight perfect solve if too many attempts', () => {
-        const numberOfAttempts = 10;
-        const result = mapAttemptColumns([{ numberOfAttempts, solved: true }]);
-        expect(result[0]).toBe(numberOfAttempts.toString());
-        expect(mockChalk.green).not.toHaveBeenCalled();
-      });
-
-      test('highlights perfect solve', () => {
-        const numberOfAttempts = 1;
-        mockChalk.green.mockImplementation((x) => x.toString());
-        const result = mapAttemptColumns([{ numberOfAttempts, solved: true }]);
-        expect(mockChalk.green).toHaveBeenCalled();
-        expect(result[0]).toBe(numberOfAttempts.toString());
-      });
-
-      test('does not highlight or mark worst if none match', () => {
-        mockChalk.green.mockImplementation((x) => x.toString());
-        const result = mapAttemptColumns([
-          { numberOfAttempts: 1, solved: true },
-          { numberOfAttempts: 2, solved: true },
-          { numberOfAttempts: 3, solved: true },
-          { numberOfAttempts: 4, solved: true },
-        ], 5);
-        expect(mockChalk.yellow).not.toHaveBeenCalled();
-        result.forEach((x) => expect(x).not.toContain('worst'));
-      });
-
-      test('highlights each matching worst', () => {
-        mockChalk.yellow.mockImplementation((x) => x.toString());
-        mapAttemptColumns([
-          { numberOfAttempts: 1, solved: true },
-          { numberOfAttempts: 2, solved: true },
-          { numberOfAttempts: 3, solved: true },
-          { numberOfAttempts: 4, solved: true },
-          { numberOfAttempts: 4, solved: true },
-          { numberOfAttempts: 4, solved: true },
-        ], 4);
-        expect(mockChalk.yellow).toHaveBeenCalledTimes(3);
-      });
-
-      test('only marks first matching worst', () => {
-        mockChalk.yellow.mockImplementation((x) => x.toString());
-        const result = mapAttemptColumns([
-          { numberOfAttempts: 1, solved: true },
-          { numberOfAttempts: 2, solved: true },
-          { numberOfAttempts: 3, solved: true },
-          { numberOfAttempts: 4, solved: true },
-          { numberOfAttempts: 4, solved: true },
-          { numberOfAttempts: 4, solved: true },
-        ], 4);
-        const marked = result.filter((x) => x?.includes('worst'));
-        expect(marked.length).toBe(1);
-      });
+  describe('mapAttemptColumns()', () => {
+    test.each([
+      null, undefined,
+    ])('returns empty string if numberOfAttempts is: "%s"', (numberOfAttempts) => {
+      const result = mapAttemptColumns([{ numberOfAttempts }]);
+      expect(result[0]).toBe('');
     });
 
-    describe('mapRuntimeColumn()', () => {
-      test.each([
-        null, undefined,
-      ])('returns empty string if runtime is: "%s"', (runtime) => {
-        const result = mapRuntimeColumn({ executionTimeNs: runtime });
-        expect(result).toBe('');
-      });
-
-      test('returns value if no fastest or slowest', () => {
-        humanizeDuration.mockImplementation((x) => x.toString());
-        const executionTimeNs = 1234;
-        const result = mapRuntimeColumn({ executionTimeNs });
-        expect(result).toBe(executionTimeNs.toString());
-      });
-
-      test('does not highlight or mark if not fastest', () => {
-        humanizeDuration.mockImplementation((x) => x.toString());
-        const executionTimeNs = 1234;
-        const result = mapRuntimeColumn({ executionTimeNs }, executionTimeNs - 10);
-        expect(mockChalk.green).not.toHaveBeenCalled();
-        expect(result).not.toContain('best');
-      });
-
-      test('highlight and marks if fastest', () => {
-        humanizeDuration.mockImplementation((x) => x.toString());
-        mockChalk.green.mockImplementation((x) => x.toString());
-        const executionTimeNs = 1234;
-        const result = mapRuntimeColumn({ executionTimeNs }, executionTimeNs);
-        expect(mockChalk.green).toHaveBeenCalled();
-        expect(result).toContain('best');
-      });
-
-      test('does not highlight or mark if not slowest', () => {
-        humanizeDuration.mockImplementation((x) => x.toString());
-        const executionTimeNs = 1234;
-        const result = mapRuntimeColumn(
-          { executionTimeNs },
-          executionTimeNs - 10,
-          executionTimeNs + 10,
-        );
-        expect(mockChalk.yellow).not.toHaveBeenCalled();
-        expect(result).not.toContain('worst');
-      });
-
-      test('highlight and marks if slowest', () => {
-        humanizeDuration.mockImplementation((x) => x.toString());
-        mockChalk.yellow.mockImplementation((x) => x.toString());
-        const executionTimeNs = 1234;
-        const result = mapRuntimeColumn({ executionTimeNs }, executionTimeNs - 10, executionTimeNs);
-        expect(mockChalk.yellow).toHaveBeenCalled();
-        expect(result).toContain('worst');
-      });
+    test('does not highlight perfect solve if not solved', () => {
+      const numberOfAttempts = 1;
+      const result = mapAttemptColumns([{ numberOfAttempts, solved: false }]);
+      expect(result[0]).toBe(numberOfAttempts.toString());
+      expect(mockChalk.green).not.toHaveBeenCalled();
     });
 
-    describe('getSolvedMessage()', () => {
-      test.each([
-        undefined, () => {}, Promise.resolve(10), NaN, Infinity,
-      ])('throws if solved count is: "%s"', (solvedCount) => {
-        expect(() => getSolvedMessage(solvedCount, 10)).toThrow();
-      });
+    test('does not highlight perfect solve if too many attempts', () => {
+      const numberOfAttempts = 10;
+      const result = mapAttemptColumns([{ numberOfAttempts, solved: true }]);
+      expect(result[0]).toBe(numberOfAttempts.toString());
+      expect(mockChalk.green).not.toHaveBeenCalled();
+    });
 
-      test.each([
-        undefined, () => {}, Promise.resolve(10), NaN,
-      ])('throws if total count is: "%s"', (totalCount) => {
-        expect(() => getSolvedMessage(10, totalCount)).toThrow();
-      });
+    test('highlights perfect solve', () => {
+      const numberOfAttempts = 1;
+      mockChalk.green.mockImplementation((x) => x.toString());
+      const result = mapAttemptColumns([{ numberOfAttempts, solved: true }]);
+      expect(mockChalk.green).toHaveBeenCalled();
+      expect(result[0]).toBe(numberOfAttempts.toString());
+    });
 
-      test('handles divide by zero', () => {
-        expect(() => getSolvedMessage(10, 0)).toThrow();
-      });
+    test('does not highlight or mark worst if none match', () => {
+      mockChalk.green.mockImplementation((x) => x.toString());
+      const result = mapAttemptColumns([
+        { numberOfAttempts: 1, solved: true },
+        { numberOfAttempts: 2, solved: true },
+        { numberOfAttempts: 3, solved: true },
+        { numberOfAttempts: 4, solved: true },
+      ], 5);
+      expect(mockChalk.yellow).not.toHaveBeenCalled();
+      result.forEach((x) => expect(x).not.toContain('worst'));
+    });
 
-      test('calculates percentage correctly', () => {
-        const solved = 10;
-        const total = 50;
-        const expected = ((solved / total) * 100).toFixed();
-        const result = getSolvedMessage(solved, total);
-        expect(result).toContain(expected);
-      });
+    test('highlights each matching worst', () => {
+      mockChalk.yellow.mockImplementation((x) => x.toString());
+      mapAttemptColumns([
+        { numberOfAttempts: 1, solved: true },
+        { numberOfAttempts: 2, solved: true },
+        { numberOfAttempts: 3, solved: true },
+        { numberOfAttempts: 4, solved: true },
+        { numberOfAttempts: 4, solved: true },
+        { numberOfAttempts: 4, solved: true },
+      ], 4);
+      expect(mockChalk.yellow).toHaveBeenCalledTimes(3);
+    });
+
+    test('only marks first matching worst', () => {
+      mockChalk.yellow.mockImplementation((x) => x.toString());
+      const result = mapAttemptColumns([
+        { numberOfAttempts: 1, solved: true },
+        { numberOfAttempts: 2, solved: true },
+        { numberOfAttempts: 3, solved: true },
+        { numberOfAttempts: 4, solved: true },
+        { numberOfAttempts: 4, solved: true },
+        { numberOfAttempts: 4, solved: true },
+      ], 4);
+      const marked = result.filter((x) => x?.includes('worst'));
+      expect(marked.length).toBe(1);
+    });
+  });
+
+  describe('mapRuntimeColumn()', () => {
+    test.each([
+      null, undefined,
+    ])('returns empty string if runtime is: "%s"', (runtime) => {
+      const result = mapRuntimeColumn({ executionTimeNs: runtime });
+      expect(result).toBe('');
+    });
+
+    test('returns value if no fastest or slowest', () => {
+      humanizeDuration.mockImplementation((x) => x.toString());
+      const executionTimeNs = 1234;
+      const result = mapRuntimeColumn({ executionTimeNs });
+      expect(result).toBe(executionTimeNs.toString());
+    });
+
+    test('does not highlight or mark if not fastest', () => {
+      humanizeDuration.mockImplementation((x) => x.toString());
+      const executionTimeNs = 1234;
+      const result = mapRuntimeColumn({ executionTimeNs }, executionTimeNs - 10);
+      expect(mockChalk.green).not.toHaveBeenCalled();
+      expect(result).not.toContain('best');
+    });
+
+    test('highlight and marks if fastest', () => {
+      humanizeDuration.mockImplementation((x) => x.toString());
+      mockChalk.green.mockImplementation((x) => x.toString());
+      const executionTimeNs = 1234;
+      const result = mapRuntimeColumn({ executionTimeNs }, executionTimeNs);
+      expect(mockChalk.green).toHaveBeenCalled();
+      expect(result).toContain('best');
+    });
+
+    test('does not highlight or mark if not slowest', () => {
+      humanizeDuration.mockImplementation((x) => x.toString());
+      const executionTimeNs = 1234;
+      const result = mapRuntimeColumn(
+        { executionTimeNs },
+        executionTimeNs - 10,
+        executionTimeNs + 10,
+      );
+      expect(mockChalk.yellow).not.toHaveBeenCalled();
+      expect(result).not.toContain('worst');
+    });
+
+    test('highlight and marks if slowest', () => {
+      humanizeDuration.mockImplementation((x) => x.toString());
+      mockChalk.yellow.mockImplementation((x) => x.toString());
+      const executionTimeNs = 1234;
+      const result = mapRuntimeColumn({ executionTimeNs }, executionTimeNs - 10, executionTimeNs);
+      expect(mockChalk.yellow).toHaveBeenCalled();
+      expect(result).toContain('worst');
+    });
+  });
+
+  describe('getSolvedMessage()', () => {
+    test.each([
+      undefined, () => {}, Promise.resolve(10), NaN, Infinity,
+    ])('throws if solved count is: "%s"', (solvedCount) => {
+      expect(() => getSolvedMessage(solvedCount, 10)).toThrow();
+    });
+
+    test.each([
+      undefined, () => {}, Promise.resolve(10), NaN,
+    ])('throws if total count is: "%s"', (totalCount) => {
+      expect(() => getSolvedMessage(10, totalCount)).toThrow();
+    });
+
+    test('handles divide by zero', () => {
+      expect(() => getSolvedMessage(10, 0)).toThrow();
+    });
+
+    test('calculates percentage correctly', () => {
+      const solved = 10;
+      const total = 50;
+      const expected = ((solved / total) * 100).toFixed();
+      const result = getSolvedMessage(solved, total);
+      expect(result).toContain(expected);
     });
   });
 });

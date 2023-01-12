@@ -118,7 +118,7 @@ const CONFIG = {
       // that years aoc and any changes that might be needed.
       years: [2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022],
       days: [...Array(25).keys()].map((x) => x + 1), // 1-25 expected to always be advent calendar..
-      parts: [1, 2],
+      levels: [1, 2],
     },
     mockApi: {
       enabled: yn(process.env[envOptions.mockApiEnabled]),
@@ -126,9 +126,9 @@ const CONFIG = {
     },
   },
   solutionRunner: {
-    partFunctions: [
-      { key: 1, name: 'partOne' },
-      { key: 2, name: 'partTwo' },
+    levelFunctions: [
+      { key: 1, name: 'levelOne' },
+      { key: 2, name: 'levelTwo' },
     ],
     cancelMessageDelayMs: 3000,
   },

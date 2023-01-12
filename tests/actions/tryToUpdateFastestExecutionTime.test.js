@@ -1,5 +1,5 @@
 import {
-  describe, jest, test, beforeEach,
+  describe, jest, test, afterEach,
 } from '@jest/globals';
 import { mockLogger } from '../mocks';
 
@@ -15,38 +15,34 @@ jest.unstable_mockModule('src/statistics.js', () => ({
 const { getPuzzlesFastestRuntime, setPuzzlesFastestRuntime } = await import('../../src/statistics.js');
 const { tryToUpdateFastestExecutionTime } = await import('../../src/actions/tryToUpdateFastestExecutionTime.js');
 
-beforeEach(() => {
-  jest.resetAllMocks();
-});
+describe('tryToUpdateFastestExecutionTime()', () => {
+  afterEach(() => {
+    jest.resetAllMocks();
+  });
 
-describe('actions', () => {
-  describe('links', () => {
-    describe('tryToUpdateFastestExecutionTime()', () => {
-      test.each([
-        null, undefined, -1,
-      ])('throws if execution time is: %s', async (executionTimeNs) => {
-        await expect(async () => tryToUpdateFastestExecutionTime({
-          year: 2022, day: 11, part: 1, executionTimeNs,
-        })).rejects.toThrow();
-      });
+  test.each([
+    null, undefined, -1,
+  ])('throws if execution time is: %s', async (executionTimeNs) => {
+    await expect(async () => tryToUpdateFastestExecutionTime({
+      year: 2022, day: 11, level: 1, executionTimeNs,
+    })).rejects.toThrow();
+  });
 
-      test('sets if no previous record set', async () => {
-        getPuzzlesFastestRuntime.mockResolvedValue(null);
-        await tryToUpdateFastestExecutionTime({ executionTimeNs: 1234 });
-        expect(setPuzzlesFastestRuntime).toHaveBeenCalled();
-      });
+  test('sets if no previous record set', async () => {
+    getPuzzlesFastestRuntime.mockResolvedValue(null);
+    await tryToUpdateFastestExecutionTime({ executionTimeNs: 1234 });
+    expect(setPuzzlesFastestRuntime).toHaveBeenCalled();
+  });
 
-      test('does not set if record not broken', async () => {
-        getPuzzlesFastestRuntime.mockResolvedValue(1234);
-        await tryToUpdateFastestExecutionTime({ executionTimeNs: 4321 });
-        expect(setPuzzlesFastestRuntime).not.toHaveBeenCalled();
-      });
+  test('does not set if record not broken', async () => {
+    getPuzzlesFastestRuntime.mockResolvedValue(1234);
+    await tryToUpdateFastestExecutionTime({ executionTimeNs: 4321 });
+    expect(setPuzzlesFastestRuntime).not.toHaveBeenCalled();
+  });
 
-      test('sets if record is broken', async () => {
-        getPuzzlesFastestRuntime.mockResolvedValue(4321);
-        await tryToUpdateFastestExecutionTime({ executionTimeNs: 1234 });
-        expect(setPuzzlesFastestRuntime).toHaveBeenCalled();
-      });
-    });
+  test('sets if record is broken', async () => {
+    getPuzzlesFastestRuntime.mockResolvedValue(4321);
+    await tryToUpdateFastestExecutionTime({ executionTimeNs: 1234 });
+    expect(setPuzzlesFastestRuntime).toHaveBeenCalled();
   });
 });

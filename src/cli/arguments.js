@@ -1,7 +1,7 @@
 import { Argument, InvalidArgumentError } from 'commander';
 import { getConfigValue } from '../config.js';
 import { betweenMessage } from '../formatting.js';
-import { dayIsValid, partIsValid, parsePositiveInt } from '../validation/index.js';
+import { dayIsValid, levelIsValid, parsePositiveInt } from '../validation/index.js';
 
 /**
  * Parses a positive int from the arg value, then validates and returns the parsed value.
@@ -35,15 +35,15 @@ export const dayArgument = new Argument('<day>', `The day to solve (${daysRange}
     `Allowed Days between ${daysRange}.`,
   ));
 
-const partsRange = betweenMessage(getConfigValue('aoc.validation.parts'));
+const levelRange = betweenMessage(getConfigValue('aoc.validation.levels'));
 
 /**
- * Argument for the puzzles part, returns an integer.
- * @throws {InvalidArgumentError} The part was invalid
+ * Argument for the puzzles level, returns an integer.
+ * @throws {InvalidArgumentError} The level was invalid
  */
-export const partArgument = new Argument('<part>', `The part of the day to solve (${partsRange}).`)
+export const levelArgument = new Argument('<level>', `The the level of the puzzle to solve (${levelRange}).`)
   .argParser((value) => parseArgument(
     value,
-    partIsValid,
-    `Allowed Parts ${partsRange}.`,
+    levelIsValid,
+    `Allowed levels ${levelRange}.`,
   ));

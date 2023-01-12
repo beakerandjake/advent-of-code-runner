@@ -17,8 +17,8 @@ import { getTotalPuzzleCount } from '../validation/validatePuzzle.js';
  * Generates the text for the name column.
  * @private
  */
-export const mapNamedColumn = ({ day, part, solved }) => {
-  const text = `${day}.${part}`;
+export const mapNamedColumn = ({ day, level, solved }) => {
+  const text = `${day}.${level}`;
   return solved ? chalk.green(text) : text;
 };
 

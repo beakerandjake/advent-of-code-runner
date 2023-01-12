@@ -14,18 +14,18 @@ const PUZZLE_DATA_KEY = 'puzzles';
 
 /**
  * Expect the id field of puzzle stored in json is exactly 8 digits.
- * YYYYDDPP (year day part)
+ * YYYYDDLL (year day level)
  */
 const idRegex = /^\d{8}$/;
 
 /**
- * Parses the year, day, part from a valid id.
+ * Parses the year, day, level from a valid id.
  * @param {String} id
  */
 const parseValidId = (id) => ({
   year: Number.parseInt(id.substring(0, 4), 10),
   day: Number.parseInt(id.substring(4, 6), 10),
-  part: Number.parseInt(id.substring(6), 10),
+  level: Number.parseInt(id.substring(6), 10),
 });
 
 /**
@@ -49,7 +49,7 @@ export const translateToPuzzleFromData = (data) => {
   } = data;
 
   if (!id || (typeof id !== 'string') || !idRegex.test(id)) {
-    throw new TypeError(`Puzzle ${id} not expected format of YYYYDDPP (year day part)`);
+    throw new TypeError(`Puzzle ${id} not expected format of YYYYDDLL (year day level)`);
   }
 
   if (!Array.isArray(incorrectAnswers)) {
@@ -88,7 +88,7 @@ export const translateToDataFromPuzzle = (puzzle) => {
   } = puzzle;
 
   if (!id || typeof id !== 'string' || !idRegex.test(id)) {
-    throw new TypeError('Puzzle "id" not expected format of YYYYDDPP (year day part)');
+    throw new TypeError('Puzzle "id" not expected format of YYYYDDLL (year day level)');
   }
 
   if (!Array.isArray(incorrectAnswers)) {
@@ -112,13 +112,13 @@ export const translateToDataFromPuzzle = (puzzle) => {
  * @private
  * @param {Number} year
  * @param {Number} day
- * @param {Number} part
+ * @param {Number} level
  */
-export const getId = (year, day, part) => {
-  const toReturn = `${year?.toString().padStart(4)}${day?.toString().padStart(2, '0')}${part?.toString().padStart(2, '0')}`;
+export const getId = (year, day, level) => {
+  const toReturn = `${year?.toString().padStart(4)}${day?.toString().padStart(2, '0')}${level?.toString().padStart(2, '0')}`;
 
   if (!idRegex.test(toReturn)) {
-    throw new TypeError(`Could not generate valid id from year: "${year}", day: "${day}", part: "${part}"`);
+    throw new TypeError(`Could not generate valid id from year: "${year}", day: "${day}", level: "${level}"`);
   }
   return toReturn;
 };
@@ -152,11 +152,11 @@ export const setPuzzles = async (puzzles = []) => (
  * Returns the specified puzzle data. If not found, returns null.
  * @param {Number} year
  * @param {Number} day
- * @param {Number} part
+ * @param {Number} level
  */
-export const findPuzzle = async (year, day, part) => {
+export const findPuzzle = async (year, day, level) => {
   const puzzles = await getPuzzles();
-  const puzzleId = getId(year, day, part);
+  const puzzleId = getId(year, day, level);
   return puzzles.find((x) => x.id === puzzleId) || null;
 };
 
@@ -165,10 +165,10 @@ export const findPuzzle = async (year, day, part) => {
  * This does not persist the instance, it just returns a new one.
  * @param {Number} year
  * @param {Number} day
- * @param {Number} part
+ * @param {Number} level
  */
-export const createPuzzle = (year, day, part) => {
-  const id = getId(year, day, part);
+export const createPuzzle = (year, day, level) => {
+  const id = getId(year, day, level);
 
   return {
     id,
@@ -197,11 +197,11 @@ export const addOrEditPuzzle = async (puzzle) => {
 
   if (puzzles.some((x) => x.id === puzzle.id)) {
     // update if exists
-    logger.debug('puzzle data already exists, updating entry', { year: puzzle.year, day: puzzle.day, part: puzzle.part });
+    logger.debug('puzzle data already exists, updating entry', { year: puzzle.year, day: puzzle.day, level: puzzle.level });
     updated = puzzles.map((x) => (x.id === puzzle.id ? translateToDataFromPuzzle(puzzle) : x));
   } else {
   // add if does not exist
-    logger.debug('puzzle data does not exist, creating entry', { year: puzzle.year, day: puzzle.day, part: puzzle.part });
+    logger.debug('puzzle data does not exist, creating entry', { year: puzzle.year, day: puzzle.day, level: puzzle.level });
     updated = [...puzzles, translateToDataFromPuzzle(puzzle)];
   }
 

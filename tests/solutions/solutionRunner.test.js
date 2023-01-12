@@ -27,7 +27,7 @@ const { Worker } = await import('node:worker_threads');
 const { join } = await import('path');
 const { pathExists } = await import('fs-extra/esm');
 const {
-  execute, getSolutionFileName, getFunctionNameForPart, spawnWorker,
+  execute, getSolutionFileName, getFunctionNameForLevel, spawnWorker,
 } = await import('../../src/solutions/solutionRunner.js');
 
 describe('solutionRunner', () => {
@@ -56,24 +56,24 @@ describe('solutionRunner', () => {
     });
   });
 
-  describe('getFunctionNameForPart()', () => {
-    test('returns value if part is found', () => {
-      const part = 10;
+  describe('getFunctionNameForLevel()', () => {
+    test('returns value if level is found', () => {
+      const level = 10;
       const name = 'CATS';
       getConfigValue.mockReturnValueOnce([
         { key: 1, name: 'Dogs' },
         { key: 2, name: 'Sheet' },
         { key: 4, name: 'Orange' },
         { key: 22, name: 'Box' },
-        { key: part, name },
+        { key: level, name },
       ]);
 
-      const result = getFunctionNameForPart(part);
+      const result = getFunctionNameForLevel(level);
 
       expect(result).toBe(name);
     });
 
-    test('throws if part is not found', () => {
+    test('throws if level is not found', () => {
       getConfigValue.mockReturnValueOnce([
         { key: 1, name: 'Dogs' },
         { key: 2, name: 'Sheet' },
@@ -82,7 +82,7 @@ describe('solutionRunner', () => {
         { key: 55, name: 'ASDF' },
       ]);
 
-      expect(() => getFunctionNameForPart(10)).toThrow();
+      expect(() => getFunctionNameForLevel(10)).toThrow();
     });
   });
 
@@ -159,15 +159,15 @@ describe('solutionRunner', () => {
     /**
      * helps set the mock getConfigValue for the solution runner.
      */
-    const setConfigMocks = (part, {
-      solutionsDir = '.', partFunctions = [{ key: part, name: 'cats' }], workerFileName = '.', authToken = '',
+    const setConfigMocks = (level, {
+      solutionsDir = '.', levelFunctions = [{ key: level, name: 'cats' }], workerFileName = '.', authToken = '',
     } = {}) => {
       getConfigValue.mockImplementation((key) => {
         switch (key) {
           case 'paths.solutionsDir':
             return solutionsDir;
-          case 'solutionRunner.partFunctions':
-            return partFunctions;
+          case 'solutionRunner.levelFunctions':
+            return levelFunctions;
           case 'paths.solutionRunnerWorkerFile':
             return workerFileName;
           case 'aoc.authenticationToken':
@@ -185,27 +185,27 @@ describe('solutionRunner', () => {
     });
 
     test('throws if user solution file not found', async () => {
-      const part = 1;
-      setConfigMocks(part);
+      const level = 1;
+      setConfigMocks(level);
       pathExists.mockResolvedValue(false);
       expect(async () => execute(1, 1, 'asdf')).rejects.toThrow(UserSolutionFileNotFoundError);
     });
 
     test('passes worker data to worker', async () => {
-      const part = 1;
+      const level = 1;
       const expected = {
-        functionToExecute: 'partOne',
+        functionToExecute: 'levelOne',
         solutionFileName: 'day_01.js',
         input: 'ASDF\nASDF',
         lines: ['ASDF', 'ASDF'],
       };
       pathExists.mockResolvedValue(true);
-      setConfigMocks(part, { partFunctions: [{ key: part, name: expected.functionToExecute }] });
+      setConfigMocks(level, { levelFunctions: [{ key: level, name: expected.functionToExecute }] });
 
       // hacky way to ensure worker constructor is called.
       // cant await execute cause that promise never resolves.
       // so await a different promise to ensure constructor is called
-      execute(1, part, expected.input);
+      execute(1, level, expected.input);
       await Promise.resolve(123);
 
       expect(Worker).toHaveBeenCalledWith(

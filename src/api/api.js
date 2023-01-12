@@ -58,15 +58,15 @@ export const downloadInput = async (year, day, authenticationToken) => {
 };
 
 /**
- * Post a solution for the problem of the given year / day / part.
+ * Post a solution for the problem of the given year / day / level.
  * @param {Number} year - The year of the puzzle
  * @param {Number} day - The day of the puzzle.
- * @param {1|2} part - Is this part one or part two of the puzzle?
+ * @param {1|2} level - The level of the puzzle
  * @param {String|Number} solution - The solution to test.
  * @param {String} authenticationToken - Token to authenticate with aoc.
  */
-export const submitSolution = async (year, day, part, solution, authenticationToken) => {
-  logger.debug('submitting solution to advent of code for year: %s, day: %s, part: %s', year, day, part);
+export const submitSolution = async (year, day, level, solution, authenticationToken) => {
+  logger.debug('submitting solution to advent of code', { year, day, level });
 
   if (!authenticationToken) {
     throw new Error('Authentication Token is required to query advent of code.');
@@ -78,7 +78,7 @@ export const submitSolution = async (year, day, part, solution, authenticationTo
   const response = await fetch(url, {
     method: 'POST',
     headers: { ...getHeaders(authenticationToken), 'Content-Type': 'application/x-www-form-urlencoded' },
-    body: `level=${part}&answer=${solution}`,
+    body: `level=${level}&answer=${solution}`,
   });
 
   // bad request, authentication failed.

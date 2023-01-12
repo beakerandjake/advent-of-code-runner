@@ -1,5 +1,5 @@
 import { answerTypeIsValid } from './validateAnswer.js';
-import { dayIsValid, partIsValid, yearIsValid } from './validateArgs.js';
+import { dayIsValid, levelIsValid, yearIsValid } from './validateArgs.js';
 import { getAllPuzzlesForYear, puzzleIsInFuture } from './validatePuzzle.js';
 import { parsePositiveInt } from './validationUtils.js';
 
@@ -8,7 +8,7 @@ export {
   dayIsValid,
   getAllPuzzlesForYear,
   parsePositiveInt,
-  partIsValid,
+  levelIsValid,
   puzzleIsInFuture,
   yearIsValid,
 };

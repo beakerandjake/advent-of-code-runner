@@ -85,21 +85,21 @@ describe('validatePuzzle', () => {
       getConfigValue.mockReturnValueOnce([1, 2, 3, 4, 5]);
       getConfigValue.mockReturnValueOnce([1, 2, 3]);
       const expected = [
-        { year, day: 1, part: 1 },
-        { year, day: 1, part: 2 },
-        { year, day: 1, part: 3 },
-        { year, day: 2, part: 1 },
-        { year, day: 2, part: 2 },
-        { year, day: 2, part: 3 },
-        { year, day: 3, part: 1 },
-        { year, day: 3, part: 2 },
-        { year, day: 3, part: 3 },
-        { year, day: 4, part: 1 },
-        { year, day: 4, part: 2 },
-        { year, day: 4, part: 3 },
-        { year, day: 5, part: 1 },
-        { year, day: 5, part: 2 },
-        { year, day: 5, part: 3 },
+        { year, day: 1, level: 1 },
+        { year, day: 1, level: 2 },
+        { year, day: 1, level: 3 },
+        { year, day: 2, level: 1 },
+        { year, day: 2, level: 2 },
+        { year, day: 2, level: 3 },
+        { year, day: 3, level: 1 },
+        { year, day: 3, level: 2 },
+        { year, day: 3, level: 3 },
+        { year, day: 4, level: 1 },
+        { year, day: 4, level: 2 },
+        { year, day: 4, level: 3 },
+        { year, day: 5, level: 1 },
+        { year, day: 5, level: 2 },
+        { year, day: 5, level: 3 },
       ];
 
       expect(getAllPuzzlesForYear(year)).toStrictEqual(expected);
@@ -109,18 +109,18 @@ describe('validatePuzzle', () => {
   describe('getTotalPuzzleCount()', () => {
     test('calculates correctly', () => {
       const days = [1, 2, 3, 4, 5, 6];
-      const parts = [1, 2, 3, 4];
+      const levels = [1, 2, 3, 4];
       getConfigValue.mockImplementation((key) => {
         if (key === 'aoc.validation.days') {
           return days;
         }
-        if (key === 'aoc.validation.parts') {
-          return parts;
+        if (key === 'aoc.validation.levels') {
+          return levels;
         }
         throw new Error('unexpected getConfigValue call in test');
       });
       const result = getTotalPuzzleCount();
-      expect(result).toBe(days.length * parts.length);
+      expect(result).toBe(days.length * levels.length);
     });
   });
 });

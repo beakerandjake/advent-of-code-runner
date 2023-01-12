@@ -57,7 +57,7 @@ export const parseResponseMessage = (message = '') => {
     logger.debug('message indicated solution was incorrect');
     return { correct: false, message };
   }
-  // check bad level, indicates user tried to solve locked or already solved part.
+  // check bad level, indicates user tried to solve locked or already solved level.
   if (message.match(matchers.badLevel)) {
     throw new SolvingWrongLevelError();
   }

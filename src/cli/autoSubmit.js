@@ -13,8 +13,6 @@ const actionChain = createChain([...new Set([
 
 /**
  * Downloads or loads the input to the puzzle, executes the users solution and outputs results.
- * @param {Number} day
- * @param {Number} part
  */
 const autoSubmit = async () => actionChain({});
 

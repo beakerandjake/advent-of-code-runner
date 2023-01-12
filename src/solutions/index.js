@@ -6,10 +6,4 @@ import { execute } from './solutionRunner.js';
  * languages such as python.
  */
 
-/**
- * Runs the answer for the given day.
- * @param {Number} year
- * @param {Number} day
- * @param {Number} part
- */
 export { execute };

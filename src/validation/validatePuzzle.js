@@ -7,7 +7,6 @@ import { getConfigValue } from '../config.js';
  * @param {Number} day
  */
 export const puzzleIsInFuture = (year, day) => {
-  // can easily check for past or future years, but current year is where the hard part is.
   if (year !== new Date().getFullYear()) {
     return year > new Date().getFullYear();
   }
@@ -22,8 +21,8 @@ export const puzzleIsInFuture = (year, day) => {
  */
 export const getAllPuzzlesForYear = (year) => {
   const days = getConfigValue('aoc.validation.days');
-  const parts = getConfigValue('aoc.validation.parts');
-  return days.reduce((acc, day) => [...acc, ...parts.map((part) => ({ year, day, part }))], []);
+  const levels = getConfigValue('aoc.validation.levels');
+  return days.reduce((acc, day) => [...acc, ...levels.map((level) => ({ year, day, level }))], []);
 };
 
 /**
@@ -31,6 +30,6 @@ export const getAllPuzzlesForYear = (year) => {
  */
 export const getTotalPuzzleCount = () => {
   const days = getConfigValue('aoc.validation.days');
-  const parts = getConfigValue('aoc.validation.parts');
-  return days.length * parts.length;
+  const levels = getConfigValue('aoc.validation.levels');
+  return days.length * levels.length;
 };

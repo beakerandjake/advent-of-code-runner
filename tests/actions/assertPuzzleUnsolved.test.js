@@ -11,24 +11,20 @@ jest.unstable_mockModule('src/answers.js', () => ({ puzzleHasBeenSolved: jest.fn
 const { puzzleHasBeenSolved } = await import('../../src/answers.js');
 const { assertPuzzleUnsolved } = await import('../../src/actions/assertPuzzleUnsolved.js');
 
-afterEach(() => {
-  jest.resetAllMocks();
-});
+describe('assertPuzzleUnsolved()', () => {
+  afterEach(() => {
+    jest.resetAllMocks();
+  });
 
-describe('actions', () => {
-  describe('links', () => {
-    describe('assertPuzzleUnsolved()', () => {
-      test('returns true if puzzle has not been solved', async () => {
-        puzzleHasBeenSolved.mockResolvedValue(false);
-        const result = await assertPuzzleUnsolved({ year: 2022, day: 1, part: 1 });
-        expect(result).toBe(true);
-      });
+  test('returns true if puzzle has not been solved', async () => {
+    puzzleHasBeenSolved.mockResolvedValue(false);
+    const result = await assertPuzzleUnsolved({ year: 2022, day: 1, level: 1 });
+    expect(result).toBe(true);
+  });
 
-      test('returns true if puzzle has been solved', async () => {
-        puzzleHasBeenSolved.mockResolvedValue(true);
-        const result = await assertPuzzleUnsolved({ year: 2022, day: 1, part: 1 });
-        expect(result).toBe(false);
-      });
-    });
+  test('returns true if puzzle has been solved', async () => {
+    puzzleHasBeenSolved.mockResolvedValue(true);
+    const result = await assertPuzzleUnsolved({ year: 2022, day: 1, level: 1 });
+    expect(result).toBe(false);
   });
 });

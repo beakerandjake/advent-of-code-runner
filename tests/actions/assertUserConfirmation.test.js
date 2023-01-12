@@ -13,37 +13,33 @@ jest.unstable_mockModule('inquirer', () => ({
 // import after setting up mocks
 const { assertUserConfirmation } = await import('../../src/actions/assertUserConfirmation.js');
 
-beforeEach(() => {
-  jest.resetAllMocks();
-});
+describe('assertUserConfirmation()', () => {
+  afterEach(() => {
+    jest.resetAllMocks();
+  });
 
-describe('actions', () => {
-  describe('links', () => {
-    describe('assertUserConfirmation()', () => {
-      test.each([
-        null, undefined,
-      ])('throws if question is %s', (question) => {
-        expect(() => assertUserConfirmation(question)).toThrow();
-      });
+  test.each([
+    null, undefined,
+  ])('throws if question is %s', (question) => {
+    expect(() => assertUserConfirmation(question)).toThrow();
+  });
 
-      test('builds and returns function', () => {
-        const result = assertUserConfirmation({});
-        expect(result).toBeInstanceOf(Function);
-      });
+  test('builds and returns function', () => {
+    const result = assertUserConfirmation({});
+    expect(result).toBeInstanceOf(Function);
+  });
 
-      test('returns true if user confirms', async () => {
-        mockPrompt.mockResolvedValue({ confirmed: true });
-        const fn = assertUserConfirmation({});
-        const result = await fn();
-        expect(result).toBe(true);
-      });
+  test('returns true if user confirms', async () => {
+    mockPrompt.mockResolvedValue({ confirmed: true });
+    const fn = assertUserConfirmation({});
+    const result = await fn();
+    expect(result).toBe(true);
+  });
 
-      test('returns false if user does not confirm', async () => {
-        mockPrompt.mockResolvedValue({ confirmed: false });
-        const fn = assertUserConfirmation({});
-        const result = await fn();
-        expect(result).toBe(false);
-      });
-    });
+  test('returns false if user does not confirm', async () => {
+    mockPrompt.mockResolvedValue({ confirmed: false });
+    const fn = assertUserConfirmation({});
+    const result = await fn();
+    expect(result).toBe(false);
   });
 });
