@@ -7,13 +7,13 @@ import { logger } from '../logger.js';
  * Returns false if the puzzle has not been solved or the values are not equal
  */
 export const assertAnswerCorrect = async ({
-  year, day, part, answer,
+  year, day, level, answer,
 } = {}) => {
   if (answer == null) {
     throw new Error('null or undefined answer');
   }
 
-  const correctAnswer = await getCorrectAnswer(year, day, part);
+  const correctAnswer = await getCorrectAnswer(year, day, level);
 
   // if there isn't a correct answer stored, then this puzzle hasn't been solved.
   if (!correctAnswer) {
