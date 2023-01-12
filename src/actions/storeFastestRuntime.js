@@ -3,7 +3,7 @@ import { setPuzzlesFastestRuntime } from '../statistics.js';
 /**
  * Update the fastest execution time for this puzzle with the new value.
  */
-export const storeFastestExecutionTime = async ({
+export const storeFastestRuntime = async ({
   year, day, level, executionTimeNs,
 } = {}) => {
   if (executionTimeNs == null) {
