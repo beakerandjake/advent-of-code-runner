@@ -23,6 +23,7 @@ const outputStats = createChain([
 const saveStats = createChain([
   assertInitialized,
   assertReadmeExists,
+  getYear,
   saveCompletionTableToReadme,
 ]);
 
