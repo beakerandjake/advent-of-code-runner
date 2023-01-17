@@ -171,7 +171,7 @@ describe('answers', () => {
         id: '20220101',
         correctAnswer: null,
         incorrectAnswers: ['asdf', '1234'],
-        fastestExecutionTimeNs: null,
+        fastestRuntimeNs: null,
       };
       findPuzzle.mockReturnValueOnce(originalData);
       await setCorrectAnswer(2022, 1, 1, correctAnswer);
@@ -224,7 +224,7 @@ describe('answers', () => {
         id: '20220101',
         correctAnswer: 'GOOD JOB',
         incorrectAnswers: ['adsf', 'qwer'],
-        fastestExecutionTimeNs: 12341234,
+        fastestRuntimeNs: 12341234,
       };
       findPuzzle.mockReturnValueOnce(originalData);
       await addIncorrectAnswer(2022, 1, 1, toAdd);
