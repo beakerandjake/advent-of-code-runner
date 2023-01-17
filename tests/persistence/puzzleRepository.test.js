@@ -97,7 +97,7 @@ describe('puzzleRepository', () => {
       expect(() => translateToPuzzleFromData(puzzle)).toThrow(TypeError);
     });
 
-    test('throws with fastestExecutionTime not number', () => {
+    test('throws with fastestRuntimeNs not number', () => {
       const puzzle = {
         id: '20221201',
         fastestRuntimeNs: 'Really Fast!',
