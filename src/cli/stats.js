@@ -5,18 +5,18 @@ import { assertInitialized, getYear, outputCompletionTable } from '../actions/in
 /**
  * Output stats to the cli
  */
-const outputStats = async () => createChain([
+const outputStats = createChain([
   assertInitialized,
   getYear,
   outputCompletionTable,
-])();
+]);
 
 /**
  * Save the stats to the users readme file
  */
-const saveStats = async () => createChain([
+const saveStats = createChain([
   assertInitialized,
-])();
+]);
 
 /**
  * Command to output user statistics.
