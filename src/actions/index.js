@@ -4,6 +4,7 @@ import { assertInitialized } from './assertInitialized.js';
 import { assertPuzzleLevelMet } from './assertPuzzleLevelMet.js';
 import { assertPuzzleUnlocked } from './assertPuzzleUnlocked.js';
 import { assertPuzzleUnsolved } from './assertPuzzleUnsolved.js';
+import { assertReadmeExists } from './assertReadmeExists.js';
 import { assertUserConfirmation } from './assertUserConfirmation.js';
 import { executeUserSolution } from './executeUserSolution.js';
 import { getAnswersFromUser } from './getAnswersFromUser.js';
@@ -30,6 +31,7 @@ export {
   assertPuzzleUnlocked,
   assertPuzzleUnsolved,
   assertPuzzleLevelMet,
+  assertReadmeExists,
   assertUserConfirmation,
   executeUserSolution,
   getAnswersFromUser,

@@ -1,6 +1,11 @@
 import { Command } from 'commander';
 import { createChain } from '../actions/actionChain.js';
-import { assertInitialized, getYear, outputCompletionTable } from '../actions/index.js';
+import {
+  assertInitialized,
+  getYear,
+  outputCompletionTable,
+  assertReadmeExists,
+} from '../actions/index.js';
 
 /**
  * Output stats to the cli
@@ -16,6 +21,7 @@ const outputStats = createChain([
  */
 const saveStats = createChain([
   assertInitialized,
+  assertReadmeExists,
 ]);
 
 /**
