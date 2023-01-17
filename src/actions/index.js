@@ -15,6 +15,7 @@ import { getYear } from './getYear.js';
 import { and, not, or } from './logical.js';
 import { outputCompletionTable } from './outputCompletionTable.js';
 import { outputPuzzleLink } from './outputPuzzleLink.js';
+import { saveCompletionTableToReadme } from './saveCompletionTableToReadme.js';
 import { storeFastestRuntime } from './storeFastestRuntime.js';
 import { storeSubmittedAnswer } from './storeSubmittedAnswer.js';
 import { submitPuzzleAnswer } from './submitPuzzleAnswer.js';
@@ -25,6 +26,7 @@ import { tryToUpdateFastestRuntime } from './tryToUpdateFastestRuntime.js';
  */
 
 export {
+  and,
   assertAnswerCorrect,
   assertAnswerPreviouslySubmitted,
   assertInitialized,
@@ -39,13 +41,13 @@ export {
   getNextUnsolvedPuzzle,
   getPuzzleInput,
   getYear,
+  not,
+  or,
+  outputCompletionTable,
+  outputPuzzleLink,
+  saveCompletionTableToReadme,
   storeFastestRuntime,
   storeSubmittedAnswer,
   submitPuzzleAnswer,
   tryToUpdateFastestRuntime,
-  or,
-  not,
-  and,
-  outputCompletionTable,
-  outputPuzzleLink,
 };
