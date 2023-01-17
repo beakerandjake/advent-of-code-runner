@@ -44,7 +44,7 @@ export const translateToPuzzleFromData = (data) => {
   const {
     id,
     correctAnswer = null,
-    fastestExecutionTimeNs = null,
+    fastestRuntimeNs = null,
     incorrectAnswers = [],
   } = data;
 
@@ -56,13 +56,13 @@ export const translateToPuzzleFromData = (data) => {
     throw new TypeError('Puzzle "incorrectAnswers" expected to be array');
   }
 
-  if (fastestExecutionTimeNs && !Number.isFinite(fastestExecutionTimeNs)) {
-    throw new TypeError('Puzzle "fastestExecutionTimeNs" expected to be number');
+  if (fastestRuntimeNs && !Number.isFinite(fastestRuntimeNs)) {
+    throw new TypeError('Puzzle "fastestRuntimeNs" expected to be number');
   }
 
   return {
     id,
-    fastestExecutionTimeNs: fastestExecutionTimeNs && Number.parseInt(fastestExecutionTimeNs, 10),
+    fastestRuntimeNs: fastestRuntimeNs && Number.parseInt(fastestRuntimeNs, 10),
     incorrectAnswers: incorrectAnswers.map((x) => (x ? x.toString() : '')),
     correctAnswer: correctAnswer?.toString() || null,
     ...parseValidId(id),
@@ -83,7 +83,7 @@ export const translateToDataFromPuzzle = (puzzle) => {
   const {
     id,
     correctAnswer = null,
-    fastestExecutionTimeNs = null,
+    fastestRuntimeNs = null,
     incorrectAnswers = [],
   } = puzzle;
 
@@ -95,13 +95,13 @@ export const translateToDataFromPuzzle = (puzzle) => {
     throw new TypeError('Puzzle "incorrectAnswers" expected to be array');
   }
 
-  if (fastestExecutionTimeNs && !Number.isFinite(fastestExecutionTimeNs)) {
-    throw new TypeError('Puzzle "fastestExecutionTimeNs" expected to be number');
+  if (fastestRuntimeNs && !Number.isFinite(fastestRuntimeNs)) {
+    throw new TypeError('Puzzle "fastestRuntimeNs" expected to be number');
   }
 
   return {
     id,
-    fastestExecutionTimeNs: fastestExecutionTimeNs && Number.parseInt(fastestExecutionTimeNs, 10),
+    fastestRuntimeNs: fastestRuntimeNs && Number.parseInt(fastestRuntimeNs, 10),
     incorrectAnswers: incorrectAnswers.map((x) => (x ? x.toString() : '')),
     correctAnswer: correctAnswer?.toString() || null,
   };
@@ -172,7 +172,7 @@ export const createPuzzle = (year, day, level) => {
 
   return {
     id,
-    fastestExecutionTimeNs: null,
+    fastestRuntimeNs: null,
     incorrectAnswers: [],
     correctAnswer: null,
     ...parseValidId(id),

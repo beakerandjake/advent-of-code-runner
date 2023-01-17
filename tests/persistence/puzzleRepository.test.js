@@ -50,7 +50,7 @@ describe('puzzleRepository', () => {
 
     test('throws missing id', () => {
       const puzzle = {
-        fastestExecutionTimeNs: null,
+        fastestRuntimeNs: null,
         incorrectAnswers: [],
         correctAnswer: null,
       };
@@ -60,7 +60,7 @@ describe('puzzleRepository', () => {
     test('throws non string id', () => {
       const puzzle = {
         id: 20021205,
-        fastestExecutionTimeNs: null,
+        fastestRuntimeNs: null,
         incorrectAnswers: [],
         correctAnswer: null,
       };
@@ -70,7 +70,7 @@ describe('puzzleRepository', () => {
     test('throws id contains non-numeric character', () => {
       const puzzle = {
         id: '200212z5',
-        fastestExecutionTimeNs: null,
+        fastestRuntimeNs: null,
         incorrectAnswers: [],
         correctAnswer: null,
       };
@@ -80,7 +80,7 @@ describe('puzzleRepository', () => {
     test('throws with id invalid length', () => {
       const puzzle = {
         id: '202212',
-        fastestExecutionTimeNs: null,
+        fastestRuntimeNs: null,
         incorrectAnswers: [],
         correctAnswer: null,
       };
@@ -90,7 +90,7 @@ describe('puzzleRepository', () => {
     test('throws with incorrectAnswers not array', () => {
       const puzzle = {
         id: '20221201',
-        fastestExecutionTimeNs: null,
+        fastestRuntimeNs: null,
         incorrectAnswers: {},
         correctAnswer: null,
       };
@@ -100,7 +100,7 @@ describe('puzzleRepository', () => {
     test('throws with fastestExecutionTime not number', () => {
       const puzzle = {
         id: '20221201',
-        fastestExecutionTimeNs: 'Really Fast!',
+        fastestRuntimeNs: 'Really Fast!',
         incorrectAnswers: [],
         correctAnswer: null,
       };
@@ -110,7 +110,7 @@ describe('puzzleRepository', () => {
     test('translates year, day, level from id', () => {
       const data = {
         id: '20220201',
-        fastestExecutionTimeNs: null,
+        fastestRuntimeNs: null,
         incorrectAnswers: [],
         correctAnswer: null,
       };
@@ -127,7 +127,7 @@ describe('puzzleRepository', () => {
     test('translates id', () => {
       const data = {
         id: '20220201',
-        fastestExecutionTimeNs: 12345,
+        fastestRuntimeNs: 12345,
         incorrectAnswers: [],
         correctAnswer: null,
       };
@@ -137,16 +137,16 @@ describe('puzzleRepository', () => {
       expect(translateToPuzzleFromData(data)).toMatchObject(expected);
     });
 
-    test('translates fastestExecutionTimeNs', () => {
+    test('translates fastestRuntimeNs', () => {
       const data = {
         id: '20220201',
-        fastestExecutionTimeNs: 12345,
+        fastestRuntimeNs: 12345,
         incorrectAnswers: [],
         correctAnswer: null,
       };
 
       const expected = {
-        fastestExecutionTimeNs: 12345,
+        fastestRuntimeNs: 12345,
       };
 
       expect(translateToPuzzleFromData(data)).toMatchObject(expected);
@@ -157,7 +157,7 @@ describe('puzzleRepository', () => {
 
       const data = {
         id: '20220201',
-        fastestExecutionTimeNs: 12345,
+        fastestRuntimeNs: 12345,
         incorrectAnswers,
         correctAnswer: null,
       };
@@ -170,7 +170,7 @@ describe('puzzleRepository', () => {
     test('translates correctAnswer', () => {
       const data = {
         id: '20220201',
-        fastestExecutionTimeNs: 12345,
+        fastestRuntimeNs: 12345,
         incorrectAnswers: [],
         correctAnswer: 'asdf',
       };
@@ -201,7 +201,7 @@ describe('puzzleRepository', () => {
 
     test('throws missing id', () => {
       const puzzle = {
-        fastestExecutionTimeNs: null,
+        fastestRuntimeNs: null,
         incorrectAnswers: [],
         correctAnswer: null,
         year: 2022,
@@ -214,7 +214,7 @@ describe('puzzleRepository', () => {
     test('throws non string id', () => {
       const puzzle = {
         id: 20021205,
-        fastestExecutionTimeNs: null,
+        fastestRuntimeNs: null,
         incorrectAnswers: [],
         correctAnswer: null,
         year: 2022,
@@ -227,7 +227,7 @@ describe('puzzleRepository', () => {
     test('throws id contains non-numeric character', () => {
       const puzzle = {
         id: 'J0021225',
-        fastestExecutionTimeNs: null,
+        fastestRuntimeNs: null,
         incorrectAnswers: [],
         correctAnswer: null,
         year: 2022,
@@ -240,7 +240,7 @@ describe('puzzleRepository', () => {
     test('throws with id invalid length', () => {
       const puzzle = {
         id: '202212',
-        fastestExecutionTimeNs: null,
+        fastestRuntimeNs: null,
         incorrectAnswers: [],
         correctAnswer: null,
         year: 2022,
@@ -253,7 +253,7 @@ describe('puzzleRepository', () => {
     test('throws with incorrectAnswers not array', () => {
       const puzzle = {
         id: '20221201',
-        fastestExecutionTimeNs: null,
+        fastestRuntimeNs: null,
         incorrectAnswers: {},
         correctAnswer: null,
         year: 2022,
@@ -263,10 +263,10 @@ describe('puzzleRepository', () => {
       expect(() => translateToDataFromPuzzle(puzzle)).toThrow(TypeError);
     });
 
-    test('throws with fastestExecutionTime not number', () => {
+    test('throws with fastestRuntimeNs not number', () => {
       const puzzle = {
         id: '20221201',
-        fastestExecutionTimeNs: 'Really Fast!',
+        fastestRuntimeNs: 'Really Fast!',
         incorrectAnswers: [],
         correctAnswer: null,
         year: 2022,
@@ -279,7 +279,7 @@ describe('puzzleRepository', () => {
     test('strips properties (year, day, level)', () => {
       const data = {
         id: '20220201',
-        fastestExecutionTimeNs: 2343455,
+        fastestRuntimeNs: 2343455,
         incorrectAnswers: ['wrong', 'answers', 'only'],
         correctAnswer: 'asdf',
         year: 2022,
@@ -297,7 +297,7 @@ describe('puzzleRepository', () => {
     test('translates id', () => {
       const puzzle = {
         id: '20220201',
-        fastestExecutionTimeNs: 12345,
+        fastestRuntimeNs: 12345,
         incorrectAnswers: ['asdf'],
         correctAnswer: 'qwer',
       };
@@ -307,15 +307,15 @@ describe('puzzleRepository', () => {
       expect(translateToDataFromPuzzle(puzzle)).toMatchObject(expected);
     });
 
-    test('translates fastestExecutionTimeNs', () => {
+    test('translates fastestRuntimeNs', () => {
       const puzzle = {
         id: '20220201',
-        fastestExecutionTimeNs: 12345,
+        fastestRuntimeNs: 12345,
         incorrectAnswers: ['asdf'],
         correctAnswer: 'qwer',
       };
 
-      const expected = { fastestExecutionTimeNs: 12345 };
+      const expected = { fastestRuntimeNs: 12345 };
 
       expect(translateToDataFromPuzzle(puzzle)).toMatchObject(expected);
     });
@@ -325,7 +325,7 @@ describe('puzzleRepository', () => {
 
       const puzzle = {
         id: '20220201',
-        fastestExecutionTimeNs: 12345,
+        fastestRuntimeNs: 12345,
         incorrectAnswers,
         correctAnswer: 'qwer',
       };
@@ -340,7 +340,7 @@ describe('puzzleRepository', () => {
 
       const puzzle = {
         id: '20220201',
-        fastestExecutionTimeNs: 12345,
+        fastestRuntimeNs: 12345,
         incorrectAnswers: ['asdf'],
         correctAnswer,
       };
@@ -434,13 +434,13 @@ describe('puzzleRepository', () => {
         {
           id: '20221202',
           correctAnswer: 'ASDF',
-          fastestExecutionTimeNs: 1234653,
+          fastestRuntimeNs: 1234653,
           incorrectAnswers: ['WRONG', 'WRONG AGAIN!'],
         },
         {
           id: matchingPuzzleId,
           correctAnswer: null,
-          fastestExecutionTimeNs: null,
+          fastestRuntimeNs: null,
           incorrectAnswers: ['NOPE', 'NOPE AGAIN!'],
         },
       ]);
@@ -448,7 +448,7 @@ describe('puzzleRepository', () => {
       const expected = {
         id: matchingPuzzleId,
         correctAnswer: null,
-        fastestExecutionTimeNs: null,
+        fastestRuntimeNs: null,
         incorrectAnswers: ['NOPE', 'NOPE AGAIN!'],
         year: 2022,
         day: 12,
@@ -463,13 +463,13 @@ describe('puzzleRepository', () => {
         {
           id: '20221202',
           correctAnswer: 'ASDF',
-          fastestExecutionTimeNs: 1234653,
+          fastestRuntimeNs: 1234653,
           incorrectAnswers: ['WRONG', 'WRONG AGAIN!'],
         },
         {
           id: '20221201',
           correctAnswer: null,
-          fastestExecutionTimeNs: null,
+          fastestRuntimeNs: null,
           incorrectAnswers: ['NOPE', 'NOPE AGAIN!'],
         },
       ]);
@@ -489,13 +489,13 @@ describe('puzzleRepository', () => {
         {
           id: '20221202',
           correctAnswer: 'ASDF',
-          fastestExecutionTimeNs: 1234653,
+          fastestRuntimeNs: 1234653,
           incorrectAnswers: ['WRONG', 'WRONG AGAIN!'],
         },
         {
           id: '20221201',
           correctAnswer: null,
-          fastestExecutionTimeNs: null,
+          fastestRuntimeNs: null,
           incorrectAnswers: ['NOPE', 'NOPE AGAIN!'],
         },
       ]);
@@ -504,7 +504,7 @@ describe('puzzleRepository', () => {
         {
           id: '20221202',
           correctAnswer: 'ASDF',
-          fastestExecutionTimeNs: 1234653,
+          fastestRuntimeNs: 1234653,
           incorrectAnswers: ['WRONG', 'WRONG AGAIN!'],
           year: 2022,
           day: 12,
@@ -513,7 +513,7 @@ describe('puzzleRepository', () => {
         {
           id: '20221201',
           correctAnswer: null,
-          fastestExecutionTimeNs: null,
+          fastestRuntimeNs: null,
           incorrectAnswers: ['NOPE', 'NOPE AGAIN!'],
           year: 2022,
           day: 12,
@@ -567,7 +567,7 @@ describe('puzzleRepository', () => {
         {
           id: '20221202',
           correctAnswer: 'ASDF',
-          fastestExecutionTimeNs: 1234653,
+          fastestRuntimeNs: 1234653,
           incorrectAnswers: ['WRONG', 'WRONG AGAIN!'],
           year: 2022,
           day: 12,
@@ -576,7 +576,7 @@ describe('puzzleRepository', () => {
         {
           id: '20221201',
           correctAnswer: null,
-          fastestExecutionTimeNs: null,
+          fastestRuntimeNs: null,
           incorrectAnswers: ['NOPE', 'NOPE AGAIN!'],
           year: 2022,
           day: 12,
@@ -588,13 +588,13 @@ describe('puzzleRepository', () => {
         {
           id: '20221202',
           correctAnswer: 'ASDF',
-          fastestExecutionTimeNs: 1234653,
+          fastestRuntimeNs: 1234653,
           incorrectAnswers: ['WRONG', 'WRONG AGAIN!'],
         },
         {
           id: '20221201',
           correctAnswer: null,
-          fastestExecutionTimeNs: null,
+          fastestRuntimeNs: null,
           incorrectAnswers: ['NOPE', 'NOPE AGAIN!'],
         },
       ];
@@ -622,7 +622,7 @@ describe('puzzleRepository', () => {
       const doesNotExist = {
         id: '20221301',
         correctAnswer: null,
-        fastestExecutionTimeNs: null,
+        fastestRuntimeNs: null,
         incorrectAnswers: [],
         year: 2022,
         day: 13,
@@ -633,13 +633,13 @@ describe('puzzleRepository', () => {
         {
           id: '20221202',
           correctAnswer: 'ASDF',
-          fastestExecutionTimeNs: 1234653,
+          fastestRuntimeNs: 1234653,
           incorrectAnswers: ['WRONG', 'WRONG AGAIN!'],
         },
         {
           id: '20221201',
           correctAnswer: null,
-          fastestExecutionTimeNs: null,
+          fastestRuntimeNs: null,
           incorrectAnswers: ['NOPE', 'NOPE AGAIN!'],
         },
       ];
@@ -651,7 +651,7 @@ describe('puzzleRepository', () => {
       const expected = [...orig, {
         id: doesNotExist.id,
         correctAnswer: doesNotExist.correctAnswer,
-        fastestExecutionTimeNs: doesNotExist.fastestExecutionTimeNs,
+        fastestRuntimeNs: doesNotExist.fastestRuntimeNs,
         incorrectAnswers: doesNotExist.incorrectAnswers,
       }];
 
@@ -670,7 +670,7 @@ describe('puzzleRepository', () => {
       await addOrEditPuzzle({
         id: '20221301',
         correctAnswer: newAnswer,
-        fastestExecutionTimeNs: null,
+        fastestRuntimeNs: null,
         incorrectAnswers: [],
         year: 2022,
         day: 13,
@@ -683,25 +683,25 @@ describe('puzzleRepository', () => {
         {
           id: '20221301',
           correctAnswer: newAnswer,
-          fastestExecutionTimeNs: null,
+          fastestRuntimeNs: null,
           incorrectAnswers: [],
         },
       ]);
     });
 
-    test('edits correct fastestExecutionTimeNs', async () => {
+    test('edits correct fastestRuntimeNs', async () => {
       const newValue = 4567;
 
       getValue.mockReturnValueOnce([
         { id: '20221202' },
         { id: '20221201' },
-        { id: '20221301', fastestExecutionTimeNs: 1234 },
+        { id: '20221301', fastestRuntimeNs: 1234 },
       ]);
 
       await addOrEditPuzzle({
         id: '20221301',
         correctAnswer: 'ASDF',
-        fastestExecutionTimeNs: newValue,
+        fastestRuntimeNs: newValue,
         incorrectAnswers: [],
         year: 2022,
         day: 13,
@@ -714,7 +714,7 @@ describe('puzzleRepository', () => {
         {
           id: '20221301',
           correctAnswer: 'ASDF',
-          fastestExecutionTimeNs: newValue,
+          fastestRuntimeNs: newValue,
           incorrectAnswers: [],
         },
       ]);
@@ -732,7 +732,7 @@ describe('puzzleRepository', () => {
       await addOrEditPuzzle({
         id: '20221301',
         correctAnswer: null,
-        fastestExecutionTimeNs: null,
+        fastestRuntimeNs: null,
         incorrectAnswers: newValue,
         year: 2022,
         day: 13,
@@ -745,7 +745,7 @@ describe('puzzleRepository', () => {
         {
           id: '20221301',
           correctAnswer: null,
-          fastestExecutionTimeNs: null,
+          fastestRuntimeNs: null,
           incorrectAnswers: newValue,
         },
       ]);
@@ -756,7 +756,7 @@ describe('puzzleRepository', () => {
     test('returns expected object', () => {
       const expected = {
         id: '20220101',
-        fastestExecutionTimeNs: null,
+        fastestRuntimeNs: null,
         incorrectAnswers: [],
         correctAnswer: null,
         year: 2022,
