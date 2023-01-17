@@ -325,7 +325,7 @@ describe('statistics', () => {
       );
     });
 
-    test('only returns execution time if solved', async () => {
+    test('only returns runtime if solved', async () => {
       const year = 2022;
       const puzzles = [
         mockPuzzle(year, 1, 1, 'ASDF', [], 1234),
