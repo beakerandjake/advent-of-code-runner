@@ -14,7 +14,7 @@ import { average } from './util.js';
  */
 export const getPuzzlesFastestRuntime = async (year, day, level) => {
   const puzzle = await findPuzzle(year, day, level);
-  return puzzle?.fastestExecutionTimeNs || null;
+  return puzzle?.fastestRuntimeNs || null;
 };
 
 /**
@@ -27,8 +27,8 @@ export const getPuzzlesFastestRuntime = async (year, day, level) => {
 export const setPuzzlesFastestRuntime = async (year, day, level, timeNs) => {
   const parsed = parsePositiveInt(timeNs);
   const puzzle = await findPuzzle(year, day, level) || createPuzzle(year, day, level);
-  const updated = { ...puzzle, fastestExecutionTimeNs: parsed };
-  logger.debug('setting fastest execution time to: %s', timeNs, { year, day, level });
+  const updated = { ...puzzle, fastestRuntimeNs: parsed };
+  logger.debug('setting fastest runtime to: %s', timeNs, { year, day, level });
   return addOrEditPuzzle(updated);
 };
 
@@ -38,7 +38,7 @@ export const setPuzzlesFastestRuntime = async (year, day, level, timeNs) => {
  */
 export const getFastestRuntime = async (year) => {
   const puzzles = await getPuzzlesForYear(year);
-  const runtimes = puzzles.map((x) => x.fastestExecutionTimeNs);
+  const runtimes = puzzles.map((x) => x.fastestRuntimeNs);
   return runtimes.length ? Math.min(...runtimes) : null;
 };
 
@@ -48,7 +48,7 @@ export const getFastestRuntime = async (year) => {
  */
 export const getSlowestRuntime = async (year) => {
   const puzzles = await getPuzzlesForYear(year);
-  const runtimes = puzzles.map((x) => x.fastestExecutionTimeNs);
+  const runtimes = puzzles.map((x) => x.fastestRuntimeNs);
   return runtimes.length ? Math.max(...runtimes) : null;
 };
 
@@ -58,7 +58,7 @@ export const getSlowestRuntime = async (year) => {
  */
 export const getAverageRuntime = async (year) => {
   const puzzles = await getPuzzlesForYear(year);
-  const runtimes = puzzles.map((x) => x.fastestExecutionTimeNs);
+  const runtimes = puzzles.map((x) => x.fastestRuntimeNs);
   return runtimes.length ? average(runtimes) : null;
 };
 
@@ -100,12 +100,12 @@ export const getPuzzleCompletionData = async (year) => {
   return puzzles
     .sort((a, b) => a.id.localeCompare(b.id))
     .map(({
-      day, level, correctAnswer, fastestExecutionTimeNs, incorrectAnswers,
+      day, level, correctAnswer, fastestRuntimeNs, incorrectAnswers,
     }) => ({
       day,
       level,
       solved: !!correctAnswer,
-      runtimeNs: correctAnswer ? fastestExecutionTimeNs : null,
+      runtimeNs: correctAnswer ? fastestRuntimeNs : null,
       numberOfAttempts: correctAnswer ? incorrectAnswers.length + 1 : incorrectAnswers.length,
     }));
 };
