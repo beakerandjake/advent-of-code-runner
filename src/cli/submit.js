@@ -20,7 +20,7 @@ export const submitLinks = [
   links.submitPuzzleAnswer,
   links.storeSubmittedAnswer,
   links.assertAnswerCorrect,
-  links.storeFastestExecutionTime,
+  links.storeFastestRuntime,
 ];
 
 /**

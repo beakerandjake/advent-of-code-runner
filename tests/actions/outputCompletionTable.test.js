@@ -155,22 +155,22 @@ describe('outputCompletionTable()', () => {
   describe('mapRuntimeColumn()', () => {
     test.each([
       null, undefined,
-    ])('returns empty string if runtime is: "%s"', (runtime) => {
-      const result = mapRuntimeColumn({ executionTimeNs: runtime });
+    ])('returns empty string if runtime is: "%s"', (runtimeNs) => {
+      const result = mapRuntimeColumn({ runtimeNs });
       expect(result).toBe('');
     });
 
     test('returns value if no fastest or slowest', () => {
       humanizeDuration.mockImplementation((x) => x.toString());
-      const executionTimeNs = 1234;
-      const result = mapRuntimeColumn({ executionTimeNs });
-      expect(result).toBe(executionTimeNs.toString());
+      const runtimeNs = 1234;
+      const result = mapRuntimeColumn({ runtimeNs });
+      expect(result).toBe(runtimeNs.toString());
     });
 
     test('does not highlight or mark if not fastest', () => {
       humanizeDuration.mockImplementation((x) => x.toString());
-      const executionTimeNs = 1234;
-      const result = mapRuntimeColumn({ executionTimeNs }, executionTimeNs - 10);
+      const runtimeNs = 1234;
+      const result = mapRuntimeColumn({ runtimeNs }, runtimeNs - 10);
       expect(mockChalk.green).not.toHaveBeenCalled();
       expect(result).not.toContain('best');
     });
@@ -178,20 +178,16 @@ describe('outputCompletionTable()', () => {
     test('highlight and marks if fastest', () => {
       humanizeDuration.mockImplementation((x) => x.toString());
       mockChalk.green.mockImplementation((x) => x.toString());
-      const executionTimeNs = 1234;
-      const result = mapRuntimeColumn({ executionTimeNs }, executionTimeNs);
+      const runtimeNs = 1234;
+      const result = mapRuntimeColumn({ runtimeNs }, runtimeNs);
       expect(mockChalk.green).toHaveBeenCalled();
       expect(result).toContain('best');
     });
 
     test('does not highlight or mark if not slowest', () => {
       humanizeDuration.mockImplementation((x) => x.toString());
-      const executionTimeNs = 1234;
-      const result = mapRuntimeColumn(
-        { executionTimeNs },
-        executionTimeNs - 10,
-        executionTimeNs + 10,
-      );
+      const runtimeNs = 1234;
+      const result = mapRuntimeColumn({ runtimeNs }, runtimeNs - 10, runtimeNs + 10);
       expect(mockChalk.yellow).not.toHaveBeenCalled();
       expect(result).not.toContain('worst');
     });
@@ -199,8 +195,8 @@ describe('outputCompletionTable()', () => {
     test('highlight and marks if slowest', () => {
       humanizeDuration.mockImplementation((x) => x.toString());
       mockChalk.yellow.mockImplementation((x) => x.toString());
-      const executionTimeNs = 1234;
-      const result = mapRuntimeColumn({ executionTimeNs }, executionTimeNs - 10, executionTimeNs);
+      const runtimeNs = 1234;
+      const result = mapRuntimeColumn({ runtimeNs }, runtimeNs - 10, runtimeNs);
       expect(mockChalk.yellow).toHaveBeenCalled();
       expect(result).toContain('worst');
     });

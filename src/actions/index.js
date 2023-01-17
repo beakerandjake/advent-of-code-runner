@@ -14,10 +14,10 @@ import { getYear } from './getYear.js';
 import { and, not, or } from './logical.js';
 import { outputCompletionTable } from './outputCompletionTable.js';
 import { outputPuzzleLink } from './outputPuzzleLink.js';
-import { storeFastestExecutionTime } from './storeFastestExecutionTime.js';
+import { storeFastestRuntime } from './storeFastestRuntime.js';
 import { storeSubmittedAnswer } from './storeSubmittedAnswer.js';
 import { submitPuzzleAnswer } from './submitPuzzleAnswer.js';
-import { tryToUpdateFastestExecutionTime } from './tryToUpdateFastestExecutionTime.js';
+import { tryToUpdateFastestRuntime } from './tryToUpdateFastestRuntime.js';
 
 /**
  * barrel for "link" functions which are used to compose action chains.
@@ -37,10 +37,10 @@ export {
   getNextUnsolvedPuzzle,
   getPuzzleInput,
   getYear,
-  storeFastestExecutionTime,
+  storeFastestRuntime,
   storeSubmittedAnswer,
   submitPuzzleAnswer,
-  tryToUpdateFastestExecutionTime,
+  tryToUpdateFastestRuntime,
   or,
   not,
   and,

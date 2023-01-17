@@ -142,7 +142,7 @@ describe('solutionRunner', () => {
       const answerMessage = {
         type: workerMessageTypes.answer,
         answer: 'cats',
-        executionTimeNs: 1234,
+        runtimeNs: 1234,
       };
       const workerPromise = spawnWorker('ASDF', {});
       await Promise.resolve();
@@ -150,7 +150,7 @@ describe('solutionRunner', () => {
       await Promise.resolve();
       const result = await workerPromise;
       expect(result).toEqual(
-        { answer: answerMessage.answer, executionTimeNs: answerMessage.executionTimeNs },
+        { answer: answerMessage.answer, runtimeNs: answerMessage.runtimeNs },
       );
     });
   });

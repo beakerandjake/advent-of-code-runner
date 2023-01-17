@@ -61,19 +61,19 @@ export const mapAttemptColumns = (completionData, maxAttempts) => {
  * Generates the text for the runtime column.
  * @private
  */
-export const mapRuntimeColumn = ({ executionTimeNs }, fastest, slowest) => {
-  if (executionTimeNs == null || executionTimeNs === '') {
+export const mapRuntimeColumn = ({ runtimeNs }, fastest, slowest) => {
+  if (runtimeNs == null || runtimeNs === '') {
     return '';
   }
-  const text = humanizeDuration(executionTimeNs);
+  const text = humanizeDuration(runtimeNs);
 
   // highlight fastest runtime
-  if (fastest > 0 && executionTimeNs === fastest) {
+  if (fastest > 0 && runtimeNs === fastest) {
     return chalk.green(`${text} (best)`);
   }
 
   // highlight slowest runtime
-  if (slowest > 0 && executionTimeNs === slowest) {
+  if (slowest > 0 && runtimeNs === slowest) {
     return chalk.yellow(`${text} (worst)`);
   }
 

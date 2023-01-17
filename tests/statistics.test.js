@@ -47,14 +47,14 @@ describe('statistics', () => {
     });
 
     test('returns null if value not set', async () => {
-      findPuzzle.mockResolvedValue({ fastestExecutionTimeNs: undefined });
+      findPuzzle.mockResolvedValue({ fastestRuntimeNs: undefined });
       const result = await getPuzzlesFastestRuntime(2022, 1, 1);
       expect(result).toBe(null);
     });
 
     test('returns value if set', async () => {
       const expected = 324234324324;
-      findPuzzle.mockResolvedValue({ fastestExecutionTimeNs: expected });
+      findPuzzle.mockResolvedValue({ fastestRuntimeNs: expected });
       const result = await getPuzzlesFastestRuntime(2022, 1, 1);
       expect(result).toBe(expected);
     });
@@ -86,17 +86,17 @@ describe('statistics', () => {
     test('does not create if puzzle is found', async () => {
       const time = 123213;
       parsePositiveInt.mockReturnValue(time);
-      findPuzzle.mockResolvedValue({ fastestExecutionTimeNs: null });
+      findPuzzle.mockResolvedValue({ fastestRuntimeNs: null });
       await setPuzzlesFastestRuntime(2022, 1, 1, time);
       expect(createPuzzle).not.toHaveBeenCalled();
     });
 
-    test('sets fastestExecutionTime to value', async () => {
+    test('sets fastestRuntimeNs to value', async () => {
       const time = 123213;
       parsePositiveInt.mockReturnValue(time);
-      findPuzzle.mockResolvedValue({ fastestExecutionTimeNs: null });
+      findPuzzle.mockResolvedValue({ fastestRuntimeNs: null });
       await setPuzzlesFastestRuntime(2022, 1, 1, time);
-      expect(addOrEditPuzzle).toHaveBeenCalledWith({ fastestExecutionTimeNs: time });
+      expect(addOrEditPuzzle).toHaveBeenCalledWith({ fastestRuntimeNs: time });
     });
   });
 
@@ -109,7 +109,7 @@ describe('statistics', () => {
 
     test('returns value if only one puzzle for year', async () => {
       const expected = 1234;
-      getPuzzlesForYear.mockResolvedValue([{ fastestExecutionTimeNs: expected }]);
+      getPuzzlesForYear.mockResolvedValue([{ fastestRuntimeNs: expected }]);
       const result = await getFastestRuntime(2022);
       expect(result).toBe(expected);
     });
@@ -117,9 +117,9 @@ describe('statistics', () => {
     test('returns min value', async () => {
       const expected = 1234;
       getPuzzlesForYear.mockResolvedValue([
-        { fastestExecutionTimeNs: expected },
-        { fastestExecutionTimeNs: expected + 2 },
-        { fastestExecutionTimeNs: expected + 10 },
+        { fastestRuntimeNs: expected },
+        { fastestRuntimeNs: expected + 2 },
+        { fastestRuntimeNs: expected + 10 },
       ]);
       const result = await getFastestRuntime(2022);
       expect(result).toBe(expected);
@@ -135,7 +135,7 @@ describe('statistics', () => {
 
     test('returns value if only one puzzle for year', async () => {
       const expected = 1234;
-      getPuzzlesForYear.mockResolvedValue([{ fastestExecutionTimeNs: expected }]);
+      getPuzzlesForYear.mockResolvedValue([{ fastestRuntimeNs: expected }]);
       const result = await getSlowestRuntime(2022);
       expect(result).toBe(expected);
     });
@@ -143,9 +143,9 @@ describe('statistics', () => {
     test('returns min value', async () => {
       const expected = 1234;
       getPuzzlesForYear.mockResolvedValue([
-        { fastestExecutionTimeNs: expected },
-        { fastestExecutionTimeNs: expected - 2 },
-        { fastestExecutionTimeNs: expected - 10 },
+        { fastestRuntimeNs: expected },
+        { fastestRuntimeNs: expected - 2 },
+        { fastestRuntimeNs: expected - 10 },
       ]);
       const result = await getSlowestRuntime(2022);
       expect(result).toBe(expected);
@@ -161,7 +161,7 @@ describe('statistics', () => {
 
     test('returns value if only one puzzle for year', async () => {
       const expected = 1234;
-      getPuzzlesForYear.mockResolvedValue([{ fastestExecutionTimeNs: expected }]);
+      getPuzzlesForYear.mockResolvedValue([{ fastestRuntimeNs: expected }]);
       const result = await getAverageRuntime(2022);
       expect(result).toBe(expected);
     });
@@ -169,7 +169,7 @@ describe('statistics', () => {
     test('calculates average', async () => {
       const runtimes = [1234, 345634, 238, 12394];
       getPuzzlesForYear.mockResolvedValue(
-        runtimes.map((x) => ({ fastestExecutionTimeNs: x })),
+        runtimes.map((x) => ({ fastestRuntimeNs: x })),
       );
       const result = await getAverageRuntime(2022);
       expect(result).toBe(runtimes.reduce((acc, x) => acc + x, 0) / runtimes.length);
@@ -281,14 +281,14 @@ describe('statistics', () => {
   });
 
   describe('getPuzzleCompletionData()', () => {
-    const mockPuzzle = (year, day, level, correctAnswer = '', incorrectAnswers = [], fastestExecutionTimeNs = null) => ({
+    const mockPuzzle = (year, day, level, correctAnswer = '', incorrectAnswers = [], fastestRuntimeNs = null) => ({
       id: `${year}${day}${level}`,
       year,
       day,
       level,
       correctAnswer,
       incorrectAnswers,
-      fastestExecutionTimeNs,
+      fastestRuntimeNs,
     });
 
     test('returns empty array if no puzzles for year', async () => {
@@ -325,7 +325,7 @@ describe('statistics', () => {
       );
     });
 
-    test('only returns execution time if solved', async () => {
+    test('only returns runtime if solved', async () => {
       const year = 2022;
       const puzzles = [
         mockPuzzle(year, 1, 1, 'ASDF', [], 1234),
@@ -336,8 +336,8 @@ describe('statistics', () => {
       getPuzzlesForYear.mockResolvedValue(puzzles);
       const result = await getPuzzleCompletionData(year);
       puzzles.forEach((x, index) => {
-        const expected = x.correctAnswer ? x.fastestExecutionTimeNs : null;
-        expect(result[index].executionTimeNs).toBe(expected);
+        const expected = x.correctAnswer ? x.fastestRuntimeNs : null;
+        expect(result[index].runtimeNs).toBe(expected);
       });
     });
 
@@ -387,7 +387,7 @@ describe('statistics', () => {
         mockPuzzle(year, 1, 1),
       ];
       const expected = input.reverse().map(({ day, level }) => ({
-        day, level, solved: false, executionTimeNs: null, numberOfAttempts: 0,
+        day, level, solved: false, runtimeNs: null, numberOfAttempts: 0,
       }));
       getPuzzlesForYear.mockResolvedValue(input);
       const result = await getPuzzleCompletionData(year);

@@ -8,7 +8,7 @@ const dataFilePath = getConfigValue('paths.userDataFile');
 
 /**
  * Use caching to store the data file in memory.
- * This gives a faster execution time at the const of a higher memory footprint.
+ * This gives a faster runtime at the cost of a higher memory footprint.
  * Also introduces difficulties associated with caching and invalidating it.
  * But this is a single threaded application which is manually invoked via command line
  * So we don't expect anyone else to change the data file while the program is running

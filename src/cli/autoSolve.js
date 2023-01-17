@@ -21,5 +21,5 @@ const autoSolve = async () => actionChain({});
  */
 export const autoSolveCommand = new Command()
   .name('autosolve')
-  .description('Find the next unsolved puzzle, execute it, benchmark the execution time and output the result.')
+  .description('Find the next unsolved puzzle, execute it, benchmark the runtime and output the result.')
   .action(autoSolve);

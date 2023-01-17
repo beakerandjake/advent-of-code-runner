@@ -9,24 +9,24 @@ jest.unstable_mockModule('src/statistics.js', () => ({ setPuzzlesFastestRuntime:
 
 // import after mocks set up
 const { setPuzzlesFastestRuntime } = await import('../../src/statistics.js');
-const { storeFastestExecutionTime } = await import('../../src/actions/storeFastestExecutionTime.js');
+const { storeFastestRuntime } = await import('../../src/actions/storeFastestRuntime.js');
 
-describe('storeFastestExecutionTime()', () => {
+describe('storeFastestRuntime()', () => {
   afterEach(() => {
     jest.resetAllMocks();
   });
 
   test.each([
     null, undefined,
-  ])('throws if execution time is: %s', async (executionTimeNs) => {
-    await expect(async () => storeFastestExecutionTime({
-      year: 2022, day: 1, level: 1, executionTimeNs,
+  ])('throws if runtime is: %s', async (runtimeNs) => {
+    await expect(async () => storeFastestRuntime({
+      year: 2022, day: 1, level: 1, runtimeNs,
     })).rejects.toThrow();
   });
 
   test('sets value', async () => {
-    await storeFastestExecutionTime({
-      year: 2022, day: 1, level: 1, executionTimeNs: 1234,
+    await storeFastestRuntime({
+      year: 2022, day: 1, level: 1, runtimeNs: 1234,
     });
     expect(setPuzzlesFastestRuntime).toHaveBeenCalled();
   });

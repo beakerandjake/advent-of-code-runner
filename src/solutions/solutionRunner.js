@@ -65,7 +65,7 @@ export const spawnWorker = async (workerThreadFileName, workerData) => (
           break;
           // worker finished executing and has posted an answer
         case workerMessageTypes.answer:
-          resolve({ answer: data.answer, executionTimeNs: data.executionTimeNs });
+          resolve({ answer: data.answer, runtimeNs: data.runtimeNs });
           break;
         default:
           reject(new Error(`Solution Worker provided unknown message type: ${data.type}`));

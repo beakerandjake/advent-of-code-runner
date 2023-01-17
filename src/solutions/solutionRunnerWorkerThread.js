@@ -36,7 +36,7 @@ export const logFromWorker = (level, message, ...args) => {
 
 /**
  * Execute the user solution function, measure the time it takes to execute
- * then post the result of the execution back to the parent.
+ * then post the result back to the parent.
  * @private
  * @param {Function} userSolutionFn
  */
@@ -60,7 +60,7 @@ export const executeUserSolution = async (userSolutionFn, input, lines) => {
   parentPort.postMessage({
     type: workerMessageTypes.answer,
     answer,
-    executionTimeNs: Number(end - start),
+    runtimeNs: Number(end - start),
   });
 };
 
