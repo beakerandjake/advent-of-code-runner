@@ -46,12 +46,6 @@ export const mapNameColumn = ({ day, level }) => `${day}.${level}`;
 export const mapSolvedColumn = ({ solved }) => (solved ? '✓' : '');
 
 /**
- * Generates the text for the attempt column.
- * @private
- */
-export const mapAttemptColumn = ({ numberOfAttempts }) => `${numberOfAttempts}`;
-
-/**
  * Generates the text for the attempts column.
  * @private
  */

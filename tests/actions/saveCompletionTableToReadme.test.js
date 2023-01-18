@@ -28,6 +28,7 @@ const {
   bold,
   mapNameColumn,
   mapSolvedColumn,
+  mapAttemptColumns,
   saveCompletionTableToReadme,
 } = await import('../../src/actions/saveCompletionTableToReadme.js');
 
@@ -85,6 +86,34 @@ describe('saveCompletionTableToReadme()', () => {
       const input = { solved: true };
       const result = mapSolvedColumn(input);
       expect(result).not.toBe('');
+    });
+  });
+
+  describe('mapAttemptColumns()', () => {
+    test.each([
+      null, undefined,
+    ])('returns empty string if provided: "%s"', (numberOfAttempts) => {
+      const input = [{ numberOfAttempts }];
+      const result = mapAttemptColumns(input);
+      expect(result).toEqual(['']);
+    });
+
+    test('returns value if no max attempts', () => {
+      const input = [{ numberOfAttempts: 10 }];
+      const result = mapAttemptColumns(input);
+      expect(result).toEqual(input.map((x) => x.numberOfAttempts.toString()));
+    });
+
+    test('returns value if max attempt not equal to value', () => {
+      const input = [{ numberOfAttempts: 10 }];
+      const result = mapAttemptColumns(input, 445);
+      expect(result).toEqual(input.map((x) => x.numberOfAttempts.toString()));
+    });
+
+    test('appends (worst) if value equal to max attempt', () => {
+      const input = [{ numberOfAttempts: 10 }];
+      const result = mapAttemptColumns(input, input[0].numberOfAttempts);
+      expect(result[0]).toContain('(worst)');
     });
   });
 
