@@ -1,14 +1,16 @@
 import { pathExists } from 'fs-extra/esm';
 import { getConfigValue } from '../config.js';
 import { logger } from '../logger.js';
-import { getPuzzleCompletionData } from '../statistics.js';
+import {
+  getAverageAttempts,
+  getAverageRuntime,
+  getFastestRuntime, getMaxAttempts, getPuzzleCompletionData, getSlowestRuntime,
+} from '../statistics.js';
 import { humanizeDuration } from '../formatting.js';
 
-
-
-const td = (value) => `<td>${value}</td>`;
-const th = (value, { colspan }) => `<th${colspan ? ` colspan=${colspan}` : ''}>${value}</th>`;
-const tr = (values) => `<tr>${values.join('')}</tr>`;
+const tr = (values) => `| ${values.join(' | ')} |`;
+const italic = (value) => `*${value}*`;
+const bold = (value) => `**${value}**`;
 
 /**
  * Generates the text for the name column.
@@ -29,33 +31,80 @@ export const mapSolvedColumn = ({ solved }) => (solved ? '✓' : '');
 export const mapAttemptColumn = ({ numberOfAttempts }) => `${numberOfAttempts}`;
 
 /**
+ * Generates the text for the attempts column.
+ * @private
+ */
+export const mapAttemptColumns = (completionData, maxAttempts) => {
+  let markedMax = false;
+  return completionData.map(({ numberOfAttempts }) => {
+    if (numberOfAttempts == null) {
+      return '';
+    }
+
+    // highlight highest number of attempts.
+    if (maxAttempts > 1 && numberOfAttempts === maxAttempts) {
+      // it's possible multiple puzzles match the max attempt.
+      // only add descriptive text to the first match.
+      const message = markedMax ? numberOfAttempts : `${numberOfAttempts} (worst)`;
+      markedMax = true;
+      return bold(italic((message)));
+    }
+
+    return `${numberOfAttempts}`;
+  });
+};
+
+/**
  * Generates the text for the runtime column.
  * @private
  */
-export const mapRuntimeColumn = ({ runtimeNs }) => {
+export const mapRuntimeColumn = ({ runtimeNs }, fastest, slowest) => {
   if (runtimeNs == null || runtimeNs === '') {
     return '';
   }
 
-  return humanizeDuration(runtimeNs);
+  const text = humanizeDuration(runtimeNs);
+
+  // highlight fastest runtime
+  if (fastest > 0 && runtimeNs === fastest) {
+    return bold(italic(`${text} (best)`));
+  }
+
+  // highlight slowest runtime
+  if (slowest > 0 && runtimeNs === slowest) {
+    return bold(italic(`${text} (worst)`));
+  }
+
+  return `${text}`;
 };
 
 /**
  * Generates a markdown table from the years data.
  */
 const generateTable = async (year, completionData) => {
+  const averageAttempts = await getAverageAttempts(year);
+  const averageRuntime = await getAverageRuntime(year);
+  // only apply highlighting if more than two puzzles have been solved.
+  // with 2 or less it's kind of obvious, there isn't a need to highlight.
+  const maxAttempts = completionData.length > 2 ? await getMaxAttempts(year) : null;
+  const fastestRuntime = completionData.length > 2 ? await getFastestRuntime(year) : null;
+  const slowestRuntime = completionData.length > 2 ? await getSlowestRuntime(year) : null;
+
   const names = completionData.map(mapNamedColumn);
   const solved = completionData.map(mapSolvedColumn);
-  const attempts = completionData.map(mapAttemptColumn);
-  const runtimes = completionData.map(mapRuntimeColumn);
+  const attempts = mapAttemptColumns(completionData, maxAttempts);
+  const runtimes = completionData.map((x) => mapRuntimeColumn(x, fastestRuntime, slowestRuntime));
 
-  const headerRow = tr(['Puzzle', 'Solved', 'Attempts', 'Runtime'].map(th));
+  const headerRows = [
+    ['Puzzle', 'Solved', 'Attempts', 'Runtime'],
+    ['---', '---', '---', '---'],
+  ].map(tr);
   const puzzleRows = completionData.map(
-    (_, index) => tr([names[index], solved[index], attempts[index], runtimes[index]].map(td)),
+    (_, index) => tr([names[index], solved[index], attempts[index], runtimes[index]]),
   );
-  const averageRow = tr([th('Average', { colspan: 2 }), td('asdf'), td('asdf')]);
+  const averageRow = tr(['', bold('Average'), averageAttempts.toFixed(2), humanizeDuration(averageRuntime)]);
 
-  return [headerRow, ...puzzleRows, averageRow].join('');
+  return [...headerRows, ...puzzleRows, averageRow].join('\n');
 };
 
 /**
