@@ -96,6 +96,7 @@ export const mapRuntimeColumn = ({ runtimeNs }, fastest, slowest) => {
 /**
  * Generates a markdown table from the years data.
  */
+/* istanbul ignore next */
 const generateTable = async (year, completionData) => {
   const averageAttempts = await getAverageAttempts(year);
   const averageRuntime = await getAverageRuntime(year);
@@ -125,8 +126,9 @@ const generateTable = async (year, completionData) => {
 
 /**
  * Returns a header for the section in the readme
+ * @private
  */
-const generateHeader = async (year) => {
+export const generateHeader = async (year) => {
   const solvedCount = await getSolvedCount(year);
   const totalPuzzleCount = getTotalPuzzleCount();
   const solvedPercent = (solvedCount / totalPuzzleCount) * 100;
@@ -135,7 +137,7 @@ const generateHeader = async (year) => {
     throw new Error('could not calculate solved percent from arguments');
   }
 
-  return `## Completion Progress - ${solvedCount}/${totalPuzzleCount} (${solvedPercent}%)`;
+  return `## Completion Progress - ${solvedCount}/${totalPuzzleCount} (${solvedPercent.toFixed()}%)`;
 };
 
 /**

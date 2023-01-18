@@ -23,6 +23,8 @@ jest.unstable_mockModule('src/statistics.js', () => ({
 
 // import after setting up mocks
 const { humanizeDuration } = await import('../../src/formatting.js');
+const { getSolvedCount } = await import('../../src/statistics.js');
+const { getTotalPuzzleCount } = await import('../../src/validation/validatePuzzle.js');
 const {
   tr,
   italic,
@@ -31,6 +33,7 @@ const {
   mapSolvedColumn,
   mapAttemptColumns,
   mapRuntimeColumn,
+  generateHeader,
   saveCompletionTableToReadme,
 } = await import('../../src/actions/saveCompletionTableToReadme.js');
 
@@ -167,6 +170,34 @@ describe('saveCompletionTableToReadme()', () => {
     //   const result = mapAttemptColumns(input, input[0].numberOfAttempts);
     //   expect(result[0]).toContain('(worst)');
     // });
+  });
+
+  describe('generateHeader()', () => {
+    test('throws if solved count is non numeric', async () => {
+      getSolvedCount.mockResolvedValue('ASDF');
+      await expect(async () => generateHeader(2022)).rejects.toThrow();
+    });
+
+    test('throws if total puzzle count is non numeric', async () => {
+      getSolvedCount.mockResolvedValue(123);
+      getTotalPuzzleCount.mockReturnValue('ASDF');
+      await expect(async () => generateHeader(2022)).rejects.toThrow();
+    });
+
+    test('handles divide by zero', async () => {
+      getSolvedCount.mockResolvedValue(123);
+      getTotalPuzzleCount.mockReturnValue(0);
+      await expect(async () => generateHeader(2022)).rejects.toThrow();
+    });
+
+    test('calculates percent correctly', async () => {
+      const solvedCount = 10;
+      const totalPuzzleCount = 522;
+      getSolvedCount.mockResolvedValue(solvedCount);
+      getTotalPuzzleCount.mockReturnValue(totalPuzzleCount);
+      const result = await generateHeader(2022);
+      expect(result).toContain(((solvedCount / totalPuzzleCount) * 100).toFixed());
+    });
   });
 
   // test.each([
