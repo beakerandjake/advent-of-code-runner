@@ -20,7 +20,15 @@ describe('initialize', () => {
 
     test('copies template file', async () => {
       const paths = { source: 'source.txt', dest: 'dest.txt' };
-      getConfigValue.mockImplementation((key) => (key === 'paths.templates.readme' ? paths : undefined));
+      getConfigValue.mockImplementation((key) => {
+        if (key === 'paths.templates.readme') {
+          return paths.source;
+        }
+        if (key === 'paths.readme') {
+          return paths.dest;
+        }
+        return undefined;
+      });
       await createReadme();
       expect(copy).toBeCalledWith(paths.source, paths.dest);
     });

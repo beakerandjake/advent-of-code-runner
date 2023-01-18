@@ -133,6 +133,7 @@ const CONFIG = {
     cancelMessageDelayMs: 3000,
   },
   paths: {
+    readme: join('cwd', 'README.md'),
     rateLimitFile: join(cwd, '.ratelimits.json'),
     userDataFile: join(cwd, 'aocr-data.json'),
     inputsDir: join(cwd, 'inputs'),
@@ -143,10 +144,7 @@ const CONFIG = {
         source: join(__dirname, '..', 'templates', 'template-gitignore'),
         dest: join(cwd, '.gitignore'),
       },
-      readme: {
-        source: join(__dirname, '..', 'templates', 'template-readme.md'),
-        dest: join(cwd, 'README.md'),
-      },
+      readme: join(__dirname, '..', 'templates', 'template-readme.md'),
       dotenv: {
         source: join(__dirname, '..', 'templates', 'template-dotenv'),
         dest: join(cwd, '.env'),
