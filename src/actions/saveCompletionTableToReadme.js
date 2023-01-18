@@ -146,8 +146,7 @@ export const generateHeader = async (year) => {
 export const saveToReadme = async (value) => {
   const readmePath = getConfigValue('paths.readme');
   const contents = await readFile(readmePath, 'utf-8');
-  console.log('contents', contents);
-  console.log('matches', contents.search(tableEnclosingTagRegex));
+  
   // ensure the enclosing tag exists
   if (contents.search(tableEnclosingTagRegex) <= 0) {
     throw new Error('Could not find required tag in readme file to insert table, this tag should have been created during the "init" command');
