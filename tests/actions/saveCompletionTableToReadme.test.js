@@ -22,6 +22,7 @@ jest.unstable_mockModule('src/statistics.js', () => ({
 }));
 
 // import after setting up mocks
+const { humanizeDuration } = await import('../../src/formatting.js');
 const {
   tr,
   italic,
@@ -29,6 +30,7 @@ const {
   mapNameColumn,
   mapSolvedColumn,
   mapAttemptColumns,
+  mapRuntimeColumn,
   saveCompletionTableToReadme,
 } = await import('../../src/actions/saveCompletionTableToReadme.js');
 
@@ -115,6 +117,56 @@ describe('saveCompletionTableToReadme()', () => {
       const result = mapAttemptColumns(input, input[0].numberOfAttempts);
       expect(result[0]).toContain('(worst)');
     });
+  });
+
+  describe('mapRuntimeColumn()', () => {
+    test.each([
+      null, undefined,
+    ])('returns empty string if provided: "%s"', (numberOfAttempts) => {
+      const input = { numberOfAttempts };
+      const result = mapRuntimeColumn(input);
+      expect(result).toEqual('');
+    });
+
+    test('returns value if no fastest or slowest provided', () => {
+      const expected = 'ASDF';
+      humanizeDuration.mockReturnValue(expected);
+      const input = { runtimeNs: 10 };
+      const result = mapRuntimeColumn(input);
+      expect(result).toBe(expected);
+    });
+
+    test('returns value if not equal to fastest or slowest', () => {
+      const expected = 'ASDF';
+      humanizeDuration.mockReturnValue(expected);
+      const input = { runtimeNs: 10 };
+      const result = mapRuntimeColumn(input, input.runtimeNs - 4, input.runtimeNs + 5);
+      expect(result).toBe(expected);
+    });
+
+    test('appends (best) if value is equal to fastest', () => {
+      const input = { runtimeNs: 10 };
+      const result = mapRuntimeColumn(input, input.runtimeNs, input.runtimeNs + 5);
+      expect(result).toContain('best');
+    });
+
+    test('appends (worst) if value is equal to slowest', () => {
+      const input = { runtimeNs: 10 };
+      const result = mapRuntimeColumn(input, input.runtimeNs - 3, input.runtimeNs);
+      expect(result).toContain('worst');
+    });
+
+    // test('returns value if max attempt not equal to value', () => {
+    //   const input = [{ numberOfAttempts: 10 }];
+    //   const result = mapAttemptColumns(input, 445);
+    //   expect(result).toEqual(input.map((x) => x.numberOfAttempts.toString()));
+    // });
+
+    // test('appends (worst) if value equal to max attempt', () => {
+    //   const input = [{ numberOfAttempts: 10 }];
+    //   const result = mapAttemptColumns(input, input[0].numberOfAttempts);
+    //   expect(result[0]).toContain('(worst)');
+    // });
   });
 
   // test.each([
