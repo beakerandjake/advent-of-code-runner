@@ -1,15 +1,28 @@
-import { pathExists } from 'fs-extra/esm';
+import { readFile } from 'node:fs/promises';
+import { outputFile} from 'fs-extra/esm';
 import { getConfigValue } from '../config.js';
 import { logger } from '../logger.js';
 import {
   getAverageAttempts,
   getAverageRuntime,
-  getFastestRuntime, getMaxAttempts, getPuzzleCompletionData, getSlowestRuntime,
+  getFastestRuntime, getMaxAttempts, getPuzzleCompletionData, getSlowestRuntime, getSolvedCount,
 } from '../statistics.js';
 import { humanizeDuration } from '../formatting.js';
+import { getTotalPuzzleCount } from '../validation/validatePuzzle.js';
 
+/**
+ * Creates a markdown table row for the values.
+ */
 const tr = (values) => `| ${values.join(' | ')} |`;
+
+/**
+ * Wraps the value with markdown to stylize as italic.
+ */
 const italic = (value) => `*${value}*`;
+
+/**
+ * Wraps the value with markdown to stylize as bold.
+ */
 const bold = (value) => `**${value}**`;
 
 /**
@@ -90,6 +103,7 @@ const generateTable = async (year, completionData) => {
   const fastestRuntime = completionData.length > 2 ? await getFastestRuntime(year) : null;
   const slowestRuntime = completionData.length > 2 ? await getSlowestRuntime(year) : null;
 
+  // generate the columns of the table from the puzzle data.
   const names = completionData.map(mapNamedColumn);
   const solved = completionData.map(mapSolvedColumn);
   const attempts = mapAttemptColumns(completionData, maxAttempts);
@@ -108,6 +122,31 @@ const generateTable = async (year, completionData) => {
 };
 
 /**
+ * Returns a header for the section in the readme
+ */
+const generateHeader = async (year) => {
+  const solvedCount = await getSolvedCount(year);
+  const totalPuzzleCount = getTotalPuzzleCount();
+  const solvedPercent = (solvedCount / totalPuzzleCount) * 100;
+
+  if (!Number.isFinite(solvedPercent)) {
+    throw new Error('could not calculate solved percent from arguments');
+  }
+
+  return `## Completion Progress - ${solvedCount}/${totalPuzzleCount} (${solvedPercent}%)`;
+};
+
+const saveToReadme = async (header, table) => {
+  const contents = await readFile(getConfigValue('paths.readme'), 'utf-8');
+  const newContents = [
+    contents,
+    header,
+    table,
+  ].join('\n\n');
+  await outputFile(getConfigValue('paths.readme'), newContents);
+};
+
+/**
  * Saves a table to the users readme which shows the users progress for the year.
  */
 export const saveCompletionTableToReadme = async ({ year } = {}) => {
@@ -123,7 +162,9 @@ export const saveCompletionTableToReadme = async ({ year } = {}) => {
   }
 
   const tableText = await generateTable(year, completionData);
+  const sectionHeader = await generateHeader(year);
 
-  console.log(tableText);
+  await saveToReadme(sectionHeader, tableText);
+
   return true;
 };
