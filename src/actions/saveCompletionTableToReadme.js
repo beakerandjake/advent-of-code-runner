@@ -178,5 +178,7 @@ export const saveCompletionTableToReadme = async ({ year } = {}) => {
 
   await saveToReadme(textToSave);
 
+  logger.festive('Saved progress to your README file');
+
   return true;
 };
