@@ -171,12 +171,10 @@ export const saveCompletionTableToReadme = async ({ year } = {}) => {
     return false;
   }
 
-  const textToSave = [
+  await saveToReadme([
     await generateHeader(year),
     await generateTable(year, completionData),
-  ].join('\n\n');
-
-  await saveToReadme(textToSave);
+  ].join('\n\n'));
 
   logger.festive('Saved progress to your README file');
 
