@@ -37,7 +37,7 @@ export const bold = (value) => `**${value}**`;
  * Generates the text for the name column.
  * @private
  */
-export const mapNamedColumn = ({ day, level }) => `${day}.${level}`;
+export const mapNameColumn = ({ day, level }) => `${day}.${level}`;
 
 /**
  * Generates the text for the solved column.
@@ -112,7 +112,7 @@ const generateTable = async (year, completionData) => {
   const slowestRuntime = completionData.length > 2 ? await getSlowestRuntime(year) : null;
 
   // generate the columns of the table from the puzzle data.
-  const names = completionData.map(mapNamedColumn);
+  const names = completionData.map(mapNameColumn);
   const solved = completionData.map(mapSolvedColumn);
   const attempts = mapAttemptColumns(completionData, maxAttempts);
   const runtimes = completionData.map((x) => mapRuntimeColumn(x, fastestRuntime, slowestRuntime));

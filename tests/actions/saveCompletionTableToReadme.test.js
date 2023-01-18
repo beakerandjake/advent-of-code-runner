@@ -23,7 +23,12 @@ jest.unstable_mockModule('src/statistics.js', () => ({
 
 // import after setting up mocks
 const {
-  tr, italic, bold, saveCompletionTableToReadme,
+  tr,
+  italic,
+  bold,
+  mapNameColumn,
+  mapSolvedColumn,
+  saveCompletionTableToReadme,
 } = await import('../../src/actions/saveCompletionTableToReadme.js');
 
 describe('saveCompletionTableToReadme()', () => {
@@ -58,6 +63,28 @@ describe('saveCompletionTableToReadme()', () => {
       const input = 'ASDF';
       const result = bold(input);
       expect(result).toBe(`**${input}**`);
+    });
+  });
+
+  describe('mapNamedColumn()', () => {
+    test('outputs expected value', () => {
+      const input = { day: 10, level: 11 };
+      const result = mapNameColumn(input);
+      expect(result).toBe([input.day, input.level].join('.'));
+    });
+  });
+
+  describe('mapSolvedColumn()', () => {
+    test('returns empty on not solved', () => {
+      const input = { solved: false };
+      const result = mapSolvedColumn(input);
+      expect(result).toBe('');
+    });
+
+    test('returns value on solved', () => {
+      const input = { solved: true };
+      const result = mapSolvedColumn(input);
+      expect(result).not.toBe('');
     });
   });
 
