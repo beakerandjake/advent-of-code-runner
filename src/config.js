@@ -133,7 +133,7 @@ const CONFIG = {
     cancelMessageDelayMs: 3000,
   },
   paths: {
-    readme: join('cwd', 'README.md'),
+    readme: join(cwd, 'README.md'),
     rateLimitFile: join(cwd, '.ratelimits.json'),
     userDataFile: join(cwd, 'aocr-data.json'),
     inputsDir: join(cwd, 'inputs'),
