@@ -17,7 +17,7 @@ export const assertAnswerCorrect = async ({
 
   // if there isn't a correct answer stored, then this puzzle hasn't been solved.
   if (!correctAnswer) {
-    logger.verbose('unknown if answer is correct, puzzle has not been solved');
+    logger.verbose('unknown if answer is correct, puzzle has not been submitted');
     return false;
   }
 

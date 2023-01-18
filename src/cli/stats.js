@@ -1,20 +1,31 @@
 import { Command } from 'commander';
 import { createChain } from '../actions/actionChain.js';
-import { assertInitialized, getYear, outputCompletionTable } from '../actions/index.js';
+import {
+  assertInitialized,
+  getYear,
+  outputCompletionTable,
+  assertReadmeExists,
+  saveCompletionTableToReadme,
+} from '../actions/index.js';
 
 /**
- * "compile" the links into the stats action.
+ * Output stats to the cli
  */
-const actionChain = createChain([
+const outputStats = createChain([
   assertInitialized,
   getYear,
   outputCompletionTable,
 ]);
 
 /**
- * Outputs stats about user progress.
+ * Save the stats to the users readme file
  */
-const stats = async () => actionChain();
+const saveStats = createChain([
+  assertInitialized,
+  assertReadmeExists,
+  getYear,
+  saveCompletionTableToReadme,
+]);
 
 /**
  * Command to output user statistics.
@@ -22,4 +33,11 @@ const stats = async () => actionChain();
 export const statsCommand = new Command()
   .name('stats')
   .description('Output your completion progress for the years advent of code.')
-  .action(stats);
+  .option('--save', 'Save your completion progress to the README file')
+  .action(async ({ save }) => {
+    if (save) {
+      await saveStats();
+    } else {
+      await outputStats();
+    }
+  });
