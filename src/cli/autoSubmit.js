@@ -1,6 +1,12 @@
 import { Command } from 'commander';
 import { createChain } from '../actions/actionChain.js';
-import { assertInitialized, getNextUnsolvedPuzzle, getYear } from '../actions/index.js';
+import {
+  assertInitialized,
+  assertReadmeExists,
+  getNextUnsolvedPuzzle,
+  getYear,
+  saveCompletionTableToReadme,
+} from '../actions/index.js';
 import { submitLinks } from './submit.js';
 
 /**
@@ -9,6 +15,8 @@ import { submitLinks } from './submit.js';
 const actionChain = createChain([...new Set([
   ...[assertInitialized, getYear, getNextUnsolvedPuzzle],
   ...submitLinks,
+  assertReadmeExists,
+  saveCompletionTableToReadme,
 ])]);
 
 /**
