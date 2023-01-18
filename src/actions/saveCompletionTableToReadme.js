@@ -96,7 +96,6 @@ export const mapRuntimeColumn = ({ runtimeNs }, fastest, slowest) => {
 /**
  * Generates a markdown table from the years data.
  */
-/* istanbul ignore next */
 const generateTable = async (year, completionData) => {
   const averageAttempts = await getAverageAttempts(year);
   const averageRuntime = await getAverageRuntime(year);
