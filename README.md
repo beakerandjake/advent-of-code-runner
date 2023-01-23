@@ -45,5 +45,32 @@ The authentication token is stored in a advent of code cookie. Navigate to [adve
 - [Firefox help](https://firefox-source-docs.mozilla.org/devtools-user/storage_inspector/index.html)
 - [Chrome help](https://developer.chrome.com/docs/devtools/storage/cookies/)
 
+## Usage
 
+Run the following commands from the root of your repository.
+
+### `solve <day> <level>`
+Runs your code for a specific puzzle, downloads the input file (if not already cached), measures how long your code takes to run, and outputs your answer. Use this when you want to solve a specific puzzle. *This does not submit the answer to advent of code.*
+
+Example to solve the puzzle on day 16, level 2:
+```
+npm run solve 16 2
+```
+
+### `autosolve`
+Runs the code for the next puzzle which has not had a correct answer submitted. Performs the same behavior as the `solve` command, without requiring your to input the day or the level. This command is very useful if you solve advent of code puzzles in order. 
+
+```
+npm run autosolve
+```
+
+Example: If you've submitted correct answers for days 1-4, when your run the `autosolve` command, it will run the code for Day 5 Level 1.  
+
+### `submit <day> <level>`
+The same as the `solve` command, however your answer will be submitted to advent of code. 
+
+Example to submit the answer for the puzzle on day 21, level 1:
+```
+npm run submit 21 1
+```
 
