@@ -4,7 +4,7 @@
 
 A Node.Js CLI solution generator and runner for [advent of code](https://adventofcode.com/).
 
-## 🦌 Features
+## 🤶 Features
 - Quickly and easily scaffolds an empty directory, creating all required solution files (similar to create-react-app). 
 - Runs your solutions (both sync and async) and measures performance. 
 - Downloads and caches puzzle input files.
@@ -15,10 +15,10 @@ A Node.Js CLI solution generator and runner for [advent of code](https://advento
 - Tracks your progress and knows which puzzle to run.
 - Uses modern ECMAScript modules (ESM)
 
-# 🤶 Table of Contents
+## 🦌 Table of Contents
 TODO
 
-## Installation
+## 🥛 Installation
 In an empty directory or a freshly created github repository run the following command
 ```
 npx advent-of-code-runner init 
