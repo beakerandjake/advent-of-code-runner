@@ -1,5 +1,7 @@
 # advent-of-code-runner
 
+## Please note this is a WIP repo and is not ready to be used
+
 A Node.Js CLI solution generator and runner for [advent of code](https://adventofcode.com/).
 
 ## Features
@@ -19,4 +21,13 @@ npx advent-of-code-runner init
 ```
 You will be asked a few questions, and then your project files will be generated and the required dependencies will be installed.
 
-## Please note this is a WIP repo and is not ready to be used
+### Authentication Token
+advent of code generates puzzle inputs unique to your account. In order to download inputs and submit answers this CLI needs to store your advent of code authentication token. The token will be stored in a .env file in your project directory. This .env file ***should not*** be committed to source control. When you run the `init` command a .gitignore file is generated which ignores .env files, so your token is safe by default. 
+
+#### Finding your Authentication Token
+The authentication token is stored in a advent of code cookie. Navigate to [advent of code](https://adventofcode.com/), and sign in to your account. Once signed in open up your browsers development tools, find the cookies for adventofcode.com and copy the value of the "session" cookie. 
+- [Firefox help](https://firefox-source-docs.mozilla.org/devtools-user/storage_inspector/index.html)
+- [Chrome help](https://developer.chrome.com/docs/devtools/storage/cookies/)
+
+
+
