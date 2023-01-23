@@ -9,6 +9,7 @@ A Node.Js CLI solution generator and runner for [advent of code](https://advento
 - Submits answers to advent of code.
 - Tracks submitted answers and prevents duplicate submissions.
 - Stores and outputs statistics to the CLI or your README file.
+- Rate limits submissions to prevent timeout penalties.
 - Tracks your progress and knows which puzzle to run. 
 
 ## Please note this is a WIP repo and is not ready to be used
