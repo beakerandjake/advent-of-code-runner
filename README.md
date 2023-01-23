@@ -141,7 +141,7 @@ Depending on the puzzle and its input you might need to [parse string values int
 ## 🌨️ Caching
 This CLI downloads puzzles inputs only once and saves them to the `inputs/` folder. Additionally it tracks the answers you submit to ensure you don't attempt to re-submit an answer to the website.  
 
-## ❄ Misc File Information
+## 🎁 Misc File Information
 
 #### `aocr-data.json`
 This file stores your progress. Every time you submit an answer, the answer you submit is stored in this file to prevent duplicate submissions and track statistics. Additionally it stores the fastest recorded runtime. You should not edit this file manually. 
@@ -161,7 +161,7 @@ If you view the plain text markdown, you might notice a section that looks like:
 ```
 The CLI requires this section so it can continually update your readme with your progress table (if using the `autosubmit` or the `stats` command).
 
-## 🎁 Example Repository
+## ❄ Example Repository
 I am using this CLI for my own advent of code solutions. You can refer to this project as a real world example of how to use this CLI. 
 
 *Spoiler Warning*: [This project](https://github.com/beakerandjake/aoc-2022) contains my solutions to advent of code 2022.
