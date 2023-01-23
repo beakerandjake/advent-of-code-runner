@@ -57,7 +57,7 @@ Example to solve the puzzle on day 16, level 2:
 npm run solve 16 2
 ```
 
-Note: If your code is taking a long time to run you can cancel it any any time by pressing `ctrl + c` in your terminal.
+*Note: If your code is taking a long time to run you can cancel it any any time by pressing `Ctrl + c` in your terminal.*
 
 ### `autosolve`
 Runs the code for the next puzzle which has not had a correct answer submitted. Performs the same behavior as the `solve` command, without requiring your to input the day or the level. This command is very useful if you solve puzzles in order.
