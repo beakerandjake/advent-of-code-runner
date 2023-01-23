@@ -30,8 +30,7 @@ your-repository-folder/
 ├── inputs/
 ├── node_modules/
 ├── package.json
-├── package.lock.json![image](https://user-images.githubusercontent.com/1727349/214147828-cd1f7327-8fd7-4fbf-80a5-e9e933237276.png)
-
+├── package.lock.json
 ├── README.md
 ├── src/
 │   ├── day_01.js
