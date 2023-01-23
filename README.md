@@ -139,11 +139,11 @@ Depending on the puzzle and its input you might need to [parse string values int
 
 ## Misc File Information
 
-### `aocr-data.json`
+#### `aocr-data.json`
 This file stores your progress. Every time you submit an answer, the answer you submit is stored in this file to prevent duplicate submissions and track statistics. Additionally it stores the fastest recorded runtime. You should not edit this file manually. 
 
-### `.ratelimits.json`
+#### `.ratelimits.json`
 This file stores rate limit information used when querying the advent of code website. The creator of the website has requested automated tools such as this CLI are conservative in the number of requests made to the website. This file tracks when the last request was made and the CLI uses this data to prevent requests from occuring too frequently. 
 
-### `.env`
+#### `.env`
 This file stores your authentication token, it ***should not be committed to source control***. See the [Authentication Token](https://github.com/beakerandjake/advent-of-code-runner#authentication-token) section for more information.
