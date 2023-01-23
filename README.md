@@ -4,7 +4,7 @@ A Node.Js CLI solution generator and runner for [advent of code](https://advento
 
 ## Features
 - Quickly and easily scaffolds an empty directory, creating all required solution files (similar to create-react-app). 
-- Runs your solutions (both sync and async) and measures runtime performance. 
+- Runs your solutions (both sync and async) and measures performance. 
 - Downloads and caches puzzle input files.
 - Submits answers to advent of code.
 - Tracks submitted answers and prevents duplicate submissions.
