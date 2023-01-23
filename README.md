@@ -22,6 +22,7 @@ A Node.Js CLI solution generator and runner for [advent of code](https://advento
   - [solve](#solve-day-level)
   - [submit](#submit-day-level)
   - [stats](#stats---save)
+  - [auth](#auth)
 - [Solution Files](#snowman-solution-files)
 - [Caching](#cloud_with_snow-caching)
 - [Misc File Information](#gift-misc-file-information)
@@ -118,7 +119,7 @@ npm run stats -- --save
 Note you must add `--` seperator between the command name and the `--save` argument. See this [stackoverflow question](https://stackoverflow.com/q/11580961) for more info.
 
 ### `auth`
-Creates or updates the `.env` file with your advent of code authentication token. This is a useful command if you checkout your repository on a new machine, since the `.env` file is not commited to source control.
+Creates or updates the `.env` file with your advent of code authentication token. This is a useful command if you checkout your repository on a new machine, since the `.env` file is not commited to source control and wont be present on the new machine.
 
 ```
 npm run auth
