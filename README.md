@@ -141,7 +141,7 @@ Depending on the puzzle and its input you might need to [parse string values int
 ## 🌨️ Caching
 This CLI downloads puzzles inputs only once and saves them to the `inputs/` folder. Additionally it tracks the answers you submit to ensure you don't attempt to re-submit an answer to the website.  
 
-## Misc File Information
+## ❄ Misc File Information
 
 #### `aocr-data.json`
 This file stores your progress. Every time you submit an answer, the answer you submit is stored in this file to prevent duplicate submissions and track statistics. Additionally it stores the fastest recorded runtime. You should not edit this file manually. 
