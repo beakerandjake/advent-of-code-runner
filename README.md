@@ -17,11 +17,18 @@ A Node.Js CLI solution generator and runner for [advent of code](https://advento
 
 ## :deer: Table of Contents
 - [Installation](#milk_glass-installation)
+  - [Authentication Token](#authentication-token)
 - [Usage](#star2-usage)
+  - [solve](#solve-day-level)
+  - [submit](#submit-day-level)
+  - [stats](#stats---save)
+  - [auth](#auth)
+  - [help](#help)
 - [Solution Files](#snowman-solution-files)
 - [Caching](#cloud_with_snow-caching)
 - [Misc File Information](#gift-misc-file-information)
 - [Example](#snowflake-example)
+- [Automation Compliance](#bell-automation-compliance)
 
 
 ## :milk_glass: Installation
@@ -173,3 +180,8 @@ I am using this CLI for my own advent of code solutions. You can refer to this p
 
 *Spoiler Warning*: [This project](https://github.com/beakerandjake/aoc-2022) contains my solutions to advent of code 2022.
 
+## :bell: Automation Compliance
+This CLI does follow the automation guidelines on the /r/adventofcode [community wiki](https://www.reddit.com/r/adventofcode/wiki/faqs/automation/). Specifically: 
+- Outbound calls are throttled to every five minutes in [rateLimitDecorator.js](https://github.com/beakerandjake/advent-of-code-runner/blob/main/src/api/rateLimitDecorator.js)
+- Once inputs are downloaded, they are cached locally in [getPuzzleInput.js](https://github.com/beakerandjake/advent-of-code-runner/blob/main/src/actions/getPuzzleInput.js). If you suspect your input is corrupted, you can manually request a fresh copy by deleting the downloaded file.
+- The User-Agent header in [api.js](https://github.com/beakerandjake/advent-of-code-runner/blob/main/src/api/api.js) is set to `https://github.com/beakerandjake/advent-of-code-runner by beakerandjake`
