@@ -114,7 +114,7 @@ npm run help
 ```
 
 ## Solution Files
-The `init` command generates a solution file for each day of advent of code.
+The `init` command generates a solution file for each day of advent of code. This is where you will add your code to compute the answer to each puzzle.
 
 Each solution file is expected to export two functions: 
 - `levelOne({ input: string, lines: string[] }) -> string|number|Promise<string>|Promise<number>`
@@ -126,7 +126,7 @@ These functions:
 
 ### Arguments
 Solution functions are invoked with a single argument, an object containing the following fields:
-- `input: string`: A string containing the raw, unprocessed puzzle input. Provided for flexibility and customization.
+- `input: string`: A string containing the raw, unprocessed puzzle input. Provided for flexibility and custom parsing.
 - `lines: string[]`:  An array of strings containing the each line of the puzzle input. Provided for convience and speed. 
 
 Depending on the puzzle and its input you might need to [parse string values into integers](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/parseInt). 
