@@ -15,6 +15,9 @@ A Node.Js CLI solution generator and runner for [advent of code](https://advento
 - Tracks your progress and knows which puzzle to run.
 - Uses modern ECMAScript modules (ESM)
 
+# Table of Contents
+TODO
+
 ## Installation
 In an empty directory or a freshly created github repository run the following command
 ```
@@ -45,6 +48,9 @@ advent of code generates puzzle inputs unique to your account. In order to downl
 The authentication token is stored in a advent of code cookie. Navigate to [advent of code](https://adventofcode.com/), and sign in to your account. Once signed in open up your browsers development tools, find the cookies for adventofcode.com and copy the value of the "session" cookie. 
 - [Firefox help](https://firefox-source-docs.mozilla.org/devtools-user/storage_inspector/index.html)
 - [Chrome help](https://developer.chrome.com/docs/devtools/storage/cookies/)
+
+## Post Installation 
+Once run the `init` command you are ready to start solving the puzzles. Navigate to `src/` folder and open up `day_01.js`. Navigate to the `levelOne` function and add your code. Run the `autosolve` or `solve` command to see what answer your code returns, if you're happy with the answer run the `submit` or `autosubmit` command to see if you got the right answer.
 
 ## Usage
 
