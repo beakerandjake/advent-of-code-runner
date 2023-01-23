@@ -137,6 +137,9 @@ Solution functions are invoked with a single argument, an object containing the 
 
 Depending on the puzzle and its input you might need to [parse string values into integers](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/parseInt). 
 
+## Caching
+This CLI downloads puzzles inputs only once and saves them to the `inputs/` folder. Additionally it tracks the answers you submit to ensure you don't attempt to re-submit an answer to the website.  
+
 ## Misc File Information
 
 #### `aocr-data.json`
