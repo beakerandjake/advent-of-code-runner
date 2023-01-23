@@ -1,5 +1,5 @@
 /**
- * Contains solutions for Day 1
+ * Contains solutions for Day {{day}}
  * Puzzle Description: https://adventofcode.com/{{year}}/day/{{day}}
  */
 
