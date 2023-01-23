@@ -19,7 +19,23 @@ In an empty directory or a freshly created github repository run the following c
 ```
 npx advent-of-code-runner init 
 ```
-You will be asked a few questions, and then your project files will be generated and the required dependencies will be installed.
+You will be asked a few questions, then the following contents will be generated: 
+```
+your-repository-folder/
+├── aocr-data.json
+├── inputs/
+├── node_modules/
+├── package.json
+├── package.lock.json
+├── README.md
+├── src/
+│   ├── day_01.js
+│   ├── day_02.js
+│   ├── ...
+│   └── day_25.js
+├── .env
+└── .gitignore
+```
 
 ### Authentication Token
 advent of code generates puzzle inputs unique to your account. In order to download inputs and submit answers this CLI needs to store your advent of code authentication token. The token will be stored in a .env file in your project directory. This .env file ***should not*** be committed to source control. When you run the `init` command a .gitignore file is generated which ignores .env files, so your token is safe by default. 
