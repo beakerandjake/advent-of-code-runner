@@ -46,10 +46,11 @@ export const createPackageJson = async ({ year } = {}) => {
     description: `Solutions to Advent of Code ${year}`,
     scripts: {
       ...originalPackageJson.scripts,
-      solve: 'advent-of-code-runner solve',
       autosolve: 'advent-of-code-runner autosolve',
+      solve: 'advent-of-code-runner solve',
       autosubmit: 'advent-of-code-runner autosubmit',
       submit: 'advent-of-code-runner submit',
+      stats: 'advent-of-code-runner stats',
       help: 'advent-of-code-runner help',
     },
     dependencies: {
