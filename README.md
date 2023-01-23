@@ -58,7 +58,8 @@ npm run solve 16 2
 ```
 
 ### `autosolve`
-Runs the code for the next puzzle which has not had a correct answer submitted. Performs the same behavior as the `solve` command, without requiring your to input the day or the level. This command is very useful if you solve advent of code puzzles in order. 
+Runs the code for the next puzzle which has not had a correct answer submitted. Performs the same behavior as the `solve` command, without requiring your to input the day or the level. This command is very useful if you solve puzzles in order.
+
 
 ```
 npm run autosolve
@@ -73,4 +74,26 @@ Example to submit the answer for the puzzle on day 21, level 1:
 ```
 npm run submit 21 1
 ```
+
+### `autosubmit`
+Runs the code and submits the answer for the next puzzle which has not had a correct answer submitted. Performs the same behavior as the `submit` command without requiring you to input the day or the level. Additionally this command will update the progress table in your README file. This command is very useful if you solve puzzles in order.
+
+```
+npm run autosubmit
+```
+Example: If you've submitted correct answers for days 1-16 and day 17 level 1, when your run the `autosolve` command, it will submit the answer for Day 17 Level 2.  
+
+### `stats [--save]`
+Generates showing your current statistics for the year. Shows you which puzzles you have completed, how many attempts you made for each puzzle, and the fastest recorded runtime for that puzzle. The table additionally displays your completion percentage for the year, the average number of attempts, and the average runtime.
+
+If you run the command without the `--save` argument then the table will be printed in the console
+```
+npm run stats
+```
+
+If you run the command with the `--save` argument then the table will be saved to your README file.
+```
+npm run stats -- --save
+```
+Note you must add `--` seperator between the command name and the `--save` argument. See this [stackoverflow question](https://stackoverflow.com/q/11580961) for more info.
 
