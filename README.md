@@ -1,10 +1,10 @@
-# advent-of-code-runner
+# 🎅 advent-of-code-runner 🎄
 
 ## Please note this is a WIP repo and is not ready to be used
 
 A Node.Js CLI solution generator and runner for [advent of code](https://adventofcode.com/).
 
-## Features
+## 🦌 Features
 - Quickly and easily scaffolds an empty directory, creating all required solution files (similar to create-react-app). 
 - Runs your solutions (both sync and async) and measures performance. 
 - Downloads and caches puzzle input files.
@@ -15,7 +15,7 @@ A Node.Js CLI solution generator and runner for [advent of code](https://advento
 - Tracks your progress and knows which puzzle to run.
 - Uses modern ECMAScript modules (ESM)
 
-# Table of Contents
+# 🤶 Table of Contents
 TODO
 
 ## Installation
@@ -30,7 +30,8 @@ your-repository-folder/
 ├── inputs/
 ├── node_modules/
 ├── package.json
-├── package.lock.json
+├── package.lock.json![image](https://user-images.githubusercontent.com/1727349/214147828-cd1f7327-8fd7-4fbf-80a5-e9e933237276.png)
+
 ├── README.md
 ├── src/
 │   ├── day_01.js
@@ -49,10 +50,10 @@ The authentication token is stored in a advent of code cookie. Navigate to [adve
 - [Firefox help](https://firefox-source-docs.mozilla.org/devtools-user/storage_inspector/index.html)
 - [Chrome help](https://developer.chrome.com/docs/devtools/storage/cookies/)
 
-## Post Installation 
+## 🍪 Post Installation 
 Once you run the `init` command you are ready to start solving the puzzles. Navigate to `src/` folder and open up `day_01.js`. Navigate to the `levelOne` function and add your code. Run the `autosolve` or `solve` command to see what answer your code returns, if you're happy with the answer run the `submit` or `autosubmit` command to see if you got the right answer.
 
-## Usage
+## 🌟 Usage
 
 Run the following commands from the root of your repository.
 
@@ -119,7 +120,7 @@ Outputs the help text for the cli
 npm run help
 ```
 
-## Solution Files
+## ⛄️ Solution Files
 The `init` command generates a solution file for each day of advent of code. This is where you will add your code to compute the answer to each puzzle.
 
 Each solution file is expected to export two functions: 
@@ -137,7 +138,7 @@ Solution functions are invoked with a single argument, an object containing the 
 
 Depending on the puzzle and its input you might need to [parse string values into integers](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/parseInt). 
 
-## Caching
+## 🌨️ Caching
 This CLI downloads puzzles inputs only once and saves them to the `inputs/` folder. Additionally it tracks the answers you submit to ensure you don't attempt to re-submit an answer to the website.  
 
 ## Misc File Information
@@ -160,7 +161,7 @@ If you view the plain text markdown, you might notice a section that looks like:
 ```
 The CLI requires this section so it can continually update your readme with your progress table (if using the `autosubmit` or the `stats` command).
 
-## Example Repository
+## 🎁 Example Repository
 I am using this CLI for my own advent of code solutions. You can refer to this project as a real world example of how to use this CLI. 
 
 *Spoiler Warning*: [This project](https://github.com/beakerandjake/aoc-2022) contains my solutions to advent of code 2022.
