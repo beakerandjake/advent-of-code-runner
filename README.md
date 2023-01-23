@@ -150,3 +150,9 @@ This file stores rate limit information used when querying the advent of code we
 
 #### `.env`
 This file stores your authentication token, it ***should not be committed to source control***. See the [Authentication Token](https://github.com/beakerandjake/advent-of-code-runner#authentication-token) section for more information.
+
+## Example Repository
+I am using this CLI for my own advent of code solutions. You can refer to this project as a real world example of how to use this CLI. 
+
+*Spoiler Warning*: [This project](https://github.com/beakerandjake/aoc-2022) contains my solutions to advent of code 2022.
+
