@@ -13,7 +13,7 @@ import { logger } from '../logger.js';
 export const authTokenQuestion = {
   type: 'password',
   name: 'authToken',
-  message: festiveStyle('Enter your advent of code authentication token'),
+  message: festiveStyle('Enter your advent of code authentication token (see README for help)'),
   prefix: festiveEmoji(),
   validate: (input) => (input ? true : 'Token cannot be empty!'),
   filter: (input) => input.trim(),
