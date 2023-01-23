@@ -84,9 +84,9 @@ npm run autosubmit
 Example: If you've submitted correct answers for days 1-16 and day 17 level 1, when your run the `autosolve` command, it will submit the answer for Day 17 Level 2.  
 
 ### `stats [--save]`
-Generates showing your current statistics for the year. Shows you which puzzles you have completed, how many attempts you made for each puzzle, and the fastest recorded runtime for that puzzle. The table additionally displays your completion percentage for the year, the average number of attempts, and the average runtime.
+Generates a table showing your current statistics for the year. Shows you which puzzles you have completed, how many attempts you made for each puzzle, and the fastest recorded runtime for that puzzle. The table additionally displays your completion percentage for the year, the average number of attempts, and the average runtime.
 
-If you run the command without the `--save` argument then the table will be printed in the console
+If you run the command without the `--save` argument then the table will be printed to the console
 ```
 npm run stats
 ```
@@ -97,3 +97,18 @@ npm run stats -- --save
 ```
 Note you must add `--` seperator between the command name and the `--save` argument. See this [stackoverflow question](https://stackoverflow.com/q/11580961) for more info.
 
+### `auth`
+Creates or updates the `.env` file with your advent of code authentication token. This is a useful command if you checkout your repository on a new machine, since the `.env` file is not commited to source control.
+
+```
+npm run auth
+```
+
+### `help`
+Outputs the help text for the cli
+```
+npm run help
+```
+
+## Solution Files
+The `init` command generates a solution file for each day of advent of code. The solution files export two functions `levelOne` and `levelTwo`. You are expected to return a `string` or a `number` from the function. The functions can be sync or async. 
