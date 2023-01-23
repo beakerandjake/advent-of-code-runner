@@ -1,10 +1,10 @@
-# advent-of-code-runner
+# 🎅 advent-of-code-runner 🎄
 
 ## Please note this is a WIP repo and is not ready to be used
 
 A Node.Js CLI solution generator and runner for [advent of code](https://adventofcode.com/).
 
-## Features
+## 🤶 Features
 - Quickly and easily scaffolds an empty directory, creating all required solution files (similar to create-react-app). 
 - Runs your solutions (both sync and async) and measures performance. 
 - Downloads and caches puzzle input files.
@@ -12,9 +12,13 @@ A Node.Js CLI solution generator and runner for [advent of code](https://advento
 - Tracks submitted answers and prevents duplicate submissions.
 - Stores and outputs statistics to the CLI or your README file.
 - Rate limits submissions to prevent timeout penalties.
-- Tracks your progress and knows which puzzle to run. 
+- Tracks your progress and knows which puzzle to run.
+- Uses modern ECMAScript modules (ESM)
 
-## Installation
+## 🦌 Table of Contents
+TODO
+
+## 🥛 Installation
 In an empty directory or a freshly created github repository run the following command
 ```
 npx advent-of-code-runner init 
@@ -38,14 +42,17 @@ your-repository-folder/
 ```
 
 ### Authentication Token
-advent of code generates puzzle inputs unique to your account. In order to download inputs and submit answers this CLI needs to store your advent of code authentication token. The token will be stored in a .env file in your project directory. This .env file ***should not*** be committed to source control. When you run the `init` command a .gitignore file is generated which ignores .env files, so your token is safe by default. 
+advent of code generates puzzle inputs unique to your account. In order to download inputs and submit answers this CLI needs to store your advent of code authentication token. The token will be stored in a .env file in your project directory. This .env file ***should not*** be committed to source control. When you run the `init` command a .gitignore file is generated which ignores .env files, so *your token is safe by default*. 
 
 #### Finding your Authentication Token
 The authentication token is stored in a advent of code cookie. Navigate to [advent of code](https://adventofcode.com/), and sign in to your account. Once signed in open up your browsers development tools, find the cookies for adventofcode.com and copy the value of the "session" cookie. 
 - [Firefox help](https://firefox-source-docs.mozilla.org/devtools-user/storage_inspector/index.html)
 - [Chrome help](https://developer.chrome.com/docs/devtools/storage/cookies/)
 
-## Usage
+## 🍪 Post Installation 
+Once you run the `init` command you are ready to start solving the puzzles. Navigate to `src/` folder and open up `day_01.js`. Navigate to the `levelOne` function and add your code. Run the `autosolve` or `solve` command to see what answer your code returns, if you're happy with the answer run the `submit` or `autosubmit` command to see if you got the right answer.
+
+## 🌟 Usage
 
 Run the following commands from the root of your repository.
 
@@ -56,6 +63,8 @@ Example to solve the puzzle on day 16, level 2:
 ```
 npm run solve 16 2
 ```
+
+*Note: If your code is taking a long time to run you can cancel it any any time by pressing `Ctrl + c` in your terminal.*
 
 ### `autosolve`
 Runs the code for the next puzzle which has not had a correct answer submitted. Performs the same behavior as the `solve` command, without requiring your to input the day or the level. This command is very useful if you solve puzzles in order.
@@ -110,5 +119,49 @@ Outputs the help text for the cli
 npm run help
 ```
 
-## Solution Files
-The `init` command generates a solution file for each day of advent of code. The solution files export two functions `levelOne` and `levelTwo`. You are expected to return a `string` or a `number` from the function. The functions can be sync or async. 
+## ⛄️ Solution Files
+The `init` command generates a solution file for each day of advent of code. This is where you will add your code to compute the answer to each puzzle.
+
+Each solution file is expected to export two functions: 
+- `levelOne({ input: string, lines: string[] }) -> string|number|Promise<string>|Promise<number>`
+- `levelTwo({ input: string, lines: string[] }) -> string|number|Promise<string>|Promise<number>`
+
+These functions: 
+- Must return a `string` or a `number`.
+- Can be `sync` or `async`
+
+### Arguments
+Solution functions are invoked with a single argument, an object containing the following fields:
+- `input: string`: A string containing the raw, unprocessed puzzle input. Provided for flexibility and custom parsing.
+- `lines: string[]`:  An array of strings containing the each line of the puzzle input. Provided for convience and speed. 
+
+Depending on the puzzle and its input you might need to [parse string values into integers](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/parseInt). 
+
+## 🌨️ Caching
+This CLI downloads puzzles inputs only once and saves them to the `inputs/` folder. Additionally it tracks the answers you submit to ensure you don't attempt to re-submit an answer to the website.  
+
+## 🎁 Misc File Information
+
+#### `aocr-data.json`
+This file stores your progress. Every time you submit an answer, it is stored in this file to prevent duplicate submissions and track statistics. Additionally it stores the fastest recorded runtime for each puzzle. You should not edit this file manually. 
+
+#### `.ratelimits.json`
+This file stores rate limit information used when querying the advent of code website. The creator of the website has requested automated tools such as this CLI are conservative in the number of requests made to the website. This file tracks when the last request was made and the CLI uses this data to prevent requests from occuring too frequently. 
+
+#### `.env`
+This file stores your authentication token, it ***should not be committed to source control***. See the [Authentication Token](https://github.com/beakerandjake/advent-of-code-runner#authentication-token) section for more information.
+
+#### `README.md`
+If you view the plain text markdown, you might notice a section that looks like: 
+```
+<!--Please do not delete the following comments, they are required to save your stats to this file.-->
+<!--START_AUTOGENERATED_COMPLETION_PROGRESS_SECTION-->
+<!--END_AUTOGENERATED_COMPLETION_PROGRESS_SECTION-->
+```
+The CLI requires this section so it can continually update your readme with your progress table (if using the `autosubmit` or the `stats` command).
+
+## ❄ Example Repository
+I am using this CLI for my own advent of code solutions. You can refer to this project as a real world example of how to use this CLI. 
+
+*Spoiler Warning*: [This project](https://github.com/beakerandjake/aoc-2022) contains my solutions to advent of code 2022.
+
