@@ -12,7 +12,8 @@ A Node.Js CLI solution generator and runner for [advent of code](https://advento
 - Tracks submitted answers and prevents duplicate submissions.
 - Stores and outputs statistics to the CLI or your README file.
 - Rate limits submissions to prevent timeout penalties.
-- Tracks your progress and knows which puzzle to run. 
+- Tracks your progress and knows which puzzle to run.
+- Uses modern ECMAScript modules (ESM)
 
 ## Installation
 In an empty directory or a freshly created github repository run the following command
@@ -113,4 +114,19 @@ npm run help
 ```
 
 ## Solution Files
-The `init` command generates a solution file for each day of advent of code. The solution files export two functions `levelOne` and `levelTwo`. You are expected to return a `string` or a `number` from the function. The functions can be sync or async. 
+The `init` command generates a solution file for each day of advent of code.
+
+Each solution file is expected to export two functions: 
+- `levelOne({ input: string, lines: string[] }) -> string|number|Promise<string>|Promise<number>`
+- `levelTwo({ input: string, lines: string[] }) -> string|number|Promise<string>|Promise<number>`
+
+These functions: 
+- Must return a `string` or a `number`.
+- Can be `sync` or `async`
+
+### Arguments
+Solution functions are invoked with a single argument, an object containing the following fields:
+- `input: string`: A string containing the raw, unprocessed puzzle input. Provided for flexibility and customization.
+- `lines: string[]`:  An array of strings containing the each line of the puzzle input. Provided for convience and speed. 
+
+Depending on the puzzle and its input you might need to [parse string values into integers](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/parseInt). 
