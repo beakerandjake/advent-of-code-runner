@@ -17,6 +17,6 @@ In an empty directory or a freshly created github repository run the following c
 ```
 npx advent-of-code-runner init 
 ```
-You will be asked a few questions, and then your project files will be generated and the dependencies will be installed.
+You will be asked a few questions, and then your project files will be generated and the required dependencies will be installed.
 
 ## Please note this is a WIP repo and is not ready to be used
