@@ -22,8 +22,6 @@ A Node.Js CLI solution generator and runner for [advent of code](https://advento
   - [solve](#solve-day-level)
   - [submit](#submit-day-level)
   - [stats](#stats---save)
-  - [auth](#auth)
-  - [help](#help)
 - [Solution Files](#snowman-solution-files)
 - [Caching](#cloud_with_snow-caching)
 - [Misc File Information](#gift-misc-file-information)
