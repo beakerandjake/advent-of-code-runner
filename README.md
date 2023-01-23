@@ -13,7 +13,7 @@ A Node.Js CLI solution generator and runner for [advent of code](https://advento
 - Stores and outputs statistics to the CLI or your README file.
 - Rate limits submissions to prevent timeout penalties.
 - Tracks your progress and knows which puzzle to run.
-- Uses modern ECMAScript modules (ESM)
+- Uses modern ECMAScript modules (ESM).
 
 ## :deer: Table of Contents
 - [Installation](#milk_glass-installation)
