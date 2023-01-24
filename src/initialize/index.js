@@ -1,5 +1,5 @@
 import { createDataFile } from './createDataFile.js';
-import { createDotEnv, dotEnvFileExists } from './dotEnv.js';
+import { createDotEnv } from './dotEnv.js';
 import { createGitIgnore } from './createGitIgnore.js';
 import { createPackageJson } from './createPackageJson.js';
 import { createReadme } from './createReadme.js';
@@ -17,6 +17,5 @@ export {
   createSolutionFiles,
   cwdIsEmpty,
   deleteExistingInputFiles,
-  dotEnvFileExists,
   installPackages,
 };
