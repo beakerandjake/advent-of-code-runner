@@ -61,8 +61,3 @@ export const setValue = async (key, value) => {
   const updated = { ...data, [key]: value };
   await saveData(updated);
 };
-
-/**
- * Returns true if the user data file exists.
- */
-export const userDataFileExists = async () => pathExists(dataFilePath);
