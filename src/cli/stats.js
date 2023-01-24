@@ -4,7 +4,6 @@ import {
   assertInitialized,
   getYear,
   outputCompletionTable,
-  assertReadmeExists,
   saveProgressTableToReadme,
 } from '../actions/index.js';
 
@@ -22,7 +21,6 @@ const outputStats = createChain([
  */
 const saveStats = createChain([
   assertInitialized,
-  assertReadmeExists,
   getYear,
   saveProgressTableToReadme,
 ]);
