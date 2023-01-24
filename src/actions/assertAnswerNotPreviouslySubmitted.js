@@ -2,9 +2,9 @@ import { logger } from '../logger.js';
 import { answerHasBeenSubmitted } from '../answers.js';
 
 /**
- * Halts execution if the puzzle has not already been submitted to advent of code.
+ * Halts execution if the puzzle already been submitted to advent of code.
  */
-export const assertAnswerPreviouslySubmitted = async ({
+export const assertAnswerNotPreviouslySubmitted = async ({
   year, day, level, answer,
 } = {}) => {
   if (answer == null) {
@@ -13,8 +13,8 @@ export const assertAnswerPreviouslySubmitted = async ({
 
   if (await answerHasBeenSubmitted(year, day, level, answer)) {
     logger.error('You have already submitted this answer for this puzzle!');
-    return true;
+    return false;
   }
 
-  return false;
+  return true;
 };

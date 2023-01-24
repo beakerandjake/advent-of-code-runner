@@ -1,5 +1,5 @@
 import { assertAnswerCorrect } from './assertAnswerCorrect.js';
-import { assertAnswerPreviouslySubmitted } from './assertAnswerPreviouslySubmitted.js';
+import { assertAnswerNotPreviouslySubmitted } from './assertAnswerNotPreviouslySubmitted.js';
 import { assertInitialized } from './assertInitialized.js';
 import { assertPuzzleLevelMet } from './assertPuzzleLevelMet.js';
 import { assertPuzzleUnlocked } from './assertPuzzleUnlocked.js';
@@ -28,7 +28,7 @@ import { tryToUpdateFastestRuntime } from './tryToUpdateFastestRuntime.js';
 export {
   and,
   assertAnswerCorrect,
-  assertAnswerPreviouslySubmitted,
+  assertAnswerNotPreviouslySubmitted,
   assertInitialized,
   assertPuzzleUnlocked,
   assertPuzzleUnsolved,
