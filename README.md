@@ -68,25 +68,46 @@ Once you run the `init` command you are ready to start solving the puzzles. Navi
 
 Run the following commands from the root of your repository.
 
-### `solve <day> <level>`
-Runs your code for a specific puzzle, downloads the input file (if not already cached), measures how long your code takes to run, and outputs your answer. Use this when you want to solve a specific puzzle. *This does not submit the answer to advent of code.*
-
-Example to solve the puzzle on day 16, level 2:
-```
-npm run solve 16 2
-```
+### `solve [day] [level]`
+Runs your code for a specific puzzle, downloads the input file (if not already cached), measures how long your code takes to run, and outputs your answer. *This does not submit the answer to advent of code.*
 
 *Note: If your code is taking a long time to run you can cancel it any any time by pressing `Ctrl + c` in your terminal.*
 
-### `autosolve`
-Runs the code for the next puzzle which has not had a correct answer submitted. Performs the same behavior as the `solve` command, without requiring your to input the day or the level. This command is very useful if you solve puzzles in order.
+This command has different behavior based on which arguments you pass:
 
+##### No Arguments
 
 ```
-npm run autosolve
+npm run solve
 ```
 
-Example: If you've submitted correct answers for days 1-4, when your run the `autosolve` command, it will run the code for Day 5 Level 1.  
+If the command is run without any arguments, the CLI will find and solve the next puzzle you have not submitted a correct answer for. This is very useful if you solve puzzles in the order of the advent calendar. 
+
+Example: 
+- If you've correctly answered days 1-4, then day 5 level 1 will be solved.  
+- If you've correctly answered days 1-7 and day 8 level 1, then day 8 level 2 will be solved.
+
+##### One Argument
+
+```
+npm run solve [day]
+```
+If you run the command with just the day argument, then the level one of the days puzzle will be solved.
+
+Example:
+- To solve day 16 level 1: `npm run solve 16`
+- To solve day 4 level 1: `npm run solve 4`
+
+##### Two Arguments
+
+```
+npm run solve [day] [level]
+```
+If you run the command with the day and the level argument, then the specified puzzle will be solved.
+
+Example:
+- To solve day 23 level 2: `npm run solve 24 2`
+- To solve day 15 level 1: `npm run solve 15 1`
 
 ### `submit <day> <level>`
 The same as the `solve` command, however your answer will be submitted to advent of code. 
