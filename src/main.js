@@ -1,7 +1,6 @@
 #!/usr/bin/env node
 import { Command } from 'commander';
 import { authCommand } from './cli/auth.js';
-import { autoSubmitCommand } from './cli/autoSubmit.js';
 import { exitOverride } from './cli/exitOverride.js';
 import { initializeCommand } from './cli/initialize.js';
 import { solveCommand } from './cli/solve.js';
@@ -23,7 +22,6 @@ program
 program.addCommand(authCommand);
 program.addCommand(initializeCommand);
 program.addCommand(solveCommand);
-program.addCommand(autoSubmitCommand);
 program.addCommand(submitCommand);
 program.addCommand(statsCommand);
 
