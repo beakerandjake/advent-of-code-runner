@@ -1,5 +1,12 @@
 import { exit } from 'node:process';
 
+const commanderErrorCodes = [
+  'commander.help',
+  'commander.version',
+  'commander.helpDisplayed',
+  'commander.unknownCommand',
+];
+
 /**
  * Exit override function which can be passed to commanders exitOverride.
  * @param {Error} error
@@ -7,7 +14,7 @@ import { exit } from 'node:process';
 export const exitOverride = (error) => {
   // handle edge case when help is displayed
   // exit instead of throwing error.
-  if (error.code === 'commander.help' || error.code === 'commander.version' || error.code === 'commander.helpDisplayed') {
+  if (commanderErrorCodes.includes(error.code)) {
     exit(1);
   }
 
