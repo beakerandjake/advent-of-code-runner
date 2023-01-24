@@ -5,10 +5,10 @@ import { mockLogger } from '../mocks.js';
 
 // setup mocks
 mockLogger();
-jest.unstable_mockModule('src/persistence/userDataFile.js', () => ({ userDataFileExists: jest.fn() }));
+jest.unstable_mockModule('src/validation/userFilesExist.js', () => ({ dataFileExists: jest.fn() }));
 
 // import after mocks set up
-const { userDataFileExists } = await import('../../src/persistence/userDataFile.js');
+const { dataFileExists } = await import('../../src/validation/userFilesExist.js');
 const { assertInitialized } = await import('../../src/actions/assertInitialized.js');
 
 describe('assertInitialized()', () => {
@@ -17,13 +17,13 @@ describe('assertInitialized()', () => {
   });
 
   test('returns true if data store file exists', async () => {
-    userDataFileExists.mockResolvedValue(true);
+    dataFileExists.mockResolvedValue(true);
     const result = await assertInitialized();
     expect(result).toBe(true);
   });
 
   test('returns false if data store file does not exist', async () => {
-    userDataFileExists.mockResolvedValue(false);
+    dataFileExists.mockResolvedValue(false);
     const result = await assertInitialized();
     expect(result).toBe(false);
   });
