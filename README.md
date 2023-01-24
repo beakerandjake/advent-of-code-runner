@@ -62,7 +62,7 @@ The authentication token is stored in a advent of code cookie. Navigate to [adve
 - [Chrome help](https://developer.chrome.com/docs/devtools/storage/cookies/)
 
 ### Post Installation 
-Once you run the `init` command you are ready to start solving the puzzles. Navigate to `src/` folder and open up `day_01.js`. Navigate to the `levelOne` function and add your code. Run the `solve` command to see what answer your code returns, if you're happy with the answer run the `submit` command to see if you got the right answer.
+Once you run the `init` command you are ready to start solving the puzzles. Navigate to `src/` folder and open up `day_01.js`. Navigate to the `levelOne` function and add your code. Run the `solve` command to see what answer your code returns, if you're happy with the answer run the `submit` command to see if you got the right answer. From there you can move on to level 2 of day 1 or solve the puzzles in any order you wish. Good luck and have fun! 
 
 ## :star2: Usage
 
