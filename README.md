@@ -140,8 +140,8 @@ npm run submit [day] [level]
 If you run the command with the day and the level argument, then the specified puzzle will be submitted.
 
 Example:
-- To submit day 3 level 2: `npm run solve 3 2`
-- To submit day 14 level 1: `npm run solve 14 1`
+- To submit day 3 level 2: `npm run submit 3 2`
+- To submit day 14 level 1: `npm run submit 14 1`
 
 ### `stats [--save]`
 Generates a table showing your current statistics for the year. Shows you which puzzles you have completed, how many attempts you made for each puzzle, and the fastest recorded runtime for that puzzle. The table additionally displays your completion percentage for the year, the average number of attempts, and the average runtime.
