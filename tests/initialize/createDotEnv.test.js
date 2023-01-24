@@ -14,7 +14,7 @@ jest.unstable_mockModule('src/initialize/replaceTokens.js', () => ({ replaceToke
 const { outputFile } = await import('fs-extra/esm');
 const { readFile } = await import('node:fs/promises');
 const { replaceTokens } = await import('../../src/initialize/replaceTokens.js');
-const { createDotEnv } = await import('../../src/initialize/dotEnv.js');
+const { createDotEnv } = await import('../../src/initialize/createDotEnv.js');
 
 describe('initialize', () => {
   beforeEach(() => {
