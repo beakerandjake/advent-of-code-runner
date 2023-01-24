@@ -6,10 +6,10 @@ import { mockConfig, mockLogger } from '../mocks.js';
 // setup mocks
 mockLogger();
 mockConfig();
-jest.unstable_mockModule('fs-extra/esm', () => ({ pathExists: jest.fn() }));
+jest.unstable_mockModule('src/validation/userFilesExist.js', () => ({ readmeExists: jest.fn() }));
 
 // import after mocks set up
-const { pathExists } = await import('fs-extra/esm');
+const { readmeExists } = await import('../../src/validation/userFilesExist.js');
 const { assertReadmeExists } = await import('../../src/actions/assertReadmeExists.js');
 
 describe('assertReadmeExists()', () => {
@@ -18,13 +18,13 @@ describe('assertReadmeExists()', () => {
   });
 
   test('returns false if readme does not exist', async () => {
-    pathExists.mockResolvedValue(false);
+    readmeExists.mockResolvedValue(false);
     const result = await assertReadmeExists();
     expect(result).toBe(false);
   });
 
   test('returns true if readme does exists', async () => {
-    pathExists.mockResolvedValue(true);
+    readmeExists.mockResolvedValue(true);
     const result = await assertReadmeExists();
     expect(result).toBe(true);
   });
