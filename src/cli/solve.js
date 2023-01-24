@@ -44,8 +44,8 @@ export const solveCommand = new Command()
   .addHelpText('after', `
 Example Calls:
   solve               (Finds and solves your next unsolved puzzle)
-  solve [day]         (Solves level one of the days puzzle)
-  solve [day] [level] (Solves the puzzle for the day and level)
+  solve [day]         (Solves level one of the specified days puzzle)
+  solve [day] [level] (Solves the puzzle for the specified day and level)
   `)
   .addArgument(dayArgument)
   .addArgument(levelArgument)
