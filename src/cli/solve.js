@@ -1,41 +1,60 @@
 import { Command } from 'commander';
 import { createChain } from '../actions/actionChain.js';
-import * as links from '../actions/index.js';
+import * as actions from '../actions/index.js';
 import { dayArgument, levelArgument } from './arguments.js';
 
 /**
- * The links which together make up the solve action.
+ * The common actions between the 'solve' and 'autosolve' commands
  */
-export const solveLinks = [
-  links.assertInitialized,
-  links.getYear,
-  links.outputPuzzleLink,
-  links.assertPuzzleUnlocked,
-  links.assertPuzzleLevelMet,
-  links.getPuzzleInput,
-  links.executeUserSolution,
-  links.assertAnswerCorrect,
-  links.tryToUpdateFastestRuntime,
+const solveActions = [
+  actions.outputPuzzleLink,
+  actions.assertPuzzleUnlocked,
+  actions.assertPuzzleLevelMet,
+  actions.getPuzzleInput,
+  actions.executeUserSolution,
+  actions.assertAnswerCorrect,
+  actions.tryToUpdateFastestRuntime,
 ];
 
 /**
- * "compile" the links into the solve action.
+ * Solves a specific puzzle.
  */
-const actionChain = createChain(solveLinks);
+const solve = createChain([
+  actions.assertInitialized,
+  actions.getYear,
+  ...solveActions,
+]);
 
 /**
- * Downloads or loads the input to the puzzle, executes the users solution and outputs results.
- * @param {Number} day
- * @param {Number} level
+ * Finds the next unsolved puzzle and then solves it.
  */
-const solve = async (day, level) => actionChain({ day, level });
+const autoSolve = createChain([
+  actions.assertInitialized,
+  actions.getYear,
+  actions.getNextUnsolvedPuzzle,
+  ...solveActions,
+]);
 
 /**
- * Command which lets the user solve a specific puzzle
+ * Command which lets the user solve a puzzle
  */
 export const solveCommand = new Command()
   .name('solve')
-  .description('Solve the puzzle, benchmark the runtime, and output the result.')
+  .description('Runs your solution for a puzzle, measures the runtime, and outputs the answer.')
+  .addHelpText('after', `
+Example Calls:
+  solve               (Finds and solves your next unsolved puzzle)
+  solve [day]         (Solves level one of the days puzzle)
+  solve [day] [level] (Solves the puzzle for the day and level)
+  `)
   .addArgument(dayArgument)
   .addArgument(levelArgument)
-  .action(solve);
+  .action(async (day, level) => {
+    if (day == null && level == null) {
+      await autoSolve({});
+    } else if (day != null && level == null) {
+      await solve({ day, level: 1 });
+    } else {
+      await solve({ day, level });
+    }
+  });
