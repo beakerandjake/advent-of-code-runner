@@ -62,7 +62,7 @@ The authentication token is stored in a advent of code cookie. Navigate to [adve
 - [Chrome help](https://developer.chrome.com/docs/devtools/storage/cookies/)
 
 ### Post Installation 
-Once you run the `init` command you are ready to start solving the puzzles. Navigate to `src/` folder and open up `day_01.js`. Navigate to the `levelOne` function and add your code. Run the `autosolve` or `solve` command to see what answer your code returns, if you're happy with the answer run the `submit` or `autosubmit` command to see if you got the right answer.
+Once you run the `init` command you are ready to start solving the puzzles. Navigate to `src/` folder and open up `day_01.js`. Navigate to the `levelOne` function and add your code. Run the `solve` command to see what answer your code returns, if you're happy with the answer run the `submit` command to see if you got the right answer.
 
 ## :star2: Usage
 
@@ -109,21 +109,39 @@ Example:
 - To solve day 23 level 2: `npm run solve 24 2`
 - To solve day 15 level 1: `npm run solve 15 1`
 
-### `submit <day> <level>`
-The same as the `solve` command, however your answer will be submitted to advent of code. 
+### `submit [day] [level]`
+The same behavior as the `solve` command, however your answer will be submitted to advent of code. Additionally the progress table in your README file will be updated.
 
-Example to submit the answer for the puzzle on day 21, level 1:
-```
-npm run submit 21 1
-```
+This command has different behavior based on which arguments you pass:
 
-### `autosubmit`
-Runs the code and submits the answer for the next puzzle which has not had a correct answer submitted. Performs the same behavior as the `submit` command without requiring you to input the day or the level. Additionally this command will update the progress table in your README file. This command is very useful if you solve puzzles in order.
+##### No Arguments
 
 ```
-npm run autosubmit
+npm run submit
 ```
-Example: If you've submitted correct answers for days 1-16 and day 17 level 1, when your run the `autosolve` command, it will submit the answer for Day 17 Level 2.  
+If the command is run without any arguments, the CLI will find and submit the next puzzle you have not yet submitted a correct answer for. This is very useful if you solve puzzles in the order of the advent calendar.
+
+##### One Argument
+
+```
+npm run submit [day]
+```
+If you run the command with just the day argument, then the level one of the days puzzle will be submitted.
+
+Example:
+- To submit day 12 level 1: `npm run submit 12`
+- To submit day 20 level 1: `npm run submit 20`
+
+##### Two Arguments
+
+```
+npm run submit [day] [level]
+```
+If you run the command with the day and the level argument, then the specified puzzle will be submitted.
+
+Example:
+- To submit day 3 level 2: `npm run solve 3 2`
+- To submit day 14 level 1: `npm run solve 14 1`
 
 ### `stats [--save]`
 Generates a table showing your current statistics for the year. Shows you which puzzles you have completed, how many attempts you made for each puzzle, and the fastest recorded runtime for that puzzle. The table additionally displays your completion percentage for the year, the average number of attempts, and the average runtime.
