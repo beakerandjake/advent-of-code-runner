@@ -15,7 +15,7 @@ import { getYear } from './getYear.js';
 import { and, not, or } from './logical.js';
 import { outputCompletionTable } from './outputCompletionTable.js';
 import { outputPuzzleLink } from './outputPuzzleLink.js';
-import { saveCompletionTableToReadme } from './saveCompletionTableToReadme.js';
+import { saveProgressTableToReadme } from './saveProgressTableToReadme.js';
 import { storeFastestRuntime } from './storeFastestRuntime.js';
 import { storeSubmittedAnswer } from './storeSubmittedAnswer.js';
 import { submitPuzzleAnswer } from './submitPuzzleAnswer.js';
@@ -45,7 +45,7 @@ export {
   or,
   outputCompletionTable,
   outputPuzzleLink,
-  saveCompletionTableToReadme,
+  saveProgressTableToReadme,
   storeFastestRuntime,
   storeSubmittedAnswer,
   submitPuzzleAnswer,

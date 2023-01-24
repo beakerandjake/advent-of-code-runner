@@ -37,10 +37,10 @@ const {
   mapRuntimeColumn,
   generateHeader,
   saveToReadme,
-  saveCompletionTableToReadme,
-} = await import('../../src/actions/saveCompletionTableToReadme.js');
+  saveProgressTableToReadme,
+} = await import('../../src/actions/saveProgressTableToReadme.js');
 
-describe('saveCompletionTableToReadme()', () => {
+describe('saveProgressTableToReadme()', () => {
   afterEach(() => {
     jest.resetAllMocks();
   });
@@ -222,12 +222,12 @@ describe('saveCompletionTableToReadme()', () => {
     test.each([
       null, undefined,
     ])('throws if year is: "%s"', async () => {
-      await expect(async () => saveCompletionTableToReadme({ year: 2022 })).rejects.toThrow();
+      await expect(async () => saveProgressTableToReadme({ year: 2022 })).rejects.toThrow();
     });
 
     test('halts chain if no completion data', async () => {
       getPuzzleCompletionData.mockResolvedValue([]);
-      const result = await saveCompletionTableToReadme({ year: 2022 });
+      const result = await saveProgressTableToReadme({ year: 2022 });
       expect(result).toBe(false);
     });
   });

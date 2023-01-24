@@ -159,7 +159,7 @@ export const saveToReadme = async (value) => {
 /**
  * Saves a table to the users readme which shows the users progress for the year.
  */
-export const saveCompletionTableToReadme = async ({ year } = {}) => {
+export const saveProgressTableToReadme = async ({ year } = {}) => {
   if (year == null) {
     throw new Error('null or undefined year');
   }

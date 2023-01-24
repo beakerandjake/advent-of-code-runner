@@ -20,7 +20,7 @@ const submitActions = [
   actions.assertAnswerCorrect,
   actions.storeFastestRuntime,
   actions.assertReadmeExists,
-  actions.saveCompletionTableToReadme,
+  actions.saveProgressTableToReadme,
 ];
 
 /**
