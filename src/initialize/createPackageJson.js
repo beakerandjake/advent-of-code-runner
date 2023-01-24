@@ -45,7 +45,6 @@ export const createPackageJson = async ({ year } = {}) => {
     type: 'module',
     description: `Solutions to Advent of Code ${year}`,
     scripts: {
-      autosolve: 'advent-of-code-runner autosolve',
       solve: 'advent-of-code-runner solve',
       autosubmit: 'advent-of-code-runner autosubmit',
       submit: 'advent-of-code-runner submit',
