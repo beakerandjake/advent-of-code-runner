@@ -196,10 +196,10 @@ This CLI downloads puzzles inputs only once and saves them to the `inputs/` fold
 ## :gift: Misc File Information
 
 #### `aocr-data.json`
-This file stores your progress. Every time you submit an answer, it is stored in this file to prevent duplicate submissions and track statistics. Additionally it stores the fastest recorded runtime for each puzzle. You should not edit this file manually. 
+This file stores your progress. Every time you submit an answer, it is stored in this file to prevent duplicate submissions and track statistics. Additionally it stores the fastest recorded runtime for each puzzle. You should not edit this file manually. This file should be commited to source control. 
 
 #### `.ratelimits.json`
-This file stores rate limit information used when querying the advent of code website. The creator of the website has requested automated tools such as this CLI are conservative in the number of requests made to the website. This file tracks when the last request was made and the CLI uses this data to prevent requests from occuring too frequently. 
+This file stores rate limit information used when querying the advent of code website. The creator of the website has requested automated tools such as this CLI are conservative in the number of requests made to the website. This file tracks when the last request was made and the CLI uses this data to prevent requests from occuring too frequently. This file is ignored in source control.
 
 #### `.env`
 This file stores your authentication token, it ***should not be committed to source control***. See the [Authentication Token](https://github.com/beakerandjake/advent-of-code-runner#authentication-token) section for more information.
