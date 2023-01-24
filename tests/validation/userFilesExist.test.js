@@ -9,7 +9,7 @@ jest.unstable_mockModule('fs-extra/esm', () => ({ outputFile: jest.fn(), pathExi
 
 // import after mocks set up
 const { pathExists } = await import('fs-extra/esm');
-const { readmeExists } = await import('../../src/validation/userFilesExist.js');
+const { readmeExists, dotEnvExists } = await import('../../src/validation/userFilesExist.js');
 
 describe('userFilesExist', () => {
   afterEach(() => {
@@ -31,6 +31,25 @@ describe('userFilesExist', () => {
     test('returns false if does not exist', async () => {
       pathExists.mockResolvedValue(false);
       const result = await readmeExists();
+      expect(result).toBe(false);
+    });
+  });
+
+  describe('dotEnvExists()', () => {
+    test('loads expected config value', async () => {
+      await dotEnvExists();
+      expect(getConfigValue).toBeCalledWith('paths.templates.dotenv.dest');
+    });
+
+    test('returns true if exists', async () => {
+      pathExists.mockResolvedValue(true);
+      const result = await dotEnvExists();
+      expect(result).toBe(true);
+    });
+
+    test('returns false if does not exist', async () => {
+      pathExists.mockResolvedValue(false);
+      const result = await dotEnvExists();
       expect(result).toBe(false);
     });
   });
