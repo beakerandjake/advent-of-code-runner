@@ -16,7 +16,7 @@ export const submitLinks = [
   links.getAuthenticationToken,
   links.getPuzzleInput,
   links.executeUserSolution,
-  links.not(links.assertAnswerPreviouslySubmitted),
+  links.assertAnswerNotPreviouslySubmitted,
   links.submitPuzzleAnswer,
   links.storeSubmittedAnswer,
   links.assertAnswerCorrect,
