@@ -152,7 +152,7 @@ Depending on the puzzle and its input you might need to [parse string values int
 
 ## :cloud_with_snow: Caching
 
-This CLI downloads puzzles inputs only once and saves them to the `inputs/` folder. Additionally it tracks the answers you submit to ensure you don't attempt to re-submit an answer to the website.  
+This CLI downloads puzzles inputs only once and saves them to the `inputs/` folder. If your input file becomes corrupted you can force a re-download by deleting the file and running the `solve` or `submit` command. Additionally the CLI tracks the answers you submit to ensure you don't attempt to re-submit a duplicate answer to a question.  
 
 ## :gift: Misc File Information
 
