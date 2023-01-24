@@ -11,6 +11,7 @@ jest.unstable_mockModule('fs-extra/esm', () => ({ outputFile: jest.fn() }));
 jest.unstable_mockModule('src/api/urls.js', () => ({ puzzleBaseUrl: jest.fn() }));
 jest.unstable_mockModule('src/formatting.js', () => ({ humanizeDuration: jest.fn() }));
 jest.unstable_mockModule('src/validation/validatePuzzle.js', () => ({ getTotalPuzzleCount: jest.fn() }));
+jest.unstable_mockModule('src/validation/userFilesExist.js', () => ({ readmeExists: jest.fn() }));
 jest.unstable_mockModule('src/statistics.js', () => ({
   getAverageAttempts: jest.fn(),
   getAverageRuntime: jest.fn(),
@@ -25,6 +26,7 @@ jest.unstable_mockModule('src/statistics.js', () => ({
 const { readFile } = await import('node:fs/promises');
 const { outputFile } = await import('fs-extra/esm');
 const { humanizeDuration } = await import('../../src/formatting.js');
+const { readmeExists } = await import('../../src/validation/userFilesExist.js');
 const { getSolvedCount, getPuzzleCompletionData } = await import('../../src/statistics.js');
 const { getTotalPuzzleCount } = await import('../../src/validation/validatePuzzle.js');
 const {
@@ -221,14 +223,24 @@ describe('saveProgressTableToReadme()', () => {
   describe('saveCompletionTableToReadme()', () => {
     test.each([
       null, undefined,
-    ])('throws if year is: "%s"', async () => {
-      await expect(async () => saveProgressTableToReadme({ year: 2022 })).rejects.toThrow();
+    ])('throws if year is: "%s"', async (year) => {
+      await expect(async () => saveProgressTableToReadme({ year })).rejects.toThrow();
+    });
+
+    test('halts chain if readme file does not exist', async () => {
+      readmeExists.mockResolvedValue(false);
+      const result = await saveProgressTableToReadme({ year: 2022 });
+      expect(result).toBe(false);
+      expect(outputFile).not.toHaveBeenCalled();
     });
 
     test('halts chain if no completion data', async () => {
+      readmeExists.mockResolvedValue(true);
       getPuzzleCompletionData.mockResolvedValue([]);
       const result = await saveProgressTableToReadme({ year: 2022 });
       expect(result).toBe(false);
+      expect(getPuzzleCompletionData).toHaveBeenCalled();
+      expect(outputFile).not.toHaveBeenCalled();
     });
   });
 });

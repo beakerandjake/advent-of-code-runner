@@ -1,13 +1,14 @@
-import { readFile } from 'node:fs/promises';
 import { outputFile } from 'fs-extra/esm';
+import { readFile } from 'node:fs/promises';
 import { getConfigValue } from '../config.js';
+import { humanizeDuration } from '../formatting.js';
 import { logger } from '../logger.js';
 import {
   getAverageAttempts,
   getAverageRuntime,
   getFastestRuntime, getMaxAttempts, getPuzzleCompletionData, getSlowestRuntime, getSolvedCount,
 } from '../statistics.js';
-import { humanizeDuration } from '../formatting.js';
+import { readmeExists } from '../validation/userFilesExist.js';
 import { getTotalPuzzleCount } from '../validation/validatePuzzle.js';
 
 /**
@@ -146,7 +147,7 @@ export const generateHeader = async (year) => {
 export const saveToReadme = async (value) => {
   const readmePath = getConfigValue('paths.readme');
   const contents = await readFile(readmePath, 'utf-8');
-  
+
   // ensure the enclosing tag exists
   if (contents.search(tableEnclosingTagRegex) <= 0) {
     throw new Error('Could not find required tag in readme file to insert table, this tag should have been created during the "init" command');
@@ -162,6 +163,11 @@ export const saveToReadme = async (value) => {
 export const saveProgressTableToReadme = async ({ year } = {}) => {
   if (year == null) {
     throw new Error('null or undefined year');
+  }
+
+  if (!await readmeExists()) {
+    logger.error('Could not find README file in your repository. This file should have been created by the "init" command');
+    return false;
   }
 
   const completionData = await getPuzzleCompletionData(year);
