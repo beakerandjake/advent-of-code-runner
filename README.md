@@ -68,7 +68,7 @@ Once you run the `init` command you are ready to start solving the puzzles. Navi
 
 Run the following commands from the root of your repository.
 
-*Note: If a command which executes your code (`solve` or `submit`) is taking a long time to run, you can cancel it any any time by pressing `Ctrl + c` in your terminal.*
+*Note: If a command which executes your code (`solve` or `submit`) is taking a long time to complete, you can cancel it any any time by pressing `Ctrl + c` in your terminal.*
 
 ### `solve [day] [level]`
 Runs your code for a specific puzzle, downloads the input file (if not already cached), measures how long your code takes to run, and outputs your answer. *This does not submit the answer to advent of code.*
