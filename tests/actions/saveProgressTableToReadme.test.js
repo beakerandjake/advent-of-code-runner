@@ -227,18 +227,16 @@ describe('saveProgressTableToReadme()', () => {
       await expect(async () => saveProgressTableToReadme({ year })).rejects.toThrow();
     });
 
-    test('halts chain if readme file does not exist', async () => {
+    test('does not update readme if readme does not exist', async () => {
       readmeExists.mockResolvedValue(false);
-      const result = await saveProgressTableToReadme({ year: 2022 });
-      expect(result).toBe(false);
+      await saveProgressTableToReadme({ year: 2022 });
       expect(outputFile).not.toHaveBeenCalled();
     });
 
-    test('halts chain if no completion data', async () => {
+    test('does not update readme if no completion data', async () => {
       readmeExists.mockResolvedValue(true);
       getPuzzleCompletionData.mockResolvedValue([]);
-      const result = await saveProgressTableToReadme({ year: 2022 });
-      expect(result).toBe(false);
+      await saveProgressTableToReadme({ year: 2022 });
       expect(getPuzzleCompletionData).toHaveBeenCalled();
       expect(outputFile).not.toHaveBeenCalled();
     });

@@ -167,14 +167,14 @@ export const saveProgressTableToReadme = async ({ year } = {}) => {
 
   if (!await readmeExists()) {
     logger.error('Could not find README file in your repository. This file should have been created by the "init" command');
-    return false;
+    return;
   }
 
   const completionData = await getPuzzleCompletionData(year);
 
   if (completionData.length === 0) {
     logger.festive('You have not submitted any puzzles yet, please run this command after submitting a puzzle');
-    return false;
+    return;
   }
 
   await saveToReadme([
@@ -183,6 +183,4 @@ export const saveProgressTableToReadme = async ({ year } = {}) => {
   ].join('\n\n'));
 
   logger.festive('Saved progress to your README file');
-
-  return true;
 };
