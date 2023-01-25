@@ -23,11 +23,8 @@ jest.unstable_mockModule('src/statistics.js', () => ({
 }));
 
 // import after setting up mocks
-const { readFile } = await import('node:fs/promises');
-const { outputFile } = await import('fs-extra/esm');
 const { humanizeDuration } = await import('../../src/formatting.js');
-const { readmeExists } = await import('../../src/validation/userFilesExist.js');
-const { getSolvedCount, getPuzzleCompletionData } = await import('../../src/statistics.js');
+const { getSolvedCount } = await import('../../src/statistics.js');
 const { getTotalPuzzleCount } = await import('../../src/validation/validatePuzzle.js');
 const {
   tr,
@@ -38,14 +35,13 @@ const {
   mapAttemptColumns,
   mapRuntimeColumn,
   generateHeader,
-  saveToReadme,
-  saveProgressTableToReadme,
 } = await import('../../src/tables/markdownProgressTable.js');
 
 describe('markdownProgressTable', () => {
   afterEach(() => {
     jest.resetAllMocks();
   });
+
   describe('tr()', () => {
     test('joins values', () => {
       const values = ['ASDF', '1234', 'ASDF'];
