@@ -34,7 +34,7 @@ export const statsCommand = new Command()
   .option('--save', 'Save your completion progress to the README file')
   .action(async ({ save }) => {
     if (save) {
-      await saveStats();
+      await saveStats({ forceSaveProgressToReadme: true });
     } else {
       await outputStats();
     }

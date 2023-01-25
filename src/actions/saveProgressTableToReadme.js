@@ -164,12 +164,14 @@ export const saveToReadme = async (value) => {
 /**
  * Saves a table to the users readme which shows the users progress for the year.
  */
-export const saveProgressTableToReadme = async ({ year } = {}) => {
+export const saveProgressTableToReadme = async (
+  { year, forceSaveProgressToReadme = false } = {},
+) => {
   if (year == null) {
     throw new Error('null or undefined year');
   }
 
-  if (getConfigValue('disableReadmeProgress')) {
+  if (!forceSaveProgressToReadme && getConfigValue('disableReadmeAutoSaveProgress')) {
     logger.debug('Skipping saving progress to README because feature is disabled in config');
     return;
   }
