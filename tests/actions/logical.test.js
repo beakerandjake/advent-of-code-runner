@@ -2,7 +2,7 @@ import {
   describe, jest, test,
 } from '@jest/globals';
 import {
-  or, not, and, passThrough,
+  or, not, and,
 } from '../../src/actions/logical.js';
 
 describe('logical', () => {
@@ -92,13 +92,6 @@ describe('logical', () => {
       const fnReturn = false;
       const result = await not(() => fnReturn)();
       expect(result).toBe(!fnReturn);
-    });
-  });
-
-  describe('passThrough()', () => {
-    test('returns true', () => {
-      const result = passThrough();
-      expect(result).toBe(true);
     });
   });
 });

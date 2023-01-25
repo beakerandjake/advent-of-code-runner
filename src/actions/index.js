@@ -45,7 +45,6 @@ export {
   or,
   outputCompletionTable,
   outputPuzzleLink,
-  passThrough,
   saveProgressTableToReadme,
   storeFastestRuntime,
   storeSubmittedAnswer,
