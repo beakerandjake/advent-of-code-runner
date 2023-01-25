@@ -25,6 +25,7 @@ export const envOptions = {
   mockApiAnswerCorrect: 'AOC_MOCK_API_ANSWER_CORRECT',
   rateLimitDefaultTimeoutMs: 'AOC_RATE_DEFAULT_RATE_LIMIT_MS',
   year: 'AOC_YEAR',
+  disableReadmeProgress: 'AOC_DISABLE_README_PROGRESS',
 };
 
 /**
@@ -168,6 +169,7 @@ const CONFIG = {
       'node_modules',
     ],
   },
+  saveProgressToReadme: !yn(process.env[envOptions.disableReadmeProgress]),
 };
 
 /**
