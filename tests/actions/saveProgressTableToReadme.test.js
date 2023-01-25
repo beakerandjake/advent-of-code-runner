@@ -215,6 +215,19 @@ describe('saveProgressTableToReadme()', () => {
       await expect(async () => saveProgressTableToReadme({ year })).rejects.toThrow();
     });
 
+    test('does not update readme if disabled via config', async () => {
+      getConfigValue.mockImplementation((key) => {
+        if (key === 'disableReadmeProgress') {
+          return true;
+        }
+        throw new Error('unexpected config key');
+      });
+      await saveProgressTableToReadme({ year: 2022 });
+      expect(outputFile).not.toHaveBeenCalled();
+      expect(readmeExists).not.toHaveBeenCalled();
+      expect(getPuzzleCompletionData).not.toHaveBeenCalled();
+    });
+
     test('does not update readme if readme does not exist', async () => {
       readmeExists.mockResolvedValue(false);
       await saveProgressTableToReadme({ year: 2022 });

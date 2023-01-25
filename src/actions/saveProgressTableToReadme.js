@@ -6,7 +6,11 @@ import { logger } from '../logger.js';
 import {
   getAverageAttempts,
   getAverageRuntime,
-  getFastestRuntime, getMaxAttempts, getPuzzleCompletionData, getSlowestRuntime, getSolvedCount,
+  getFastestRuntime,
+  getMaxAttempts,
+  getPuzzleCompletionData,
+  getSlowestRuntime,
+  getSolvedCount,
 } from '../statistics.js';
 import { readmeExists } from '../validation/userFilesExist.js';
 import { getTotalPuzzleCount } from '../validation/validatePuzzle.js';
@@ -163,6 +167,11 @@ export const saveToReadme = async (value) => {
 export const saveProgressTableToReadme = async ({ year } = {}) => {
   if (year == null) {
     throw new Error('null or undefined year');
+  }
+
+  if (getConfigValue('disableReadmeProgress')) {
+    logger.debug('Skipping saving progress to README because feature is disabled in config');
+    return;
   }
 
   if (!await readmeExists()) {

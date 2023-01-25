@@ -169,7 +169,7 @@ const CONFIG = {
       'node_modules',
     ],
   },
-  saveProgressToReadme: !yn(process.env[envOptions.disableReadmeProgress]),
+  disableReadmeProgress: yn(process.env[envOptions.disableReadmeProgress]),
 };
 
 /**
