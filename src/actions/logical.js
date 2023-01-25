@@ -52,3 +52,8 @@ export const not = (fn) => {
   };
   return _[fnName];
 };
+
+/**
+ * A noop action that always returns true.
+ */
+export const passThrough = () => true;

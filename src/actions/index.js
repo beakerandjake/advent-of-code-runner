@@ -11,7 +11,9 @@ import { getAuthenticationToken } from './getAuthenticationToken.js';
 import { getNextUnsolvedPuzzle } from './getNextUnsolvedPuzzle.js';
 import { getPuzzleInput } from './getPuzzleInput.js';
 import { getYear } from './getYear.js';
-import { and, not, or } from './logical.js';
+import {
+  and, not, or, passThrough,
+} from './logical.js';
 import { outputCompletionTable } from './outputCompletionTable.js';
 import { outputPuzzleLink } from './outputPuzzleLink.js';
 import { saveProgressTableToReadme } from './saveProgressTableToReadme.js';
@@ -43,6 +45,7 @@ export {
   or,
   outputCompletionTable,
   outputPuzzleLink,
+  passThrough,
   saveProgressTableToReadme,
   storeFastestRuntime,
   storeSubmittedAnswer,
