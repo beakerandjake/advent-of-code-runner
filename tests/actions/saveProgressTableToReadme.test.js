@@ -163,18 +163,6 @@ describe('saveProgressTableToReadme()', () => {
       const result = mapRuntimeColumn(input, input.runtimeNs - 3, input.runtimeNs);
       expect(result).toContain('worst');
     });
-
-    // test('returns value if max attempt not equal to value', () => {
-    //   const input = [{ numberOfAttempts: 10 }];
-    //   const result = mapAttemptColumns(input, 445);
-    //   expect(result).toEqual(input.map((x) => x.numberOfAttempts.toString()));
-    // });
-
-    // test('appends (worst) if value equal to max attempt', () => {
-    //   const input = [{ numberOfAttempts: 10 }];
-    //   const result = mapAttemptColumns(input, input[0].numberOfAttempts);
-    //   expect(result[0]).toContain('(worst)');
-    // });
   });
 
   describe('generateHeader()', () => {
