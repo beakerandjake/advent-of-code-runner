@@ -7,6 +7,7 @@ import { assertPuzzleUnlocked } from './assertPuzzleUnlocked.js';
 import { assertPuzzleUnsolved } from './assertPuzzleUnsolved.js';
 import { assertUserConfirmation } from './assertUserConfirmation.js';
 import { executeUserSolution } from './executeUserSolution.js';
+import { generateMarkdownProgressTable } from './generateMarkdownProgressTable.js';
 import { getAnswersFromUser } from './getAnswersFromUser.js';
 import { getAuthenticationToken } from './getAuthenticationToken.js';
 import { getCompletionData } from './getCompletionData.js';
@@ -39,6 +40,7 @@ export {
   assertPuzzleLevelMet,
   assertUserConfirmation,
   executeUserSolution,
+  generateMarkdownProgressTable,
   getAnswersFromUser,
   getAuthenticationToken,
   getCompletionData,
