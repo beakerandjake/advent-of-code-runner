@@ -2,10 +2,11 @@ import { Command } from 'commander';
 import { createChain } from '../actions/actionChain.js';
 import {
   assertInitialized,
+  generateCliProgressTable,
   generateMarkdownProgressTable,
   getCompletionData,
   getYear,
-  outputCompletionTable,
+  printProgressTable,
   saveProgressTableToReadme,
 } from '../actions/index.js';
 
@@ -15,7 +16,9 @@ import {
 const outputStats = createChain([
   assertInitialized,
   getYear,
-  outputCompletionTable,
+  getCompletionData,
+  generateCliProgressTable,
+  printProgressTable,
 ]);
 
 /**
