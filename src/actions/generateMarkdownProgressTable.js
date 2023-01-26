@@ -145,7 +145,7 @@ export const generateTable = async (year, completionData) => {
     ['---', '---', '---', '---'],
   ].map(tr);
   const puzzleRows = await generatePuzzleRows(year, completionData);
-  const averageRow = await generateAverageRow();
+  const averageRow = await generateAverageRow(year);
 
   return [...headerRows, ...puzzleRows, averageRow].join('\n');
 };
