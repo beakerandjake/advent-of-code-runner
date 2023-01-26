@@ -83,7 +83,21 @@ export const mapRuntimeColumn = ({ runtimeNs }, fastest, slowest) => {
  * @private
  */
 export const generatePuzzleRows = async (year, completionData) => {
+  // only apply highlighting if more than two puzzles have been solved.
+  // with 2 or less it's kind of obvious, there isn't a need to highlight.
+  const maxAttempts = completionData.length > 2 ? await getMaxAttempts(year) : null;
+  const fastestRuntime = completionData.length > 2 ? await getFastestRuntime(year) : null;
+  const slowestRuntime = completionData.length > 2 ? await getSlowestRuntime(year) : null;
 
+  // generate the columns for the puzzle data.
+  const names = completionData.map(mapNamedColumn);
+  const solved = completionData.map(mapSolvedColumn);
+  const attempts = mapAttemptColumns(completionData, maxAttempts);
+  const runtimes = completionData.map((x) => mapRuntimeColumn(x, fastestRuntime, slowestRuntime));
+
+  return completionData.map(
+    (_, index) => [names[index], solved[index], attempts[index], runtimes[index]],
+  );
 };
 
 /**
@@ -119,25 +133,11 @@ export const getSolvedRow = async (year) => {
 const generateTable = async (year, completionData) => {
   // grab any extra data we want to display.
 
-  // only apply highlighting if more than two puzzles have been solved.
-  // with 2 or less it's kind of obvious, there isn't a need to highlight.
-  const maxAttempts = completionData.length > 2 ? await getMaxAttempts(year) : null;
-  const fastestRuntime = completionData.length > 2 ? await getFastestRuntime(year) : null;
-  const slowestRuntime = completionData.length > 2 ? await getSlowestRuntime(year) : null;
-
-  // generate the columns for the puzzle data.
-  const names = completionData.map(mapNamedColumn);
-  const solved = completionData.map(mapSolvedColumn);
-  const attempts = mapAttemptColumns(completionData, maxAttempts);
-  const runtimes = completionData.map((x) => mapRuntimeColumn(x, fastestRuntime, slowestRuntime));
-
   const headerRows = [
     [`Advent of Code ${year}`, '', '', ''],
     ['Puzzle', 'Solved', 'Attempts', 'Runtime'],
   ];
-  const puzzleRows = completionData.map(
-    (_, index) => [names[index], solved[index], attempts[index], runtimes[index]],
-  );
+  const puzzleRows = await generatePuzzleRows(year, completionData);
   const averageRow = await getAverageRow(year);
   const solvedRow = await getSolvedRow(year);
 

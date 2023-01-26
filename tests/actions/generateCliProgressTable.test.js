@@ -24,7 +24,13 @@ jest.unstable_mockModule('src/statistics.js', () => ({
 const { table } = await import('table');
 const { humanizeDuration } = await import('../../src/formatting.js');
 const { getTotalPuzzleCount } = await import('../../src/validation/validatePuzzle.js');
-const { getAverageAttempts, getSolvedCount } = await import('../../src/statistics.js');
+const {
+  getAverageAttempts,
+  getSolvedCount,
+  getMaxAttempts,
+  getFastestRuntime,
+  getSlowestRuntime,
+} = await import('../../src/statistics.js');
 const {
   mapNamedColumn,
   mapSolvedColumn,
@@ -32,6 +38,7 @@ const {
   mapRuntimeColumn,
   getAverageRow,
   getSolvedRow,
+  generatePuzzleRows,
 } = await import('../../src/actions/generateCliProgressTable.js');
 
 describe('generateCliProgressTable()', () => {
@@ -223,6 +230,52 @@ describe('generateCliProgressTable()', () => {
       humanizeDuration.mockReturnValue('775.37ms');
       const result = await getAverageRow(2022);
       expect(result).toEqual(['Average', '', '22.23', '775.37ms']);
+    });
+  });
+
+  describe('generatePuzzleRows()', () => {
+    test('does not mark best/worst if less than 2 rows', async () => {
+      mockChalk.green.mockImplementation((x) => x?.toString() || '');
+      humanizeDuration.mockImplementation((x) => x?.toString() || '');
+      const result = await generatePuzzleRows(2022, [
+        {
+          day: 1, level: 1, solved: false, runtimeNs: 1234, numberOfAttempts: 6,
+        },
+        {
+          day: 1, level: 2, solved: true, runtimeNs: 4321, numberOfAttempts: 4,
+        },
+      ]);
+      expect(result).toEqual([
+        ['1.1', '', '6', '1234'],
+        ['1.2', '✓', '4', '4321'],
+      ]);
+    });
+
+    test('marks best/worst if more than 2 rows', async () => {
+      const completionData = [
+        {
+          day: 1, level: 1, solved: false, runtimeNs: 1234, numberOfAttempts: 6,
+        },
+        {
+          day: 1, level: 2, solved: true, runtimeNs: 4321, numberOfAttempts: 4,
+        },
+        {
+          day: 2, level: 1, solved: false, runtimeNs: 661, numberOfAttempts: 1,
+        },
+      ];
+      mockChalk.green.mockImplementation((x) => x?.toString() || '');
+      mockChalk.yellow.mockImplementation((x) => x?.toString() || '');
+      getMaxAttempts.mockResolvedValue(6);
+      getFastestRuntime.mockResolvedValue(661);
+      getSlowestRuntime.mockResolvedValue(4321);
+      humanizeDuration.mockImplementation((x) => x?.toString() || '');
+      const result = await generatePuzzleRows(2022, completionData);
+
+      expect(result).toEqual([
+        ['1.1', '', '6 (worst)', '1234'],
+        ['1.2', '✓', '4', '4321 (worst)'],
+        ['2.1', '', '1', '661 (best)'],
+      ]);
     });
   });
 });
