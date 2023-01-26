@@ -28,6 +28,22 @@ export const italic = (value) => `*${value}*`;
 export const bold = (value) => `**${value}**`;
 
 /**
+ * Returns a header for the section in the readme
+ * @private
+ */
+export const generateHeader = async (year) => {
+  const solvedCount = await getSolvedCount(year);
+  const totalPuzzleCount = getTotalPuzzleCount();
+  const solvedPercent = (solvedCount / totalPuzzleCount) * 100;
+
+  if (!Number.isFinite(solvedPercent)) {
+    throw new Error('could not calculate solved percent from arguments');
+  }
+
+  return `## Completion Progress - ${solvedCount}/${totalPuzzleCount} (${solvedPercent.toFixed()}%)`;
+};
+
+/**
  * Generates the text for the name column.
  * @private
  */
@@ -88,11 +104,20 @@ export const mapRuntimeColumn = ({ runtimeNs }, fastest, slowest) => {
 };
 
 /**
- * Generates a markdown table from the years data.
+ * Generates a markdown row for the years averages.
+ * @private
  */
-const generateTable = async (year, completionData) => {
+export const generateAverageRow = async (year) => {
   const averageAttempts = await getAverageAttempts(year);
   const averageRuntime = await getAverageRuntime(year);
+  return tr(['', bold('Average'), averageAttempts.toFixed(2), humanizeDuration(averageRuntime)]);
+};
+
+/**
+ * Generates a markdown row for each of the years puzzles.
+ * @private
+ */
+export const generatePuzzleRows = async (year, completionData) => {
   // only apply highlighting if more than two puzzles have been solved.
   // with 2 or less it's kind of obvious, there isn't a need to highlight.
   const maxAttempts = completionData.length > 2 ? await getMaxAttempts(year) : null;
@@ -105,32 +130,24 @@ const generateTable = async (year, completionData) => {
   const attempts = mapAttemptColumns(completionData, maxAttempts);
   const runtimes = completionData.map((x) => mapRuntimeColumn(x, fastestRuntime, slowestRuntime));
 
+  return completionData.map(
+    (_, index) => tr([names[index], solved[index], attempts[index], runtimes[index]]),
+  );
+};
+
+/**
+ * Generates a markdown table from the years data.
+ * @private
+ */
+export const generateTable = async (year, completionData) => {
   const headerRows = [
     ['Puzzle', 'Solved', 'Attempts', 'Runtime'],
     ['---', '---', '---', '---'],
   ].map(tr);
-  const puzzleRows = completionData.map(
-    (_, index) => tr([names[index], solved[index], attempts[index], runtimes[index]]),
-  );
-  const averageRow = tr(['', bold('Average'), averageAttempts.toFixed(2), humanizeDuration(averageRuntime)]);
+  const puzzleRows = await generatePuzzleRows(year, completionData);
+  const averageRow = await generateAverageRow();
 
   return [...headerRows, ...puzzleRows, averageRow].join('\n');
-};
-
-/**
- * Returns a header for the section in the readme
- * @private
- */
-export const generateHeader = async (year) => {
-  const solvedCount = await getSolvedCount(year);
-  const totalPuzzleCount = getTotalPuzzleCount();
-  const solvedPercent = (solvedCount / totalPuzzleCount) * 100;
-
-  if (!Number.isFinite(solvedPercent)) {
-    throw new Error('could not calculate solved percent from arguments');
-  }
-
-  return `## Completion Progress - ${solvedCount}/${totalPuzzleCount} (${solvedPercent.toFixed()}%)`;
 };
 
 /**
