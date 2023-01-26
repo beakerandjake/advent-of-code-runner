@@ -52,3 +52,26 @@ export const not = (fn) => {
   };
   return _[fnName];
 };
+
+/**
+ * Will execute the consequent action only if the condition returns true.
+ * No matter the result, will not halt the chain.
+ * @param {Function} condition - The function expected to return a boolean
+ * @param {Function} consequent - The function that is executed only if the condition returns true.
+ * @returns
+ */
+export const ifThen = (condition, consequent) => {
+  const fnName = (condition?.name && consequent?.name)
+    ? `if-${condition.name}-then-${consequent.name}`
+    : 'if-then';
+  // create a variable for this fn instead of just returning the fn
+  // this gives the fn a .name property and makes debugging easier.
+  const _ = {
+    [fnName]: async (...args) => {
+      if (await condition(...args)) {
+        await consequent(...args);
+      }
+    },
+  };
+  return _[fnName];
+};
