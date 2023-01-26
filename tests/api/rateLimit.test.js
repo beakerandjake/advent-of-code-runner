@@ -1,27 +1,19 @@
 import {
   describe, jest, test, afterEach,
 } from '@jest/globals';
+import { mockLogger, mockConfig } from '../mocks.js';
 
 // setup mocks.
+mockLogger();
+const { getConfigValue } = mockConfig();
 jest.unstable_mockModule('../../src/persistence/rateLimitRepository.js', () => ({
   getRateLimit: jest.fn(),
   setRateLimit: jest.fn(),
 }));
 
-jest.unstable_mockModule('../../src/config.js', () => ({
-  getConfigValue: jest.fn(),
-}));
-
-jest.unstable_mockModule('../../src/logger.js', () => ({
-  logger: {
-    debug: jest.fn(),
-  },
-}));
-
 // import after setting up the mock so the modules import the mocked version
-const { getConfigValue } = await import('../../src/config.js');
-const { updateRateLimit, isRateLimited, rateLimitedActions } = await import('../../src/api/rateLimit.js');
 const { getRateLimit, setRateLimit } = await import('../../src/persistence/rateLimitRepository.js');
+const { updateRateLimit, isRateLimited, rateLimitedActions } = await import('../../src/api/rateLimit.js');
 
 afterEach(() => {
   jest.clearAllMocks();
@@ -48,7 +40,12 @@ describe('rateLimit', () => {
         .mockImplementationOnce(() => now)
         .mockImplementation((...args) => new DateOrig(...args));
 
-      getConfigValue.mockReturnValueOnce(msToAdd);
+      getConfigValue.mockImplementation((key) => {
+        if (key === 'aoc.rateLimiting.defaultTimeoutMs') {
+          return msToAdd;
+        }
+        throw new Error('unknown config key');
+      });
 
       await updateRateLimit(rateLimitedActions.downloadInput);
 
