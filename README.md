@@ -218,12 +218,11 @@ The CLI requires this section so it can continually update your readme with your
 
 You can customize the behavior of this CLI by using the following options in your `.env` file. Please keep in mind this is where your authentication token is stored and this file **should not be committed to source control**. 
 
-Each option accepts values specified in the [yn package](https://www.npmjs.com/package/yn).
-
-| Option Name  | Default | Effect |
-| --- | --- | --- |
-| `AOC_DISABLE_README_AUTO_SAVE_PROGRESS` | `false` | If enabled, the README file will not be updated with the progress table automatically during the `solve` or `submit` commands. You can still update the table manually with the `stats` command. |
-| `AOC_SUPPRESS_FESTIVE` | `false` | If enabled, the CLI will not add emojis to the console output. |
+| Option Name  | Accepted Values | Default | Effect |
+| --- | --- | --- | --- |
+| `AOC_DISABLE_README_AUTO_SAVE_PROGRESS` | see [yn package](https://www.npmjs.com/package/yn) | `false` | If enabled, the README file will not be automatically updated with the progress table during the `solve` or `submit` commands. You can still update the README manually with the `stats` command. |
+| `AOC_SUPPRESS_FESTIVE` | see [yn package](https://www.npmjs.com/package/yn) | `false` | If enabled, the CLI will not add emojis to the console output. |
+| `AOC_LOG_LEVEL` | `error`, `warn`, `info`, `verbose`, `debug`, `silly` | `warn` | Controls the verbosity of logging, a higher level is useful for development | 
 
 #### Example .env file
 This example modifies the default `.env` file created by the `init` command. It sets the `AOC_DISABLE_README_AUTO_SAVE_PROGRESS` option to `true`, which disables the progress table being automatically saved to the README file. It also sets the `AOC_SUPPRESS_FESTIVE` to `true` which disables emojis in the console output. 
