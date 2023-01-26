@@ -9,6 +9,7 @@ import { assertUserConfirmation } from './assertUserConfirmation.js';
 import { executeUserSolution } from './executeUserSolution.js';
 import { getAnswersFromUser } from './getAnswersFromUser.js';
 import { getAuthenticationToken } from './getAuthenticationToken.js';
+import { getCompletionData } from './getCompletionData.js';
 import { getNextUnsolvedPuzzle } from './getNextUnsolvedPuzzle.js';
 import { getPuzzleInput } from './getPuzzleInput.js';
 import { getYear } from './getYear.js';
@@ -40,6 +41,7 @@ export {
   executeUserSolution,
   getAnswersFromUser,
   getAuthenticationToken,
+  getCompletionData,
   getNextUnsolvedPuzzle,
   getPuzzleInput,
   getYear,
