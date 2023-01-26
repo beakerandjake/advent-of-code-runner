@@ -26,6 +26,7 @@ A Node.Js CLI solution generator and runner for [advent of code](https://advento
 - [Solution Files](#snowman-solution-files)
 - [Caching](#cloud_with_snow-caching)
 - [Misc File Information](#gift-misc-file-information)
+- [Advanced Configuration](#christmas_tree-advanced-configuration)
 - [Example](#snowflake-example)
 - [Automation Compliance](#bell-automation-compliance)
 
@@ -213,7 +214,7 @@ If you view the plain text markdown, you might notice a section that looks like:
 ```
 The CLI requires this section so it can continually update your readme with your progress table (if using the `submit` or the `stats` command).
 
-## Advanced Configuration
+## :christmas_tree: Advanced Configuration
 
 You can customize the behavior of this CLI by using the following options in your `.env` file. Please keep in mind this is where your authentication token is stored and this file **should not be committed to source control**. 
 
@@ -225,7 +226,7 @@ Each option accepts values specified in the [yn package](https://www.npmjs.com/p
 | `AOC_SUPPRESS_FESTIVE` | `false` | If enabled, the CLI will not add emojis to the console output. |
 
 #### Example .env file
-This example modifies the default `.env` file created by the `init` command. It disables the auto readme update feature and disables festive emojis.
+This example modifies the default `.env` file created by the `init` command. It sets the `AOC_DISABLE_README_AUTO_SAVE_PROGRESS` option to `true`, which disables the progress table being automatically saved to the README file. It also sets the `AOC_SUPPRESS_FESTIVE` to `true` which disables emojis in the console output. 
 
 ```Shell
 # This is an authentication token to advent of code.
