@@ -45,7 +45,7 @@ describe('initialize', () => {
         .toHaveBeenCalledWith(expect.any(Array), { authToken }, fileContents);
     });
 
-    test('tokenizes template source file contents', async () => {
+    test('saves tokenized contents', async () => {
       const paths = { source: 'asdf.txt', dest: 'qwer.txt' };
       getConfigValue.mockImplementation((key) => (key === 'paths.templates.dotenv' ? paths : undefined));
       const contents = 'ASDF';
