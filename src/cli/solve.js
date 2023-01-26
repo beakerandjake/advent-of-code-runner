@@ -15,7 +15,7 @@ const solveActions = [
   actions.executeUserSolution,
   actions.assertAnswerCorrect,
   actions.tryToUpdateFastestRuntime,
-  tryToSaveProgressTableToReadme,
+  actions.tryToUpdateReadmeWithProgressTable,
 ];
 
 /**
