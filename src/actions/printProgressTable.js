@@ -6,5 +6,6 @@ export const printProgressTable = async ({ progressTable } = {}) => {
     throw new Error('null or undefined progressTable');
   }
 
+  /* istanbul ignore next */
   console.log(progressTable);
 };
