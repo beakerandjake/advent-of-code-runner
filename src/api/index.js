@@ -23,7 +23,7 @@ const decorateApiWithRateLimiting = ({ downloadInput, submitSolution }) => {
     submitSolution: rateLimitDecorator(
       submitSolution,
       rateLimitedActions.submitAnswer,
-      'Timeout period for submitting a solution has not expired.',
+      'Timeout period for submitting an answer has not expired.',
     ),
   };
 };
