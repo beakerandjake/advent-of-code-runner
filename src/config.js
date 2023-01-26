@@ -23,7 +23,6 @@ export const envOptions = {
   logLevel: 'AOC_LOG_LEVEL',
   mockApiEnabled: 'AOC_MOCK_API_ENABLED',
   mockApiAnswerCorrect: 'AOC_MOCK_API_ANSWER_CORRECT',
-  year: 'AOC_YEAR',
   disableReadmeAutoSaveProgress: 'AOC_DISABLE_README_AUTO_SAVE_PROGRESS',
 };
 
