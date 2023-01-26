@@ -30,6 +30,7 @@ const {
   getMaxAttempts,
   getFastestRuntime,
   getSlowestRuntime,
+  getAverageRuntime,
 } = await import('../../src/statistics.js');
 const {
   mapNamedColumn,
@@ -39,11 +40,53 @@ const {
   getAverageRow,
   getSolvedRow,
   generatePuzzleRows,
+  generateCliProgressTable,
 } = await import('../../src/actions/generateCliProgressTable.js');
 
 describe('generateCliProgressTable()', () => {
   afterEach(() => {
     jest.resetAllMocks();
+  });
+
+  test.each([
+    undefined, null, '',
+  ])('throws if year is: "%s"', async (year) => {
+    await expect(
+      async () => generateCliProgressTable({ year, completionData: [1234] }),
+    ).rejects.toThrow();
+  });
+
+  test.each([
+    undefined, null, [],
+  ])('throws if completion data is: "%s"', async (completionData) => {
+    await expect(
+      async () => generateCliProgressTable({ year: 2023, completionData }),
+    ).rejects.toThrow();
+  });
+
+  test('passes expected data to table()', async () => {
+    const completionData = [
+      {
+        day: 1, level: 1, solved: false, runtimeNs: 1234, numberOfAttempts: 6,
+      },
+    ];
+    mockChalk.green.mockImplementation((x) => x?.toString() || '');
+    mockChalk.yellow.mockImplementation((x) => x?.toString() || '');
+    getSolvedCount.mockResolvedValue(123);
+    getTotalPuzzleCount.mockReturnValue(1234);
+    getAverageAttempts.mockResolvedValue(22.23344555);
+    getAverageRuntime.mockResolvedValue('432ms');
+    humanizeDuration.mockImplementation((x) => x?.toString() || '');
+
+    await generateCliProgressTable({ year: 2023, completionData });
+
+    expect(table).toHaveBeenCalledWith([
+      ['Advent of Code 2023', '', '', ''],
+      ['Puzzle', 'Solved', 'Attempts', 'Runtime'],
+      ['1.1', '', '6', '1234'],
+      ['Average', '', '22.23', '432ms'],
+      ['Solved 123/1234 (10%)', '', '', ''],
+    ], expect.anything());
   });
 
   describe('mapNamedColumn()', () => {
