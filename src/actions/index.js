@@ -24,6 +24,7 @@ import { storeFastestRuntime } from './storeFastestRuntime.js';
 import { storeSubmittedAnswer } from './storeSubmittedAnswer.js';
 import { submitPuzzleAnswer } from './submitPuzzleAnswer.js';
 import { tryToUpdateFastestRuntime } from './tryToUpdateFastestRuntime.js';
+import { tryToUpdateReadmeWithProgressTable } from './tryToUpdateReadmeWithProgressTable.js';
 
 /**
  * barrel for "link" functions which are used to compose action chains.
@@ -56,4 +57,5 @@ export {
   storeSubmittedAnswer,
   submitPuzzleAnswer,
   tryToUpdateFastestRuntime,
+  tryToUpdateReadmeWithProgressTable,
 };
