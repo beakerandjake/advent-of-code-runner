@@ -2,7 +2,7 @@ import {
   describe, jest, test,
 } from '@jest/globals';
 import {
-  or, not, and,
+  or, not, and, ifThen,
 } from '../../src/actions/logical.js';
 
 describe('logical', () => {
@@ -92,6 +92,36 @@ describe('logical', () => {
       const fnReturn = false;
       const result = await not(() => fnReturn)();
       expect(result).toBe(!fnReturn);
+    });
+  });
+
+  describe('ifThen', () => {
+    test('does not invoke function if condition returns false (sync)', async () => {
+      const condition = () => false;
+      const func = jest.fn();
+      await ifThen(condition, func)();
+      expect(func).not.toHaveBeenCalled();
+    });
+
+    test('invokes function if condition returns true (sync)', async () => {
+      const condition = () => true;
+      const func = jest.fn();
+      await ifThen(condition, func)();
+      expect(func).toHaveBeenCalled();
+    });
+
+    test('does not invoke function if condition returns false (async)', async () => {
+      const condition = async () => false;
+      const func = jest.fn();
+      await ifThen(condition, func)();
+      expect(func).not.toHaveBeenCalled();
+    });
+
+    test('invokes function if condition returns true (async)', async () => {
+      const condition = async () => true;
+      const func = jest.fn();
+      await ifThen(condition, func)();
+      expect(func).toHaveBeenCalled();
     });
   });
 });

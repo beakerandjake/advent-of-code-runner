@@ -17,9 +17,8 @@ const submitActions = [
   actions.assertAnswerNotPreviouslySubmitted,
   actions.submitPuzzleAnswer,
   actions.storeSubmittedAnswer,
+  actions.ifThen(actions.assertAnswerCorrect, actions.storeFastestRuntime),
   actions.tryToUpdateReadmeWithProgressTable,
-  actions.assertAnswerCorrect,
-  actions.storeFastestRuntime,
 ];
 
 /**
