@@ -1,3 +1,4 @@
+import { formatDistanceToNow } from 'date-fns';
 import { RateLimitExceededError } from '../errors/apiErrors.js';
 import { isRateLimited, updateRateLimit } from './rateLimit.js';
 import { logger } from '../logger.js';
@@ -12,14 +13,14 @@ import { logger } from '../logger.js';
 export const rateLimitDecorator = (
   fn,
   actionType,
-  exceededMessage = 'Rate limit exceeded.',
+  exceededMessage = 'You have made too many requests to advent of code.',
 ) => async (...args) => {
   logger.debug('checking rate limit before performing action: %s', actionType);
 
   const { limited, expiration } = await isRateLimited(actionType);
 
   if (limited) {
-    throw new RateLimitExceededError(exceededMessage, expiration);
+    throw new RateLimitExceededError(exceededMessage, formatDistanceToNow(expiration));
   }
 
   try {
