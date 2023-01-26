@@ -20,9 +20,10 @@ export const tryToUpdateFastestRuntime = async ({
 
   if (fastestRuntime != null && runtimeNs >= fastestRuntime) {
     logger.verbose('not setting fastest runtime, %s is slower than record: %s', runtimeNs, fastestRuntime);
-    return;
+    return false;
   }
 
   logger.festive('That\'s your fastest runtime ever for this puzzle!');
   await setPuzzlesFastestRuntime(year, day, level, runtimeNs);
+  return true;
 };

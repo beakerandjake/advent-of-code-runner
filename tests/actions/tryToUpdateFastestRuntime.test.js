@@ -45,4 +45,16 @@ describe('tryToUpdateFastestRuntime()', () => {
     await tryToUpdateFastestRuntime({ runtimeNs: 1234 });
     expect(setPuzzlesFastestRuntime).toHaveBeenCalled();
   });
+
+  test('halts chain if record not broken', async () => {
+    getPuzzlesFastestRuntime.mockResolvedValue(1234);
+    const result = await tryToUpdateFastestRuntime({ runtimeNs: 4321 });
+    expect(result).toBe(false);
+  });
+
+  test('returns true if updated', async () => {
+    getPuzzlesFastestRuntime.mockResolvedValue(4321);
+    const result = await tryToUpdateFastestRuntime({ runtimeNs: 1234 });
+    expect(result).toBe(true);
+  });
 });
