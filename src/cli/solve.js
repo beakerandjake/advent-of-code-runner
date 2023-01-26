@@ -2,6 +2,7 @@ import { Command } from 'commander';
 import { createChain } from '../actions/actionChain.js';
 import * as actions from '../actions/index.js';
 import { dayArgument, levelArgument } from './arguments.js';
+import { tryToSaveProgressTableToReadme } from './stats.js';
 
 /**
  * The common actions between the 'solve' and 'autosolve' commands
@@ -14,6 +15,7 @@ const solveActions = [
   actions.executeUserSolution,
   actions.assertAnswerCorrect,
   actions.tryToUpdateFastestRuntime,
+  tryToSaveProgressTableToReadme,
 ];
 
 /**

@@ -2,6 +2,7 @@ import { Command } from 'commander';
 import { createChain } from '../actions/actionChain.js';
 import * as actions from '../actions/index.js';
 import { dayArgument, levelArgument } from './arguments.js';
+import { tryToSaveProgressTableToReadme } from './stats.js';
 
 /**
  * The common actions between the 'submit' and 'autosubmit' commands
@@ -17,7 +18,7 @@ const submitActions = [
   actions.assertAnswerNotPreviouslySubmitted,
   actions.submitPuzzleAnswer,
   actions.storeSubmittedAnswer,
-  actions.saveProgressTableToReadme,
+  tryToSaveProgressTableToReadme,
   actions.assertAnswerCorrect,
   actions.storeFastestRuntime,
 ];
