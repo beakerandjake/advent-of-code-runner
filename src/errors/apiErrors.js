@@ -4,8 +4,8 @@ import { UserError } from './userError.js';
  * Error that is raised if the user makes too many requests to advent of code.
  */
 export class RateLimitExceededError extends UserError {
-  constructor(...args) {
-    super('You have made too many requests to advent of code. Please wait before trying again.', ...args);
+  constructor(message, duration, ...args) {
+    super(`${message} Please wait ${duration} before trying again.`, ...args);
     this.name = 'RateLimitExceededError';
   }
 }
