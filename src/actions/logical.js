@@ -55,7 +55,7 @@ export const not = (fn) => {
 
 /**
  * Will execute the consequent action only if the condition returns true.
- * No matter the result, will not halt the chain.
+ * Will not halt the chain unless an exception is raised.
  * @param {Function} condition - The function expected to return a boolean
  * @param {Function} consequent - The function that is executed only if the condition returns true.
  * @returns
