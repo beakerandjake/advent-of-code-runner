@@ -213,6 +213,32 @@ If you view the plain text markdown, you might notice a section that looks like:
 ```
 The CLI requires this section so it can continually update your readme with your progress table (if using the `submit` or the `stats` command).
 
+## Advanced Configuration
+
+You can customize the behavior of this CLI by using the following options in your `.env` file. Please keep in mind this is where your authentication token is stored and this file **should not be committed to source control**. 
+
+Each option accepts values specified in the [yn package](https://www.npmjs.com/package/yn).
+
+| Option Name  | Default | Effect |
+| --- | --- | --- |
+| `AOC_DISABLE_README_AUTO_SAVE_PROGRESS` | `false` | If enabled, the README file will not be updated with the progress table automatically during the `solve` or `submit` commands. You can still update the table manually with the `stats` command. |
+| `AOC_SUPPRESS_FESTIVE` | `false` | If enabled, the CLI will not add emojis to the console output. |
+
+#### Example .env file
+This example modifies the default `.env` file created by the `init` command. It disables the auto readme update feature and disables festive emojis.
+
+```Shell
+# This is an authentication token to advent of code.
+# It is a SECRET and should be treated like a password.
+# That means this .env file should NOT be committed to source control!
+#
+# If you created this project using advent-of-code-runner init, 
+# then your .gitignore already includes this file, your secret is safe.
+AOC_AUTHENTICATION_TOKEN=asdfasdfasdfasdf
+AOC_DISABLE_README_AUTO_SAVE_PROGRESS=true
+AOC_SUPPRESS_FESTIVE=true
+```
+
 ## :snowflake: Example
 I am using this CLI for my own advent of code solutions. You can refer to this project as a real world example of how to use this CLI. 
 
