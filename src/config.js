@@ -23,7 +23,6 @@ export const envOptions = {
   logLevel: 'AOC_LOG_LEVEL',
   mockApiEnabled: 'AOC_MOCK_API_ENABLED',
   mockApiAnswerCorrect: 'AOC_MOCK_API_ANSWER_CORRECT',
-  rateLimitDefaultTimeoutMs: 'AOC_RATE_DEFAULT_RATE_LIMIT_MS',
   year: 'AOC_YEAR',
   disableReadmeAutoSaveProgress: 'AOC_DISABLE_README_AUTO_SAVE_PROGRESS',
 };
@@ -109,7 +108,7 @@ const CONFIG = {
       ],
     },
     rateLimiting: {
-      defaultTimeoutMs: parsePositiveInt(process.env[envOptions.rateLimitDefaultTimeoutMs], 300000),
+      defaultTimeoutMs: 300000,
     },
     validation: {
       // could dynamically set valid dates here, but keeping this explicit
