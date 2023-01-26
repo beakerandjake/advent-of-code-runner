@@ -79,17 +79,36 @@ export const mapRuntimeColumn = ({ runtimeNs }, fastest, slowest) => {
 };
 
 /**
- * Generates the text for the solved count summary row.
+ * Generates a row for each of the years puzzles.
  * @private
  */
-export const getSolvedMessage = (solvedCount, totalPuzzleCount) => {
+export const generatePuzzleRows = async (year, completionData) => {
+
+};
+
+/**
+ * Returns a row which summarizes the years average.
+ * @private
+ */
+export const getAverageRow = async (year) => {
+  const averageAttempts = await getAverageAttempts(year);
+  const averageRuntime = await getAverageRuntime(year);
+  return ['Average', '', averageAttempts.toFixed(2), humanizeDuration(averageRuntime)];
+};
+
+/**
+ * Returns a row which summarizes the percentage of puzzles solved.
+ */
+export const getSolvedRow = async (year) => {
+  const solvedCount = await getSolvedCount(year);
+  const totalPuzzleCount = getTotalPuzzleCount();
   const solvedPercent = (solvedCount / totalPuzzleCount) * 100;
 
   if (!Number.isFinite(solvedPercent)) {
     throw new Error('could not calculate solved percent from arguments');
   }
 
-  return `Solved ${solvedCount}/${totalPuzzleCount} (${solvedPercent.toFixed()}%)`;
+  return [`Solved ${solvedCount}/${totalPuzzleCount} (${solvedPercent.toFixed()}%)`, '', '', ''];
 };
 
 /**
@@ -99,10 +118,7 @@ export const getSolvedMessage = (solvedCount, totalPuzzleCount) => {
 /* istanbul ignore next */
 const generateTable = async (year, completionData) => {
   // grab any extra data we want to display.
-  const averageAttempts = await getAverageAttempts(year);
-  const averageRuntime = await getAverageRuntime(year);
-  const solvedCount = await getSolvedCount(year);
-  const totalPuzzleCount = getTotalPuzzleCount();
+
   // only apply highlighting if more than two puzzles have been solved.
   // with 2 or less it's kind of obvious, there isn't a need to highlight.
   const maxAttempts = completionData.length > 2 ? await getMaxAttempts(year) : null;
@@ -122,10 +138,8 @@ const generateTable = async (year, completionData) => {
   const puzzleRows = completionData.map(
     (_, index) => [names[index], solved[index], attempts[index], runtimes[index]],
   );
-  const summaryRows = [
-    ['Average', '', averageAttempts.toFixed(2), humanizeDuration(averageRuntime)],
-    [getSolvedMessage(solvedCount, totalPuzzleCount), '', '', ''],
-  ];
+  const averageRow = await getAverageRow(year);
+  const solvedRow = await getSolvedRow(year);
 
   const config = {
     columnDefault: { alignment: 'left' },
@@ -151,7 +165,12 @@ const generateTable = async (year, completionData) => {
     ),
   };
 
-  return table([...headerRows, ...puzzleRows, ...summaryRows], config);
+  return table([
+    ...headerRows,
+    ...puzzleRows,
+    averageRow,
+    solvedRow,
+  ], config);
 };
 
 /**

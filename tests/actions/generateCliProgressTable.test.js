@@ -22,40 +22,21 @@ jest.unstable_mockModule('src/statistics.js', () => ({
 
 // import after mocks set up
 const { table } = await import('table');
-const { getPuzzleCompletionData } = await import('../../src/statistics.js');
 const { humanizeDuration } = await import('../../src/formatting.js');
+const { getTotalPuzzleCount } = await import('../../src/validation/validatePuzzle.js');
+const { getAverageAttempts, getSolvedCount } = await import('../../src/statistics.js');
 const {
-  outputCompletionTable,
   mapNamedColumn,
   mapSolvedColumn,
   mapAttemptColumns,
   mapRuntimeColumn,
-  getSolvedMessage,
+  getAverageRow,
+  getSolvedRow,
 } = await import('../../src/actions/generateCliProgressTable.js');
 
 describe('generateCliProgressTable()', () => {
   afterEach(() => {
     jest.resetAllMocks();
-  });
-
-  describe('outputCompletionTable()', () => {
-    test.each([
-      null, undefined,
-    ])('throws if year is: "%s"', async (year) => {
-      await expect(async () => outputCompletionTable({ year })).rejects.toThrow();
-    });
-
-    test('halts chain if no completion data', async () => {
-      getPuzzleCompletionData.mockResolvedValue([]);
-      const result = await outputCompletionTable({ year: 2022 });
-      expect(result).toBe(false);
-    });
-
-    test('does not generate table if no completion data', async () => {
-      getPuzzleCompletionData.mockResolvedValue([]);
-      await outputCompletionTable({ year: 2022 });
-      expect(table).not.toHaveBeenCalled();
-    });
   });
 
   describe('mapNamedColumn()', () => {
@@ -202,29 +183,46 @@ describe('generateCliProgressTable()', () => {
     });
   });
 
-  describe('getSolvedMessage()', () => {
+  describe('getSolvedRow()', () => {
     test.each([
       undefined, () => {}, Promise.resolve(10), NaN, Infinity,
-    ])('throws if solved count is: "%s"', (solvedCount) => {
-      expect(() => getSolvedMessage(solvedCount, 10)).toThrow();
+    ])('throws if solved count is: "%s"', async (solvedCount) => {
+      getSolvedCount.mockResolvedValue(solvedCount);
+      await expect(async () => getSolvedRow({ year: 2022 })).rejects.toThrow();
     });
 
     test.each([
       undefined, () => {}, Promise.resolve(10), NaN,
-    ])('throws if total count is: "%s"', (totalCount) => {
-      expect(() => getSolvedMessage(10, totalCount)).toThrow();
+    ])('throws if total count is: "%s"', async (totalCount) => {
+      getSolvedCount.mockResolvedValue(12);
+      getTotalPuzzleCount.mockReturnValue(totalCount);
+      await expect(async () => getSolvedRow({ year: 2022 })).rejects.toThrow();
     });
 
-    test('handles divide by zero', () => {
-      expect(() => getSolvedMessage(10, 0)).toThrow();
+    test('handles divide by zero', async () => {
+      getSolvedCount.mockResolvedValue(12);
+      getTotalPuzzleCount.mockReturnValue(0);
+      await expect(async () => getSolvedRow({ year: 2022 })).rejects.toThrow();
     });
 
-    test('calculates percentage correctly', () => {
+    test('returns expected value', async () => {
       const solved = 10;
       const total = 50;
-      const expected = ((solved / total) * 100).toFixed();
-      const result = getSolvedMessage(solved, total);
-      expect(result).toContain(expected);
+      const expectedPercent = ((solved / total) * 100).toFixed();
+      getSolvedCount.mockResolvedValue(solved);
+      getTotalPuzzleCount.mockReturnValue(total);
+
+      const result = await getSolvedRow({ year: 2023 });
+      expect(result).toEqual([`Solved ${solved}/${total} (${expectedPercent}%)`, '', '', '']);
+    });
+  });
+
+  describe('getAverageRow()', () => {
+    test('generates expected value', async () => {
+      getAverageAttempts.mockResolvedValue(22.23344555);
+      humanizeDuration.mockReturnValue('775.37ms');
+      const result = await getAverageRow(2022);
+      expect(result).toEqual(['Average', '', '22.23', '775.37ms']);
     });
   });
 });
