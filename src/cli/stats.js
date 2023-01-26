@@ -2,10 +2,12 @@ import { Command } from 'commander';
 import { createChain } from '../actions/actionChain.js';
 import {
   assertInitialized,
+  generateCliProgressTable,
+  generateMarkdownProgressTable,
+  getCompletionData,
   getYear,
-  outputCompletionTable,
-  assertReadmeExists,
-  saveCompletionTableToReadme,
+  printProgressTable,
+  saveProgressTableToReadme,
 } from '../actions/index.js';
 
 /**
@@ -14,7 +16,9 @@ import {
 const outputStats = createChain([
   assertInitialized,
   getYear,
-  outputCompletionTable,
+  getCompletionData,
+  generateCliProgressTable,
+  printProgressTable,
 ]);
 
 /**
@@ -22,9 +26,10 @@ const outputStats = createChain([
  */
 const saveStats = createChain([
   assertInitialized,
-  assertReadmeExists,
   getYear,
-  saveCompletionTableToReadme,
+  getCompletionData,
+  generateMarkdownProgressTable,
+  saveProgressTableToReadme,
 ]);
 
 /**

@@ -3,7 +3,8 @@ import { assertInitialized } from '../actions/assertInitialized.js';
 import { assertUserConfirmation } from '../actions/assertUserConfirmation.js';
 import { getAnswersFromUser } from '../actions/getAnswersFromUser.js';
 import { festiveEmoji, festiveStyle, printFestiveTitle } from '../festive.js';
-import { createDotEnv, dotEnvFileExists } from '../initialize/index.js';
+import { createDotEnv } from '../initialize/index.js';
+import { dotEnvExists } from '../validation/userFilesExist.js';
 import { logger } from '../logger.js';
 
 /**
@@ -43,7 +44,7 @@ export const auth = async () => {
   }
 
   // if there is already a .env file then ask users confirmation.
-  if (await dotEnvFileExists() && !await assertUserConfirmation(confirmOverwriteQuestion)()) {
+  if (await dotEnvExists() && !await assertUserConfirmation(confirmOverwriteQuestion)()) {
     return;
   }
 

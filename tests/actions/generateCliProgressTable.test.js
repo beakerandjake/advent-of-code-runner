@@ -22,40 +22,71 @@ jest.unstable_mockModule('src/statistics.js', () => ({
 
 // import after mocks set up
 const { table } = await import('table');
-const { getPuzzleCompletionData } = await import('../../src/statistics.js');
 const { humanizeDuration } = await import('../../src/formatting.js');
+const { getTotalPuzzleCount } = await import('../../src/validation/validatePuzzle.js');
 const {
-  outputCompletionTable,
+  getAverageAttempts,
+  getSolvedCount,
+  getMaxAttempts,
+  getFastestRuntime,
+  getSlowestRuntime,
+  getAverageRuntime,
+} = await import('../../src/statistics.js');
+const {
   mapNamedColumn,
   mapSolvedColumn,
   mapAttemptColumns,
   mapRuntimeColumn,
-  getSolvedMessage,
-} = await import('../../src/actions/outputCompletionTable.js');
+  getAverageRow,
+  getSolvedRow,
+  generatePuzzleRows,
+  generateCliProgressTable,
+} = await import('../../src/actions/generateCliProgressTable.js');
 
-describe('outputCompletionTable()', () => {
+describe('generateCliProgressTable()', () => {
   afterEach(() => {
     jest.resetAllMocks();
   });
 
-  describe('outputCompletionTable()', () => {
-    test.each([
-      null, undefined,
-    ])('throws if year is: "%s"', async (year) => {
-      await expect(async () => outputCompletionTable({ year })).rejects.toThrow();
-    });
+  test.each([
+    undefined, null, '',
+  ])('throws if year is: "%s"', async (year) => {
+    await expect(
+      async () => generateCliProgressTable({ year, completionData: [1234] }),
+    ).rejects.toThrow();
+  });
 
-    test('halts chain if no completion data', async () => {
-      getPuzzleCompletionData.mockResolvedValue([]);
-      const result = await outputCompletionTable({ year: 2022 });
-      expect(result).toBe(false);
-    });
+  test.each([
+    undefined, null, [],
+  ])('throws if completion data is: "%s"', async (completionData) => {
+    await expect(
+      async () => generateCliProgressTable({ year: 2023, completionData }),
+    ).rejects.toThrow();
+  });
 
-    test('does not generate table if no completion data', async () => {
-      getPuzzleCompletionData.mockResolvedValue([]);
-      await outputCompletionTable({ year: 2022 });
-      expect(table).not.toHaveBeenCalled();
-    });
+  test('passes expected data to table()', async () => {
+    const completionData = [
+      {
+        day: 1, level: 1, solved: false, runtimeNs: 1234, numberOfAttempts: 6,
+      },
+    ];
+    mockChalk.green.mockImplementation((x) => x?.toString() || '');
+    mockChalk.yellow.mockImplementation((x) => x?.toString() || '');
+    getSolvedCount.mockResolvedValue(123);
+    getTotalPuzzleCount.mockReturnValue(1234);
+    getAverageAttempts.mockResolvedValue(22.23344555);
+    getAverageRuntime.mockResolvedValue('432ms');
+    humanizeDuration.mockImplementation((x) => x?.toString() || '');
+
+    await generateCliProgressTable({ year: 2023, completionData });
+
+    expect(table).toHaveBeenCalledWith([
+      ['Advent of Code 2023', '', '', ''],
+      ['Puzzle', 'Solved', 'Attempts', 'Runtime'],
+      ['1.1', '', '6', '1234'],
+      ['Average', '', '22.23', '432ms'],
+      ['Solved 123/1234 (10%)', '', '', ''],
+    ], expect.anything());
   });
 
   describe('mapNamedColumn()', () => {
@@ -202,29 +233,92 @@ describe('outputCompletionTable()', () => {
     });
   });
 
-  describe('getSolvedMessage()', () => {
+  describe('getSolvedRow()', () => {
     test.each([
       undefined, () => {}, Promise.resolve(10), NaN, Infinity,
-    ])('throws if solved count is: "%s"', (solvedCount) => {
-      expect(() => getSolvedMessage(solvedCount, 10)).toThrow();
+    ])('throws if solved count is: "%s"', async (solvedCount) => {
+      getSolvedCount.mockResolvedValue(solvedCount);
+      await expect(async () => getSolvedRow({ year: 2022 })).rejects.toThrow();
     });
 
     test.each([
       undefined, () => {}, Promise.resolve(10), NaN,
-    ])('throws if total count is: "%s"', (totalCount) => {
-      expect(() => getSolvedMessage(10, totalCount)).toThrow();
+    ])('throws if total count is: "%s"', async (totalCount) => {
+      getSolvedCount.mockResolvedValue(12);
+      getTotalPuzzleCount.mockReturnValue(totalCount);
+      await expect(async () => getSolvedRow({ year: 2022 })).rejects.toThrow();
     });
 
-    test('handles divide by zero', () => {
-      expect(() => getSolvedMessage(10, 0)).toThrow();
+    test('handles divide by zero', async () => {
+      getSolvedCount.mockResolvedValue(12);
+      getTotalPuzzleCount.mockReturnValue(0);
+      await expect(async () => getSolvedRow({ year: 2022 })).rejects.toThrow();
     });
 
-    test('calculates percentage correctly', () => {
+    test('returns expected value', async () => {
       const solved = 10;
       const total = 50;
-      const expected = ((solved / total) * 100).toFixed();
-      const result = getSolvedMessage(solved, total);
-      expect(result).toContain(expected);
+      const expectedPercent = ((solved / total) * 100).toFixed();
+      getSolvedCount.mockResolvedValue(solved);
+      getTotalPuzzleCount.mockReturnValue(total);
+
+      const result = await getSolvedRow({ year: 2023 });
+      expect(result).toEqual([`Solved ${solved}/${total} (${expectedPercent}%)`, '', '', '']);
+    });
+  });
+
+  describe('getAverageRow()', () => {
+    test('generates expected value', async () => {
+      getAverageAttempts.mockResolvedValue(22.23344555);
+      humanizeDuration.mockReturnValue('775.37ms');
+      const result = await getAverageRow(2022);
+      expect(result).toEqual(['Average', '', '22.23', '775.37ms']);
+    });
+  });
+
+  describe('generatePuzzleRows()', () => {
+    test('does not mark best/worst if less than 2 rows', async () => {
+      mockChalk.green.mockImplementation((x) => x?.toString() || '');
+      humanizeDuration.mockImplementation((x) => x?.toString() || '');
+      const result = await generatePuzzleRows(2022, [
+        {
+          day: 1, level: 1, solved: false, runtimeNs: 1234, numberOfAttempts: 6,
+        },
+        {
+          day: 1, level: 2, solved: true, runtimeNs: 4321, numberOfAttempts: 4,
+        },
+      ]);
+      expect(result).toEqual([
+        ['1.1', '', '6', '1234'],
+        ['1.2', '✓', '4', '4321'],
+      ]);
+    });
+
+    test('marks best/worst if more than 2 rows', async () => {
+      const completionData = [
+        {
+          day: 1, level: 1, solved: false, runtimeNs: 1234, numberOfAttempts: 6,
+        },
+        {
+          day: 1, level: 2, solved: true, runtimeNs: 4321, numberOfAttempts: 4,
+        },
+        {
+          day: 2, level: 1, solved: false, runtimeNs: 661, numberOfAttempts: 1,
+        },
+      ];
+      mockChalk.green.mockImplementation((x) => x?.toString() || '');
+      mockChalk.yellow.mockImplementation((x) => x?.toString() || '');
+      getMaxAttempts.mockResolvedValue(6);
+      getFastestRuntime.mockResolvedValue(661);
+      getSlowestRuntime.mockResolvedValue(4321);
+      humanizeDuration.mockImplementation((x) => x?.toString() || '');
+      const result = await generatePuzzleRows(2022, completionData);
+
+      expect(result).toEqual([
+        ['1.1', '', '6 (worst)', '1234'],
+        ['1.2', '✓', '4', '4321 (worst)'],
+        ['2.1', '', '1', '661 (best)'],
+      ]);
     });
   });
 });

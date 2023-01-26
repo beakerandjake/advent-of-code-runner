@@ -1,7 +1,9 @@
 import {
   describe, jest, test,
 } from '@jest/globals';
-import { or, not, and } from '../../src/actions/logical.js';
+import {
+  or, not, and,
+} from '../../src/actions/logical.js';
 
 describe('logical', () => {
   describe('or()', () => {

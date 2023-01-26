@@ -1,4 +1,4 @@
-import { outputFile, pathExists } from 'fs-extra/esm';
+import { outputFile } from 'fs-extra/esm';
 import { readFile } from 'node:fs/promises';
 import { getConfigValue } from '../config.js';
 import { logger } from '../logger.js';
@@ -29,9 +29,3 @@ export const createDotEnv = async ({ authToken } = {}) => {
   logger.debug('saving .env file to: %s', dest);
   await outputFile(dest, envFile);
 };
-
-/**
- * Does the .env file already exist?
- * @returns
- */
-export const dotEnvFileExists = async () => pathExists(getConfigValue('paths.templates.dotenv.dest'));
