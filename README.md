@@ -6,6 +6,8 @@ A Node.Js CLI solution generator and runner for [advent of code](https://advento
 
 [![npm](https://img.shields.io/npm/v/advent-of-code-runner)](https://www.npmjs.com/package/advent-of-code-runner)
 [![npm](https://img.shields.io/npm/dt/advent-of-code-runner)](https://www.npmjs.com/package/advent-of-code-runner)
+[![node-current](https://img.shields.io/node/v/advent-of-code-runner)](https://www.npmjs.com/package/advent-of-code-runner)
+
 ## :mrs_claus: Features
 - Quickly and easily scaffolds an empty directory, creating all required solution files (similar to create-react-app). 
 - Runs your solutions (both sync and async) and measures performance. 
