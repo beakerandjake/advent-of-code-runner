@@ -34,7 +34,7 @@ jobs:
       if: ${{ matrix.node-version == '18.x' }}    
       
       # Test without collection coverage data on non-LTS version of node
-    - run: npm test -- --coverage
+    - run: npm test
       if: ${{ matrix.node-version != '18.x' }}    
 
       # Updload coverage data to coveralls.io only on LTS version of node.
