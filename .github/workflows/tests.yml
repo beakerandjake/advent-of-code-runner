@@ -28,7 +28,7 @@ jobs:
     - run: npm test -- --coverage
     
     - name: Upload to Coveralls
-      if: ${{ matrix.node-version }} == '18.x'
+      if: ${{ matrix.node-version }} == '16.x'
       uses: coverallsapp/github-action@1.1.3
       with:
         github-token: ${{ secrets.GITHUB_TOKEN }}
