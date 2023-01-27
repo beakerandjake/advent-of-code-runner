@@ -8,8 +8,7 @@ on:
     branches: [ "main" ]
 
 jobs:
-  build:
-    name: Tests
+  test:
     runs-on: ubuntu-latest
     
     strategy:
