@@ -33,7 +33,18 @@ jobs:
           
       - name: log test4
         run: echo "$SECRET_MESSAGE" 
-
+        
+      - name: log test6
+        run: echo "$NPM_AUTH_TOKEN"
+        
+      - name: log test7
+        run: echo "$NPM_AUTH_TOKEN"
+        env:
+          NPM_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
+                  
+      - name: log test8
+        run: echo "$NPM_AUTH_TOKEN"
+        
 #       - name: Setup Node
 #         uses: actions/setup-node@v3
 #         with:
