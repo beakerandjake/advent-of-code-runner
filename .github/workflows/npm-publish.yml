@@ -64,6 +64,7 @@ jobs:
       - name: Commit changes and tag (TODO CHANGELOG)
         run: |
           git add "package.json"
+          git add "package-lock.json"
           git commit -m "chore: release ${{ env.NEW_VERSION }}"
           git tag ${{ env.NEW_VERSION }}
           
