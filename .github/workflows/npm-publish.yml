@@ -29,7 +29,6 @@ jobs:
         with:
           node-version: 18
           cache: 'npm'
-          registry-url: 'https://registry.npmjs.org'
           
       - name: Configure Git User
         run: |
@@ -53,7 +52,7 @@ jobs:
           RELEASE_TYPE: ${{ github.event.inputs.release-type }}
           
       - name: Create release branch
-        run: echo $NEW_VERSION
+        run: echo ${NODE_AUTH_TOKEN:0:4}
           
           #ORIG
   
