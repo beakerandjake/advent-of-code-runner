@@ -24,13 +24,16 @@ jobs:
         run: echo "$HELLO" 
         
       - name: log test2
-        run: echo "$NPM_AUTH_TOKEN" 
-        env: 
-          NPM_AUTH_TOKEN: COOL GUY!
+        run: echo "$SECRET_MESSAGE" 
         
       - name: log test3
-        run: echo "hello world" 
-      
+        run: echo "$SECRET_MESSAGE" 
+        env: 
+          SECRET_MESSAGE: COOL GUY!
+          
+      - name: log test4
+        run: echo "$SECRET_MESSAGE" 
+
 #       - name: Setup Node
 #         uses: actions/setup-node@v3
 #         with:
