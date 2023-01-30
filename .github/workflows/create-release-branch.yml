@@ -1,5 +1,4 @@
 name: Create Release Branch
-
 on:
   workflow_dispatch:
     inputs:
@@ -55,7 +54,7 @@ jobs:
           echo "NEW_VERSION=$(npm --no-git-tag-version --preid=beta version $RELEASE_TYPE)" >> $GITHUB_ENV
           echo "RELEASE_TAG=beta" >> $GITHUB_ENV
         env:
-          RELEASE_TYPE: ${{ github.event.inputs.release-type }}'
+          RELEASE_TYPE: ${{ github.event.inputs.release-type }}
           
       - name: Create Release Branch
         run: git branch ${{ format('release/{0}', env.NEW_VERSION) }}
