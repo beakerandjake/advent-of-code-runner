@@ -8,13 +8,13 @@ on:
         required: true
         type: choice
         options:
-        - patch
-        - minor
-        - major
-        - prepatch
-        - preminor
-        - premajor
-        - prerelease
+        - 'patch'
+        - 'minor'
+        - 'major'
+        - 'prepatch'
+        - 'preminor'
+        - 'premajor'
+        - 'prerelease'
         
 jobs:
   create-release:
