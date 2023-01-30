@@ -39,6 +39,9 @@ jobs:
           git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git config --global user.name "github-actions[bot]"
           
+      - name: Create Release Branch
+        run: git checkout -b ${{ format('release/{0}', env.NEW_VERSION) }}
+          
       - name: Version (latest)
         if: startsWith(github.event.inputs.release-type, 'pre') != true
         run: |
@@ -55,11 +58,8 @@ jobs:
           echo "RELEASE_TAG=beta" >> $GITHUB_ENV
         env:
           RELEASE_TYPE: ${{ github.event.inputs.release-type }}
-          
-      - name: Create Release Branch
-        run: git checkout -b ${{ format('release/{0}', env.NEW_VERSION) }}
         
-      - name: Commit changes and tag
+      - name: Commit changes
         run: |
           git add "package.json"
           git add "package-lock.json"
