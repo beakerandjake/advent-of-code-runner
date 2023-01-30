@@ -52,11 +52,16 @@ jobs:
         env:
           RELEASE_TYPE: ${{ github.event.inputs.release-type }}
           
-      - name: Update CHANGELOG
-        uses: superfaceai/release-changelog-action@v1
+      - name: Update changelog
+        uses: thomaseizinger/keep-a-changelog-new-release@v1
         with:
           version: ${{ env.NEW_VERSION }}
-          operation: release
+          
+#       - name: Update CHANGELOG
+#         uses: superfaceai/release-changelog-action@v1
+#         with:
+#           version: ${{ env.NEW_VERSION }}
+#           operation: release
             
       - name: Commit changes and tag
         run: |
