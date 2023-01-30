@@ -2,7 +2,6 @@
 # For more information see: https://docs.github.com/en/actions/publishing-packages/publishing-nodejs-packages
 
 name: Release package
-
 on:
   workflow_dispatch:
     inputs:
@@ -15,19 +14,19 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout project
-        uses: actions/checkout@v3
+      - uses: actions/checkout@v3
       
       - name: Setup Node
-        uses: actions/setup-node@v3
+      - uses: actions/setup-node@v3
         with:
           node-version: 18
           cache: 'npm'
      
       - name: Install dependencies
-        run: npm ci
+      - run: npm ci
   
       - name: Run Tests
-        run: npm test
+      - run: npm test
       
       - name: Configure Git
         run: |
@@ -49,7 +48,10 @@ jobs:
       - name: Bump pre-release version
         if: startsWith(github.event.inputs.release-type, 'pre')
         run: |
-          echo "NEW_VERSION=$(npm --no-git-tag-version --preid=beta version $RELEASE_TYPE
+          echo "NEW_VERSION=$(npm --no-git-tag-version --preid=alpha version $RELEASE_TYPE)" >> $GITHUB_ENV
           echo "RELEASE_TAG=beta" >> $GITHUB_ENV
         env:
           RELEASE_TYPE: ${{ github.event.inputs.release-type }}
+          
+      - name: DEBUG LOG
+        run: echo $GITHUB_ENV
