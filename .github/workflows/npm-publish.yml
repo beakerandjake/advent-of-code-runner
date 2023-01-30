@@ -31,14 +31,12 @@ jobs:
 #       - name: Run Tests
 #         run: npm test
       
-      - name: Configure Git
+      - name: Configure Git User
         run: |
           git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git config --global user.name "github-actions[bot]"
           
-      # Bump package version
-      # Use tag latest
-      - name: Bump release version
+      - name: Version (latest)
         if: startsWith(github.event.inputs.release-type, 'pre') != true
         run: |
           echo "NEW_VERSION=$(npm --no-git-tag-version version $RELEASE_TYPE)" >> $GITHUB_ENV
@@ -46,27 +44,32 @@ jobs:
         env:
           RELEASE_TYPE: ${{ github.event.inputs.release-type }}
 
-      # Bump package pre-release version
-      # Use tag beta for pre-release versions
-      - name: Bump pre-release version
+      - name: Version (pre-release)
         if: startsWith(github.event.inputs.release-type, 'pre')
         run: |
           echo "NEW_VERSION=$(npm --no-git-tag-version --preid=beta version $RELEASE_TYPE)" >> $GITHUB_ENV
           echo "RELEASE_TAG=beta" >> $GITHUB_ENV
         env:
           RELEASE_TYPE: ${{ github.event.inputs.release-type }}
-        
-      - name: Publish
-        run: npm publish --tag ${{ env.RELEASE_TAG }}
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
           
-      - name: Commit changes and tag (TODO CHANGELOG)
+      - name: Update CHANGELOG
+        uses: superfaceai/release-changelog-action@v1
+        with:
+          version: ${{ env.NEW_VERSION }}
+          operation: release
+            
+      - name: Commit changes and tag
         run: |
           git add "package.json"
           git add "package-lock.json"
+          git add "CHANGELOG.md"
           git commit -m "chore: release ${{ env.NEW_VERSION }}"
           git tag ${{ env.NEW_VERSION }}
+
+      - name: Publish to npm
+        run: npm publish --tag ${{ env.RELEASE_TAG }}
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
           
       - name: Push changes to repository
         env:
