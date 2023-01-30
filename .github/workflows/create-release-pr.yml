@@ -62,6 +62,7 @@ jobs:
         run: |
           git add "package.json"
           git add "package-lock.json"
+          git add "CHANGELOG.md"
           git commit -m "chore: release ${{ env.NEW_VERSION }}"
           
       - name: Git Push
