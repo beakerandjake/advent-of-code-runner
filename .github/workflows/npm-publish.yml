@@ -8,9 +8,15 @@ on:
       release-type:
         description: 'Release type (one of): patch, minor, major, prepatch, preminor, premajor, prerelease'
         required: true
-env:
-  HELLO: world
-
+        type: choice
+        options:
+        - patch
+        - minor
+        - major
+        - prepatch
+        - preminor
+        - premajor
+        - prerelease
 jobs:
   publish:
     runs-on: ubuntu-latest
