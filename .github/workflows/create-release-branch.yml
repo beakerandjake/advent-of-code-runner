@@ -27,12 +27,6 @@ jobs:
         with:
           node-version: 18
           cache: 'npm'
-          
-#       - name: Install dependencies
-#         run: npm ci
-  
-#       - name: Run Tests
-#         run: npm test
 
       - name: Configure Git User
         run: |
@@ -71,3 +65,7 @@ jobs:
         run: |
           git push -u origin ${{ format('release/{0}', env.NEW_VERSION) }}
       
+      - name: Create Pull Request
+        run: gh pr create --base main -title ${{ format('release/{0}', env.NEW_VERSION) }} --body 'Created by Github action'
+        env:
+            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
