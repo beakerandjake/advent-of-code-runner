@@ -8,6 +8,8 @@ on:
       release-type:
         description: 'Release type (one of): patch, minor, major, prepatch, preminor, premajor, prerelease'
         required: true
+env:
+  HELLO: world
 
 jobs:
   publish:
@@ -19,9 +21,12 @@ jobs:
 #           token: ${{ secrets.PAT_FOR_GITHUB }}
           
       - name: log test
-        run: echo $NPM_AUTH_TOKEN 
+        run: echo "$HELLO" 
         
       - name: log test2
+        run: echo "$NPM_AUTH_TOKEN" 
+        
+      - name: log test3
         run: echo "hello world" 
       
 #       - name: Setup Node
