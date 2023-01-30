@@ -23,37 +23,40 @@ jobs:
     steps:
       - name: Checkout project
         uses: actions/checkout@v3
+        
+      - name: Setup Node
+        uses: actions/setup-node@v3
         with:
-          token: ${{ secrets.PAT_FOR_GITHUB }}
+          node-version: 18
+          cache: 'npm'
+          registry-url: 'https://registry.npmjs.org'
           
-      - name: log test
-        run: echo "$HELLO" 
-        
-      - name: log test2
-        run: echo "$SECRET_MESSAGE" 
-        
-      - name: log test3
-        run: echo "$SECRET_MESSAGE" 
-        env: 
-          SECRET_MESSAGE: COOL GUY!
+      - name: Configure Git User
+        run: |
+          git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git config --global user.name "github-actions[bot]"
           
-      - name: log test4
-        run: echo "$SECRET_MESSAGE" 
-        
-      - name: log test6
-        run: echo "$NPM_AUTH_TOKEN"
-        
-      - name: log test7
-        run: echo "$NPM_AUTH_TOKEN"
+      - name: Version (latest)
+        if: startsWith(github.event.inputs.release-type, 'pre') != true
+        run: |
+          echo "NEW_VERSION=$(npm --no-git-tag-version version $RELEASE_TYPE)" >> $GITHUB_ENV
+          echo "RELEASE_TAG=latest" >> $GITHUB_ENV
         env:
-          NPM_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
-                  
-      - name: log test8
-        run: echo "$NPM_AUTH_TOKEN"
-        
-      - name: log test8
-        run: echo "$GITHUB_TOKEN"
-        
+          RELEASE_TYPE: ${{ github.event.inputs.release-type }}
+
+      - name: Version (pre-release)
+        if: startsWith(github.event.inputs.release-type, 'pre')
+        run: |
+          echo "NEW_VERSION=$(npm --no-git-tag-version --preid=beta version $RELEASE_TYPE)" >> $GITHUB_ENV
+          echo "RELEASE_TAG=beta" >> $GITHUB_ENV
+        env:
+          RELEASE_TYPE: ${{ github.event.inputs.release-type }}
+          
+      - name: Create release branch
+        run: echo $NEW_VERSION
+          
+          #ORIG
+  
 #       - name: Setup Node
 #         uses: actions/setup-node@v3
 #         with:
