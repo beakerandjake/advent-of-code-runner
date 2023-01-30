@@ -51,6 +51,7 @@ jobs:
       - name: Version (pre-release)
         if: startsWith(github.event.inputs.release-type, 'pre')
         run: |
+          echo $RELEASE_TYPE
           echo "NEW_VERSION=$(npm --no-git-tag-version --preid=beta version $RELEASE_TYPE)" >> $GITHUB_ENV
           echo "RELEASE_TAG=beta" >> $GITHUB_ENV
         env:
