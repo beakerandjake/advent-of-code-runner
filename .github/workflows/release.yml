@@ -6,6 +6,7 @@ on:
         description: 'Release type'
         required: true
         type: choice
+        # The first option provided is the default selection, make this "please select" to ensure user has to explicitly choose a release type. 
         options:
         - please select
         - patch
@@ -19,86 +20,83 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - name: Fail if release type not selected
+      - name: Validate selected release type - "${{ github.event.inputs.release-type }}"
         if: contains(fromJSON('["patch","minor","major","prepatch","preminor","premajor","prerelease"]'), github.event.inputs.release-type) == false
         uses: actions/github-script@v6
         with:
           script: core.setFailed('Please choose a valid Release Type!')
-    
-#       - uses: step-security/harden-runner@18bf8ad2ca49c14cbb28b91346d626ccfb00c518 # v2.1.0
-#         with:
-#           disable-sudo: true
-#           egress-policy: block
-#           disable-telemetry: true
-#           allowed-endpoints: >
-#             github.com:443
-#             registry.npmjs.org:443
-            
-      - name: Log Release Type - ${{ github.event.inputs.release-type }}
-        run: echo "Creating Release Type - ${{ toJSON(github.event.inputs.release-type) }}"
+          
+      - uses: step-security/harden-runner@18bf8ad2ca49c14cbb28b91346d626ccfb00c518 # v2.1.0
+        with:
+          disable-sudo: true
+          egress-policy: block
+          disable-telemetry: true
+          allowed-endpoints: >
+            github.com:443
+            registry.npmjs.org:443
       
-#       - name: Checkout project
-#         uses: actions/checkout@v3
-#         with:
-#           token: ${{ secrets.PAT_FOR_GITHUB }}
+      - name: Checkout project
+        uses: actions/checkout@v3
+        with:
+          token: ${{ secrets.PAT_FOR_GITHUB }}
       
-#       - name: Configure Git User
-#         run: |
-#           git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
-#           git config --global user.name "github-actions[bot]"
+      - name: Configure Git User
+        run: |
+          git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git config --global user.name "github-actions[bot]"
       
-#       - name: Setup Node
-#         uses: actions/setup-node@v3
-#         with:
-#           node-version: 18
-#           cache: 'npm'
-#           registry-url: 'https://registry.npmjs.org'
+      - name: Setup Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+          cache: 'npm'
+          registry-url: 'https://registry.npmjs.org'
         
 # #       - name: Run Tests
 # #         run: |
 # #           npm ci
 # #           npm test
 
-#       - name: npm version (@latest)
-#         if: startsWith(github.event.inputs.release-type, 'pre') != true
-#         run: |
-#           echo "NEW_VERSION=$(npm --no-git-tag-version version $RELEASE_TYPE)" >> $GITHUB_ENV
-#           echo "RELEASE_TAG=latest" >> $GITHUB_ENV
-#         env:
-#           RELEASE_TYPE: ${{ github.event.inputs.release-type }}
+      - name: npm version (@latest)
+        if: startsWith(github.event.inputs.release-type, 'pre') != true
+        run: |
+          echo "NEW_VERSION=$(npm --no-git-tag-version version $RELEASE_TYPE)" >> $GITHUB_ENV
+          echo "RELEASE_TAG=latest" >> $GITHUB_ENV
+        env:
+          RELEASE_TYPE: ${{ github.event.inputs.release-type }}
 
-#       - name: npm version (@prerelease)
-#         if: startsWith(github.event.inputs.release-type, 'pre')
-#         run: |
-#           echo $RELEASE_TYPE
-#           echo "NEW_VERSION=$(npm --no-git-tag-version --preid=beta version $RELEASE_TYPE)" >> $GITHUB_ENV
-#           echo "RELEASE_TAG=beta" >> $GITHUB_ENV
-#         env:
-#           RELEASE_TYPE: ${{ github.event.inputs.release-type }}
+      - name: npm version (@prerelease)
+        if: startsWith(github.event.inputs.release-type, 'pre')
+        run: |
+          echo $RELEASE_TYPE
+          echo "NEW_VERSION=$(npm --no-git-tag-version --preid=beta version $RELEASE_TYPE)" >> $GITHUB_ENV
+          echo "RELEASE_TAG=beta" >> $GITHUB_ENV
+        env:
+          RELEASE_TYPE: ${{ github.event.inputs.release-type }}
           
-#       - name: Update CHANGELOG
-#         uses: superfaceai/release-changelog-action@b1411d74107d4691016c93940673c67535a927aa
-#         with:
-#           path-to-changelog: CHANGELOG.md
-#           version: ${{ env.NEW_VERSION }}
-#           operation: release
+      - name: Update CHANGELOG
+        uses: superfaceai/release-changelog-action@b1411d74107d4691016c93940673c67535a927aa
+        with:
+          path-to-changelog: CHANGELOG.md
+          version: ${{ env.NEW_VERSION }}
+          operation: release
           
-#       - name: Commit changes & tag
-#         run: |
-#           git add "package.json"
-#           git add "package-lock.json"
-#           git add "CHANGELOG.md"
-#           git commit -m "chore: release ${{ env.NEW_VERSION }}"
-#           git tag ${{ env.NEW_VERSION }}
+      - name: Commit changes & tag
+        run: |
+          git add "package.json"
+          git add "package-lock.json"
+          git add "CHANGELOG.md"
+          git commit -m "chore: release ${{ env.NEW_VERSION }}"
+          git tag ${{ env.NEW_VERSION }}
           
-#       - name: Publish to npm
-#         run: npm publish --tag ${{ env.RELEASE_TAG }}
-#         env:
-#           NODE_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
+      - name: Publish to npm
+        run: npm publish --tag ${{ env.RELEASE_TAG }}
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
           
-#       - name: Push changes & tags
+      - name: Push changes & tags
 #         env:
 #           GITHUB_TOKEN: ${{ secrets.PAT_FOR_GITHUB }}
-#         run: git push origin && git push --tags
+        run: git push origin && git push --tags
   
 
