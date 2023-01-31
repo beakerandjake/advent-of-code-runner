@@ -24,5 +24,10 @@ module.exports = {
     'no-restricted-syntax': 'off',
     'max-classes-per-file': 'off',
     'no-unused-expressions': ['error', { allowShortCircuit: true, allowTernary: true }],
+    'import/no-unresolved': [
+      2,
+      // ignore false positive when importing v11.1.0
+      { ignore: ['fs-extra/esm'] },
+    ],
   },
 };
