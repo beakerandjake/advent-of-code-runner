@@ -1,3 +1,6 @@
+# Creates a new npm release of this package. 
+# Bumps version in package.json, updates CHANGELOG, creates git tag
+
 name: Release
 on:
   workflow_dispatch:
@@ -95,8 +98,6 @@ jobs:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
           
       - name: Push changes & tags
-#         env:
-#           GITHUB_TOKEN: ${{ secrets.PAT_FOR_GITHUB }}
         run: git push origin && git push --tags
   
 
