@@ -8,9 +8,6 @@ module.exports = {
   overrides: [
     {
       files: ['**/*.test.js'], // Or *.test.js
-      rules: {
-        'no-console': 'off',
-      },
     },
   ],
   parserOptions: {
