@@ -56,12 +56,7 @@ jobs:
           path-to-changelog: CHANGELOG.md
           version: ${{ env.NEW_VERSION }}
           operation: release
-          
-#       - name: Update CHANGELOG
-#         uses: thomaseizinger/keep-a-changelog-new-release@v1
-#         with:
-#           version: ${{ env.NEW_VERSION }}
-              
+
       - name: Create Release Branch
         run: git checkout -b ${{ format('release/{0}', env.NEW_VERSION) }}
           
