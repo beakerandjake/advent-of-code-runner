@@ -9,13 +9,13 @@ on:
 
 jobs:
   test:
+    name: Run Tests
     runs-on: ubuntu-latest
     strategy:
       matrix:
         node-version: [18.x, 19.x]
         # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
     steps:
-    
     - name: Checkout Repository
       uses: actions/checkout@v3
     
@@ -27,10 +27,7 @@ jobs:
         
     - name: Install Packages
       run: npm ci
-      
-    - name: Linting
-      run: npm run lint
-    
+          
       # Collect coverage data only on LTS version of node
     - name: Run Tests (With Coverage)
       run: npm test -- --coverage 
@@ -40,10 +37,32 @@ jobs:
     - name: Run Tests (Without Coverage)
       run: npm test
       if: matrix.node-version != '18.x'  
-
-      # Updload coverage data to coveralls.io only on LTS version of node.
-    - name: Upload Coverage to Coveralls
-      uses: coverallsapp/github-action@1.1.3
-      if: matrix.node-version == '18.x'
+      
+  lint:
+    name: Linting
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout Repository
+      uses: actions/checkout@v3
+    
+    - name: Setup Node
+      uses: actions/setup-node@v3
       with:
-        github-token: ${{ secrets.GITHUB_TOKEN }}
+        node-version: 18
+        cache: 'npm'
+        
+    - name: Install Packages
+      run: npm ci
+      
+    - name: Linting
+      run: npm run lint
+      
+  coverage:
+    name: Upload Code Coverage
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Upload Coverage to Coveralls
+        uses: coverallsapp/github-action@1.1.3
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
