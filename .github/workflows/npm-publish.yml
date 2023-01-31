@@ -39,11 +39,14 @@ jobs:
           git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git config --global user.name "github-actions[bot]"
           
-      - name: Get Version
-        run: echo "VERSION=$(npm pkg get version | sed 's/"//g')" >> $GITHUB_ENV
+      - name: Get Version from package.json
+        run: echo "NEW_VERSION=$(npm pkg get version | sed 's/"//g')" >> $GITHUB_ENV
         
-      - name: TEST
-        run: echo 'hello world'
+      - name: Git Tag
+        run: git tag ${{ env.NEW_VERSION }}
+        
+      - name: Push tag
+        run: git push --tags
 
 #       - name: Version (pre-release)
 #         if: startsWith(github.event.inputs.release-type, 'pre')
