@@ -18,7 +18,8 @@
   "bin": "src/main.js",
   "scripts": {
     "test": "NODE_OPTIONS=\"--experimental-vm-modules --no-warnings\" jest",
-    "start": "node src/main.js"
+    "start": "node src/main.js",
+    "lint": "eslint 'src/**/*.js' 'tests/**/*.js'"
   },
   "repository": {
     "type": "git",

@@ -5,7 +5,7 @@ import { mockConfig, mockLogger } from '../mocks.js';
 
 // setup mocks
 mockLogger();
-const { getConfigValue } = mockConfig();
+mockConfig();
 jest.unstable_mockModule('node:child_process', () => ({ exec: jest.fn() }));
 jest.unstable_mockModule('node:path', () => ({ join: jest.fn() }));
 jest.unstable_mockModule('fs-extra/esm', () => ({ readJson: jest.fn(), writeJson: jest.fn() }));

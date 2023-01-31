@@ -1,4 +1,4 @@
-import { readJson, writeJson, pathExists } from 'fs-extra/esm';
+import { readJson, writeJson } from 'fs-extra/esm';
 import { getConfigValue } from '../config.js';
 import { logger } from '../logger.js';
 import { get } from '../util.js';
