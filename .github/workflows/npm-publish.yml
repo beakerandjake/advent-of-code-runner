@@ -43,7 +43,7 @@ jobs:
         run: echo "NEW_VERSION=$(npm pkg get version | sed 's/"//g')" >> $GITHUB_ENV
         
       - name: Git Tag
-        run: git tag ${{ format('v${0}', env.NEW_VERSION) }}
+        run: git tag ${{ format('v{0}', env.NEW_VERSION) }}
         
       - name: Push tag
         run: git push --tags
