@@ -20,7 +20,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Assert Release Type valid - ${{ github.event.inputs.release-type }}
-        if: ${{ contains(fromJson('["patch","minor","major","prepatch","preminor","premajor","prerelease"]'), github.event.inputs.release-type) }} == false
+        if: ${{ contains(fromJSON('["patch","minor","major","prepatch","preminor","premajor","prerelease"]'), github.event.inputs.release-type) }} == false
         uses: actions/github-script@v3
         with:
           script: core.setFailed('Please choose a valid Release Type!')
