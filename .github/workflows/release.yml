@@ -7,14 +7,14 @@ on:
         required: true
         type: choice
         options:
-        - 'please select'
-        - 'patch'
-        - 'minor'
-        - 'major'
-        - 'prepatch'
-        - 'preminor'
-        - 'premajor'
-        - 'prerelease'
+        - please select
+        - patch
+        - minor
+        - major
+        - prepatch
+        - preminor
+        - premajor
+        - prerelease
 jobs:
   build:
     runs-on: ubuntu-latest
