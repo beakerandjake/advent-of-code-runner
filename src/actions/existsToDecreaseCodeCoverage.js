@@ -11,6 +11,4 @@ export const uncoveredFunction = async ({ year }) => {
   const q = z / 2;
   const p = year * q;
   console.log('p', p);
-  const zz = 1;
 };
-
