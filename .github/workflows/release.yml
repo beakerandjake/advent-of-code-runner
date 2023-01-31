@@ -6,6 +6,7 @@ on:
         description: 'Release type'
         required: true
         type: choice
+        default: 'please select'
         options:
         - 'patch'
         - 'minor'
