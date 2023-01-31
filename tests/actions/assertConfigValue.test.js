@@ -15,6 +15,12 @@ describe('assertInitialized()', () => {
   });
 
   test.each([
+    undefined, null, '',
+  ])('throws if key is: "%s"', async (key) => {
+    expect(() => assertConfigValue(key)).toThrow();
+  });
+
+  test.each([
     true, {}, [], 1234, 'ASDF', new Date(),
   ])('returns true if value is: "%s"', (value) => {
     const key = 'QWER';
@@ -30,7 +36,7 @@ describe('assertInitialized()', () => {
 
   test.each([
     false, 0, '', null, undefined, NaN,
-  ])('returns true if value is: "%s"', (value) => {
+  ])('returns false if value is: "%s"', (value) => {
     const key = 'QWER';
     getConfigValue.mockImplementation((x) => {
       if (x === key) {
