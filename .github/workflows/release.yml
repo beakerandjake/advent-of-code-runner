@@ -21,7 +21,7 @@ jobs:
     steps:
       - name: Fail if Release Type - "${{ github.event.inputs.release-type }}" is unsupported
         if: contains(fromJSON('["patch","minor","major","prepatch","preminor","premajor","prerelease"]'), github.event.inputs.release-type) == false
-        uses: actions/github-script@v3
+        uses: actions/github-script@v6
         with:
           script: core.setFailed('Please choose a valid Release Type!')
     
