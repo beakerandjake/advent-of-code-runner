@@ -20,15 +20,14 @@ jobs:
         uses: actions/checkout@v3
         with:
           token: ${{ secrets.PAT_FOR_GITHUB }}
-            
+          
       - id: get-changelog
         name: Get changelog
-        uses: @superfaceai/release-changelog-action@b1411d74107d4691016c93940673c67535a927aa
+        uses: superfaceai/release-changelog-action@b1411d74107d4691016c93940673c67535a927aa
         with:
           path-to-changelog: CHANGELOG.md
           version: 1.0.0
           operation: read
           
-          
-#       - name: Log changelog
-#         run: echo ${{ steps.get-changelog.outputs.changelog }}
+      - name: Log changelog
+        run: echo ${{ steps.get-changelog.outputs.changelog }}
