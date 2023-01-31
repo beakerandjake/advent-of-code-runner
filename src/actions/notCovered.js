@@ -28,7 +28,6 @@ export const uncoveredFunction2 = async ({ year }) => {
   console.log('p', p);
 };
 
-
 export const uncoveredFunction3 = async ({ year }) => {
   if (year === 2022) {
     throw new Error('WOOF');
