@@ -19,7 +19,7 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - name: Fail if Release Type - "${{ github.event.inputs.release-type }}" is unsupported
+      - name: Fail if release type not selected
         if: contains(fromJSON('["patch","minor","major","prepatch","preminor","premajor","prerelease"]'), github.event.inputs.release-type) == false
         uses: actions/github-script@v6
         with:
