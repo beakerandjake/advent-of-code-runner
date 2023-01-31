@@ -30,4 +30,4 @@ jobs:
           operation: read
           
       - name: Log changelog
-        run: echo ${{ steps.get-changelog.outputs.changelog }}
+        run: echo "${{ steps.get-changelog.outputs.changelog }}"
