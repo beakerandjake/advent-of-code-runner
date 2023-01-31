@@ -5,7 +5,7 @@ import { mockConfig, mockLogger } from '../mocks.js';
 
 // setup mocks
 mockLogger();
-const { getConfigValue } = mockConfig();
+mockConfig();
 jest.unstable_mockModule('node:child_process', () => ({ spawn: jest.fn() }));
 
 // import after mocks set up

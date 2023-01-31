@@ -24,7 +24,7 @@ jest.unstable_mockModule('../../src/persistence/cachedValue.js', () => ({
 
 // import after setting up the mock so the modules import the mocked version
 // const { CachedValue } = await import('../src/persistence/cachedValue.js');
-const { readJson, writeJson, pathExists } = await import('fs-extra/esm');
+const { readJson, writeJson } = await import('fs-extra/esm');
 const { getValue, setValue } = await import('../../src/persistence/userDataFile.js');
 
 beforeEach(() => {

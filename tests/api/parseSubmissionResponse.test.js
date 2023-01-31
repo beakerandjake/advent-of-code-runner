@@ -168,7 +168,6 @@ describe('parseSubmissionResponse', () => {
       expect(correct).toBe(true);
     });
 
-
     test('matches bad level', () => {
       const input = 'CATS';
       getConfigValue.mockReturnValue({

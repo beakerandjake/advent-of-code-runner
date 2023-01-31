@@ -2,7 +2,6 @@ import { describe, jest, test } from '@jest/globals';
 import { workerMessageTypes } from '../../src/solutions/workerMessageTypes';
 import {
   SolutionWorkerMissingDataError,
-  UserSolutionAnswerInvalidError,
   UserSolutionFileNotFoundError,
   UserSolutionMissingFunctionError,
   UserSolutionThrewError,

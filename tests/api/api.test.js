@@ -16,7 +16,7 @@ const mockFetch = jest.fn();
 global.fetch = mockFetch;
 
 // import after mocks are setup
-const { extractTextContentOfMain, sanitizeMessage, parseResponseMessage } = await import('../../src/api/parseSubmissionResponse.js');
+const { sanitizeMessage, parseResponseMessage } = await import('../../src/api/parseSubmissionResponse.js');
 const { downloadInput, submitSolution } = await import('../../src/api/api.js');
 
 beforeEach(() => {
