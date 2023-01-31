@@ -49,17 +49,6 @@ const readMetaFromPackageJson = async () => {
   };
 };
 
-/**
- * Attempts to parse and return an integer from the given value.
- * If the integer does not parse or is not positive then default value is returned.
- * @param {String} value
- * @param {Any} defaultValue
- */
-const parsePositiveInt = (value, defaultValue = null) => {
-  const parsed = Number.parseInt(value, 10);
-  return Number.isFinite(parsed) && parsed > 0 ? parsed : defaultValue;
-};
-
 const CONFIG = {
   cwd,
   meta: await readMetaFromPackageJson(),
