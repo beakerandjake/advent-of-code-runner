@@ -1,5 +1,6 @@
-# Creates a new npm release of this package. 
-# Bumps version in package.json, updates CHANGELOG, creates git tag
+# Creates a new npm release of this package
+# Bumps version in package.json, updates CHANGELOG, creates git tag 
+# Creates github release
 
 name: Release
 on:
