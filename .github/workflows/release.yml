@@ -56,10 +56,10 @@ jobs:
           cache: 'npm'
           registry-url: 'https://registry.npmjs.org'
         
-# #       - name: Run Tests
-# #         run: |
-# #           npm ci
-# #           npm test
+      - name: Run Tests
+        run: |
+          npm ci
+          npm test
 
       - name: npm version (@latest)
         if: startsWith(github.event.inputs.release-type, 'pre') != true
