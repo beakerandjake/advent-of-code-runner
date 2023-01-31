@@ -1,0 +1,83 @@
+name: Release
+on:
+  workflow_dispatch:
+    inputs:
+      release-type:
+        description: 'Release type'
+        required: true
+        type: choice
+        options:
+        - 'patch'
+        - 'minor'
+        - 'major'
+        - 'prepatch'
+        - 'preminor'
+        - 'premajor'
+        - 'prerelease'
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout project
+        uses: actions/checkout@v3
+      
+      - name: Configure Git User
+        run: |
+          git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git config --global user.name "github-actions[bot]"
+      
+      - name: Setup Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+          cache: 'npm'
+          registry-url: 'https://registry.npmjs.org'
+        
+#       - name: Run Tests
+#         run: |
+#           npm ci
+#           npm test
+
+      - name: npm version (@latest)
+        if: startsWith(github.event.inputs.release-type, 'pre') != true
+        run: |
+          echo "NEW_VERSION=$(npm --no-git-tag-version version $RELEASE_TYPE)" >> $GITHUB_ENV
+          echo "RELEASE_TAG=latest" >> $GITHUB_ENV
+        env:
+          RELEASE_TYPE: ${{ github.event.inputs.release-type }}
+
+      - name: npm version (@prerelease)
+        if: startsWith(github.event.inputs.release-type, 'pre')
+        run: |
+          echo $RELEASE_TYPE
+          echo "NEW_VERSION=$(npm --no-git-tag-version --preid=beta version $RELEASE_TYPE)" >> $GITHUB_ENV
+          echo "RELEASE_TAG=beta" >> $GITHUB_ENV
+        env:
+          RELEASE_TYPE: ${{ github.event.inputs.release-type }}
+          
+      - name: Update CHANGELOG
+        uses: superfaceai/release-changelog-action@b1411d74107d4691016c93940673c67535a927aa
+        with:
+          path-to-changelog: CHANGELOG.md
+          version: ${{ env.NEW_VERSION }}
+          operation: release
+          
+      - name: Commit changes & tag
+        run: |
+          git add "package.json"
+          git add "package-lock.json"
+          git add "CHANGELOG.md"
+          git commit -m "chore: release ${{ env.NEW_VERSION }}"
+          git tag ${{ env.NEW_VERSION }}
+          
+      - name: Publish to npm
+        run: npm publish --tag ${{ env.RELEASE_TAG }}
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
+          
+      - name: Push changes & tags
+        env:
+          GITHUB_TOKEN: ${{ secrets.PAT_FOR_GITHUB }}
+        run: git push origin && git push --tags
+  
+
