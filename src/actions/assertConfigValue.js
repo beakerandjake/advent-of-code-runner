@@ -5,7 +5,7 @@ import { getConfigValue } from '../config.js';
  * @param {String} key
  */
 export const assertConfigValue = (key) => {
-  if (key == null) {
+  if (key == null || key === '') {
     throw new Error('null or undefined key');
   }
 
