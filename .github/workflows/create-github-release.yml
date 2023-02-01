@@ -1,6 +1,7 @@
 # Creates a Github Release whenever new version tags are pushed to main branch.
 
 name: Create Github Release
+run-name: Create Github release for tag ${{ github.ref }}
 on: 
   push:
     tags:
