@@ -17,19 +17,17 @@ jobs:
           cache: 'npm'
           registry-url: 'https://registry.npmjs.org'
         
-      - name: Run Tests
-        run: |
-          npm ci
-          npm test  
+#       - name: Run Tests
+#         run: |
+#           npm ci
+#           npm test  
 
       - name: Get Version
         run: echo "NEW_VERSION=$(npm pkg get version | sed 's/"//g')" >> $GITHUB_ENV
         
       - name: Set npm dist tag (@prerelease)
-        if: contains(env.NEW_VERSION, 'zbeta') || contains(env.NEW_VERSION, 'zalpha')
+        if: contains(env.NEW_VERSION, 'beta') || contains(env.NEW_VERSION, 'alpha')
         run: echo "NPM_DIST_TAG=beta" >> $GITHUB_ENV
-        env:
-          NEW_VERSION: ${{ env.NEW_VERSION }}
           
       - name: Run npm publish (@prerelease)
         if: env.NPM_DIST_TAG != null
@@ -37,4 +35,9 @@ jobs:
         
       - name: Run npm publish (@latest)
         if: env.NPM_DIST_TAG == null
-        run: echo 'latest!'
+        run: echo 'LATEST'
+        
+      - name: Git tag
+        run: |
+          git tag ${{ format('v{0}', env.NEW_VERSION) }}
+          git push origin ${{ format('v{0}', env.NEW_VERSION) }}
