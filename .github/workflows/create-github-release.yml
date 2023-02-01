@@ -40,6 +40,5 @@ jobs:
       - name: Create Github Release
         uses: softprops/action-gh-release@de2c0eb89ae2a093876385947365aca7b0e5f844 # v0.1.15
         with:
-          tag_name: ${{ env.NEW_VERSION }}
           body: ${{ steps.get-changelog.outputs.changelog }}
           prerelease: ${{ contains(env.NEW_VERSION, 'beta') || contains(env.NEW_VERSION, 'alpha') }}
