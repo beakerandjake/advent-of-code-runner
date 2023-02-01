@@ -7,6 +7,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+- Github Action generates correct tag name
+
 ## [1.3.2-beta.2] - 2023-02-01
 ### Added
 - First pass Github Actions for publishing to NPM / Creating github Release
