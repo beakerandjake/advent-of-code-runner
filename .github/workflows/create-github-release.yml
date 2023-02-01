@@ -1,0 +1,15 @@
+# Runs whne new version tags are pushed to main branch then creates a github release.
+
+name: Create Github Release
+on: 
+  push:
+    tags:
+#       - 'v[0-9]+.[0-9]+.[0-9]'
+      - 'v[0-9]+.[0-9]+.[0-9]-[a-zA-Z]*.?[0-9]*'
+jobs:
+  create-release:
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
+    steps:
+      - name: LOG
+        run: echo 'Hello world it worked!'
