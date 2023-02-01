@@ -45,6 +45,11 @@ jobs:
         with:
           # using custom token to bypass branch protections and push directly to main.
           token: ${{ secrets.WORKFLOW_GITHUB_PAT }}
+          
+      - name: Configure Git User
+        run: |
+          git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git config --global user.name "github-actions[bot]"
             
       - name: Setup Node
         uses: actions/setup-node@v3
