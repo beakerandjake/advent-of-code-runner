@@ -17,10 +17,10 @@ jobs:
           cache: 'npm'
           registry-url: 'https://registry.npmjs.org'
         
-#       - name: Run Tests
-#         run: |
-#           npm ci
-#           npm test  
+      - name: Run Tests
+        run: |
+          npm ci
+          npm test  
 
       - name: Get Version
         run: echo "NEW_VERSION=$(npm pkg get version | sed 's/"//g')" >> $GITHUB_ENV
