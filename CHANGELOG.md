@@ -7,6 +7,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## Added
+- First pass Github Actions for publishing to NPM / Creating github Release
+
 ## [1.3.2-beta.1] - 2023-01-31
 
 ## [1.3.2-beta.0] - 2023-01-31
