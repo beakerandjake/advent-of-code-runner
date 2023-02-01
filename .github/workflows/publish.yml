@@ -1,0 +1,115 @@
+# Publish a new release of this package to NPM
+
+name: Release
+on:
+  workflow_dispatch:
+    inputs:
+      release-type:
+        description: 'Release type'
+        required: true
+        type: choice
+        # The first option provided is the default selection, make this "please select" to ensure user has to explicitly choose a release type. 
+        options:
+        - please select
+        - patch
+        - minor
+        - major
+        - prepatch
+        - preminor
+        - premajor
+        - prerelease
+        
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Validate selected release type - "${{ github.event.inputs.release-type }}"
+        if: contains(fromJSON('["patch","minor","major","prepatch","preminor","premajor","prerelease"]'), github.event.inputs.release-type) == false
+        uses: actions/github-script@v6
+        with:
+          script: core.setFailed('Please choose a valid Release Type!')
+          
+      - name: Harden Runner
+        uses: step-security/harden-runner@18bf8ad2ca49c14cbb28b91346d626ccfb00c518 # v2.1.0
+        with:
+          disable-sudo: true
+          egress-policy: block
+          disable-telemetry: true
+          allowed-endpoints: >
+            github.com:443
+            registry.npmjs.org:443
+            api.github.com:443
+            
+      - name: Checkout project
+        uses: actions/checkout@v3
+        with:
+          token: ${{ secrets.PAT_FOR_GITHUB }}
+            
+      - name: Setup Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+          cache: 'npm'
+          registry-url: 'https://registry.npmjs.org'
+        
+      - name: Run Tests
+        run: |
+          npm ci
+          npm test
+          
+      - name: npm version (@latest)
+        if: startsWith(github.event.inputs.release-type, 'pre') != true
+        run: |
+          echo "NEW_VERSION=$(npm --no-git-tag-version version $RELEASE_TYPE)" >> $GITHUB_ENV
+          echo "NPM_DIST_TAG=latest" >> $GITHUB_ENV
+        env:
+          RELEASE_TYPE: ${{ github.event.inputs.release-type }}
+
+      - name: npm version (@prerelease)
+        if: startsWith(github.event.inputs.release-type, 'pre')
+        run: |
+          echo $RELEASE_TYPE
+          echo "NEW_VERSION=$(npm --no-git-tag-version --preid=beta version $RELEASE_TYPE)" >> $GITHUB_ENV
+          echo "NPM_DIST_TAG=beta" >> $GITHUB_ENV
+        env:
+          RELEASE_TYPE: ${{ github.event.inputs.release-type }}
+          
+      - name: Update CHANGELOG
+        uses: superfaceai/release-changelog-action@b1411d74107d4691016c93940673c67535a927aa # v2.0.0
+        with:
+          path-to-changelog: CHANGELOG.md
+          version: ${{ env.NEW_VERSION }}
+          operation: release
+          
+      - name: Commit changes & tag
+        run: |
+          git add "package.json"
+          git add "package-lock.json"
+          git add "CHANGELOG.md"
+          git commit -m "chore: release v${{ env.NEW_VERSION }}"
+          git tag ${{ format('v{0}', env.NEW_VERSION) }}
+          
+      - name: Publish to npm
+        run: npm publish --tag ${{ env.NPM_DIST_TAG }}
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
+          
+      - name: Push changes & tags
+        run: git push --atomic origin main ${{ format('v{0}', env.NEW_VERSION) }}
+        
+      - name: Get changes for Release
+        id: get-changelog
+        uses: superfaceai/release-changelog-action@b1411d74107d4691016c93940673c67535a927aa # v2.0.0
+        with:
+          path-to-changelog: CHANGELOG.md
+          version: 1.3.1-beta.4
+          operation: read
+          
+      - name: Create Github Release
+        uses: softprops/action-gh-release@de2c0eb89ae2a093876385947365aca7b0e5f844 # v0.1.15
+        with:
+          tag_name: ${{ env.NEW_VERSION }}
+          prerelease: ${{ startsWith(github.event.inputs.release-type, 'pre') }}
+          body: ${{ steps.get-changelog.outputs.changelog }}
+
+          
