@@ -1,6 +1,6 @@
 # Publish a new release of this package to NPM
 
-name: Release
+name: Publish
 on:
   workflow_dispatch:
     inputs:
@@ -20,7 +20,7 @@ on:
         - prerelease
         
 jobs:
-  build:
+  publish:
     runs-on: ubuntu-latest
     steps:
       - name: Validate selected release type - "${{ github.event.inputs.release-type }}"
@@ -118,4 +118,3 @@ jobs:
           prerelease: ${{ startsWith(github.event.inputs.release-type, 'pre') }}
           body: ${{ steps.get-changelog.outputs.changelog }}
 
-          
