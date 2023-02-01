@@ -38,9 +38,9 @@ jobs:
       run: npm test
       if: matrix.node-version != '18.x'  
       
-    - name: Upload Coverage to Codecov
-      uses: codecov/codecov-action@d9f34f8cd5cb3b3eb79b3e4b5dae3a16df499a70
-      if: matrix.node-version == '18.x'   
+#     - name: Upload Coverage to Codecov
+#       uses: codecov/codecov-action@d9f34f8cd5cb3b3eb79b3e4b5dae3a16df499a70
+#       if: matrix.node-version == '18.x'   
       
   lint:
     name: Linting
