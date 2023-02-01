@@ -97,14 +97,13 @@ describe('api', () => {
       await expect(async () => submitSolution(2022, 1, 1, 'solution', 'auth')).rejects.toThrow(/authentication/i);
     });
 
-    test.each([
-      400, 302,
-    ])('throws on auth failed with: %s', async (status) => {
+    test('throws on 404', async () => {
       mockFetch.mockImplementation(() => Promise.resolve({
-        status,
-        statusText: 'you no logged in pal',
+        ok: false,
+        status: 404,
+        statusText: 'not found pal',
       }));
-      await expect(async () => submitSolution(2022, 1, 1, 'solution', 'auth')).rejects.toThrow(/authentication/i);
+      await expect(async () => submitSolution(2022, 1, 1, 'solution', 'auth')).rejects.toThrow(/found/i);
     });
 
     test('throws on response not ok', async () => {
