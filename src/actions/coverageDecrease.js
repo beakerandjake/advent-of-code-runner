@@ -100,19 +100,3 @@ export const assertUserConfirmation6 = (question) => {
   };
   return _.assertUserConfirmation;
 };
-
-export const assertUserConfirmation7 = (question) => {
-  if (question == null) {
-    throw new Error('null or undefined question');
-  }
-
-  // create a variable for this fn instead of just returning the fn
-  // this gives the fn a .name property and makes debugging easier.
-  const _ = {
-    assertUserConfirmation: async () => {
-      const { confirmed } = await inquirer.prompt({ ...question, type: 'confirm' });
-      return confirmed;
-    },
-  };
-  return _.assertUserConfirmation;
-};
