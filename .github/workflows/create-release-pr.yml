@@ -71,13 +71,6 @@ jobs:
           version: ${{ env.NEW_VERSION }}
           operation: release
           
-      - name: commit changes
-        run: |
-          git add "package.json"
-          git add "package-lock.json"
-          git add "CHANGELOG.md"
-          git commit -m "chore: release ${{ env.NEW_VERSION }}"
-          
       - id: get-changelog
         name: Get changes for Release
         uses: superfaceai/release-changelog-action@b1411d74107d4691016c93940673c67535a927aa # v2.0.0
