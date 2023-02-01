@@ -1,9 +1,8 @@
-# Runs whne new version tags are pushed to main branch then creates a github release.
-#       - 'v[0-9]+.[0-9]+.[0-9]'
-# v1.3.2-beta.1
+# Creates a Github Release whenever new version tags are pushed to main branch.
 
 name: Create Github Release
 on: 
+  workflow_dispatch:
   push:
     tags:
       - 'v[0-9]+.[0-9]+.[0-9]-[a-zA-Z]+.[0-9]+'
@@ -13,5 +12,34 @@ jobs:
     runs-on: ubuntu-latest
     if: github.ref == 'refs/heads/main'
     steps:
-      - name: LOG
-        run: echo 'Hello world it worked!'
+      - name: Harden Runner
+        uses: step-security/harden-runner@18bf8ad2ca49c14cbb28b91346d626ccfb00c518 # v2.1.0
+        with:
+          egress-policy: audit
+          
+      - name: Checkout project
+        uses: actions/checkout@v3
+        
+      - name: Setup Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+          cache: 'npm'
+        
+      - name: Get Version
+        run: echo "NEW_VERSION=$(npm pkg get version | sed 's/"//g')" >> $GITHUB_ENV
+          
+      - name: Get changes for Release
+        id: get-changelog
+        uses: superfaceai/release-changelog-action@b1411d74107d4691016c93940673c67535a927aa # v2.0.0
+        with:
+          path-to-changelog: CHANGELOG.md
+          version: ${{ env.NEW_VERSION }}
+          operation: read
+          
+      - name: Create Github Release
+        uses: softprops/action-gh-release@de2c0eb89ae2a093876385947365aca7b0e5f844 # v0.1.15
+        with:
+          tag_name: ${{ env.NEW_VERSION }}
+          body: ${{ steps.get-changelog.outputs.changelog }}
+          prerelease: ${{ contains(env.NEW_VERSION, 'beta') || contains(env.NEW_VERSION, 'alpha') }}
