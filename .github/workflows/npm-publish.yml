@@ -33,11 +33,15 @@ jobs:
           
       - name: Run npm publish (@prerelease)
         if: env.NPM_DIST_TAG != null
-        run: echo 'PRERELEASE!'
+        run: npm publish --tag ${{ env.NPM_DIST_TAG }}
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
         
       - name: Run npm publish (@latest)
         if: env.NPM_DIST_TAG == null
-        run: echo 'LATEST'
+        run: npm publish
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
         
       - name: Git tag
         run: |
