@@ -93,7 +93,7 @@ jobs:
           git add "package-lock.json"
           git add "CHANGELOG.md"
           git commit -m "chore: release v${{ env.NEW_VERSION }}"
-          git tag ${{ format('v{0}', env.NEW_VERSION) }}
+          git tag ${{ env.NEW_VERSION) }}
           
       - name: Publish to npm
         run: npm publish --tag ${{ env.NPM_DIST_TAG }}
@@ -101,7 +101,7 @@ jobs:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
           
       - name: Push changes & tags
-        run: git push --atomic origin main ${{ format('v{0}', env.NEW_VERSION) }}
+        run: git push --atomic origin main ${{ env.NEW_VERSION) }}
         
       - name: Get changes for Release
         id: get-changelog
@@ -114,6 +114,7 @@ jobs:
       - name: Create Github Release
         uses: softprops/action-gh-release@de2c0eb89ae2a093876385947365aca7b0e5f844 # v0.1.15
         with:
+          tag_name: ${{ env.NEW_VERSION }}
           prerelease: ${{ startsWith(github.event.inputs.release-type, 'pre') }}
           body: ${{ steps.get-changelog.outputs.changelog }}
 
