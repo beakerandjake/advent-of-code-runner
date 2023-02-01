@@ -15,6 +15,11 @@ jobs:
       matrix:
         node-version: [18.x, 19.x]
     steps:
+    - name: Harden runner
+      uses: step-security/harden-runner@18bf8ad2ca49c14cbb28b91346d626ccfb00c518 # v2.1.0
+      with:
+        egress-policy: audit
+      
     - name: Checkout Repository
       uses: actions/checkout@v3
     
@@ -29,13 +34,11 @@ jobs:
 
     - name: Run Tests
       run: npm test -- --coverage 
-    
-    - name: Upload Coverage Data to Coveralls
-      uses: coverallsapp/github-action@9ba913c152ae4be1327bfb9085dc806cedb44057 # v 1.1.3
+        
+    - name: Upload coverage to Codecov
+      uses: codecov/codecov-action@d9f34f8cd5cb3b3eb79b3e4b5dae3a16df499a70 #v3.1.1
       with:
-        github-token: ${{ secrets.GITHUB_TOKEN }}
-        flag-name: node-${{ matrix.node-version }}
-        parallel: true
+        fail_ci_if_error: true
       
   lint:
     name: Linting
@@ -55,13 +58,3 @@ jobs:
       
     - name: Linting
       run: npm run lint
-      
-  coveralls-finish:
-    needs: test
-    runs-on: ubuntu-latest
-    steps:
-    - name: Coveralls Finished
-      uses: coverallsapp/github-action@9ba913c152ae4be1327bfb9085dc806cedb44057 # v 1.1.3
-      with:
-        github-token: ${{ secrets.GITHUB_TOKEN }}
-        parallel-finished: true
