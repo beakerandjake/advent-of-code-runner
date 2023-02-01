@@ -9,7 +9,7 @@ on:
 
 jobs:
   coverage:
-    name: Test Coverage (Node LTS)
+    name: Test with Coverage (Node LTS)
     runs-on: ubuntu-latest
     steps:      
     - name: Harden runner
@@ -36,7 +36,7 @@ jobs:
         
     - name: Install Packages
       run: npm ci
-     
+      
     - name: Run Tests (With Coverage)
       run: npm test -- --coverage 
       
@@ -66,7 +66,7 @@ jobs:
     
   # Run tests without coverage on non-lts versions of node.
   tests:
-    name: Run Tests (Node ${{ matrix.node-version }})
+    name: Test (Node ${{ matrix.node-version }})
     runs-on: ubuntu-latest
     strategy:
       matrix:
