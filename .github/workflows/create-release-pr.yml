@@ -36,11 +36,6 @@ jobs:
           
       - name: checkout project
         uses: actions/checkout@v3
-        
-#       - name: configure git user
-#         run: |
-#           git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
-#           git config --global user.name "github-actions[bot]"
           
       - name: setup node
         uses: actions/setup-node@v3
@@ -68,10 +63,7 @@ jobs:
           echo "RELEASE_TAG=beta" >> $GITHUB_ENV
         env:
           RELEASE_TYPE: ${{ github.event.inputs.release-type }}
-          
-      - name: create release branch - release/{{ env.NEW_VERSION }} 
-        run: git checkout -b ${{ format('release/{0}',env.NEW_VERSION) }} 
-          
+
       - name: update CHANGELOG
         uses: superfaceai/release-changelog-action@b1411d74107d4691016c93940673c67535a927aa # v2.0.0
         with:
@@ -86,7 +78,23 @@ jobs:
           git add "CHANGELOG.md"
           git commit -m "chore: release ${{ env.NEW_VERSION }}"
           
-#       - name: create pull request
-#         run: gh pr create --base main --head branch_to_merge --title 'Merge branch_to_merge into base_branch' --body 'Created by Github action'
-#         env:
-#           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - id: get-changelog
+        name: Get changes for Release
+        uses: superfaceai/release-changelog-action@b1411d74107d4691016c93940673c67535a927aa # v2.0.0
+        with:
+          path-to-changelog: CHANGELOG.md
+          version: ${{ env.NEW_VERSION }}
+          operation: read
+          
+      - name: create pull request
+        uses: peter-evans/create-pull-request@2b011faafdcbc9ceb11414d64d0573f37c774b04
+        with:
+          branch: ${{ format('release/{0}', env.NEW_VERSION) }}
+          title: Release ${{ env.NEW_VERSION }} 
+          body: |
+            Automated PR to bump the package.json version and update the CHANGELOG to prepare for a release. 
+            Once merged into main, you can run the 'TODO LINK' action to perform an actual publish to NPM.
+            
+            ## Changes
+            
+            ${{ steps.get-changelog.outputs.changelog }}
