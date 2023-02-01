@@ -93,7 +93,7 @@ jobs:
           git add "package-lock.json"
           git add "CHANGELOG.md"
           git commit -m "chore: release v${{ env.NEW_VERSION }}"
-          git tag ${{ env.NEW_VERSION) }}
+          git tag ${{ env.NEW_VERSION }}
           
       - name: Publish to npm
         run: npm publish --tag ${{ env.NPM_DIST_TAG }}
@@ -101,7 +101,7 @@ jobs:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
           
       - name: Push changes & tags
-        run: git push --atomic origin main ${{ env.NEW_VERSION) }}
+        run: git push --atomic origin main ${{ env.NEW_VERSION }}
         
       - name: Get changes for Release
         id: get-changelog
