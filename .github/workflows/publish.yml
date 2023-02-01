@@ -43,6 +43,7 @@ jobs:
       - name: Checkout project
         uses: actions/checkout@v3
         with:
+          # using custom token to bypass branch protections and push directly to main.
           token: ${{ secrets.WORKFLOW_GITHUB_PAT }}
             
       - name: Setup Node
