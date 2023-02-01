@@ -26,7 +26,7 @@ jobs:
         run: echo "NEW_VERSION=$(npm pkg get version | sed 's/"//g')" >> $GITHUB_ENV
         
       - name: Set npm dist tag (@prerelease)
-        if: contains(env.NEW_VERSION, 'beta') || contains(env.NEW_VERSION, 'alpha')
+        if: contains(env.NEW_VERSION, 'zbeta') || contains(env.NEW_VERSION, 'zalpha')
         run: echo "NPM_DIST_TAG=beta" >> $GITHUB_ENV
         env:
           NEW_VERSION: ${{ env.NEW_VERSION }}
