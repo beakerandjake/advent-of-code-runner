@@ -1,0 +1,40 @@
+# Creates a new npm release of this package
+
+name: Publish to npm
+on:
+  workflow_dispatch:
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:   
+      - name: Checkout project
+        uses: actions/checkout@v3
+        with:
+          token: ${{ secrets.PAT_FOR_GITHUB }}
+      
+      - name: Setup Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+          cache: 'npm'
+          registry-url: 'https://registry.npmjs.org'
+        
+#       - name: Run Tests
+#         run: |
+#           npm ci
+#           npm test  
+
+      - name: Get Version
+        run: echo "NEW_VERSION=$(npm pkg get version | sed 's/"//g')" >> $GITHUB_ENV
+        
+      - name: Get npm release tag (@prerelease)
+        if: contains($NEW_VERSION, 'beta') || contains($NEW_VERSION, 'alpha')
+        run: echo "NPM_RELEASE_TAG=beta" >> $GITHUB_ENV
+        env:
+          NEW_VERSION: ${{ env.NEW_VERSION }}
+
+      - name: DEBUG LOG
+        run: |
+          echo 'hello world'
+          echo $NEW_VERSION
+          echo $NPM_RELEASE_TAG
