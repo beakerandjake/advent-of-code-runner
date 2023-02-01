@@ -82,7 +82,7 @@ jobs:
       - name: Create PR
         uses: peter-evans/create-pull-request@2b011faafdcbc9ceb11414d64d0573f37c774b04
         with:
-          token: ${{ secrets.CREATE_PR_GITHUB_PAT }}
+          token: ${{ secrets.WORKFLOW_GITHUB_PAT }}
           branch: ${{ format('release/{0}', env.NEW_VERSION) }}
           title: Release ${{ env.NEW_VERSION }} 
           body: |
