@@ -11,6 +11,7 @@ on:
 jobs:
   create-release:
     runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
     steps:
       - name: LOG
         run: echo 'Hello world it worked!'
