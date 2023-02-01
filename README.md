@@ -7,7 +7,7 @@ A Node.Js CLI solution generator and runner for [advent of code](https://advento
 [![npm](https://img.shields.io/npm/v/advent-of-code-runner)](https://www.npmjs.com/package/advent-of-code-runner)
 [![npm](https://img.shields.io/npm/dt/advent-of-code-runner)](https://www.npmjs.com/package/advent-of-code-runner)
 [![node-current](https://img.shields.io/node/v/advent-of-code-runner)](https://www.npmjs.com/package/advent-of-code-runner)
-[![codecov](https://codecov.io/github/beakerandjake/advent-of-code-runner/branch/main/graph/badge.svg)](https://codecov.io/github/beakerandjake/advent-of-code-runner)
+[![Coverage Status](https://coveralls.io/repos/github/beakerandjake/advent-of-code-runner/badge.svg?branch=main)](https://coveralls.io/github/beakerandjake/advent-of-code-runner?branch=main)
 
 ## :mrs_claus: Features
 - Quickly and easily scaffolds an empty directory, creating all required solution files (similar to create-react-app). 
