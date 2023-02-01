@@ -1,4 +1,4 @@
-# Creates a release pull request into main, bumps package version and updates changelog.
+# Updates the package version and CHANGELOG, then creates a release pull request into main.
 
 name: Create Release Pull Request
 on:
