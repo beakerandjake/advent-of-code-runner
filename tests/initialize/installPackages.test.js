@@ -37,6 +37,52 @@ describe('initialize', () => {
       await expect(promise).rejects.toThrow();
     });
 
+    test('throws if install raises error event', async () => {
+      let errorCallback;
+      spawn.mockReturnValue({
+        stderr: {
+          on: jest.fn(),
+        },
+        once: (key, callback) => {
+          if (key === 'error') {
+            errorCallback = callback;
+          }
+        },
+      });
+
+      const promise = installPackages();
+      await Promise.resolve();
+      errorCallback(new Error('DARN'));
+      await expect(promise).rejects.toThrow();
+    });
+
+    test('logs stderr on exit', async () => {
+      let exitCallback;
+      let stdErrOnCallback;
+      spawn.mockReturnValue({
+        stderr: {
+          on: (key, callback) => {
+            if (key === 'data') {
+              stdErrOnCallback = callback;
+            }
+          },
+        },
+        once: (key, callback) => {
+          if (key === 'exit') {
+            exitCallback = callback;
+          }
+        },
+      });
+      const errorMessage = 'That failed so hard!';
+
+      const promise = installPackages();
+      await Promise.resolve();
+      stdErrOnCallback(errorMessage);
+      await Promise.resolve();
+      exitCallback(1);
+      await expect(promise).rejects.toThrow(errorMessage);
+    });
+
     test('resolves if install succeeds', async () => {
       let exitCallback;
       spawn.mockReturnValue({
