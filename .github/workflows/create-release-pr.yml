@@ -1,4 +1,4 @@
-# Creates a release pull request into main.
+# Creates a release pull request into main, bumps package version and updates changelog.
 
 name: Create Release Pull Request
 on:
@@ -42,11 +42,6 @@ jobs:
         with:
           node-version: 18
           cache: 'npm'
-          
-#       - name: run tests
-#         run: |
-#           npm ci
-#           npm test
 
       - name: npm version (@latest)
         if: startsWith(github.event.inputs.release-type, 'pre') != true
@@ -85,9 +80,12 @@ jobs:
           branch: ${{ format('release/{0}', env.NEW_VERSION) }}
           title: Release ${{ env.NEW_VERSION }} 
           body: |
-            Automated PR to bump the package.json version and update the CHANGELOG to prepare for a release. 
-            Once merged into main, you can run the 'TODO LINK' action to perform an actual publish to NPM.
-            
+            ## Release ${{ env.NEW_VERSION }} 
+            _Automated Pull Request created by Github Action_
+            - Updates package.json with new version and updates CHANGELOG.md.
+            - Once merged into main, you can run the 'TODO LINK' action to perform an actual publish to NPM.
+
             ## Changes
+            _from CHANGELOG.md_
             
             ${{ steps.get-changelog.outputs.changelog }}
