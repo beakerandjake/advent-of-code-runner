@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.3.2-beta.2] - 2023-02-01
+
 ## [1.3.2-beta.1] - 2023-01-31
 
 ## [1.3.2-beta.0] - 2023-01-31
@@ -23,7 +25,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - CHANGELOG is automatically updated during github release action.
 
-[Unreleased]: https://github.com/beakerandjake/advent-of-code-runner/compare/v1.3.2-beta.1...HEAD
+[Unreleased]: https://github.com/beakerandjake/advent-of-code-runner/compare/v1.3.2-beta.2...HEAD
+[1.3.2-beta.2]: https://github.com/beakerandjake/advent-of-code-runner/compare/v1.3.2-beta.1...v1.3.2-beta.2
 [1.3.2-beta.1]: https://github.com/beakerandjake/advent-of-code-runner/compare/v1.3.2-beta.0...v1.3.2-beta.1
 [1.3.2-beta.0]: https://github.com/beakerandjake/advent-of-code-runner/compare/v1.3.1...v1.3.2-beta.0
 [1.3.1]: https://github.com/beakerandjake/advent-of-code-runner/compare/v1.3.1-beta.4...v1.3.1
