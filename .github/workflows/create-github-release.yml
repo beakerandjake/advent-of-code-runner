@@ -1,12 +1,13 @@
 # Runs whne new version tags are pushed to main branch then creates a github release.
+#       - 'v[0-9]+.[0-9]+.[0-9]'
+# v1.3.2-beta.1
 
 name: Create Github Release
 on: 
   push:
     tags:
-#       - 'v[0-9]+.[0-9]+.[0-9]'
-# v1.3.2-beta.1
       - 'v[0-9]+.[0-9]+.[0-9]-[a-zA-Z]+.[0-9]+'
+      - 'v*'
 jobs:
   create-release:
     runs-on: ubuntu-latest
