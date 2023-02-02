@@ -1,0 +1,26 @@
+name: Test Changelog PR comment
+
+on:
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+        
+      - name: Get changed files
+        id: changed-files
+        uses: tj-actions/changed-files@db3ea27a0cf07135175be5efe7aaf84df6e0e6f0 # v35.5.0
+
+      - name: List all changed files
+        run: |
+          for file in ${{ steps.changed-files.outputs.all_changed_files }}; do
+            echo "$file was changed"
+          done
+
+
