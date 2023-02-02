@@ -7,9 +7,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-### Fixed
-- Update Changelog!
-
 ## [1.3.2-beta.3] - 2023-02-01
 ### Fixed
 - Github Action generates correct tag name
