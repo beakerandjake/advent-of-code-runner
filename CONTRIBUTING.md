@@ -1,5 +1,7 @@
 # Contributing Guide
-Hello thank you for showing interest in contributing to this project. Before submitting your contribution please be sure to read over this document.
+Hello! Thank you for showing interest in contributing to this project. 
+
+Before submitting your contribution please be sure to read over this document.
 
 ## Issue Reporting
 
@@ -29,13 +31,19 @@ If fixing a bug:
   - Ensure an issue has been created with the `bug` template.
   - Name your branch like following the pattern: `feature/(#issue number)-fix-bug-description` (e.g. feature/1234-fix-divide-by-zero)'
 
-There is no need to tag or bump a version in `package.json` that is done by maintainers when creating a release.
+There is no need to add a git tag or bump the `package.json` version, these are done by maintainers when creating a release.
 
-Pull requests run automated checks, they generally must pass for a PR to be merged:
-- linting
-- Unit testing
-- 
+Pull requests run a CI workflow, which generally must pass for the PR to be merged:
+- Run code linting.
+- Check that CHANGELOG has been updated.
+- Run Unit Tests.
+- Check code coverage.
 
+### Additional Pull Request Tips
+- Try to focus on accomplishing one thing, be it a feature or a bug fix. 
+- Try to do the least amount of change possible to accomplish the goal. 
+- Skip the temptation to make unecessary changes or refactors (this makes tracing changes easier in the future). 
+- If possible try not to introduce new dependencies.  
 
 ## Development Setup
 You will need Node.js version >= 18. 
