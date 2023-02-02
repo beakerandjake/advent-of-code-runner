@@ -1,12 +1,13 @@
 # Workflow to validate pull requests on main branch. Runs tests and linting and updates code coverage.
 
 name: CI
+run-name: CI for Pull Request #${{ github.event.pull_request.number }} - ${{ github.head_ref }}
 
 on:
   pull_request:
     branches: [ "main" ]
   workflow_dispatch:
-
+  
 jobs:
   coverage:
     name: Test with Coverage (Node LTS)
