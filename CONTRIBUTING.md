@@ -46,11 +46,14 @@ Pull requests run a CI workflow, which generally must pass for the PR to be merg
 - If possible try not to introduce new dependencies.  
 
 ## Development Setup
-You will need Node.js version >= 18. 
+You will need [git](http://git-scm.com/) and [Node.js](https://nodejs.org) version >= 18; [nvm](https://github.com/nvm-sh/nvm) is a very helpful way to install node.
 
 A high level overview of tools used:
-- Jest for unit testing
-- eslint for code linting
+- [Jest](https://github.com/facebook/jest) for unit testing
+- [eslint](https://github.com/eslint/eslint) for code linting
+- [winston](https://github.com/winstonjs/winston) for logging
+
+Once you have the repository on your machine, be sure to [install the npm packages](https://docs.npmjs.com/cli/v6/commands/npm-install).
 
 ## Project Structure
 
@@ -59,3 +62,12 @@ A high level overview of tools used:
 ## Tests
 
 ## Code Style Guide
+
+
+Inspo while creating:
+https://github.com/facebook/create-react-app/blob/main/CONTRIBUTING.md
+https://github.com/tj/commander.js/blob/master/CONTRIBUTING.md
+https://github.com/axios/axios/blob/v1.x/CONTRIBUTING.md
+https://reactjs.org/docs/how-to-contribute.html
+https://github.com/vuejs/core/blob/main/.github/contributing.md
+https://github.com/moment/moment/blob/develop/CONTRIBUTING.md
