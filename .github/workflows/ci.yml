@@ -4,8 +4,8 @@ name: CI
 run-name: CI for PR - ${{ github.event.pull_request.title || 'N/A' }}
 
 on:
-  pull_request:
-    branches: [ "main" ]
+#   pull_request:
+#     branches: [ "main" ]
   workflow_dispatch:
   
 jobs:
