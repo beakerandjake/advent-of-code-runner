@@ -4,8 +4,8 @@ name: CI
 run-name: CI for PR - ${{ github.event.pull_request.title || 'N/A' }}
 
 on:
-#   pull_request:
-#     branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
   workflow_dispatch:
   
 jobs:
@@ -45,26 +45,7 @@ jobs:
       uses: codecov/codecov-action@d9f34f8cd5cb3b3eb79b3e4b5dae3a16df499a70 #v3.1.1 
       with:
         fail_ci_if_error: true
-      
-  lint:
-    name: Linting
-    runs-on: ubuntu-latest
-    steps:
-    - name: Checkout Repository
-      uses: actions/checkout@v3
-    
-    - name: Setup Node
-      uses: actions/setup-node@v3
-      with:
-        node-version: 18
-        cache: 'npm'
         
-    - name: Install Packages
-      run: npm ci
-      
-    - name: Linting
-      run: npm run lint
-    
   # Run tests without coverage on non-lts versions of node.
   tests:
     name: Test (Node ${{ matrix.node-version }})
@@ -87,3 +68,88 @@ jobs:
 
       - name: Run Tests
         run: npm test
+      
+  linting:
+    name: Linting
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout Repository
+      uses: actions/checkout@v3
+    
+    - name: Setup Node
+      uses: actions/setup-node@v3
+      with:
+        node-version: 18
+        cache: 'npm'
+        
+    - name: Install Packages
+      run: npm ci
+      
+    - name: Linting
+      run: npm run lint
+        
+  pr-changelog-comment:
+    name: CHANGELOG enforcer
+    runs-on: ubuntu-latest
+    steps:
+      - name: Harden runner
+        uses: step-security/harden-runner@18bf8ad2ca49c14cbb28b91346d626ccfb00c518 # v2.1.0
+        with:
+          disable-telemetry: true
+          disable-sudo: true
+          egress-policy: block
+          allowed-endpoints: >
+            api.github.com:443
+            github.com:443
+      
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+        
+      - name: Check if CHANGELOG modified
+        id: changed-files
+        uses: tj-actions/changed-files@db3ea27a0cf07135175be5efe7aaf84df6e0e6f0 # v35.5.0
+        with:
+          files: |
+            CHANGELOG.md
+            
+      - name: Find existing CHANGELOG comment
+        id: find-comment
+        uses: peter-evans/find-comment@81e2da3af01c92f83cb927cf3ace0e085617c556 # v2.2.0
+        with:
+          issue-number: ${{ github.event.pull_request.number }}
+          comment-author: 'github-actions[bot]'
+          body-includes: CHANGELOG
+            
+      - name: Add or Update comment if CHANGELOG not modified.
+        if: steps.changed-files.outputs.any_modified != 'true'
+        uses: peter-evans/create-or-update-comment@5adcb0bb0f9fb3f95ef05400558bdb3f329ee808 # v2.1.0
+        with:
+          issue-number: ${{ github.event.pull_request.number }}
+          comment-id: ${{ steps.find-comment.outputs.comment-id }}
+          edit-mode: replace
+          body: |
+            # :warning: CHANGELOG Reminder :warning:
+            This pull request does not include any modifications to the CHANGELOG.
+            Significant changes should be added to the `[Unreleased]` section of the CHANGELOG.
+            Types of changes
+            - `Added`
+            - `Changed`
+            - `Deprecated`
+            - `Removed`
+            - `Fixed`
+            - `Security`
+            For more information see [keep a changelog](https://keepachangelog.com/en/1.0.0/)
+            _Note: Some chore and maintenance changes which don't impact consumers can be excluded from the CHANGELOG._
+            
+      - name: Add or Update comment if CHANGELOG modified.
+        if: steps.changed-files.outputs.any_modified == 'true'
+        uses: peter-evans/create-or-update-comment@5adcb0bb0f9fb3f95ef05400558bdb3f329ee808 # v2.1.0
+        with:
+          issue-number: ${{ github.event.pull_request.number }}
+          comment-id: ${{ steps.find-comment.outputs.comment-id }}
+          edit-mode: replace
+          body: |
+            # :thumbsup: CHANGELOG Updated :thumbsup:
+            Thanks for modifying the CHANGELOG with this PR. 
+            For more information see [keep a changelog](https://keepachangelog.com/en/1.0.0/)
