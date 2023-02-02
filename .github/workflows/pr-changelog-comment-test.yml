@@ -13,13 +13,41 @@ jobs:
         with:
           fetch-depth: 0
         
-      - name: Get changed files
-        id: changed-files
+      - name: Get changed files (changelog)
+        id: changelog
         uses: tj-actions/changed-files@db3ea27a0cf07135175be5efe7aaf84df6e0e6f0 # v35.5.0
+        with:
+          files: |
+            CHANGELOG.md
+            
+      - name: echo any changed (changelog)
+        run: echo "ANY CHANGED ${{ steps.changelog.outputs.any_changed }}"
+        
+      - name: echo any changed (changelog)
+        run: echo "ANY CHANGED ${{ steps.changelog.outputs.any_modified }}"
 
-      - name: List all changed files
+      - name: echo all changed (changelog)
         run: |
-          for file in ${{ steps.changed-files.outputs.all_changed_files }}; do
+          for file in ${{ steps.changelog.outputs.all_changed_files }}; do
+            echo "$file was changed"
+          done
+          
+      - name: Get changed files (assertAnswerCorrect.js)
+        id: test2
+        uses: tj-actions/changed-files@db3ea27a0cf07135175be5efe7aaf84df6e0e6f0 # v35.5.0
+        with:
+          files: |
+            src/actions/assertAnswerCorrect.js
+            
+      - name: echo any changed (changelog)
+        run: echo "ANY CHANGED ${{ steps.test2.outputs.any_changed }}"
+        
+      - name: echo any changed (changelog)
+        run: echo "ANY CHANGED ${{ steps.test2.outputs.any_modified }}"
+
+      - name: echo all changed (changelog)
+        run: |
+          for file in ${{ steps.test2.outputs.all_changed_files }}; do
             echo "$file was changed"
           done
 
