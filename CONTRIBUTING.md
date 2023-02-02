@@ -52,8 +52,7 @@ A high level overview of tools used:
 **TLDR**
 1. Checkout repo and install packages.
 2. Create `.env` file and add `AOC_AUTHENTICATION_TOKEN`, `AOC_MOCK_API_ENABLED`, `AOC_MOCK_API_ANSWER_CORRECT` and optionally `AOC_LOG_LEVEL`.
-3. Add a "mock cwd" folder to the root of the repository called `dev`
-4. Run commands using `npm start` e.g. `npm start -- init` or `npm start -- solve 17 1`
+3. Run commands using `npm start` e.g. `npm start -- init` or `npm start -- solve 17 1`
 
 ### Checkout repo & install packages
 ```
@@ -99,6 +98,14 @@ Examples:
 - `npm start -- submit 5 1`
 - `npm start -- stats --save`
 
+### `dev` Directory
+When developing locally the CLI will run commands against a local directory called `dev`. This directory simulates a cwd the end user would run commands in. 
+Commands are run against a directory in the repository called `dev` this directory is ignored by default.  If this folder does not exist it will be created the first time you run the `npm start` command. 
+
+If you are running commands locally suhc as `solve` or `submit` you will likely want to initialize this directory first. You can initialize this folder by using the CLI, run: 
+```
+npm start -- init
+```
 
 
 ## Project Structure
