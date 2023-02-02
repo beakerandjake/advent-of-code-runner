@@ -31,7 +31,7 @@ jobs:
         with:
           issue-number: ${{ github.event.pull_request.number }}
           comment_tag: bot
-          body: 
+          message: 
             # CHANGELOG Reminder
             This pull request does not include any modifications to the CHANGELOG.
             
