@@ -14,14 +14,20 @@ jobs:
           fetch-depth: 0
         
       - name: Check for CHANGELOG modified
-        id: changelog
+        id: changed-files
         uses: tj-actions/changed-files@db3ea27a0cf07135175be5efe7aaf84df6e0e6f0 # v35.5.0
         with:
           files: |
             CHANGELOG.md
             
+      - name: List all changed files
+        run: |
+          for file in ${{ steps.changed-files.outputs.all_changed_files }}; do
+            echo "$file was changed"
+          done
+            
       - name: Add Comment to PR if CHANGELOG not modified.
-        if: steps.changelog.outputs.any_changed == false
+        if: steps.changed-files.outputs.any_changed == false
         run:
           echo 'I NEED TO ADD A COMMENT!'
           
