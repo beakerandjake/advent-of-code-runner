@@ -33,11 +33,7 @@ If fixing a bug:
 
 There is no need to add a git tag or bump the `package.json` version, these are done by maintainers when creating a release.
 
-Pull requests run a CI workflow, which generally must pass for the PR to be merged:
-- Run code linting.
-- Check that CHANGELOG has been updated.
-- Run Unit Tests.
-- Check code coverage.
+Pull requests run a CI workflow, which must pass for the PR to be merged.
 
 ### Additional Pull Request Tips
 - Try to focus on accomplishing one thing, be it a feature or a bug fix. 
