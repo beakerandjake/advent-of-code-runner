@@ -131,7 +131,8 @@ jobs:
           body: |
             # :warning: CHANGELOG Reminder :warning:
             
-            This pull request does not include any modifications to the CHANGELOG.
+            This pull request does not include any modifications to the CHANGELOG.    
+
             Significant changes should be added to the `[Unreleased]` section of the CHANGELOG.
             
             Types of changes
