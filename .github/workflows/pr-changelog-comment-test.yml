@@ -28,12 +28,21 @@ jobs:
           files: |
             CHANGELOG.md
             
-      - name: Add Comment to PR if CHANGELOG not modified.
+      - name: Find existing CHANGELOG comment
+        id: find-comment
+        uses: peter-evans/find-comment@81e2da3af01c92f83cb927cf3ace0e085617c556 # v2.2.0
+        with:
+          issue-number: ${{ github.event.pull_request.number }}
+          comment-author: 'github-actions[bot]'
+          body-includes: CHANGELOG Reminder
+            
+      - name: Add or Update comment if CHANGELOG not modified.
         if: steps.changed-files.outputs.any_modified != 'true'
         uses: peter-evans/create-or-update-comment@5adcb0bb0f9fb3f95ef05400558bdb3f329ee808 # v2.1.0
         with:
           issue-number: ${{ github.event.pull_request.number }}
-          comment_tag: bot
+          comment-id: ${{ steps.find-comment.outputs.comment-id }}
+          edit-mode: replace
           body: |
             # :warning: CHANGELOG Reminder :warning:
             This pull request does not include any modifications to the CHANGELOG.
@@ -51,3 +60,16 @@ jobs:
             For more information see [keep a changelog](https://keepachangelog.com/en/1.0.0/)
 
             _Note: Some chore and maintenance changes which don't impact consumers can be excluded from the CHANGELOG._
+            
+      - name: Add or Update comment if CHANGELOG modified.
+        if: steps.changed-files.outputs.any_modified == 'true'
+        uses: peter-evans/create-or-update-comment@5adcb0bb0f9fb3f95ef05400558bdb3f329ee808 # v2.1.0
+        with:
+          issue-number: ${{ github.event.pull_request.number }}
+          comment-id: ${{ steps.find-comment.outputs.comment-id }}
+          edit-mode: replace
+          body: |
+            # :thumbsup: CHANGELOG Updated :thumbsup:
+            Thanks for modifying the CHANGELOG with this PR. 
+
+            For more information see [keep a changelog](https://keepachangelog.com/en/1.0.0/)
