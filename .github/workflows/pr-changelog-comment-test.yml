@@ -27,7 +27,7 @@ jobs:
           done
             
       - name: Add Comment to PR if CHANGELOG not modified.
-        if: steps.changed-files.outputs.any_changed == false
+        if: steps.changed-files.outputs.any_modified != 'true'
         run:
           echo 'I NEED TO ADD A COMMENT!'
           
