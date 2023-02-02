@@ -65,9 +65,9 @@ Once you have the repository on your machine, be sure to [install the npm packag
 
 
 Inspo while creating:
-https://github.com/facebook/create-react-app/blob/main/CONTRIBUTING.md
-https://github.com/tj/commander.js/blob/master/CONTRIBUTING.md
-https://github.com/axios/axios/blob/v1.x/CONTRIBUTING.md
-https://reactjs.org/docs/how-to-contribute.html
-https://github.com/vuejs/core/blob/main/.github/contributing.md
-https://github.com/moment/moment/blob/develop/CONTRIBUTING.md
+- https://github.com/facebook/create-react-app/blob/main/CONTRIBUTING.md
+- https://github.com/tj/commander.js/blob/master/CONTRIBUTING.md
+- https://github.com/axios/axios/blob/v1.x/CONTRIBUTING.md
+- https://reactjs.org/docs/how-to-contribute.html
+- https://github.com/vuejs/core/blob/main/.github/contributing.md
+- https://github.com/moment/moment/blob/develop/CONTRIBUTING.md
