@@ -9,25 +9,42 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
+      - name: Harden runner
+        uses: step-security/harden-runner@18bf8ad2ca49c14cbb28b91346d626ccfb00c518 # v2.1.0
+        with:
+          egress-policy: audit
+      
       - uses: actions/checkout@v3
         with:
           fetch-depth: 0
         
-      - name: Check for CHANGELOG modified
+      - name: Check if CHANGELOG modified
         id: changed-files
         uses: tj-actions/changed-files@db3ea27a0cf07135175be5efe7aaf84df6e0e6f0 # v35.5.0
         with:
           files: |
             CHANGELOG.md
             
-      - name: List all changed files
-        run: |
-          for file in ${{ steps.changed-files.outputs.all_changed_files }}; do
-            echo "$file was changed"
-          done
-            
       - name: Add Comment to PR if CHANGELOG not modified.
         if: steps.changed-files.outputs.any_modified != 'true'
-        run:
-          echo 'I NEED TO ADD A COMMENT!'
-          
+        uses: peter-evans/create-or-update-comment@5adcb0bb0f9fb3f95ef05400558bdb3f329ee808 # v2.1.0
+        with:
+          issue-number: ${{ github.event.pull_request.number }}
+          comment_tag: bot
+          body: 
+            # CHANGELOG Reminder
+            This pull request does not include any modifications to the CHANGELOG.
+            
+            Significant changes should be added to the [Unreleased] section of the CHANGELOG.
+            
+            Types of changes
+            - `Added`
+            - `Changed`
+            - `Deprecated`
+            - `Removed`
+            - `Fixed`
+            - `Security`
+            
+            For more information see [keep a changelog](https://keepachangelog.com/en/1.0.0/)
+            
+            _This comment was  automatically added by a bot_
