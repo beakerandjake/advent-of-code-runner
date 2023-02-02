@@ -34,7 +34,7 @@ jobs:
         with:
           issue-number: ${{ github.event.pull_request.number }}
           comment-author: 'github-actions[bot]'
-          body-includes: CHANGELOG Reminder
+          body-includes: CHANGELOG
             
       - name: Add or Update comment if CHANGELOG not modified.
         if: steps.changed-files.outputs.any_modified != 'true'
