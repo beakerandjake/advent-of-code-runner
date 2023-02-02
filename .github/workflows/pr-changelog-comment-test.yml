@@ -1,10 +1,8 @@
 name: Test Changelog PR comment
-
 on:
   pull_request:
     branches:
       - main
-
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -12,7 +10,12 @@ jobs:
       - name: Harden runner
         uses: step-security/harden-runner@18bf8ad2ca49c14cbb28b91346d626ccfb00c518 # v2.1.0
         with:
-          egress-policy: audit
+          disable-telemetry: true
+          disable-sudo: true
+          egress-policy: block
+          allowed-endpoints: >
+            api.github.com:443
+            github.com:443
       
       - uses: actions/checkout@v3
         with:
@@ -32,11 +35,11 @@ jobs:
           issue-number: ${{ github.event.pull_request.number }}
           comment_tag: bot
           body: |
-            # CHANGELOG Reminder
+            # :warning: CHANGELOG Reminder :warning:
             This pull request does not include any modifications to the CHANGELOG.
-            
-            Significant changes should be added to the [Unreleased] section of the CHANGELOG.
-            
+
+            Significant changes should be added to the `[Unreleased]` section of the CHANGELOG.
+
             Types of changes
             - `Added`
             - `Changed`
@@ -44,7 +47,7 @@ jobs:
             - `Removed`
             - `Fixed`
             - `Security`
-            
+
             For more information see [keep a changelog](https://keepachangelog.com/en/1.0.0/)
-            
-            _This comment was  automatically added by a bot_
+
+            _Note: Some chore and maintenance changes which don't impact consumers can be excluded from the CHANGELOG._
