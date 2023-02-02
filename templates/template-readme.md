@@ -1,7 +1,8 @@
-# Advent of Code {{year}}
-This repository contains solutions to [advent of code](https://adventofcode.com/{{year}}) for {{year}}. 
+# :santa: Advent of Code {{year}} :christmas_tree:
 
-This project was created using [advent-of-code-runner](https://github.com/beakerandjake/advent-of-code-runner).
+This repository contains solutions to [advent of code {{year}}](https://adventofcode.com/{{year}}) 
+
+_Created using [advent-of-code-runner](https://github.com/beakerandjake/advent-of-code-runner)_
 
 ## Usage
 See [advent-of-code-runner](https://github.com/beakerandjake/advent-of-code-runner) for more information.
