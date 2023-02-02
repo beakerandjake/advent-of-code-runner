@@ -130,8 +130,10 @@ jobs:
           edit-mode: replace
           body: |
             # :warning: CHANGELOG Reminder :warning:
+            
             This pull request does not include any modifications to the CHANGELOG.
             Significant changes should be added to the `[Unreleased]` section of the CHANGELOG.
+            
             Types of changes
             - `Added`
             - `Changed`
@@ -139,7 +141,9 @@ jobs:
             - `Removed`
             - `Fixed`
             - `Security`
+            
             For more information see [keep a changelog](https://keepachangelog.com/en/1.0.0/)
+            
             _Note: Some chore and maintenance changes which don't impact consumers can be excluded from the CHANGELOG._
             
       - name: Add or Update comment if CHANGELOG modified.
@@ -151,5 +155,7 @@ jobs:
           edit-mode: replace
           body: |
             # :thumbsup: CHANGELOG Updated :thumbsup:
+            
             Thanks for modifying the CHANGELOG with this PR. 
+            
             For more information see [keep a changelog](https://keepachangelog.com/en/1.0.0/)
