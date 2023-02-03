@@ -18,7 +18,7 @@
   "bin": "src/main.js",
   "scripts": {
     "test": "NODE_OPTIONS=\"--experimental-vm-modules --no-warnings\" jest",
-    "start": "node src/main.js",
+    "start": "mkdirp development && cd development && node ../src/main.js",
     "lint": "eslint 'src/**/*.js' 'tests/**/*.js'"
   },
   "repository": {
@@ -55,7 +55,8 @@
     "eslint": "^8.29.0",
     "eslint-config-airbnb-base": "^15.0.0",
     "eslint-plugin-import": "^2.26.0",
-    "jest": "^29.3.1"
+    "jest": "^29.3.1",
+    "mkdirp": "^2.1.3"
   },
   "engines": {
     "node": ">=18"
