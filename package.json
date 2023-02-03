@@ -18,7 +18,7 @@
   "bin": "src/main.js",
   "scripts": {
     "test": "NODE_OPTIONS=\"--experimental-vm-modules --no-warnings\" jest",
-    "start": "mkdirp development && cd development && node ../src/main.js",
+    "start": "node scripts/start.js",
     "lint": "eslint 'src/**/*.js' 'tests/**/*.js'"
   },
   "repository": {
