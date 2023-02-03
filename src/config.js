@@ -17,7 +17,8 @@ const __dirname = fileURLToPath(new URL('.', import.meta.url));
 // read the users config from the cwd.
 dotenv.config();
 
-// allow overrides by reading from 'development' .env (if exists)
+// attempt to read an .env file at the root of this repository.
+// this helps in local development by having one place to set development settings.
 dotenv.config({ path: join(__dirname, '..', '.env') });
 
 export const envOptions = {
