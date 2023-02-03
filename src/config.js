@@ -13,7 +13,12 @@ import { get, has } from './util.js';
 const __dirname = fileURLToPath(new URL('.', import.meta.url));
 
 // ensure dotenv runs before we attempt to read any environment variables.
+
+// read the users config from the cwd.
 dotenv.config();
+
+// allow overrides by reading from 'development' .env (if exists)
+dotenv.config({ path: join(__dirname, '..', '.env') });
 
 export const envOptions = {
   suppressTitle: 'AOC_SUPPRESS_TITLE',
