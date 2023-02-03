@@ -13,10 +13,15 @@ import { get, has } from './util.js';
 const __dirname = fileURLToPath(new URL('.', import.meta.url));
 
 // ensure dotenv runs before we attempt to read any environment variables.
+
+// read the users config from the cwd.
 dotenv.config();
 
+// attempt to read an .env file at the root of this repository.
+// this helps in local development by having one place to set development settings.
+dotenv.config({ path: join(__dirname, '..', '.env') });
+
 export const envOptions = {
-  cwdOverride: 'AOC_CWD_OVERRIDE',
   suppressTitle: 'AOC_SUPPRESS_TITLE',
   suppressFestive: 'AOC_SUPPRESS_FESTIVE',
   authenticationToken: 'AOC_AUTHENTICATION_TOKEN',
@@ -31,7 +36,7 @@ export const envOptions = {
  * This will be the root folder where this program operates.
  * User solution files, inputs, data store etc will all exist in this folder.
  */
-const cwd = process.env[envOptions.cwdOverride] || getCwd();
+const cwd = getCwd();
 
 /**
  * Load meta details about this package form the package json
