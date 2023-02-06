@@ -20,6 +20,7 @@ const solveActions = [
 /**
  * Solves a specific puzzle.
  */
+// prettier-ignore
 const solve = createChain([
   actions.assertInitialized,
   actions.getYear,
@@ -41,13 +42,18 @@ const autoSolve = createChain([
  */
 export const solveCommand = new Command()
   .name('solve')
-  .description('Runs your solution for a puzzle, measures the runtime, and outputs the answer.')
-  .addHelpText('after', `
+  .description(
+    'Runs your solution for a puzzle, measures the runtime, and outputs the answer.'
+  )
+  .addHelpText(
+    'after',
+    `
 Example Calls:
   solve               (Finds and solves your next unsolved puzzle)
   solve [day]         (Solves level one of the specified days puzzle)
   solve [day] [level] (Solves the puzzle for the specified day and level)
-  `)
+  `
+  )
   .addArgument(dayArgument)
   .addArgument(levelArgument)
   .action(async (day, level) => {

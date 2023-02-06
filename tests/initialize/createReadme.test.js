@@ -1,6 +1,4 @@
-import {
-  describe, jest, test, beforeEach,
-} from '@jest/globals';
+import { describe, jest, test, beforeEach } from '@jest/globals';
 import { mockConfig, mockLogger } from '../mocks.js';
 
 // setup mocks
@@ -8,7 +6,9 @@ mockLogger();
 const { getConfigValue } = mockConfig();
 jest.unstable_mockModule('fs-extra/esm', () => ({ outputFile: jest.fn() }));
 jest.unstable_mockModule('node:fs/promises', () => ({ readFile: jest.fn() }));
-jest.unstable_mockModule('src/initialize/replaceTokens.js', () => ({ replaceTokens: jest.fn() }));
+jest.unstable_mockModule('src/initialize/replaceTokens.js', () => ({
+  replaceTokens: jest.fn(),
+}));
 
 // import after mocks set up
 const { outputFile } = await import('fs-extra/esm');
@@ -22,9 +22,7 @@ describe('initialize', () => {
       jest.resetAllMocks();
     });
 
-    test.each([
-      null, undefined, '',
-    ])('throws if year is: "%s"', async (year) => {
+    test.each([null, undefined, ''])('throws if year is: "%s"', async (year) => {
       await expect(async () => createReadme({ year })).rejects.toThrow();
     });
 
@@ -58,8 +56,11 @@ describe('initialize', () => {
       readFile.mockResolvedValue(fileContents);
       const year = 2023;
       await createReadme({ year });
-      expect(replaceTokens)
-        .toHaveBeenCalledWith(expect.any(Array), { year }, fileContents);
+      expect(replaceTokens).toHaveBeenCalledWith(
+        expect.any(Array),
+        { year },
+        fileContents
+      );
     });
 
     test('saves tokenized contents', async () => {

@@ -72,7 +72,7 @@ export const mapAttemptColumns = (completionData, maxAttempts) => {
       // only add descriptive text to the first match.
       const message = markedMax ? numberOfAttempts : `${numberOfAttempts} (worst)`;
       markedMax = true;
-      return bold(italic((message)));
+      return bold(italic(message));
     }
 
     return `${numberOfAttempts}`;
@@ -110,7 +110,12 @@ export const mapRuntimeColumn = ({ runtimeNs }, fastest, slowest) => {
 export const generateAverageRow = async (year) => {
   const averageAttempts = await getAverageAttempts(year);
   const averageRuntime = await getAverageRuntime(year);
-  return tr(['', bold('Average'), averageAttempts.toFixed(2), humanizeDuration(averageRuntime)]);
+  return tr([
+    '',
+    bold('Average'),
+    averageAttempts.toFixed(2),
+    humanizeDuration(averageRuntime),
+  ]);
 };
 
 /**
@@ -128,10 +133,12 @@ export const generatePuzzleRows = async (year, completionData) => {
   const names = completionData.map(mapNameColumn);
   const solved = completionData.map(mapSolvedColumn);
   const attempts = mapAttemptColumns(completionData, maxAttempts);
-  const runtimes = completionData.map((x) => mapRuntimeColumn(x, fastestRuntime, slowestRuntime));
+  const runtimes = completionData.map((x) =>
+    mapRuntimeColumn(x, fastestRuntime, slowestRuntime)
+  );
 
-  return completionData.map(
-    (_, index) => tr([names[index], solved[index], attempts[index], runtimes[index]]),
+  return completionData.map((_, index) =>
+    tr([names[index], solved[index], attempts[index], runtimes[index]])
   );
 };
 

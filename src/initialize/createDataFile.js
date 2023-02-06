@@ -29,7 +29,7 @@ export const createDataFile = async ({ year } = {}) => {
   const dataFileContents = replaceTokens(
     tokens,
     { version: getConfigValue('meta.version'), year },
-    templateFileContents,
+    templateFileContents
   );
 
   logger.debug('saving data file to: %s', dest);

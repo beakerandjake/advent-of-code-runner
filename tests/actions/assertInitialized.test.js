@@ -1,11 +1,11 @@
-import {
-  describe, jest, test, afterEach,
-} from '@jest/globals';
+import { describe, jest, test, afterEach } from '@jest/globals';
 import { mockLogger } from '../mocks.js';
 
 // setup mocks
 mockLogger();
-jest.unstable_mockModule('src/validation/userFilesExist.js', () => ({ dataFileExists: jest.fn() }));
+jest.unstable_mockModule('src/validation/userFilesExist.js', () => ({
+  dataFileExists: jest.fn(),
+}));
 
 // import after mocks set up
 const { dataFileExists } = await import('../../src/validation/userFilesExist.js');

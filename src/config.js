@@ -43,7 +43,7 @@ const cwd = getCwd();
  */
 const readMetaFromPackageJson = async () => {
   const packageJson = JSON.parse(
-    await readFile(join(__dirname, '..', 'package.json'), { encoding: 'utf8' }),
+    await readFile(join(__dirname, '..', 'package.json'), { encoding: 'utf8' })
   );
 
   return {
@@ -67,8 +67,7 @@ const CONFIG = {
   aoc: {
     authenticationToken: process.env[envOptions.authenticationToken] || null,
     baseUrl: 'http://192.168.0.1', // 'https://adventofcode.com',
-    userAgent:
-      'https://github.com/beakerandjake/advent-of-code-runner by beakerandjake',
+    userAgent: 'https://github.com/beakerandjake/advent-of-code-runner by beakerandjake',
     responseParsing: {
       correctSolution: /that's the right answer/gim,
       incorrectSolution: /that's not the right answer/gim,
@@ -131,7 +130,11 @@ const CONFIG = {
     userDataFile: join(cwd, 'aocr-data.json'),
     inputsDir: join(cwd, 'inputs'),
     solutionsDir: join(cwd, 'src'),
-    solutionRunnerWorkerFile: join(__dirname, 'solutions', 'solutionRunnerWorkerThread.js'),
+    solutionRunnerWorkerFile: join(
+      __dirname,
+      'solutions',
+      'solutionRunnerWorkerThread.js'
+    ),
     templates: {
       gitignore: {
         source: join(__dirname, '..', 'templates', 'template-gitignore'),
@@ -154,14 +157,11 @@ const CONFIG = {
     },
   },
   initialize: {
-    emptyCwdWhitelist: [
-      '.git',
-      '.DS_Store',
-      'LICENSE',
-      'node_modules',
-    ],
+    emptyCwdWhitelist: ['.git', '.DS_Store', 'LICENSE', 'node_modules'],
   },
-  disableReadmeAutoSaveProgress: yn(process.env[envOptions.disableReadmeAutoSaveProgress]),
+  disableReadmeAutoSaveProgress: yn(
+    process.env[envOptions.disableReadmeAutoSaveProgress]
+  ),
 };
 
 /**

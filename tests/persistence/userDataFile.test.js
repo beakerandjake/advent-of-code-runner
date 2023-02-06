@@ -1,6 +1,4 @@
-import {
-  describe, jest, test, beforeEach,
-} from '@jest/globals';
+import { describe, jest, test, beforeEach } from '@jest/globals';
 import { mockLogger, mockConfig } from '../mocks.js';
 
 // setup mocks.
@@ -147,10 +145,7 @@ describe('userDataFile', () => {
 
         await setValue(key, value);
 
-        expect(writeJson).toHaveBeenCalledWith(
-          undefined,
-          { ...orig, [key]: value },
-        );
+        expect(writeJson).toHaveBeenCalledWith(undefined, { ...orig, [key]: value });
       });
 
       test('value is updated when key exists', async () => {
@@ -161,10 +156,7 @@ describe('userDataFile', () => {
 
         await setValue(key, value);
 
-        expect(writeJson).toHaveBeenCalledWith(
-          undefined,
-          { ...orig, [key]: value },
-        );
+        expect(writeJson).toHaveBeenCalledWith(undefined, { ...orig, [key]: value });
       });
 
       test('throws if could not save file', async () => {

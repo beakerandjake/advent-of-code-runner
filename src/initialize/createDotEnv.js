@@ -7,9 +7,7 @@ import { replaceTokens } from './replaceTokens.js';
 /**
  * Maps tokens strings in the template env file to fields of the args.
  */
-const envFileTokens = [
-  { match: '{{authToken}}', key: 'authToken' },
-];
+const envFileTokens = [{ match: '{{authToken}}', key: 'authToken' }];
 
 /**
  * Creates the .env file in the cwd

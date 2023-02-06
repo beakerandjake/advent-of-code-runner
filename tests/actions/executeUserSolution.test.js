@@ -1,6 +1,4 @@
-import {
-  describe, jest, test, afterEach,
-} from '@jest/globals';
+import { describe, jest, test, afterEach } from '@jest/globals';
 import { mockConfig, mockLogger } from '../mocks.js';
 
 // setup mocks
@@ -18,9 +16,7 @@ describe('executeUserSolution()', () => {
     jest.resetAllMocks();
   });
 
-  test.each([
-    null, undefined,
-  ])('throws if question is %s', async (question) => {
+  test.each([null, undefined])('throws if question is %s', async (question) => {
     await expect(async () => executeUserSolution(question)).rejects.toThrow();
   });
 

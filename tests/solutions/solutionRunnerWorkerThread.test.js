@@ -38,8 +38,12 @@ const { hrtime } = await import('node:process');
 const { parentPort } = await import('node:worker_threads');
 const { get } = await import('../../src/util.js');
 const { answerTypeIsValid } = await import('../../src/validation/validateAnswer.js');
-const { importUserSolutionModule } = await import('../../src/solutions/importUserSolutionModule.js');
-const { logFromWorker, executeUserSolution, runWorker } = await import('../../src/solutions/solutionRunnerWorkerThread.js');
+const { importUserSolutionModule } = await import(
+  '../../src/solutions/importUserSolutionModule.js'
+);
+const { logFromWorker, executeUserSolution, runWorker } = await import(
+  '../../src/solutions/solutionRunnerWorkerThread.js'
+);
 
 afterEach(() => {
   jest.clearAllMocks();
@@ -97,21 +101,31 @@ describe('solutionRunnerWorkerThread', () => {
     });
 
     test('throws if user function throws error', async () => {
-      const userSolutionFn = jest.fn(() => { throw new RangeError('Invalid Index'); });
+      const userSolutionFn = jest.fn(() => {
+        throw new RangeError('Invalid Index');
+      });
       answerTypeIsValid.mockReturnValue(true);
-      await expect(async () => executeUserSolution(userSolutionFn, 'asdf')).rejects.toThrow(UserSolutionThrewError);
+      await expect(async () =>
+        executeUserSolution(userSolutionFn, 'asdf')
+      ).rejects.toThrow(UserSolutionThrewError);
     });
 
     test('throws if user function throws literal', async () => {
       // eslint-disable-next-line no-throw-literal
-      const userSolutionFn = jest.fn(() => { throw 'Thrown non error object'; });
+      const userSolutionFn = jest.fn(() => {
+        throw 'Thrown non error object';
+      });
       answerTypeIsValid.mockReturnValue(true);
-      await expect(async () => executeUserSolution(userSolutionFn, 'asdf')).rejects.toThrow(UserSolutionThrewError);
+      await expect(async () =>
+        executeUserSolution(userSolutionFn, 'asdf')
+      ).rejects.toThrow(UserSolutionThrewError);
     });
 
     test('throws if answer type is invalid', async () => {
       answerTypeIsValid.mockReturnValue(false);
-      await expect(async () => executeUserSolution(() => {}, 'asdf')).rejects.toThrow(TypeError);
+      await expect(async () => executeUserSolution(() => {}, 'asdf')).rejects.toThrow(
+        TypeError
+      );
     });
 
     test('posts answer to parent thread on success', async () => {
@@ -123,7 +137,7 @@ describe('solutionRunnerWorkerThread', () => {
 
       expect(parentPort.postMessage).toHaveBeenCalledTimes(1);
       expect(parentPort.postMessage).toHaveBeenCalledWith(
-        expect.objectContaining({ type: workerMessageTypes.answer, answer }),
+        expect.objectContaining({ type: workerMessageTypes.answer, answer })
       );
     });
 
@@ -138,42 +152,51 @@ describe('solutionRunnerWorkerThread', () => {
 
       expect(parentPort.postMessage).toHaveBeenCalledTimes(1);
       expect(parentPort.postMessage).toHaveBeenCalledWith(
-        expect.objectContaining({ runtimeNs: endTime - startTime }),
+        expect.objectContaining({ runtimeNs: endTime - startTime })
       );
     });
   });
 
   describe('runWorker()', () => {
     test('throws if user data missing "solutionName"', async () => {
-      await expect(
-        async () => runWorker({ functionToExecute: 'asdf', input: 'asdf', lines: ['asdf'] }),
+      await expect(async () =>
+        runWorker({ functionToExecute: 'asdf', input: 'asdf', lines: ['asdf'] })
       ).rejects.toThrow(SolutionWorkerMissingDataError);
     });
 
     test('throws if user data missing "functionToExecute"', async () => {
-      await expect(
-        async () => runWorker({ solutionFileName: 'asdf', input: 'asdf', lines: ['asdf'] }),
+      await expect(async () =>
+        runWorker({ solutionFileName: 'asdf', input: 'asdf', lines: ['asdf'] })
       ).rejects.toThrow(SolutionWorkerMissingDataError);
     });
 
     test('throws if user data missing "input"', async () => {
-      await expect(
-        async () => runWorker({ functionToExecute: 'asdf', solutionFileName: 'asdf', lines: ['asdf'] }),
+      await expect(async () =>
+        runWorker({
+          functionToExecute: 'asdf',
+          solutionFileName: 'asdf',
+          lines: ['asdf'],
+        })
       ).rejects.toThrow(SolutionWorkerMissingDataError);
     });
 
     test('throws if user data missing "lines"', async () => {
-      await expect(
-        async () => runWorker({ functionToExecute: 'asdf', solutionFileName: 'asdf', input: 'asdf' }),
+      await expect(async () =>
+        runWorker({ functionToExecute: 'asdf', solutionFileName: 'asdf', input: 'asdf' })
       ).rejects.toThrow(SolutionWorkerMissingDataError);
     });
 
     test('throws if user solution file not found', async () => {
-      importUserSolutionModule.mockRejectedValue(new UserSolutionFileNotFoundError('NOT FOUND'));
-      await expect(
-        async () => runWorker({
-          solutionFileName: 'asdf', functionToExecute: 'asdf', input: 'asdf', lines: ['asdf'],
-        }),
+      importUserSolutionModule.mockRejectedValue(
+        new UserSolutionFileNotFoundError('NOT FOUND')
+      );
+      await expect(async () =>
+        runWorker({
+          solutionFileName: 'asdf',
+          functionToExecute: 'asdf',
+          input: 'asdf',
+          lines: ['asdf'],
+        })
       ).rejects.toThrow(UserSolutionFileNotFoundError);
     });
 
@@ -185,16 +208,19 @@ describe('solutionRunnerWorkerThread', () => {
       'SADF',
       {},
       Promise.resolve(1),
-      new class Cats {}(),
+      new (class Cats {})(),
       false,
       true,
     ])('throws if user function returns non function value - %s', async (fn) => {
       importUserSolutionModule.mockResolvedValue({});
       get.mockReturnValue(fn);
-      await expect(
-        async () => runWorker({
-          solutionFileName: 'asdf', functionToExecute: 'asdf', input: 'asdf', lines: ['asdf'],
-        }),
+      await expect(async () =>
+        runWorker({
+          solutionFileName: 'asdf',
+          functionToExecute: 'asdf',
+          input: 'asdf',
+          lines: ['asdf'],
+        })
       ).rejects.toThrow(UserSolutionMissingFunctionError);
     });
   });

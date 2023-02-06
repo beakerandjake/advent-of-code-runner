@@ -12,7 +12,8 @@ import {
  * @param {String} value - The value whose size to calculate.
  * @param {BufferEncoding} encoding - The strings encoding
  */
-export const sizeOfStringInKb = (value, encoding = 'utf-8') => (Buffer.byteLength(value, encoding) / 1000).toFixed(2);
+export const sizeOfStringInKb = (value, encoding = 'utf-8') =>
+  (Buffer.byteLength(value, encoding) / 1000).toFixed(2);
 
 /**
  * Converts a duration in nanoseconds to a human readable duration, up to seconds.
@@ -53,13 +54,15 @@ export const humanizeDuration = (nanoseconds) => {
 export const humanizeMinutesDifference = (startDate, endDate) => {
   const msDifference = differenceInMilliseconds(
     max([startDate, endDate]),
-    min([startDate, endDate]),
+    min([startDate, endDate])
   );
 
   const minutes = millisecondsToMinutes(msDifference);
 
   if (minutes >= 1) {
-    const remainingSeconds = millisecondsToSeconds(msDifference - minutesToMilliseconds(minutes));
+    const remainingSeconds = millisecondsToSeconds(
+      msDifference - minutesToMilliseconds(minutes)
+    );
     return `${minutes}m ${remainingSeconds}s`;
   }
 
@@ -70,4 +73,5 @@ export const humanizeMinutesDifference = (startDate, endDate) => {
  * Given a sorted array, generates a string like 'between $(first) and $(last)'
  * @param {Any[]} choices
  */
-export const betweenMessage = (choices = []) => (`between ${choices[0]} and ${choices[choices.length - 1]}`);
+export const betweenMessage = (choices = []) =>
+  `between ${choices[0]} and ${choices[choices.length - 1]}`;

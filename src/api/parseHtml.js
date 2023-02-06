@@ -11,7 +11,7 @@ import { render } from 'dom-serializer';
 export const getElementByTagName = (html, name) => {
   const found = findOne(
     (element) => element.type === 'tag' && element.name === name,
-    parseDocument(html, { decodeEntities: false }).children,
+    parseDocument(html, { decodeEntities: false }).children
   );
   return found ? render(found, { decodeEntities: false, encodeEntities: false }) : null;
 };

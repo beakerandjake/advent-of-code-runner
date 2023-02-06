@@ -8,7 +8,9 @@ export const getAuthenticationToken = () => {
   const authToken = getConfigValue('aoc.authenticationToken');
 
   if (!authToken) {
-    throw new Error('Could not get authentication token from .env file, this should have been set during the "init" command');
+    throw new Error(
+      'Could not get authentication token from .env file, this should have been set during the "init" command'
+    );
   }
 
   return { authToken };
