@@ -21,10 +21,6 @@ export const executeUserSolution = async ({ day, level, input } = {}) => {
 
   clearTimeout(timeout);
 
-  logger.festive(
-    'You answered: %s (solved in %s)',
-    answer,
-    humanizeDuration(runtimeNs)
-  );
+  logger.festive('You answered: %s (solved in %s)', answer, humanizeDuration(runtimeNs));
   return { answer, runtimeNs };
 };

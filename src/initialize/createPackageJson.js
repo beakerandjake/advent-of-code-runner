@@ -8,21 +8,16 @@ import { logger } from '../logger.js';
  * Runs the npm init command to create a package.json file.
  * @param {String} cwd
  */
-const execNpmInit = async (cwd) =>
-  new Promise((resolve, reject) => {
-    exec('npm init -y', { cwd }, (error) => {
-      if (error) {
-        reject(
-          new Error(`Failed to run npm init, exit code: ${error.code}`, {
-            cause: error,
-          })
-        );
-      } else {
-        logger.debug('created package.json file');
-        resolve();
-      }
-    });
+const execNpmInit = async (cwd) => new Promise((resolve, reject) => {
+  exec('npm init -y', { cwd }, (error) => {
+    if (error) {
+      reject(new Error(`Failed to run npm init, exit code: ${error.code}`, { cause: error }));
+    } else {
+      logger.debug('created package.json file');
+      resolve();
+    }
   });
+});
 
 /**
  * Creates a package.json file in the cwd.

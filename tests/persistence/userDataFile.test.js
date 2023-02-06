@@ -1,4 +1,6 @@
-import { describe, jest, test, beforeEach } from '@jest/globals';
+import {
+  describe, jest, test, beforeEach,
+} from '@jest/globals';
 import { mockLogger, mockConfig } from '../mocks.js';
 
 // setup mocks.
@@ -23,9 +25,7 @@ jest.unstable_mockModule('../../src/persistence/cachedValue.js', () => ({
 // import after setting up the mock so the modules import the mocked version
 // const { CachedValue } = await import('../src/persistence/cachedValue.js');
 const { readJson, writeJson } = await import('fs-extra/esm');
-const { getValue, setValue } = await import(
-  '../../src/persistence/userDataFile.js'
-);
+const { getValue, setValue } = await import('../../src/persistence/userDataFile.js');
 
 beforeEach(() => {
   jest.resetAllMocks();
@@ -147,10 +147,10 @@ describe('userDataFile', () => {
 
         await setValue(key, value);
 
-        expect(writeJson).toHaveBeenCalledWith(undefined, {
-          ...orig,
-          [key]: value,
-        });
+        expect(writeJson).toHaveBeenCalledWith(
+          undefined,
+          { ...orig, [key]: value },
+        );
       });
 
       test('value is updated when key exists', async () => {
@@ -161,10 +161,10 @@ describe('userDataFile', () => {
 
         await setValue(key, value);
 
-        expect(writeJson).toHaveBeenCalledWith(undefined, {
-          ...orig,
-          [key]: value,
-        });
+        expect(writeJson).toHaveBeenCalledWith(
+          undefined,
+          { ...orig, [key]: value },
+        );
       });
 
       test('throws if could not save file', async () => {

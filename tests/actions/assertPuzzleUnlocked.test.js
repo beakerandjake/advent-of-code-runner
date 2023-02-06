@@ -1,17 +1,15 @@
-import { describe, jest, test, afterEach } from '@jest/globals';
+import {
+  describe, jest, test, afterEach,
+} from '@jest/globals';
 import { mockLogger } from '../mocks.js';
 
 // setup mocks
 mockLogger();
 const puzzleIsInFuture = jest.fn();
-jest.unstable_mockModule('src/validation/validatePuzzle.js', () => ({
-  puzzleIsInFuture,
-}));
+jest.unstable_mockModule('src/validation/validatePuzzle.js', () => ({ puzzleIsInFuture }));
 
 // import after mocks set up
-const { assertPuzzleUnlocked } = await import(
-  '../../src/actions/assertPuzzleUnlocked.js'
-);
+const { assertPuzzleUnlocked } = await import('../../src/actions/assertPuzzleUnlocked.js');
 
 describe('assertPuzzleUnlocked()', () => {
   afterEach(() => {

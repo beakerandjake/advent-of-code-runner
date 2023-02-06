@@ -7,7 +7,9 @@ import { replaceTokens } from './replaceTokens.js';
 /**
  * Maps tokens strings in the template readme file to fields of the args.
  */
-const tokens = [{ match: '{{year}}', key: 'year' }];
+const tokens = [
+  { match: '{{year}}', key: 'year' },
+];
 
 /**
  * Creates a readme file in the cwd.

@@ -1,14 +1,12 @@
-import { describe, jest, test, afterEach } from '@jest/globals';
+import {
+  describe, jest, test, afterEach,
+} from '@jest/globals';
 import { mockLogger } from '../mocks.js';
 
 // setup mocks
 mockLogger();
-jest.unstable_mockModule('src/formatting.js', () => ({
-  humanizeDuration: jest.fn(),
-}));
-jest.unstable_mockModule('src/validation/validatePuzzle.js', () => ({
-  getTotalPuzzleCount: jest.fn(),
-}));
+jest.unstable_mockModule('src/formatting.js', () => ({ humanizeDuration: jest.fn() }));
+jest.unstable_mockModule('src/validation/validatePuzzle.js', () => ({ getTotalPuzzleCount: jest.fn() }));
 jest.unstable_mockModule('src/statistics.js', () => ({
   getAverageAttempts: jest.fn(),
   getAverageRuntime: jest.fn(),
@@ -28,9 +26,7 @@ const {
   getFastestRuntime,
   getSlowestRuntime,
 } = await import('../../src/statistics.js');
-const { getTotalPuzzleCount } = await import(
-  '../../src/validation/validatePuzzle.js'
-);
+const { getTotalPuzzleCount } = await import('../../src/validation/validatePuzzle.js');
 const {
   tr,
   italic,
@@ -51,29 +47,26 @@ describe('generateMarkdownProgressTable()', () => {
     jest.resetAllMocks();
   });
 
-  test.each([undefined, null, ''])('throws if year is: "%s"', async (year) => {
-    await expect(async () =>
-      generateMarkdownProgressTable({ year, completionData: [1234] })
+  test.each([
+    undefined, null, '',
+  ])('throws if year is: "%s"', async (year) => {
+    await expect(
+      async () => generateMarkdownProgressTable({ year, completionData: [1234] }),
     ).rejects.toThrow();
   });
 
-  test.each([undefined, null, []])(
-    'throws if completion data is: "%s"',
-    async (completionData) => {
-      await expect(async () =>
-        generateMarkdownProgressTable({ year: 2023, completionData })
-      ).rejects.toThrow();
-    }
-  );
+  test.each([
+    undefined, null, [],
+  ])('throws if completion data is: "%s"', async (completionData) => {
+    await expect(
+      async () => generateMarkdownProgressTable({ year: 2023, completionData }),
+    ).rejects.toThrow();
+  });
 
   test('returns expected value', async () => {
     const completionData = [
       {
-        day: 1,
-        level: 1,
-        solved: false,
-        runtimeNs: 1234,
-        numberOfAttempts: 6,
+        day: 1, level: 1, solved: false, runtimeNs: 1234, numberOfAttempts: 6,
       },
     ];
     getAverageAttempts.mockResolvedValue(22.23344555);
@@ -81,10 +74,7 @@ describe('generateMarkdownProgressTable()', () => {
     getTotalPuzzleCount.mockReturnValue(1234);
     humanizeDuration.mockImplementation((x) => x?.toString() || '');
 
-    const result = await generateMarkdownProgressTable({
-      year: 2023,
-      completionData,
-    });
+    const result = await generateMarkdownProgressTable({ year: 2023, completionData });
 
     const expectedHeader = '## Completion Progress - 123/1234 (10%)';
     const expectedTable = [
@@ -95,7 +85,10 @@ describe('generateMarkdownProgressTable()', () => {
     ].join('\n');
 
     expect(result).toEqual({
-      progressTable: [expectedHeader, expectedTable].join('\n\n'),
+      progressTable: [
+        expectedHeader,
+        expectedTable,
+      ].join('\n\n'),
     });
   });
 
@@ -152,14 +145,13 @@ describe('generateMarkdownProgressTable()', () => {
   });
 
   describe('mapAttemptColumns()', () => {
-    test.each([null, undefined])(
-      'returns empty string if provided: "%s"',
-      (numberOfAttempts) => {
-        const input = [{ numberOfAttempts }];
-        const result = mapAttemptColumns(input);
-        expect(result).toEqual(['']);
-      }
-    );
+    test.each([
+      null, undefined,
+    ])('returns empty string if provided: "%s"', (numberOfAttempts) => {
+      const input = [{ numberOfAttempts }];
+      const result = mapAttemptColumns(input);
+      expect(result).toEqual(['']);
+    });
 
     test('returns value if no max attempts', () => {
       const input = [{ numberOfAttempts: 10 }];
@@ -181,14 +173,13 @@ describe('generateMarkdownProgressTable()', () => {
   });
 
   describe('mapRuntimeColumn()', () => {
-    test.each([null, undefined])(
-      'returns empty string if provided: "%s"',
-      (numberOfAttempts) => {
-        const input = { numberOfAttempts };
-        const result = mapRuntimeColumn(input);
-        expect(result).toEqual('');
-      }
-    );
+    test.each([
+      null, undefined,
+    ])('returns empty string if provided: "%s"', (numberOfAttempts) => {
+      const input = { numberOfAttempts };
+      const result = mapRuntimeColumn(input);
+      expect(result).toEqual('');
+    });
 
     test('returns value if no fastest or slowest provided', () => {
       const expected = 'ASDF';
@@ -202,31 +193,19 @@ describe('generateMarkdownProgressTable()', () => {
       const expected = 'ASDF';
       humanizeDuration.mockReturnValue(expected);
       const input = { runtimeNs: 10 };
-      const result = mapRuntimeColumn(
-        input,
-        input.runtimeNs - 4,
-        input.runtimeNs + 5
-      );
+      const result = mapRuntimeColumn(input, input.runtimeNs - 4, input.runtimeNs + 5);
       expect(result).toBe(expected);
     });
 
     test('appends (best) if value is equal to fastest', () => {
       const input = { runtimeNs: 10 };
-      const result = mapRuntimeColumn(
-        input,
-        input.runtimeNs,
-        input.runtimeNs + 5
-      );
+      const result = mapRuntimeColumn(input, input.runtimeNs, input.runtimeNs + 5);
       expect(result).toContain('best');
     });
 
     test('appends (worst) if value is equal to slowest', () => {
       const input = { runtimeNs: 10 };
-      const result = mapRuntimeColumn(
-        input,
-        input.runtimeNs - 3,
-        input.runtimeNs
-      );
+      const result = mapRuntimeColumn(input, input.runtimeNs - 3, input.runtimeNs);
       expect(result).toContain('worst');
     });
   });
@@ -255,9 +234,7 @@ describe('generateMarkdownProgressTable()', () => {
       getSolvedCount.mockResolvedValue(solvedCount);
       getTotalPuzzleCount.mockReturnValue(totalPuzzleCount);
       const result = await generateHeader(2022);
-      expect(result).toContain(
-        ((solvedCount / totalPuzzleCount) * 100).toFixed()
-      );
+      expect(result).toContain(((solvedCount / totalPuzzleCount) * 100).toFixed());
     });
   });
 
@@ -275,18 +252,10 @@ describe('generateMarkdownProgressTable()', () => {
       humanizeDuration.mockImplementation((x) => x?.toString() || '');
       const result = await generatePuzzleRows(2022, [
         {
-          day: 1,
-          level: 1,
-          solved: false,
-          runtimeNs: 1234,
-          numberOfAttempts: 6,
+          day: 1, level: 1, solved: false, runtimeNs: 1234, numberOfAttempts: 6,
         },
         {
-          day: 1,
-          level: 2,
-          solved: true,
-          runtimeNs: 4321,
-          numberOfAttempts: 4,
+          day: 1, level: 2, solved: true, runtimeNs: 4321, numberOfAttempts: 4,
         },
       ]);
       expect(result).toEqual([
@@ -298,25 +267,13 @@ describe('generateMarkdownProgressTable()', () => {
     test('marks best/worst if more than 2 rows', async () => {
       const completionData = [
         {
-          day: 1,
-          level: 1,
-          solved: false,
-          runtimeNs: 1234,
-          numberOfAttempts: 6,
+          day: 1, level: 1, solved: false, runtimeNs: 1234, numberOfAttempts: 6,
         },
         {
-          day: 1,
-          level: 2,
-          solved: true,
-          runtimeNs: 4321,
-          numberOfAttempts: 4,
+          day: 1, level: 2, solved: true, runtimeNs: 4321, numberOfAttempts: 4,
         },
         {
-          day: 2,
-          level: 1,
-          solved: false,
-          runtimeNs: 661,
-          numberOfAttempts: 1,
+          day: 2, level: 1, solved: false, runtimeNs: 661, numberOfAttempts: 1,
         },
       ];
       getMaxAttempts.mockResolvedValue(6);
@@ -337,25 +294,19 @@ describe('generateMarkdownProgressTable()', () => {
     test('generates expected value', async () => {
       const completionData = [
         {
-          day: 1,
-          level: 1,
-          solved: false,
-          runtimeNs: 1234,
-          numberOfAttempts: 6,
+          day: 1, level: 1, solved: false, runtimeNs: 1234, numberOfAttempts: 6,
         },
       ];
       getAverageAttempts.mockResolvedValue(22.23344555);
       humanizeDuration.mockImplementation((x) => x?.toString() || '');
       const result = await generateTable(2022, completionData);
 
-      expect(result).toEqual(
-        [
-          '| Puzzle | Solved | Attempts | Runtime |',
-          '| --- | --- | --- | --- |',
-          '| 1.1 |  | 6 | 1234 |',
-          '|  | **Average** | 22.23 |  |',
-        ].join('\n')
-      );
+      expect(result).toEqual([
+        '| Puzzle | Solved | Attempts | Runtime |',
+        '| --- | --- | --- | --- |',
+        '| 1.1 |  | 6 | 1234 |',
+        '|  | **Average** | 22.23 |  |',
+      ].join('\n'));
     });
   });
 });

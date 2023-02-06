@@ -15,7 +15,9 @@ import { getCompletionData } from './getCompletionData.js';
 import { getNextUnsolvedPuzzle } from './getNextUnsolvedPuzzle.js';
 import { getPuzzleInput } from './getPuzzleInput.js';
 import { getYear } from './getYear.js';
-import { and, not, or, ifThen } from './logical.js';
+import {
+  and, not, or, ifThen,
+} from './logical.js';
 import { printProgressTable } from './printProgressTable.js';
 import { outputPuzzleLink } from './outputPuzzleLink.js';
 import { saveProgressTableToReadme } from './saveProgressTableToReadme.js';

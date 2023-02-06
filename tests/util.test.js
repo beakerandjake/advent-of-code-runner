@@ -1,5 +1,7 @@
 import { describe, test } from '@jest/globals';
-import { get, has, getType, average } from '../src/util.js';
+import {
+  get, has, getType, average,
+} from '../src/util.js';
 
 describe('util', () => {
   describe('get()', () => {
@@ -40,12 +42,7 @@ describe('util', () => {
 
     test('returns value if key is found (nested)', () => {
       const expected = 22;
-      expect(
-        get(
-          { one: { two: { three: { four: expected } } } },
-          'one.two.three.four'
-        )
-      ).toBe(expected);
+      expect(get({ one: { two: { three: { four: expected } } } }, 'one.two.three.four')).toBe(expected);
     });
   });
 
@@ -105,7 +102,7 @@ describe('util', () => {
       [{}, 'Object'],
       [[], 'Array'],
       [() => {}, 'Function'],
-      [new (class Cats {})(), 'Cats'],
+      [new class Cats {}(), 'Cats'],
       [Promise.resolve(true), 'Promise'],
     ])('"%s" returns "%s"', (value, expected) => {
       expect(getType(value).toLowerCase()).toBe(expected.toLocaleLowerCase());
@@ -113,13 +110,12 @@ describe('util', () => {
   });
 
   describe('average()', () => {
-    test.each([null, undefined, [], [1, 2, 3, 'CATS']])(
-      'returns NaN if items are: "%s"',
-      (items) => {
-        const result = average(items);
-        expect(result).toBe(NaN);
-      }
-    );
+    test.each([
+      null, undefined, [], [1, 2, 3, 'CATS'],
+    ])('returns NaN if items are: "%s"', (items) => {
+      const result = average(items);
+      expect(result).toBe(NaN);
+    });
 
     test.each([
       { nums: [1, 2, 2, 3, 4, 7, 9], expected: 4 },

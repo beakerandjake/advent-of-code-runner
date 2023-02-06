@@ -10,30 +10,22 @@ import { logger } from '../logger.js';
  * @param {String} actionType
  * @param {Function} fn
  */
-export const rateLimitDecorator =
-  (
-    fn,
-    actionType,
-    exceededMessage = 'You have made too many requests to advent of code.'
-  ) =>
-  async (...args) => {
-    logger.debug(
-      'checking rate limit before performing action: %s',
-      actionType
-    );
+export const rateLimitDecorator = (
+  fn,
+  actionType,
+  exceededMessage = 'You have made too many requests to advent of code.',
+) => async (...args) => {
+  logger.debug('checking rate limit before performing action: %s', actionType);
 
-    const { limited, expiration } = await isRateLimited(actionType);
+  const { limited, expiration } = await isRateLimited(actionType);
 
-    if (limited) {
-      throw new RateLimitExceededError(
-        exceededMessage,
-        formatDistanceToNow(expiration)
-      );
-    }
+  if (limited) {
+    throw new RateLimitExceededError(exceededMessage, formatDistanceToNow(expiration));
+  }
 
-    try {
-      return fn(...args);
-    } finally {
-      await updateRateLimit(actionType);
-    }
-  };
+  try {
+    return fn(...args);
+  } finally {
+    await updateRateLimit(actionType);
+  }
+};

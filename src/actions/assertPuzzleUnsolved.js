@@ -7,9 +7,7 @@ import { logger } from '../logger.js';
  */
 export const assertPuzzleUnsolved = async ({ year, day, level } = {}) => {
   if (await puzzleHasBeenSolved(year, day, level)) {
-    logger.error(
-      'You have already solved and submitted the correct answer this puzzle!'
-    );
+    logger.error('You have already solved and submitted the correct answer this puzzle!');
     return false;
   }
   return true;

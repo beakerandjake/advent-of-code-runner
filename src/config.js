@@ -43,7 +43,7 @@ const cwd = getCwd();
  */
 const readMetaFromPackageJson = async () => {
   const packageJson = JSON.parse(
-    await readFile(join(__dirname, '..', 'package.json'), { encoding: 'utf8' })
+    await readFile(join(__dirname, '..', 'package.json'), { encoding: 'utf8' }),
   );
 
   return {
@@ -131,11 +131,7 @@ const CONFIG = {
     userDataFile: join(cwd, 'aocr-data.json'),
     inputsDir: join(cwd, 'inputs'),
     solutionsDir: join(cwd, 'src'),
-    solutionRunnerWorkerFile: join(
-      __dirname,
-      'solutions',
-      'solutionRunnerWorkerThread.js'
-    ),
+    solutionRunnerWorkerFile: join(__dirname, 'solutions', 'solutionRunnerWorkerThread.js'),
     templates: {
       gitignore: {
         source: join(__dirname, '..', 'templates', 'template-gitignore'),
@@ -158,11 +154,14 @@ const CONFIG = {
     },
   },
   initialize: {
-    emptyCwdWhitelist: ['.git', '.DS_Store', 'LICENSE', 'node_modules'],
+    emptyCwdWhitelist: [
+      '.git',
+      '.DS_Store',
+      'LICENSE',
+      'node_modules',
+    ],
   },
-  disableReadmeAutoSaveProgress: yn(
-    process.env[envOptions.disableReadmeAutoSaveProgress]
-  ),
+  disableReadmeAutoSaveProgress: yn(process.env[envOptions.disableReadmeAutoSaveProgress]),
 };
 
 /**

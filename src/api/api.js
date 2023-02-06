@@ -1,11 +1,7 @@
 import { getConfigValue } from '../config.js';
 import { sizeOfStringInKb } from '../formatting.js';
 import { logger } from '../logger.js';
-import {
-  extractTextContentOfMain,
-  parseResponseMessage,
-  sanitizeMessage,
-} from './parseSubmissionResponse.js';
+import { extractTextContentOfMain, parseResponseMessage, sanitizeMessage } from './parseSubmissionResponse.js';
 import { puzzleAnswerUrl, puzzleInputUrl } from './urls.js';
 /**
  * Creates a headers object which can be passed to fetch.
@@ -27,9 +23,7 @@ export const downloadInput = async (year, day, authenticationToken) => {
   logger.debug('downloading input file for year: %s, day: %s', year, day);
 
   if (!authenticationToken) {
-    throw new Error(
-      'Authentication Token is required to query advent of code.'
-    );
+    throw new Error('Authentication Token is required to query advent of code.');
   }
 
   // query api
@@ -49,9 +43,7 @@ export const downloadInput = async (year, day, authenticationToken) => {
   }
   // handle all other error status codes
   if (!response.ok) {
-    throw new Error(
-      `Unexpected server error while downloading input file, error: ${response.status} - ${response.statusText}`
-    );
+    throw new Error(`Unexpected server error while downloading input file, error: ${response.status} - ${response.statusText}`);
   }
 
   // expect text of response is the input.
@@ -73,19 +65,11 @@ export const downloadInput = async (year, day, authenticationToken) => {
  * @param {String|Number} solution - The solution to test.
  * @param {String} authenticationToken - Token to authenticate with aoc.
  */
-export const submitSolution = async (
-  year,
-  day,
-  level,
-  solution,
-  authenticationToken
-) => {
+export const submitSolution = async (year, day, level, solution, authenticationToken) => {
   logger.debug('submitting solution to advent of code', { year, day, level });
 
   if (!authenticationToken) {
-    throw new Error(
-      'Authentication Token is required to query advent of code.'
-    );
+    throw new Error('Authentication Token is required to query advent of code.');
   }
 
   // post to api
@@ -93,10 +77,7 @@ export const submitSolution = async (
   logger.debug('posting to url: %s', url);
   const response = await fetch(url, {
     method: 'POST',
-    headers: {
-      ...getHeaders(authenticationToken),
-      'Content-Type': 'application/x-www-form-urlencoded',
-    },
+    headers: { ...getHeaders(authenticationToken), 'Content-Type': 'application/x-www-form-urlencoded' },
     body: `level=${level}&answer=${solution}`,
   });
 
@@ -112,15 +93,13 @@ export const submitSolution = async (
   }
   // bail on any other type of http error
   if (!response.ok) {
-    throw new Error(
-      `Unexpected server error while posting solution, error: ${response.status} - ${response.statusText}`
-    );
+    throw new Error(`Unexpected server error while posting solution, error: ${response.status} - ${response.statusText}`);
   }
 
   // advent of code doesn't return status codes, we have to parse the html.
   // grab the text content of the <main> element which contains the message we need.
   const responseMessage = sanitizeMessage(
-    extractTextContentOfMain(await response.text())
+    extractTextContentOfMain(await response.text()),
   );
 
   if (!responseMessage) {

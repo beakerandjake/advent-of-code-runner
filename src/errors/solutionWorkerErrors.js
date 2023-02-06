@@ -35,13 +35,10 @@ export class SolutionWorkerMissingDataError extends Error {
  */
 export class UserSolutionAnswerInvalidError extends Error {
   constructor(answerType, fileName, functionName, ...args) {
-    super(
-      [
-        `Your code returned an invalid answer of type: "${answerType}". Answer must be a string or a number.`,
-        `at ${functionName} (${pathToFileURL(fileName)})`,
-      ].join('\n    '),
-      ...args
-    );
+    super([
+      `Your code returned an invalid answer of type: "${answerType}". Answer must be a string or a number.`,
+      `at ${functionName} (${pathToFileURL(fileName)})`,
+    ].join('\n    '), ...args);
     this.name = 'UserSolutionAnswerInvalidError';
   }
 }
@@ -51,12 +48,7 @@ export class UserSolutionAnswerInvalidError extends Error {
  */
 export class UserSolutionFileNotFoundError extends Error {
   constructor(fileName, ...args) {
-    super(
-      `Could not load your solution file, ensure file exits (${pathToFileURL(
-        fileName
-      )})`,
-      ...args
-    );
+    super(`Could not load your solution file, ensure file exits (${pathToFileURL(fileName)})`, ...args);
     this.name = 'UserSolutionFileNotFoundError';
   }
 }
@@ -67,11 +59,10 @@ export class UserSolutionFileNotFoundError extends Error {
  * @param {String} message
  * @param {Error} originalError
  */
-const withOriginalErrorStack = (message, originalError) =>
-  [
-    message,
-    `↳ ${originalError?.stack ? originalError.stack : originalError}`,
-  ].join('\n');
+const withOriginalErrorStack = (message, originalError) => [
+  message,
+  `↳ ${originalError?.stack ? originalError.stack : originalError}`,
+].join('\n');
 
 /**
  * Error raised if a users solution function raises an error.
@@ -100,10 +91,7 @@ export class UserSolutionSyntaxError extends Error {
  */
 export class UserSolutionMissingFunctionError extends Error {
   constructor(functionName, ...args) {
-    super(
-      `Function not found. Your solution file must export function "${functionName}" as a named export.`,
-      ...args
-    );
+    super(`Function not found. Your solution file must export function "${functionName}" as a named export.`, ...args);
     this.name = 'UserSolutionMissingFunctionError';
   }
 }

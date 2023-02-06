@@ -1,13 +1,13 @@
-import { describe, jest, test, afterEach } from '@jest/globals';
+import {
+  describe, jest, test, afterEach,
+} from '@jest/globals';
 import { mockLogger } from '../mocks.js';
 
 // setup mocks
 mockLogger();
 
 // import after mocks setup
-const { createChain, executeChain } = await import(
-  '../../src/actions/actionChain.js'
-);
+const { createChain, executeChain } = await import('../../src/actions/actionChain.js');
 
 describe('actionChain', () => {
   afterEach(() => {
@@ -16,12 +16,7 @@ describe('actionChain', () => {
 
   describe('createChain()', () => {
     test.each([
-      null,
-      true,
-      Promise.resolve(false),
-      'ASDF',
-      { cats: true },
-      1234,
+      null, true, Promise.resolve(false), 'ASDF', { cats: true }, 1234,
     ])('throws if given: "%s"', (fn) => {
       expect(() => createChain(fn)).toThrow();
     });
@@ -88,11 +83,7 @@ describe('actionChain', () => {
     });
 
     test('throws if any link throws', async () => {
-      const chain = [
-        jest.fn(),
-        jest.fn(() => Promise.reject(new RangeError())),
-        jest.fn(),
-      ];
+      const chain = [jest.fn(), jest.fn(() => Promise.reject(new RangeError())), jest.fn()];
       await expect(async () => executeChain(chain)).rejects.toThrow(RangeError);
     });
 
@@ -100,9 +91,7 @@ describe('actionChain', () => {
       const before = [jest.fn(), jest.fn()];
       const bomb = jest.fn(() => Promise.reject(new Error()));
       const after = [jest.fn(), jest.fn()];
-      await expect(async () =>
-        executeChain([...before, bomb, ...after])
-      ).rejects.toThrow();
+      await expect(async () => executeChain([...before, bomb, ...after])).rejects.toThrow();
       before.forEach((x) => expect(x).toHaveBeenCalledTimes(1));
       expect(bomb).toHaveBeenCalled();
       after.forEach((x) => expect(x).not.toHaveBeenCalled());
@@ -122,9 +111,7 @@ describe('actionChain', () => {
       const after = [jest.fn(), jest.fn()];
       await executeChain([...before, ...after], origArgs);
       before.forEach((x) => expect(x).toHaveBeenCalledWith(origArgs));
-      after.forEach((x) =>
-        expect(x).toHaveBeenCalledWith({ ...origArgs, ...changes })
-      );
+      after.forEach((x) => expect(x).toHaveBeenCalledWith({ ...origArgs, ...changes }));
     });
   });
 });

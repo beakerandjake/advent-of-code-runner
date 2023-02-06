@@ -7,7 +7,9 @@ import { replaceTokens } from './replaceTokens.js';
 /**
  * Maps tokens strings in the template env file to fields of the args.
  */
-const envFileTokens = [{ match: '{{authToken}}', key: 'authToken' }];
+const envFileTokens = [
+  { match: '{{authToken}}', key: 'authToken' },
+];
 
 /**
  * Creates the .env file in the cwd
@@ -23,11 +25,7 @@ export const createDotEnv = async ({ authToken } = {}) => {
 
   const { source, dest } = getConfigValue('paths.templates.dotenv');
   const templateEnvFileContents = await readFile(source, { encoding: 'utf-8' });
-  const envFile = replaceTokens(
-    envFileTokens,
-    { authToken },
-    templateEnvFileContents
-  );
+  const envFile = replaceTokens(envFileTokens, { authToken }, templateEnvFileContents);
   logger.debug('saving .env file to: %s', dest);
   await outputFile(dest, envFile);
 };

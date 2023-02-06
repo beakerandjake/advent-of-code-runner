@@ -13,9 +13,7 @@ export const getAnswersFromUser = (questions = []) => {
   // create a variable for this fn instead of just returning the fn
   // this gives the fn a .name property and makes debugging easier.
   const _ = {
-    getAnswersFromUser: async () => ({
-      answers: await inquirer.prompt(questions),
-    }),
+    getAnswersFromUser: async () => ({ answers: await inquirer.prompt(questions) }),
   };
 
   return _.getAnswersFromUser;

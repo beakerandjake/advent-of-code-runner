@@ -1,13 +1,13 @@
-import { describe, jest, test, afterEach } from '@jest/globals';
+import {
+  describe, jest, test, afterEach,
+} from '@jest/globals';
 import { mockConfig } from '../mocks.js';
 
 // setup mocks
 const { getConfigValue } = mockConfig();
 
 // import after mocks setup
-const { puzzleBaseUrl, puzzleAnswerUrl, puzzleInputUrl } = await import(
-  '../../src/api/urls.js'
-);
+const { puzzleBaseUrl, puzzleAnswerUrl, puzzleInputUrl } = await import('../../src/api/urls.js');
 
 describe('urls', () => {
   afterEach(() => {
@@ -15,11 +15,15 @@ describe('urls', () => {
   });
 
   describe('puzzleBaseUrl()', () => {
-    test.each([null, undefined])('throws if year is: "%s"', (year) => {
+    test.each([
+      null, undefined,
+    ])('throws if year is: "%s"', (year) => {
       expect(() => puzzleBaseUrl(year, 1)).toThrow();
     });
 
-    test.each([null, undefined])('throws if day is: "%s"', (day) => {
+    test.each([
+      null, undefined,
+    ])('throws if day is: "%s"', (day) => {
       expect(() => puzzleBaseUrl(2022, day)).toThrow();
     });
 
@@ -39,11 +43,15 @@ describe('urls', () => {
   });
 
   describe('puzzleAnswerUrl()', () => {
-    test.each([null, undefined])('throws if year is: "%s"', (year) => {
+    test.each([
+      null, undefined,
+    ])('throws if year is: "%s"', (year) => {
       expect(() => puzzleAnswerUrl(year, 1)).toThrow();
     });
 
-    test.each([null, undefined])('throws if day is: "%s"', (day) => {
+    test.each([
+      null, undefined,
+    ])('throws if day is: "%s"', (day) => {
       expect(() => puzzleAnswerUrl(2022, day)).toThrow();
     });
 
@@ -63,11 +71,15 @@ describe('urls', () => {
   });
 
   describe('puzzleInputUrl()', () => {
-    test.each([null, undefined])('throws if year is: "%s"', (year) => {
+    test.each([
+      null, undefined,
+    ])('throws if year is: "%s"', (year) => {
       expect(() => puzzleInputUrl(year, 1)).toThrow();
     });
 
-    test.each([null, undefined])('throws if day is: "%s"', (day) => {
+    test.each([
+      null, undefined,
+    ])('throws if day is: "%s"', (day) => {
       expect(() => puzzleInputUrl(2022, day)).toThrow();
     });
 

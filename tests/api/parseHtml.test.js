@@ -1,15 +1,8 @@
 import { describe, test } from '@jest/globals';
 
+import { getElementByTagName, getTextContent } from '../../src/api/parseHtml.js';
 import {
-  getElementByTagName,
-  getTextContent,
-} from '../../src/api/parseHtml.js';
-import {
-  badLevel,
-  correctAnswerDayComplete,
-  wrongAnswer,
-  tooManyRequests,
-  correctAnswerDayIncomplete,
+  badLevel, correctAnswerDayComplete, wrongAnswer, tooManyRequests, correctAnswerDayIncomplete,
 } from './getActualResponseHtml.js';
 
 describe('parseHtml', () => {
@@ -17,7 +10,7 @@ describe('parseHtml', () => {
     test.each([
       { value: null, title: 'null' },
       { value: undefined, title: 'undefined' },
-      { value: '', title: "''" },
+      { value: '', title: '\'\'' },
       { value: '\t', title: 'whitespace character' },
       { value: '\r\n', title: 'new line character' },
       { value: '\t\t\t', title: 'multiple whitespace characters' },
@@ -26,13 +19,12 @@ describe('parseHtml', () => {
       expect(result).toBeNull();
     });
 
-    test.each([null, undefined, ''])(
-      'returns null with empty tag (%s)',
-      (value) => {
-        const result = getElementByTagName('<p>Hello World</p>', value);
-        expect(result).toBeNull();
-      }
-    );
+    test.each([
+      null, undefined, '',
+    ])('returns null with empty tag (%s)', (value) => {
+      const result = getElementByTagName('<p>Hello World</p>', value);
+      expect(result).toBeNull();
+    });
 
     test('returns null if no tags in html', () => {
       const result = getElementByTagName('Hello World I have no Tags!', 'span');
@@ -53,31 +45,11 @@ describe('parseHtml', () => {
     });
 
     test.each([
-      [
-        'html',
-        '<!DOCTYPE html><html><body>Hello!</body></html>',
-        '<html><body>Hello!</body></html>',
-      ],
-      [
-        'main',
-        '<!DOCTYPE html><html><body><main>Hello!</main></body></html>',
-        '<main>Hello!</main>',
-      ],
-      [
-        'body',
-        '<!DOCTYPE html><html><body>Hello!</body></html>',
-        '<body>Hello!</body>',
-      ],
-      [
-        'h1',
-        '<!DOCTYPE html><html><body><h1 class="cats">My First Heading</h1></body></html>',
-        '<h1 class="cats">My First Heading</h1>',
-      ],
-      [
-        'p',
-        '<!DOCTYPE html><html><body><h1>My First Heading</h1><p>My first paragraph.</p></body></html>',
-        '<p>My first paragraph.</p>',
-      ],
+      ['html', '<!DOCTYPE html><html><body>Hello!</body></html>', '<html><body>Hello!</body></html>'],
+      ['main', '<!DOCTYPE html><html><body><main>Hello!</main></body></html>', '<main>Hello!</main>'],
+      ['body', '<!DOCTYPE html><html><body>Hello!</body></html>', '<body>Hello!</body>'],
+      ['h1', '<!DOCTYPE html><html><body><h1 class="cats">My First Heading</h1></body></html>', '<h1 class="cats">My First Heading</h1>'],
+      ['p', '<!DOCTYPE html><html><body><h1>My First Heading</h1><p>My first paragraph.</p></body></html>', '<p>My first paragraph.</p>'],
     ])('finds tag <%s> when exists', (tag, html, expected) => {
       const result = getElementByTagName(html, tag);
       expect(result).toBe(expected);
@@ -95,18 +67,12 @@ describe('parseHtml', () => {
       });
 
       test('correct answer (day complete)', () => {
-        const result = getElementByTagName(
-          correctAnswerDayComplete.html,
-          'main'
-        );
+        const result = getElementByTagName(correctAnswerDayComplete.html, 'main');
         expect(result).toBe(correctAnswerDayComplete.mainTag);
       });
 
       test('correct answer (day incomplete)', () => {
-        const result = getElementByTagName(
-          correctAnswerDayIncomplete.html,
-          'main'
-        );
+        const result = getElementByTagName(correctAnswerDayIncomplete.html, 'main');
         expect(result).toBe(correctAnswerDayIncomplete.mainTag);
       });
 
@@ -121,7 +87,7 @@ describe('parseHtml', () => {
     test.each([
       { value: null, title: 'null' },
       { value: undefined, title: 'undefined' },
-      { value: '', title: "''" },
+      { value: '', title: '\'\'' },
     ])('returns empty string with empty html value ($title)', ({ html }) => {
       const result = getTextContent(html);
       expect(result).toBe('');
@@ -141,10 +107,7 @@ describe('parseHtml', () => {
       ['hello', '<div><span>hello</span></div>'],
       ['hello', '<div class="cats">hello</div>'],
       ['hello', '<div class="cats"><p>hello</p></div>'],
-      [
-        'hello world',
-        '<div class="cats">hello <a href="https://www.wikipedia.org">world</a></div>',
-      ],
+      ['hello world', '<div class="cats">hello <a href="https://www.wikipedia.org">world</a></div>'],
     ])('returns: %s from: %s', (expected, html) => {
       const result = getTextContent(html);
       expect(result).toBe(expected);
@@ -173,15 +136,13 @@ describe('parseHtml', () => {
       });
 
       test('bad level', () => {
-        const expected =
-          "You don't seem to be solving the right level. Did you already complete it? [Return to Day 1]";
+        const expected = 'You don\'t seem to be solving the right level. Did you already complete it? [Return to Day 1]';
         const result = getTextContent(badLevel.mainTag);
         expect(result).toBe(expected);
       });
 
       test('too many requests', () => {
-        const expected =
-          'You gave an answer too recently; you have to wait after submitting an answer before trying again. You have 14m 6s left to wait. [Return to Day 1]';
+        const expected = 'You gave an answer too recently; you have to wait after submitting an answer before trying again. You have 14m 6s left to wait. [Return to Day 1]';
         const result = getTextContent(tooManyRequests.mainTag);
         expect(result).toBe(expected);
       });

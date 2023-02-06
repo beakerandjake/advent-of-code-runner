@@ -16,21 +16,17 @@ describe('validateInput', () => {
       {},
       [],
       () => {},
-      new (class Cats {})(),
+      new class Cats {}(),
       Promise.resolve(true),
     ])('returns false on non string value "%s"', (value) => {
       const result = inputIsValid(value);
       expect(inputIsValid(result)).toBe(false);
     });
 
-    ['', ' ', '\t', '\r\n', '\n'].forEach((value) =>
-      test(`returns false on empty string value ${JSON.stringify(
-        value
-      )}`, () => {
-        const result = inputIsValid(value);
-        expect(result).toBe(false);
-      })
-    );
+    ['', ' ', '\t', '\r\n', '\n'].forEach((value) => test(`returns false on empty string value ${JSON.stringify(value)}`, () => {
+      const result = inputIsValid(value);
+      expect(result).toBe(false);
+    }));
 
     test('returns true on non empty string', () => {
       const result = inputIsValid('CATS');

@@ -5,10 +5,7 @@ import { answerHasBeenSubmitted } from '../answers.js';
  * Halts execution if the puzzle already been submitted to advent of code.
  */
 export const assertAnswerNotPreviouslySubmitted = async ({
-  year,
-  day,
-  level,
-  answer,
+  year, day, level, answer,
 } = {}) => {
   if (answer == null) {
     throw new Error('null or undefined answer');

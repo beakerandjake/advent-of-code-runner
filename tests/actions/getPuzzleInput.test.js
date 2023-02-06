@@ -1,33 +1,25 @@
-import { describe, jest, test, afterEach } from '@jest/globals';
+import {
+  describe, jest, test, afterEach,
+} from '@jest/globals';
 import { mockConfig, mockLogger } from '../mocks';
 
 // setup mocks.
 mockLogger();
 mockConfig();
-jest.unstable_mockModule('src/api/index.js', () => ({
-  downloadInput: jest.fn(),
-}));
+jest.unstable_mockModule('src/api/index.js', () => ({ downloadInput: jest.fn() }));
 jest.unstable_mockModule('src/inputs/inputCache.js', () => ({
   inputIsCached: jest.fn(),
   getCachedInput: jest.fn(),
   cacheInput: jest.fn(),
 }));
-jest.unstable_mockModule('src/validation/validateInput.js', () => ({
-  inputIsValid: jest.fn(),
-}));
-jest.unstable_mockModule('src/actions/getAuthenticationToken.js', () => ({
-  getAuthenticationToken: jest.fn(),
-}));
+jest.unstable_mockModule('src/validation/validateInput.js', () => ({ inputIsValid: jest.fn() }));
+jest.unstable_mockModule('src/actions/getAuthenticationToken.js', () => ({ getAuthenticationToken: jest.fn() }));
 
 // import mocks after setting up mocks
 const { downloadInput } = await import('../../src/api/index.js');
-const { inputIsCached, getCachedInput, cacheInput } = await import(
-  '../../src/inputs/inputCache.js'
-);
+const { inputIsCached, getCachedInput, cacheInput } = await import('../../src/inputs/inputCache.js');
 const { inputIsValid } = await import('../../src/validation/validateInput.js');
-const { getAuthenticationToken } = await import(
-  '../../src/actions/getAuthenticationToken.js'
-);
+const { getAuthenticationToken } = await import('../../src/actions/getAuthenticationToken.js');
 const { getPuzzleInput } = await import('../../src/actions/getPuzzleInput.js');
 
 describe('getPuzzleInput()', () => {
@@ -41,11 +33,7 @@ describe('getPuzzleInput()', () => {
       inputIsCached.mockResolvedValue(true);
       getCachedInput.mockResolvedValue(input);
       inputIsValid.mockReturnValue(true);
-      const result = await getPuzzleInput({
-        year: 2022,
-        day: 1,
-        authToken: 'ASDF',
-      });
+      const result = await getPuzzleInput({ year: 2022, day: 1, authToken: 'ASDF' });
       expect(getCachedInput).toHaveBeenCalled();
       expect(result).toEqual({ input });
     });
@@ -69,11 +57,7 @@ describe('getPuzzleInput()', () => {
       inputIsCached.mockResolvedValue(true);
       getCachedInput.mockResolvedValue(input);
       inputIsValid.mockReturnValue(false);
-      const result = await getPuzzleInput({
-        year: 2022,
-        day: 1,
-        authToken: 'ASDF',
-      });
+      const result = await getPuzzleInput({ year: 2022, day: 1, authToken: 'ASDF' });
       expect(result).toBe(false);
     });
   });
@@ -94,9 +78,7 @@ describe('getPuzzleInput()', () => {
       inputIsCached.mockResolvedValue(false);
       downloadInput.mockRejectedValue(new Error());
       inputIsValid.mockReturnValue(true);
-      await expect(async () =>
-        getPuzzleInput({ year: 2022, day: 1 })
-      ).rejects.toThrow();
+      await expect(async () => getPuzzleInput({ year: 2022, day: 1 })).rejects.toThrow();
       expect(downloadInput).toHaveBeenCalled();
       expect(cacheInput).not.toHaveBeenCalled();
     });

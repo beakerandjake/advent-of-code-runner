@@ -14,12 +14,12 @@ const decorateApiWithRateLimiting = ({ downloadInput, submitSolution }) => {
     downloadInput: rateLimitDecorator(
       downloadInput,
       rateLimitedActions.downloadInput,
-      'Timeout period for downloading an input file has not expired.'
+      'Timeout period for downloading an input file has not expired.',
     ),
     submitSolution: rateLimitDecorator(
       submitSolution,
       rateLimitedActions.submitAnswer,
-      'Timeout period for submitting an answer has not expired.'
+      'Timeout period for submitting an answer has not expired.',
     ),
   };
 };

@@ -1,18 +1,16 @@
-import { describe, jest, test, afterEach } from '@jest/globals';
+import {
+  describe, jest, test, afterEach,
+} from '@jest/globals';
 import { mockConfig, mockLogger } from '../mocks.js';
 
 // setup mocks
 mockLogger();
 mockConfig();
 const mockExecuter = jest.fn();
-jest.unstable_mockModule('src/solutions/index.js', () => ({
-  execute: mockExecuter,
-}));
+jest.unstable_mockModule('src/solutions/index.js', () => ({ execute: mockExecuter }));
 
 // import after mocks set up
-const { executeUserSolution } = await import(
-  '../../src/actions/executeUserSolution.js'
-);
+const { executeUserSolution } = await import('../../src/actions/executeUserSolution.js');
 
 describe('executeUserSolution()', () => {
   afterEach(() => {
@@ -20,7 +18,9 @@ describe('executeUserSolution()', () => {
     jest.resetAllMocks();
   });
 
-  test.each([null, undefined])('throws if question is %s', async (question) => {
+  test.each([
+    null, undefined,
+  ])('throws if question is %s', async (question) => {
     await expect(async () => executeUserSolution(question)).rejects.toThrow();
   });
 
@@ -29,9 +29,6 @@ describe('executeUserSolution()', () => {
     const expected = { answer: '1234', runtimeNs: 1234 };
     mockExecuter.mockResolvedValue(expected);
     const result = await executeUserSolution(args);
-    expect(result).toEqual({
-      answer: expected.answer,
-      runtimeNs: expected.runtimeNs,
-    });
+    expect(result).toEqual({ answer: expected.answer, runtimeNs: expected.runtimeNs });
   });
 });

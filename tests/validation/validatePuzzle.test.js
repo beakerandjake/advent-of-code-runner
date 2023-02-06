@@ -1,4 +1,6 @@
-import { describe, jest, test, afterEach } from '@jest/globals';
+import {
+  describe, jest, test, afterEach,
+} from '@jest/globals';
 import { mockConfig, mockLogger } from '../mocks.js';
 
 // set up mocks
@@ -6,8 +8,7 @@ mockLogger();
 const { getConfigValue } = mockConfig();
 
 // import after setting up the mock so the modules import the mocked version
-const { getAllPuzzlesForYear, puzzleIsInFuture, getTotalPuzzleCount } =
-  await import('../../src/validation/validatePuzzle.js');
+const { getAllPuzzlesForYear, puzzleIsInFuture, getTotalPuzzleCount } = await import('../../src/validation/validatePuzzle.js');
 
 afterEach(() => {
   jest.resetAllMocks();

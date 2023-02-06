@@ -26,12 +26,7 @@ export const executeChain = async (links, args = {}) => {
     iterations += 1;
 
     try {
-      logger.info(
-        'executing link (%s/%s): %s',
-        iterations,
-        links.length,
-        link.name
-      );
+      logger.info('executing link (%s/%s): %s', iterations, links.length, link.name);
 
       // eslint-disable-next-line no-await-in-loop
       const result = await link(currentArgs);
@@ -51,19 +46,12 @@ export const executeChain = async (links, args = {}) => {
         currentArgs = { ...currentArgs, ...result };
       }
     } catch (error) {
-      logger.info(
-        'executing halted because error was raised by link: %s',
-        link.name
-      );
+      logger.info('executing halted because error was raised by link: %s', link.name);
       throw error;
     }
   }
 
-  logger.info(
-    'successfully executed action chain (%s/%s)',
-    iterations,
-    links.length
-  );
+  logger.info('successfully executed action chain (%s/%s)', iterations, links.length);
   return iterations === links.length;
 };
 
