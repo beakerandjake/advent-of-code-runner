@@ -9,13 +9,11 @@
  * @returns {Promise<Boolean>}
  */
 export const and = (lhs, rhs) => {
-  const fnName = (lhs?.name && rhs?.name)
-    ? `${lhs.name}-and-${rhs.name}`
-    : 'and';
+  const fnName = lhs?.name && rhs?.name ? `${lhs.name}-and-${rhs.name}` : 'and';
   // create a variable for this fn instead of just returning the fn
   // this gives the fn a .name property and makes debugging easier.
   const _ = {
-    [fnName]: async (...args) => await lhs(...args) && rhs(...args),
+    [fnName]: async (...args) => (await lhs(...args)) && rhs(...args),
   };
   return _[fnName];
 };
@@ -27,13 +25,11 @@ export const and = (lhs, rhs) => {
  * @returns {Promise<Boolean>}
  */
 export const or = (lhs, rhs) => {
-  const fnName = (lhs?.name && rhs?.name)
-    ? `${lhs.name}-or-${rhs.name}`
-    : 'or';
+  const fnName = lhs?.name && rhs?.name ? `${lhs.name}-or-${rhs.name}` : 'or';
   // create a variable for this fn instead of just returning the fn
   // this gives the fn a .name property and makes debugging easier.
   const _ = {
-    [fnName]: async (...args) => await lhs(...args) || rhs(...args),
+    [fnName]: async (...args) => (await lhs(...args)) || rhs(...args),
   };
   return _[fnName];
 };
@@ -61,9 +57,10 @@ export const not = (fn) => {
  * @returns
  */
 export const ifThen = (condition, consequent) => {
-  const fnName = (condition?.name && consequent?.name)
-    ? `if-${condition.name}-then-${consequent.name}`
-    : 'if-then';
+  const fnName =
+    condition?.name && consequent?.name
+      ? `if-${condition.name}-then-${consequent.name}`
+      : 'if-then';
   // create a variable for this fn instead of just returning the fn
   // this gives the fn a .name property and makes debugging easier.
   const _ = {

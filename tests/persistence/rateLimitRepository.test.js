@@ -1,6 +1,4 @@
-import {
-  describe, jest, test, afterEach,
-} from '@jest/globals';
+import { describe, jest, test, afterEach } from '@jest/globals';
 
 // setup mocks.
 jest.unstable_mockModule('fs-extra/esm', () => ({
@@ -10,7 +8,9 @@ jest.unstable_mockModule('fs-extra/esm', () => ({
 
 // import after setting up the mock so the modules import the mocked version
 const { readJson, outputJson } = await import('fs-extra/esm');
-const { getRateLimit, setRateLimit } = await import('../../src/persistence/rateLimitRepository.js');
+const { getRateLimit, setRateLimit } = await import(
+  '../../src/persistence/rateLimitRepository.js'
+);
 
 afterEach(() => {
   jest.resetAllMocks();
@@ -71,31 +71,36 @@ describe('rateLimitRepository', () => {
       {},
       new Date(Infinity),
     ])('throws on invalid date value: "%s"', async (value) => {
-      expect(async () => setRateLimit('asdf', value)).rejects.toThrow(TypeError);
+      expect(async () => setRateLimit('asdf', value)).rejects.toThrow(
+        TypeError
+      );
     });
 
-    test('adds if didn\'t exist', async () => {
+    test("adds if didn't exist", async () => {
       const key = 'cool';
       const value = new Date(2022, 11, 4);
       const orig = { notCool: new Date().toISOString() };
       readJson.mockResolvedValueOnce(orig);
       await setRateLimit(key, value);
-      expect(outputJson).toHaveBeenCalledWith(
-        expect.any(String),
-        { ...orig, [key]: value.toISOString() },
-      );
+      expect(outputJson).toHaveBeenCalledWith(expect.any(String), {
+        ...orig,
+        [key]: value.toISOString(),
+      });
     });
 
     test('updates if already exists', async () => {
       const key = 'cool';
       const value = new Date(2022, 11, 4);
-      const orig = { notCool: new Date().toISOString(), [key]: value.toISOString() };
+      const orig = {
+        notCool: new Date().toISOString(),
+        [key]: value.toISOString(),
+      };
       readJson.mockResolvedValueOnce(orig);
       await setRateLimit(key, value);
-      expect(outputJson).toHaveBeenCalledWith(
-        expect.any(String),
-        { ...orig, [key]: value.toISOString() },
-      );
+      expect(outputJson).toHaveBeenCalledWith(expect.any(String), {
+        ...orig,
+        [key]: value.toISOString(),
+      });
     });
   });
 });

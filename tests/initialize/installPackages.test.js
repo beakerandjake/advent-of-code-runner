@@ -1,6 +1,4 @@
-import {
-  describe, jest, test, beforeEach,
-} from '@jest/globals';
+import { describe, jest, test, beforeEach } from '@jest/globals';
 import { mockConfig, mockLogger } from '../mocks.js';
 
 // setup mocks
@@ -10,7 +8,9 @@ jest.unstable_mockModule('node:child_process', () => ({ spawn: jest.fn() }));
 
 // import after mocks set up
 const { spawn } = await import('node:child_process');
-const { installPackages } = await import('../../src/initialize/installPackages.js');
+const { installPackages } = await import(
+  '../../src/initialize/installPackages.js'
+);
 
 describe('initialize', () => {
   describe('installPackages()', () => {

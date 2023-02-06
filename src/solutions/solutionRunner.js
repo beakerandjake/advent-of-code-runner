@@ -26,7 +26,11 @@ import { workerMessageTypes } from './workerMessageTypes.js';
  * @param {Number} year
  * @param {Number} day
  */
-export const getSolutionFileName = (day) => join(getConfigValue('paths.solutionsDir'), `day_${day.toString().padStart(2, '0')}.js`);
+export const getSolutionFileName = (day) =>
+  join(
+    getConfigValue('paths.solutionsDir'),
+    `day_${day.toString().padStart(2, '0')}.js`
+  );
 
 /**
  * Returns the name of the function to execute for level.
@@ -34,7 +38,9 @@ export const getSolutionFileName = (day) => join(getConfigValue('paths.solutions
  * @param {Number} level
  */
 export const getFunctionNameForLevel = (level) => {
-  const functionName = getConfigValue('solutionRunner.levelFunctions').find((x) => x.key === level)?.name;
+  const functionName = getConfigValue('solutionRunner.levelFunctions').find(
+    (x) => x.key === level
+  )?.name;
 
   if (!functionName) {
     throw new Error(`Unknown solution level: ${level}`);
@@ -50,25 +56,32 @@ export const getFunctionNameForLevel = (level) => {
  * @param {String} workerThreadFileName
  * @param {Object} workerData
  */
-export const spawnWorker = async (workerThreadFileName, workerData) => (
+export const spawnWorker = async (workerThreadFileName, workerData) =>
   new Promise((resolve, reject) => {
     // omit the auth token from the workers env.
     const { [envOptions.authenticationToken]: _, ...workerEnv } = env;
     // spawn the worker thread
-    const worker = new Worker(workerThreadFileName, { workerData, env: workerEnv });
+    const worker = new Worker(workerThreadFileName, {
+      workerData,
+      env: workerEnv,
+    });
     // listen to messages from the worker thread.
     worker.on('message', (data) => {
       switch (data.type) {
-      // worker just wants to log, pipe it through to our logger.
+        // worker just wants to log, pipe it through to our logger.
         case workerMessageTypes.log:
           logger.log(data.level, data.message, ...(data.meta || []));
           break;
-          // worker finished executing and has posted an answer
+        // worker finished executing and has posted an answer
         case workerMessageTypes.answer:
           resolve({ answer: data.answer, runtimeNs: data.runtimeNs });
           break;
         default:
-          reject(new Error(`Solution Worker provided unknown message type: ${data.type}`));
+          reject(
+            new Error(
+              `Solution Worker provided unknown message type: ${data.type}`
+            )
+          );
           break;
       }
     });
@@ -77,8 +90,7 @@ export const spawnWorker = async (workerThreadFileName, workerData) => (
     worker.on('error', (error) => reject(error));
     // handle potential edge case where worker does not send a solution message.
     worker.on('exit', () => reject(new SolutionWorkerExitWithoutAnswerError()));
-  })
-);
+  });
 
 /**
  * Spawns a worker thread to import the solution file
@@ -94,7 +106,10 @@ export const spawnWorker = async (workerThreadFileName, workerData) => (
  * @throws {SolutionWorkerExitWithoutAnswerError}
  */
 export const execute = async (day, level, input) => {
-  logger.debug('spawning worker thread to execute user solution', { day, level });
+  logger.debug('spawning worker thread to execute user solution', {
+    day,
+    level,
+  });
 
   if (!input) {
     throw new SolutionWorkerEmptyInputError();
@@ -107,7 +122,7 @@ export const execute = async (day, level, input) => {
   const workerThreadFileName = getConfigValue('paths.solutionRunnerWorkerFile');
 
   // ensure the user actually has the file we're trying to execute.
-  if (!await pathExists(solutionFileName)) {
+  if (!(await pathExists(solutionFileName))) {
     throw new UserSolutionFileNotFoundError(solutionFileName);
   }
 

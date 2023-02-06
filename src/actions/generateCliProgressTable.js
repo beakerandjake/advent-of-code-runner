@@ -41,7 +41,9 @@ export const mapAttemptColumns = (completionData, maxAttempts) => {
     if (maxAttempts > 1 && numberOfAttempts === maxAttempts) {
       // it's possible multiple puzzles match the max attempt.
       // only add descriptive text to the first match.
-      const message = markedMax ? numberOfAttempts : `${numberOfAttempts} (worst)`;
+      const message = markedMax
+        ? numberOfAttempts
+        : `${numberOfAttempts} (worst)`;
       markedMax = true;
       return chalk.yellow(message);
     }
@@ -85,19 +87,27 @@ export const mapRuntimeColumn = ({ runtimeNs }, fastest, slowest) => {
 export const generatePuzzleRows = async (year, completionData) => {
   // only apply highlighting if more than two puzzles have been solved.
   // with 2 or less it's kind of obvious, there isn't a need to highlight.
-  const maxAttempts = completionData.length > 2 ? await getMaxAttempts(year) : null;
-  const fastestRuntime = completionData.length > 2 ? await getFastestRuntime(year) : null;
-  const slowestRuntime = completionData.length > 2 ? await getSlowestRuntime(year) : null;
+  const maxAttempts =
+    completionData.length > 2 ? await getMaxAttempts(year) : null;
+  const fastestRuntime =
+    completionData.length > 2 ? await getFastestRuntime(year) : null;
+  const slowestRuntime =
+    completionData.length > 2 ? await getSlowestRuntime(year) : null;
 
   // generate the columns for the puzzle data.
   const names = completionData.map(mapNamedColumn);
   const solved = completionData.map(mapSolvedColumn);
   const attempts = mapAttemptColumns(completionData, maxAttempts);
-  const runtimes = completionData.map((x) => mapRuntimeColumn(x, fastestRuntime, slowestRuntime));
-
-  return completionData.map(
-    (_, index) => [names[index], solved[index], attempts[index], runtimes[index]],
+  const runtimes = completionData.map((x) =>
+    mapRuntimeColumn(x, fastestRuntime, slowestRuntime)
   );
+
+  return completionData.map((_, index) => [
+    names[index],
+    solved[index],
+    attempts[index],
+    runtimes[index],
+  ]);
 };
 
 /**
@@ -107,7 +117,12 @@ export const generatePuzzleRows = async (year, completionData) => {
 export const getAverageRow = async (year) => {
   const averageAttempts = await getAverageAttempts(year);
   const averageRuntime = await getAverageRuntime(year);
-  return ['Average', '', averageAttempts.toFixed(2), humanizeDuration(averageRuntime)];
+  return [
+    'Average',
+    '',
+    averageAttempts.toFixed(2),
+    humanizeDuration(averageRuntime),
+  ];
 };
 
 /**
@@ -122,7 +137,12 @@ export const getSolvedRow = async (year) => {
     throw new Error('could not calculate solved percent from arguments');
   }
 
-  return [`Solved ${solvedCount}/${totalPuzzleCount} (${solvedPercent.toFixed()}%)`, '', '', ''];
+  return [
+    `Solved ${solvedCount}/${totalPuzzleCount} (${solvedPercent.toFixed()}%)`,
+    '',
+    '',
+    '',
+  ];
 };
 
 /**
@@ -143,40 +163,41 @@ const generateTable = async (year, completionData) => {
 
   const config = {
     columnDefault: { alignment: 'left' },
-    columns: [
-      { alignment: 'right' },
-      { alignment: 'center' },
-    ],
+    columns: [{ alignment: 'right' }, { alignment: 'center' }],
     spanningCells: [
       // Header Row
       {
-        col: 0, row: 0, colSpan: 4, alignment: 'center',
+        col: 0,
+        row: 0,
+        colSpan: 4,
+        alignment: 'center',
       },
       // Average Row
       { col: 0, row: headerRows.length + puzzleRows.length, colSpan: 2 },
       // Solved Row
       {
-        col: 0, row: 1 + headerRows.length + puzzleRows.length, colSpan: 4, alignment: 'center',
+        col: 0,
+        row: 1 + headerRows.length + puzzleRows.length,
+        colSpan: 4,
+        alignment: 'center',
       },
     ],
     // don't draw lines between puzzle rows (makes table more compact)
-    drawHorizontalLine: (lineIndex) => (
-      lineIndex <= headerRows.length || lineIndex >= headerRows.length + puzzleRows.length
-    ),
+    drawHorizontalLine: (lineIndex) =>
+      lineIndex <= headerRows.length ||
+      lineIndex >= headerRows.length + puzzleRows.length,
   };
 
-  return table([
-    ...headerRows,
-    ...puzzleRows,
-    averageRow,
-    solvedRow,
-  ], config);
+  return table([...headerRows, ...puzzleRows, averageRow, solvedRow], config);
 };
 
 /**
  * Generates a progress table to be displayed in the command line.
  */
-export const generateCliProgressTable = async ({ year, completionData } = {}) => {
+export const generateCliProgressTable = async ({
+  year,
+  completionData,
+} = {}) => {
   if (year == null) {
     throw new Error('null or undefined year');
   }

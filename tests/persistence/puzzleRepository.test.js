@@ -1,6 +1,4 @@
-import {
-  describe, jest, test, afterEach,
-} from '@jest/globals';
+import { describe, jest, test, afterEach } from '@jest/globals';
 import { mockLogger } from '../mocks.js';
 
 // setup mocks.
@@ -12,7 +10,9 @@ jest.unstable_mockModule('../../src/persistence/userDataFile.js', () => ({
 }));
 
 // import after setting up the mock so the modules import the mocked version
-const { getValue, setValue } = await import('../../src/persistence/userDataFile.js');
+const { getValue, setValue } = await import(
+  '../../src/persistence/userDataFile.js'
+);
 const {
   translateToPuzzleFromData,
   translateToDataFromPuzzle,
@@ -42,9 +42,9 @@ describe('puzzleRepository', () => {
     test('throws with non object', () => {
       expect(() => translateToPuzzleFromData(1234)).toThrow(TypeError);
       expect(() => translateToPuzzleFromData(() => {})).toThrow(TypeError);
-      expect(
-        () => translateToPuzzleFromData(Promise.resolve(10)),
-      ).toThrow(TypeError);
+      expect(() => translateToPuzzleFromData(Promise.resolve(10))).toThrow(
+        TypeError
+      );
       expect(() => translateToPuzzleFromData('asdf')).toThrow(TypeError);
     });
 
@@ -193,9 +193,9 @@ describe('puzzleRepository', () => {
     test('throws with non object', () => {
       expect(() => translateToDataFromPuzzle(1234)).toThrow(TypeError);
       expect(() => translateToDataFromPuzzle(() => {})).toThrow(TypeError);
-      expect(
-        () => translateToDataFromPuzzle(Promise.resolve(10)),
-      ).toThrow(TypeError);
+      expect(() => translateToDataFromPuzzle(Promise.resolve(10))).toThrow(
+        TypeError
+      );
       expect(() => translateToDataFromPuzzle('asdf')).toThrow(TypeError);
     });
 
@@ -547,15 +547,28 @@ describe('puzzleRepository', () => {
     });
 
     test('returns empty array if no puzzles for year', async () => {
-      mockGetPuzzles([{ id: '20200101' }, { id: '20210101' }, { id: '20230101' }]);
+      mockGetPuzzles([
+        { id: '20200101' },
+        { id: '20210101' },
+        { id: '20230101' },
+      ]);
       const result = await getPuzzlesForYear(2022);
       expect(result).toEqual([]);
     });
 
     test('returns all puzzles for year', async () => {
       const year = 2022;
-      const expected = [{ id: `${year}0101` }, { id: `${year}0102` }, { id: `${year}0201` }];
-      mockGetPuzzles([...expected, { id: `${year - 2}0101` }, { id: `${year - 1}0101` }, { id: `${year + 1}0101` }]);
+      const expected = [
+        { id: `${year}0101` },
+        { id: `${year}0102` },
+        { id: `${year}0201` },
+      ];
+      mockGetPuzzles([
+        ...expected,
+        { id: `${year - 2}0101` },
+        { id: `${year - 1}0101` },
+        { id: `${year + 1}0101` },
+      ]);
       const result = await getPuzzlesForYear(year);
       result.forEach((x) => expect(x.year).toBe(year));
     });
@@ -618,7 +631,7 @@ describe('puzzleRepository', () => {
   });
 
   describe('addOrEditPuzzle()', () => {
-    test('adds puzzle doesn\'t exist', async () => {
+    test("adds puzzle doesn't exist", async () => {
       const doesNotExist = {
         id: '20221301',
         correctAnswer: null,
@@ -648,12 +661,15 @@ describe('puzzleRepository', () => {
 
       await addOrEditPuzzle(doesNotExist);
 
-      const expected = [...orig, {
-        id: doesNotExist.id,
-        correctAnswer: doesNotExist.correctAnswer,
-        fastestRuntimeNs: doesNotExist.fastestRuntimeNs,
-        incorrectAnswers: doesNotExist.incorrectAnswers,
-      }];
+      const expected = [
+        ...orig,
+        {
+          id: doesNotExist.id,
+          correctAnswer: doesNotExist.correctAnswer,
+          fastestRuntimeNs: doesNotExist.fastestRuntimeNs,
+          incorrectAnswers: doesNotExist.incorrectAnswers,
+        },
+      ];
 
       expect(setValue.mock.lastCall[1]).toStrictEqual(expected);
     });
@@ -764,7 +780,9 @@ describe('puzzleRepository', () => {
         level: 1,
       };
 
-      expect(createPuzzle(expected.year, expected.day, expected.level)).toStrictEqual(expected);
+      expect(
+        createPuzzle(expected.year, expected.day, expected.level)
+      ).toStrictEqual(expected);
     });
   });
 });

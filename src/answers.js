@@ -35,9 +35,8 @@ export const parseAnswer = (answer) => {
  * @param {String|Number} lhs
  * @param {String|Number} rhs
  */
-export const answersEqual = (lhs, rhs) => (
-  lhs?.toString().toLowerCase() === rhs?.toString().toLowerCase()
-);
+export const answersEqual = (lhs, rhs) =>
+  lhs?.toString().toLowerCase() === rhs?.toString().toLowerCase();
 
 /**
  * Has this puzzle already been solved?
@@ -46,7 +45,7 @@ export const answersEqual = (lhs, rhs) => (
  * @param {Number} level
  */
 export const puzzleHasBeenSolved = async (year, day, level) => {
-  const { correctAnswer } = await findPuzzle(year, day, level) || {};
+  const { correctAnswer } = (await findPuzzle(year, day, level)) || {};
   return !!correctAnswer;
 };
 
@@ -59,7 +58,7 @@ export const puzzleHasBeenSolved = async (year, day, level) => {
  * @returns {Promise<String>}
  */
 export const getCorrectAnswer = async (year, day, level) => {
-  const { correctAnswer = null } = await findPuzzle(year, day, level) || {};
+  const { correctAnswer = null } = (await findPuzzle(year, day, level)) || {};
   return correctAnswer;
 };
 
@@ -71,9 +70,14 @@ export const getCorrectAnswer = async (year, day, level) => {
  * @param {String} correctAnswer
  */
 export const setCorrectAnswer = async (year, day, level, correctAnswer) => {
-  logger.debug('saving correct answer: "%s"', correctAnswer, { year, day, level });
+  logger.debug('saving correct answer: "%s"', correctAnswer, {
+    year,
+    day,
+    level,
+  });
   const parsedAnswer = parseAnswer(correctAnswer);
-  const puzzle = await findPuzzle(year, day, level) || createPuzzle(year, day, level);
+  const puzzle =
+    (await findPuzzle(year, day, level)) || createPuzzle(year, day, level);
   const updatedPuzzle = { ...puzzle, correctAnswer: parsedAnswer };
   await addOrEditPuzzle(updatedPuzzle);
 };
@@ -86,14 +90,23 @@ export const setCorrectAnswer = async (year, day, level, correctAnswer) => {
  * @param {String} incorrectAnswer
  */
 export const addIncorrectAnswer = async (year, day, level, incorrectAnswer) => {
-  logger.debug('saving incorrect answer: "%s"', incorrectAnswer, { year, day, level });
+  logger.debug('saving incorrect answer: "%s"', incorrectAnswer, {
+    year,
+    day,
+    level,
+  });
 
   const parsedAnswer = parseAnswer(incorrectAnswer);
-  const puzzle = await findPuzzle(year, day, level) || createPuzzle(year, day, level);
+  const puzzle =
+    (await findPuzzle(year, day, level)) || createPuzzle(year, day, level);
 
   // bail if incorrect answer is already stored
   if (puzzle.incorrectAnswers.some((x) => answersEqual(x, parsedAnswer))) {
-    logger.warn('Attempted to save incorrect answer: "%s" which was already stored', incorrectAnswer, { year, day, level });
+    logger.warn(
+      'Attempted to save incorrect answer: "%s" which was already stored',
+      incorrectAnswer,
+      { year, day, level }
+    );
     return;
   }
 
@@ -111,7 +124,8 @@ export const addIncorrectAnswer = async (year, day, level, incorrectAnswer) => {
  * @param {String} incorrectAnswer
  */
 export const answerHasBeenSubmitted = async (year, day, level, answer) => {
-  const { correctAnswer = null, incorrectAnswers = [] } = await findPuzzle(year, day, level) || {};
+  const { correctAnswer = null, incorrectAnswers = [] } =
+    (await findPuzzle(year, day, level)) || {};
 
   if (incorrectAnswers.some((x) => answersEqual(x, answer))) {
     return true;
@@ -128,9 +142,15 @@ export const answerHasBeenSubmitted = async (year, day, level, answer) => {
 export const getNextUnansweredPuzzle = async (year) => {
   const allPuzzles = getAllPuzzlesForYear(year);
   const answeredPuzzles = (await getPuzzles()).filter((x) => !!x.correctAnswer);
-  const toReturn = allPuzzles.find((x) => !answeredPuzzles.some(
-    (puzzle) => puzzle.year === x.year && puzzle.day === x.day && puzzle.level === x.level,
-  ));
+  const toReturn = allPuzzles.find(
+    (x) =>
+      !answeredPuzzles.some(
+        (puzzle) =>
+          puzzle.year === x.year &&
+          puzzle.day === x.day &&
+          puzzle.level === x.level
+      )
+  );
   return toReturn ? { day: toReturn.day, level: toReturn.level } : null;
 };
 

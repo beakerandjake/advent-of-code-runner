@@ -8,5 +8,9 @@ export const answerTypeIsValid = (answer) => {
     return false;
   }
 
-  return Number.isFinite(answer) || (typeof answer === 'string' || answer instanceof String);
+  return (
+    Number.isFinite(answer) ||
+    typeof answer === 'string' ||
+    answer instanceof String
+  );
 };

@@ -1,6 +1,4 @@
-import {
-  createLogger, format, transports, addColors,
-} from 'winston';
+import { createLogger, format, transports, addColors } from 'winston';
 import { exit } from 'node:process';
 import { LEVEL, MESSAGE } from 'triple-beam';
 import { getConfigValue } from './config.js';
@@ -46,7 +44,7 @@ try {
     format: format.combine(
       format.errors({ stack: true }),
       format.splat(),
-      format.json(),
+      format.json()
     ),
     transports: [
       new transports.Console({
@@ -62,7 +60,7 @@ try {
 
             return simpleFormat.transform(info)[MESSAGE];
           }),
-          format.colorize({ all: true }),
+          format.colorize({ all: true })
         ),
       }),
       new FestiveTransport({

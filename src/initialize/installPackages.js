@@ -11,15 +11,11 @@ export const installPackages = async () => {
   logger.debug('installing npm packages');
   await new Promise((resolve, reject) => {
     // run npm install command
-    const childProcess = spawn(
-      'npm',
-      ['i', '--omit=dev'],
-      {
-        cwd: getConfigValue('cwd'),
-        stdio: ['ignore', 'ignore', 'pipe'],
-        detached: false,
-      },
-    );
+    const childProcess = spawn('npm', ['i', '--omit=dev'], {
+      cwd: getConfigValue('cwd'),
+      stdio: ['ignore', 'ignore', 'pipe'],
+      detached: false,
+    });
 
     // we have to buffer the child process std err
     // and output it at the exit in order to get the log order correct

@@ -14,7 +14,10 @@ export const assertUserConfirmation = (question) => {
   // this gives the fn a .name property and makes debugging easier.
   const _ = {
     assertUserConfirmation: async () => {
-      const { confirmed } = await inquirer.prompt({ ...question, type: 'confirm' });
+      const { confirmed } = await inquirer.prompt({
+        ...question,
+        type: 'confirm',
+      });
       return confirmed;
     },
   };

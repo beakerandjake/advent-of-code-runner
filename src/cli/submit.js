@@ -45,13 +45,18 @@ const autoSubmit = createChain([
  */
 export const submitCommand = new Command()
   .name('submit')
-  .description('Runs your solution for a puzzle and submits the answer to advent of code.`')
-  .addHelpText('after', `
+  .description(
+    'Runs your solution for a puzzle and submits the answer to advent of code.`'
+  )
+  .addHelpText(
+    'after',
+    `
 Example Calls:
   submit               (Finds and submits your next unsolved puzzle)
   submit [day]         (Submits level one of the specified days puzzle)
   submit [day] [level] (Submits the puzzle for the specified day and level)
-    `)
+    `
+  )
   .addArgument(dayArgument)
   .addArgument(levelArgument)
   .action(async (day, level) => {

@@ -18,13 +18,13 @@ export const createChainWithReporting = (links = [], successMessage = '') => {
 
   // create a wrapper function for each link which updates the spinner
   // with a message when that link starts.
-  const decoratedActions = links.map(
-    ({ fn, message }) => async (...args) => {
-      const festiveMessage = festiveStyle(message);
-      spinner.isSpinning ? (spinner.text = festiveMessage) : (spinner.start(festiveMessage));
-      return fn(...args);
-    },
-  );
+  const decoratedActions = links.map(({ fn, message }) => async (...args) => {
+    const festiveMessage = festiveStyle(message);
+    spinner.isSpinning
+      ? (spinner.text = festiveMessage)
+      : spinner.start(festiveMessage);
+    return fn(...args);
+  });
 
   const chain = createChain(decoratedActions);
 

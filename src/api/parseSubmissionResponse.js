@@ -1,7 +1,10 @@
 import { getConfigValue } from '../config.js';
 import { logger } from '../logger.js';
 import { getElementByTagName, getTextContent } from './parseHtml.js';
-import { RateLimitExceededError, SolvingWrongLevelError } from '../errors/apiErrors.js';
+import {
+  RateLimitExceededError,
+  SolvingWrongLevelError,
+} from '../errors/apiErrors.js';
 
 /**
  * Parses the response html, finds the <main> element and then extracts its text content.
@@ -14,14 +17,18 @@ export const extractTextContentOfMain = (responseHtml) => {
   // get the <main> element from the response html.
   const main = getElementByTagName(responseHtml, 'main');
   if (!main) {
-    throw new Error('Failed to parse html response from advent of code, could not extract text content of <main>');
+    throw new Error(
+      'Failed to parse html response from advent of code, could not extract text content of <main>'
+    );
   }
 
   // grab the text content the <main> element.
   const text = getTextContent(main);
   logger.silly('extracted text from main: %s', text);
   if (!text) {
-    throw new Error('Failed to parse html response from advent of code, text content of <main> element was empty');
+    throw new Error(
+      'Failed to parse html response from advent of code, text content of <main> element was empty'
+    );
   }
 
   return text;
@@ -33,10 +40,12 @@ export const extractTextContentOfMain = (responseHtml) => {
  */
 export const sanitizeMessage = (message = '') => {
   logger.debug('sanitizing api response message');
-  return getConfigValue('aoc.responseParsing.sanitizers').reduce(
-    (acc, sanitizer) => acc.replaceAll(sanitizer.pattern, sanitizer.replace),
-    message,
-  ).trim();
+  return getConfigValue('aoc.responseParsing.sanitizers')
+    .reduce(
+      (acc, sanitizer) => acc.replaceAll(sanitizer.pattern, sanitizer.replace),
+      message
+    )
+    .trim();
 };
 
 /**

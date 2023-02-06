@@ -70,9 +70,11 @@ export const mapAttemptColumns = (completionData, maxAttempts) => {
     if (maxAttempts > 1 && numberOfAttempts === maxAttempts) {
       // it's possible multiple puzzles match the max attempt.
       // only add descriptive text to the first match.
-      const message = markedMax ? numberOfAttempts : `${numberOfAttempts} (worst)`;
+      const message = markedMax
+        ? numberOfAttempts
+        : `${numberOfAttempts} (worst)`;
       markedMax = true;
-      return bold(italic((message)));
+      return bold(italic(message));
     }
 
     return `${numberOfAttempts}`;
@@ -110,7 +112,12 @@ export const mapRuntimeColumn = ({ runtimeNs }, fastest, slowest) => {
 export const generateAverageRow = async (year) => {
   const averageAttempts = await getAverageAttempts(year);
   const averageRuntime = await getAverageRuntime(year);
-  return tr(['', bold('Average'), averageAttempts.toFixed(2), humanizeDuration(averageRuntime)]);
+  return tr([
+    '',
+    bold('Average'),
+    averageAttempts.toFixed(2),
+    humanizeDuration(averageRuntime),
+  ]);
 };
 
 /**
@@ -120,18 +127,23 @@ export const generateAverageRow = async (year) => {
 export const generatePuzzleRows = async (year, completionData) => {
   // only apply highlighting if more than two puzzles have been solved.
   // with 2 or less it's kind of obvious, there isn't a need to highlight.
-  const maxAttempts = completionData.length > 2 ? await getMaxAttempts(year) : null;
-  const fastestRuntime = completionData.length > 2 ? await getFastestRuntime(year) : null;
-  const slowestRuntime = completionData.length > 2 ? await getSlowestRuntime(year) : null;
+  const maxAttempts =
+    completionData.length > 2 ? await getMaxAttempts(year) : null;
+  const fastestRuntime =
+    completionData.length > 2 ? await getFastestRuntime(year) : null;
+  const slowestRuntime =
+    completionData.length > 2 ? await getSlowestRuntime(year) : null;
 
   // generate the columns of the table from the puzzle data.
   const names = completionData.map(mapNameColumn);
   const solved = completionData.map(mapSolvedColumn);
   const attempts = mapAttemptColumns(completionData, maxAttempts);
-  const runtimes = completionData.map((x) => mapRuntimeColumn(x, fastestRuntime, slowestRuntime));
+  const runtimes = completionData.map((x) =>
+    mapRuntimeColumn(x, fastestRuntime, slowestRuntime)
+  );
 
-  return completionData.map(
-    (_, index) => tr([names[index], solved[index], attempts[index], runtimes[index]]),
+  return completionData.map((_, index) =>
+    tr([names[index], solved[index], attempts[index], runtimes[index]])
   );
 };
 
@@ -153,7 +165,10 @@ export const generateTable = async (year, completionData) => {
 /**
  * Generates a progress table in markdown syntax.
  */
-export const generateMarkdownProgressTable = async ({ year, completionData } = {}) => {
+export const generateMarkdownProgressTable = async ({
+  year,
+  completionData,
+} = {}) => {
   if (year == null) {
     throw new Error('null or undefined year');
   }

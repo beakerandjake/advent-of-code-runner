@@ -1,6 +1,4 @@
-import {
-  describe, jest, test, afterEach,
-} from '@jest/globals';
+import { describe, jest, test, afterEach } from '@jest/globals';
 import { RateLimitExceededError } from '../../src/errors/apiErrors.js';
 
 // setup mocks.
@@ -17,8 +15,12 @@ jest.unstable_mockModule('../../src/logger.js', () => ({
 }));
 
 // const { logger } = await import('../src/logger.js');
-const { isRateLimited, updateRateLimit } = await import('../../src/api/rateLimit.js');
-const { rateLimitDecorator } = await import('../../src/api/rateLimitDecorator.js');
+const { isRateLimited, updateRateLimit } = await import(
+  '../../src/api/rateLimit.js'
+);
+const { rateLimitDecorator } = await import(
+  '../../src/api/rateLimitDecorator.js'
+);
 
 afterEach(() => {
   jest.clearAllMocks();
@@ -26,7 +28,10 @@ afterEach(() => {
 
 describe('rateLimitDecorator', () => {
   test('throws if rate limit exceeded', async () => {
-    isRateLimited.mockResolvedValueOnce({ limited: true, expiration: new Date() });
+    isRateLimited.mockResolvedValueOnce({
+      limited: true,
+      expiration: new Date(),
+    });
     const fn = jest.fn();
     const decorated = rateLimitDecorator(() => {}, 'ASDF');
     expect(async () => decorated()).rejects.toThrow(RateLimitExceededError);
@@ -41,9 +46,14 @@ describe('rateLimitDecorator', () => {
   });
 
   test('does not update rate limit if rate limit exceeded', () => {
-    isRateLimited.mockResolvedValueOnce({ limited: true, expiration: new Date() });
+    isRateLimited.mockResolvedValueOnce({
+      limited: true,
+      expiration: new Date(),
+    });
     const fn = jest.fn();
-    expect(async () => rateLimitDecorator(fn, 'ASDF')()).rejects.toThrow(RateLimitExceededError);
+    expect(async () => rateLimitDecorator(fn, 'ASDF')()).rejects.toThrow(
+      RateLimitExceededError
+    );
     expect(fn).not.toHaveBeenCalled();
     expect(updateRateLimit).not.toHaveBeenCalled();
   });
@@ -56,7 +66,9 @@ describe('rateLimitDecorator', () => {
 
   test('updates rate limit if fn throws', async () => {
     isRateLimited.mockResolvedValueOnce({ limited: false, expiration: null });
-    const decorated = rateLimitDecorator(async () => { throw new RangeError(); }, 'ASDF');
+    const decorated = rateLimitDecorator(async () => {
+      throw new RangeError();
+    }, 'ASDF');
     await expect(async () => decorated()).rejects.toThrow(RangeError);
     expect(updateRateLimit).toHaveBeenCalled();
   });

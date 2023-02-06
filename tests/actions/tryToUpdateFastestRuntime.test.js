@@ -1,6 +1,4 @@
-import {
-  describe, jest, test, afterEach,
-} from '@jest/globals';
+import { describe, jest, test, afterEach } from '@jest/globals';
 import { mockLogger } from '../mocks';
 
 // setup mocks.
@@ -12,21 +10,31 @@ jest.unstable_mockModule('src/statistics.js', () => ({
 }));
 
 // import mocks after setting up mocks
-const { getPuzzlesFastestRuntime, setPuzzlesFastestRuntime } = await import('../../src/statistics.js');
-const { tryToUpdateFastestRuntime } = await import('../../src/actions/tryToUpdateFastestRuntime.js');
+const { getPuzzlesFastestRuntime, setPuzzlesFastestRuntime } = await import(
+  '../../src/statistics.js'
+);
+const { tryToUpdateFastestRuntime } = await import(
+  '../../src/actions/tryToUpdateFastestRuntime.js'
+);
 
 describe('tryToUpdateFastestRuntime()', () => {
   afterEach(() => {
     jest.resetAllMocks();
   });
 
-  test.each([
-    null, undefined, -1,
-  ])('throws if runtime is: %s', async (runtimeNs) => {
-    await expect(async () => tryToUpdateFastestRuntime({
-      year: 2022, day: 11, level: 1, runtimeNs,
-    })).rejects.toThrow();
-  });
+  test.each([null, undefined, -1])(
+    'throws if runtime is: %s',
+    async (runtimeNs) => {
+      await expect(async () =>
+        tryToUpdateFastestRuntime({
+          year: 2022,
+          day: 11,
+          level: 1,
+          runtimeNs,
+        })
+      ).rejects.toThrow();
+    }
+  );
 
   test('sets if no previous record set', async () => {
     getPuzzlesFastestRuntime.mockResolvedValue(null);

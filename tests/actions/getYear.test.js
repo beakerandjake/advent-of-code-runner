@@ -1,12 +1,14 @@
-import {
-  describe, jest, test, afterEach,
-} from '@jest/globals';
+import { describe, jest, test, afterEach } from '@jest/globals';
 import { mockLogger } from '../mocks.js';
 
 // setup mocks
 mockLogger();
-jest.unstable_mockModule('src/persistence/userDataFile.js', () => ({ getValue: jest.fn() }));
-jest.unstable_mockModule('src/validation/index.js', () => ({ yearIsValid: jest.fn() }));
+jest.unstable_mockModule('src/persistence/userDataFile.js', () => ({
+  getValue: jest.fn(),
+}));
+jest.unstable_mockModule('src/validation/index.js', () => ({
+  yearIsValid: jest.fn(),
+}));
 
 // import after mocks set up
 const { getValue } = await import('../../src/persistence/userDataFile.js');

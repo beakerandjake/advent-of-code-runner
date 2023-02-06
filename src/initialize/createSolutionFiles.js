@@ -30,16 +30,16 @@ export const createSolutionFiles = async ({ year } = {}) => {
   // load the contents of the template solution
   const templateSolutionFile = await readFile(
     getConfigValue('paths.templates.solution'),
-    { encoding: 'utf-8' },
+    { encoding: 'utf-8' }
   );
 
   // create each template solution file.
-  const createFilePromises = getConfigValue('aoc.validation.days').map(
-    (day) => writeFile(
+  const createFilePromises = getConfigValue('aoc.validation.days').map((day) =>
+    writeFile(
       getSolutionFileName(day),
       replaceTokens(tokens, { year, day }, templateSolutionFile),
-      'utf-8',
-    ),
+      'utf-8'
+    )
   );
 
   await Promise.all(createFilePromises);

@@ -1,12 +1,12 @@
-import {
-  describe, jest, test, beforeEach,
-} from '@jest/globals';
+import { describe, jest, test, beforeEach } from '@jest/globals';
 import { mockConfig, mockLogger } from '../mocks.js';
 
 // setup mocks.
 mockLogger();
 const { getConfigValue } = mockConfig();
-jest.unstable_mockModule('src/api/index.js', () => ({ downloadInput: jest.fn() }));
+jest.unstable_mockModule('src/api/index.js', () => ({
+  downloadInput: jest.fn(),
+}));
 jest.unstable_mockModule('node:fs/promises', () => ({ readFile: jest.fn() }));
 jest.unstable_mockModule('node:path', () => ({ join: jest.fn() }));
 jest.unstable_mockModule('fs-extra/esm', () => ({
@@ -16,7 +16,9 @@ jest.unstable_mockModule('fs-extra/esm', () => ({
 
 const { readFile } = await import('node:fs/promises');
 const { outputFile, pathExists } = await import('fs-extra/esm');
-const { getCachedInput, cacheInput, inputIsCached } = await import('../../src/inputs/inputCache.js');
+const { getCachedInput, cacheInput, inputIsCached } = await import(
+  '../../src/inputs/inputCache.js'
+);
 
 beforeEach(() => {
   jest.resetAllMocks();

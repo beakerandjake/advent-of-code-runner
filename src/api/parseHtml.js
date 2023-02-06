@@ -11,9 +11,11 @@ import { render } from 'dom-serializer';
 export const getElementByTagName = (html, name) => {
   const found = findOne(
     (element) => element.type === 'tag' && element.name === name,
-    parseDocument(html, { decodeEntities: false }).children,
+    parseDocument(html, { decodeEntities: false }).children
   );
-  return found ? render(found, { decodeEntities: false, encodeEntities: false }) : null;
+  return found
+    ? render(found, { decodeEntities: false, encodeEntities: false })
+    : null;
 };
 
 /**
@@ -21,4 +23,5 @@ export const getElementByTagName = (html, name) => {
  * @param {String} html - The html to parse
  * @returns {String} The textContent of the parsed Node
  */
-export const getTextContent = (html) => textContent(parseDocument(html))?.trim();
+export const getTextContent = (html) =>
+  textContent(parseDocument(html))?.trim();

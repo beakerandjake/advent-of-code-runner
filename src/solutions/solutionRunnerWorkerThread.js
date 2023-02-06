@@ -69,14 +69,21 @@ export const executeUserSolution = async (userSolutionFn, input, lines) => {
  * @private
  */
 export const runWorker = async ({
-  solutionFileName, functionToExecute, input, lines,
+  solutionFileName,
+  functionToExecute,
+  input,
+  lines,
 } = {}) => {
   // expect worker data to have required fields
   if (!solutionFileName || !functionToExecute || !input || !lines) {
     throw new SolutionWorkerMissingDataError();
   }
 
-  logFromWorker('debug', 'worker thread loading user solution module: %s', solutionFileName);
+  logFromWorker(
+    'debug',
+    'worker thread loading user solution module: %s',
+    solutionFileName
+  );
   const userSolutionModule = await importUserSolutionModule(solutionFileName);
   const userSolutionFunction = get(userSolutionModule, functionToExecute);
 
@@ -85,12 +92,20 @@ export const runWorker = async ({
     throw new UserSolutionMissingFunctionError(functionToExecute);
   }
 
-  logFromWorker('debug', 'worker thread executing user function: %s', functionToExecute);
+  logFromWorker(
+    'debug',
+    'worker thread executing user function: %s',
+    functionToExecute
+  );
   try {
     await executeUserSolution(userSolutionFunction, input, lines);
   } catch (error) {
     if (error instanceof TypeError) {
-      throw new UserSolutionAnswerInvalidError(error.message, solutionFileName, functionToExecute);
+      throw new UserSolutionAnswerInvalidError(
+        error.message,
+        solutionFileName,
+        functionToExecute
+      );
     }
     throw error;
   }

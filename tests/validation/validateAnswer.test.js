@@ -17,7 +17,7 @@ describe('validateAnswer', () => {
       [{}, false],
       [[], false],
       [() => {}, false],
-      [new class Cats {}(), false],
+      [new (class Cats {})(), false],
       [Promise.resolve(true), false],
     ])('"%s" returns "%s"', (value, expected) => {
       expect(answerTypeIsValid(value)).toBe(expected);

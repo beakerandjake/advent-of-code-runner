@@ -14,7 +14,9 @@ import { logger } from '../logger.js';
 export const authTokenQuestion = {
   type: 'password',
   name: 'authToken',
-  message: festiveStyle('Enter your advent of code authentication token (see README for help)'),
+  message: festiveStyle(
+    'Enter your advent of code authentication token (see README for help)'
+  ),
   prefix: festiveEmoji(),
   validate: (input) => (input ? true : 'Token cannot be empty!'),
   filter: (input) => input.trim(),
@@ -27,7 +29,7 @@ const confirmOverwriteQuestion = {
   type: 'confirm',
   name: 'confirmed',
   message: festiveStyle(
-    'It appears a .env file is already present, do you want to overwrite this file?',
+    'It appears a .env file is already present, do you want to overwrite this file?'
   ),
   default: false,
   prefix: festiveEmoji(),
@@ -39,18 +41,23 @@ const confirmOverwriteQuestion = {
  */
 export const auth = async () => {
   // don't let the user run this command if they haven't ran the "init" command.
-  if (!await assertInitialized()) {
+  if (!(await assertInitialized())) {
     return;
   }
 
   // if there is already a .env file then ask users confirmation.
-  if (await dotEnvExists() && !await assertUserConfirmation(confirmOverwriteQuestion)()) {
+  if (
+    (await dotEnvExists()) &&
+    !(await assertUserConfirmation(confirmOverwriteQuestion)())
+  ) {
     return;
   }
 
   const { answers } = await getAnswersFromUser([authTokenQuestion])();
   await createDotEnv(answers);
-  logger.festive('Added auth token to the .env file, do not commit this file to source control');
+  logger.festive(
+    'Added auth token to the .env file, do not commit this file to source control'
+  );
 };
 
 /**
@@ -59,5 +66,7 @@ export const auth = async () => {
 export const authCommand = new Command()
   .name('auth')
   .hook('preAction', printFestiveTitle)
-  .description('Add or update the .env file with your advent of code auth token.')
+  .description(
+    'Add or update the .env file with your advent of code auth token.'
+  )
   .action(auth);

@@ -1,5 +1,9 @@
 import { downloadInput } from '../api/index.js';
-import { cacheInput, getCachedInput, inputIsCached } from '../inputs/inputCache.js';
+import {
+  cacheInput,
+  getCachedInput,
+  inputIsCached,
+} from '../inputs/inputCache.js';
 import { logger } from '../logger.js';
 import { inputIsValid } from '../validation/validateInput.js';
 import { getAuthenticationToken } from './getAuthenticationToken.js';
@@ -12,7 +16,7 @@ import { getAuthenticationToken } from './getAuthenticationToken.js';
 export const getPuzzleInput = async ({ year, day } = {}) => {
   let input;
 
-  if (!await inputIsCached(year, day)) {
+  if (!(await inputIsCached(year, day))) {
     logger.festive('Downloading and caching input file');
     const { authToken } = getAuthenticationToken();
     input = await downloadInput(year, day, authToken);
@@ -24,7 +28,9 @@ export const getPuzzleInput = async ({ year, day } = {}) => {
 
   // even though we loaded the input file, the contents could be invalid
   if (!inputIsValid(input)) {
-    logger.error('Failed to load data from the input file. Loaded value was an empty string.');
+    logger.error(
+      'Failed to load data from the input file. Loaded value was an empty string.'
+    );
     return false;
   }
 

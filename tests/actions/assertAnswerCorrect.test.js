@@ -1,6 +1,4 @@
-import {
-  describe, jest, test, afterEach,
-} from '@jest/globals';
+import { describe, jest, test, afterEach } from '@jest/globals';
 import { mockLogger } from '../mocks.js';
 
 // setup mocks
@@ -12,26 +10,34 @@ jest.unstable_mockModule('src/answers.js', () => ({
 
 // import after mocks set up
 const { getCorrectAnswer, answersEqual } = await import('../../src/answers.js');
-const { assertAnswerCorrect } = await import('../../src/actions/assertAnswerCorrect.js');
+const { assertAnswerCorrect } = await import(
+  '../../src/actions/assertAnswerCorrect.js'
+);
 
 describe('assertAnswerCorrect()', () => {
   afterEach(() => {
     jest.resetAllMocks();
   });
 
-  test.each([
-    null, undefined,
-  ])('throws if answer is %s', async (answer) => {
+  test.each([null, undefined])('throws if answer is %s', async (answer) => {
     getCorrectAnswer.mockResolvedValue(answer);
-    await expect(async () => assertAnswerCorrect({
-      year: 2022, day: 1, level: 5, answer,
-    })).rejects.toThrow();
+    await expect(async () =>
+      assertAnswerCorrect({
+        year: 2022,
+        day: 1,
+        level: 5,
+        answer,
+      })
+    ).rejects.toThrow();
   });
 
   test('returns false if puzzle not solved', async () => {
     getCorrectAnswer.mockReturnValue(null);
     const result = await assertAnswerCorrect({
-      year: 2022, day: 1, level: 1, answer: 'ASDF',
+      year: 2022,
+      day: 1,
+      level: 1,
+      answer: 'ASDF',
     });
     expect(result).toBe(false);
   });
@@ -40,7 +46,10 @@ describe('assertAnswerCorrect()', () => {
     getCorrectAnswer.mockResolvedValue('ASDF');
     answersEqual.mockReturnValue(false);
     const result = await assertAnswerCorrect({
-      year: 2022, day: 1, level: 1, answer: 'ASDF',
+      year: 2022,
+      day: 1,
+      level: 1,
+      answer: 'ASDF',
     });
     expect(result).toBe(false);
   });
@@ -49,7 +58,10 @@ describe('assertAnswerCorrect()', () => {
     getCorrectAnswer.mockResolvedValue('ASDF');
     answersEqual.mockReturnValue(true);
     const result = await assertAnswerCorrect({
-      year: 2022, day: 1, level: 1, answer: 'ASDF',
+      year: 2022,
+      day: 1,
+      level: 1,
+      answer: 'ASDF',
     });
     expect(result).toBe(true);
   });
