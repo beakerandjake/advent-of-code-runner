@@ -17,11 +17,11 @@ Using the templates is encouraged, but if a template doesn't fit your need feel 
 
 ## Pull Request Guidelines
 
-Pull requests with features or bug fixes are always welcome, provied they align with the guidelines in this document. 
+Pull requests with features or bug fixes are always welcome, provided they align with the guidelines in this document. 
 
 If applicable please update the `[Unreleased]` section of the `CHANGELOG` following the [keep a changelog](https://keepachangelog.com/en/1.0.0/) format.
 
-An issue should exist before hand that way work can be cooridnated and discussed in the issue, it also allows you to follow a branch naming convention.
+An issue should exist before hand that way work can be coordinated and discussed in the issue, it also allows you to follow a branch naming convention.
 
 If adding a new feature:
   - Ensure an issue has been created with the `feature request` template.
@@ -38,7 +38,7 @@ Pull requests run a CI workflow, which must pass for the PR to be merged.
 ### Additional Pull Request Tips
 - Try to focus on accomplishing one thing, be it a feature or a bug fix. 
 - Try to do the least amount of change possible to accomplish the goal. 
-- Skip the temptation to make unecessary changes or refactors (this makes tracing changes easier in the future). 
+- Skip the temptation to make unnecessary changes or refactors (this makes tracing changes easier in the future). 
 - If possible try not to introduce new dependencies.  
 
 ## Development Setup
@@ -90,7 +90,7 @@ Additionally, all of the options specified in the [advanced configuration](https
 ## Project Structure
 The project folder structure attempts to be as flat as possible to avoid deep nesting. The general rule is that folders are created per feature or area and are only created if that feature starts to have more than a few files. 
 
-Each js file strives to have a single purpose, and if it starts to do too much it should be split into different files. This makes lfinding the implementation of a feature easy and makes the code more testable. Big multipurpose files are generally avoided save for some exceptions such as `util.js` or `formatting.js`. 
+Each js file strives to have a single purpose, and if it starts to do too much it should be split into different files. This makes finding the implementation of a feature easy and makes the code more testable. Big multipurpose files are generally avoided save for some exceptions such as `util.js` or `formatting.js`. 
 
 ### Folders
 - `scripts/` contains development scripts launched by the `package.json`
@@ -128,8 +128,6 @@ The chain runs these links in order:
   4. `outputPuzzleLink` - Prints a link to the puzzle in the terminal. 
 
 The order of the links is very important. Some links expect certain args to be present and will fail if those ars are missing. For instance `outputPuzzleLink` requires an args object like `{ year, day, level }`. These fields are added to the args object by the earlier links `getYear` and `getNextUnsolvedPuzzle`.
-
-
 
 
 ## Tests
