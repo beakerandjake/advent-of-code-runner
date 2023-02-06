@@ -111,8 +111,8 @@ describe('solutionRunnerWorkerThread', () => {
     });
 
     test('throws if user function throws literal', async () => {
-      // eslint-disable-next-line no-throw-literal
       const userSolutionFn = jest.fn(() => {
+        // eslint-disable-next-line no-throw-literal
         throw 'Thrown non error object';
       });
       answerTypeIsValid.mockReturnValue(true);
