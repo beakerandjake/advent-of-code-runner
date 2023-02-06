@@ -87,6 +87,9 @@ jobs:
       
     - name: Linting
       run: npm run lint
+      
+    - name: Prettier
+      run: npm run prettier
         
   pr-changelog-comment:
     name: CHANGELOG enforcer
