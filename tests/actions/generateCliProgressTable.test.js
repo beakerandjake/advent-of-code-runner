@@ -1,15 +1,18 @@
-import {
-  describe, jest, test, afterEach,
-} from '@jest/globals';
+import { describe, jest, test, afterEach } from '@jest/globals';
 import { mockLogger } from '../mocks.js';
 
 // setup mocks
 mockLogger();
-const mockChalk = { green: jest.fn((x) => x.toString()), yellow: jest.fn((x) => x?.toString() || '') };
+const mockChalk = {
+  green: jest.fn((x) => x.toString()),
+  yellow: jest.fn((x) => x?.toString() || ''),
+};
 jest.unstable_mockModule('chalk', () => ({ default: mockChalk }));
 jest.unstable_mockModule('table', () => ({ table: jest.fn() }));
 jest.unstable_mockModule('src/formatting.js', () => ({ humanizeDuration: jest.fn() }));
-jest.unstable_mockModule('src/validation/validatePuzzle.js', () => ({ getTotalPuzzleCount: jest.fn() }));
+jest.unstable_mockModule('src/validation/validatePuzzle.js', () => ({
+  getTotalPuzzleCount: jest.fn(),
+}));
 jest.unstable_mockModule('src/statistics.js', () => ({
   getAverageAttempts: jest.fn(),
   getAverageRuntime: jest.fn(),
@@ -48,26 +51,29 @@ describe('generateCliProgressTable()', () => {
     jest.resetAllMocks();
   });
 
-  test.each([
-    undefined, null, '',
-  ])('throws if year is: "%s"', async (year) => {
-    await expect(
-      async () => generateCliProgressTable({ year, completionData: [1234] }),
+  test.each([undefined, null, ''])('throws if year is: "%s"', async (year) => {
+    await expect(async () =>
+      generateCliProgressTable({ year, completionData: [1234] })
     ).rejects.toThrow();
   });
 
-  test.each([
-    undefined, null, [],
-  ])('throws if completion data is: "%s"', async (completionData) => {
-    await expect(
-      async () => generateCliProgressTable({ year: 2023, completionData }),
-    ).rejects.toThrow();
-  });
+  test.each([undefined, null, []])(
+    'throws if completion data is: "%s"',
+    async (completionData) => {
+      await expect(async () =>
+        generateCliProgressTable({ year: 2023, completionData })
+      ).rejects.toThrow();
+    }
+  );
 
   test('passes expected data to table()', async () => {
     const completionData = [
       {
-        day: 1, level: 1, solved: false, runtimeNs: 1234, numberOfAttempts: 6,
+        day: 1,
+        level: 1,
+        solved: false,
+        runtimeNs: 1234,
+        numberOfAttempts: 6,
       },
     ];
     mockChalk.green.mockImplementation((x) => x?.toString() || '');
@@ -80,13 +86,16 @@ describe('generateCliProgressTable()', () => {
 
     await generateCliProgressTable({ year: 2023, completionData });
 
-    expect(table).toHaveBeenCalledWith([
-      ['Advent of Code 2023', '', '', ''],
-      ['Puzzle', 'Solved', 'Attempts', 'Runtime'],
-      ['1.1', '', '6', '1234'],
-      ['Average', '', '22.23', '432ms'],
-      ['Solved 123/1234 (10%)', '', '', ''],
-    ], expect.anything());
+    expect(table).toHaveBeenCalledWith(
+      [
+        ['Advent of Code 2023', '', '', ''],
+        ['Puzzle', 'Solved', 'Attempts', 'Runtime'],
+        ['1.1', '', '6', '1234'],
+        ['Average', '', '22.23', '432ms'],
+        ['Solved 123/1234 (10%)', '', '', ''],
+      ],
+      expect.anything()
+    );
   });
 
   describe('mapNamedColumn()', () => {
@@ -114,12 +123,13 @@ describe('generateCliProgressTable()', () => {
   });
 
   describe('mapAttemptColumns()', () => {
-    test.each([
-      null, undefined,
-    ])('returns empty string if numberOfAttempts is: "%s"', (numberOfAttempts) => {
-      const result = mapAttemptColumns([{ numberOfAttempts }]);
-      expect(result[0]).toBe('');
-    });
+    test.each([null, undefined])(
+      'returns empty string if numberOfAttempts is: "%s"',
+      (numberOfAttempts) => {
+        const result = mapAttemptColumns([{ numberOfAttempts }]);
+        expect(result[0]).toBe('');
+      }
+    );
 
     test('does not highlight perfect solve if not solved', () => {
       const numberOfAttempts = 1;
@@ -145,51 +155,61 @@ describe('generateCliProgressTable()', () => {
 
     test('does not highlight or mark worst if none match', () => {
       mockChalk.green.mockImplementation((x) => x.toString());
-      const result = mapAttemptColumns([
-        { numberOfAttempts: 1, solved: true },
-        { numberOfAttempts: 2, solved: true },
-        { numberOfAttempts: 3, solved: true },
-        { numberOfAttempts: 4, solved: true },
-      ], 5);
+      const result = mapAttemptColumns(
+        [
+          { numberOfAttempts: 1, solved: true },
+          { numberOfAttempts: 2, solved: true },
+          { numberOfAttempts: 3, solved: true },
+          { numberOfAttempts: 4, solved: true },
+        ],
+        5
+      );
       expect(mockChalk.yellow).not.toHaveBeenCalled();
       result.forEach((x) => expect(x).not.toContain('worst'));
     });
 
     test('highlights each matching worst', () => {
       mockChalk.yellow.mockImplementation((x) => x.toString());
-      mapAttemptColumns([
-        { numberOfAttempts: 1, solved: true },
-        { numberOfAttempts: 2, solved: true },
-        { numberOfAttempts: 3, solved: true },
-        { numberOfAttempts: 4, solved: true },
-        { numberOfAttempts: 4, solved: true },
-        { numberOfAttempts: 4, solved: true },
-      ], 4);
+      mapAttemptColumns(
+        [
+          { numberOfAttempts: 1, solved: true },
+          { numberOfAttempts: 2, solved: true },
+          { numberOfAttempts: 3, solved: true },
+          { numberOfAttempts: 4, solved: true },
+          { numberOfAttempts: 4, solved: true },
+          { numberOfAttempts: 4, solved: true },
+        ],
+        4
+      );
       expect(mockChalk.yellow).toHaveBeenCalledTimes(3);
     });
 
     test('only marks first matching worst', () => {
       mockChalk.yellow.mockImplementation((x) => x.toString());
-      const result = mapAttemptColumns([
-        { numberOfAttempts: 1, solved: true },
-        { numberOfAttempts: 2, solved: true },
-        { numberOfAttempts: 3, solved: true },
-        { numberOfAttempts: 4, solved: true },
-        { numberOfAttempts: 4, solved: true },
-        { numberOfAttempts: 4, solved: true },
-      ], 4);
+      const result = mapAttemptColumns(
+        [
+          { numberOfAttempts: 1, solved: true },
+          { numberOfAttempts: 2, solved: true },
+          { numberOfAttempts: 3, solved: true },
+          { numberOfAttempts: 4, solved: true },
+          { numberOfAttempts: 4, solved: true },
+          { numberOfAttempts: 4, solved: true },
+        ],
+        4
+      );
       const marked = result.filter((x) => x?.includes('worst'));
       expect(marked.length).toBe(1);
     });
   });
 
   describe('mapRuntimeColumn()', () => {
-    test.each([
-      null, undefined,
-    ])('returns empty string if runtime is: "%s"', (runtimeNs) => {
-      const result = mapRuntimeColumn({ runtimeNs });
-      expect(result).toBe('');
-    });
+    test.each([null, undefined])(
+      'returns empty string if runtime is: "%s"',
+      (runtimeNs) => {
+        const result = mapRuntimeColumn({ runtimeNs });
+        expect(result).toBe('');
+      }
+    );
 
     test('returns value if no fastest or slowest', () => {
       humanizeDuration.mockImplementation((x) => x.toString());
@@ -234,20 +254,22 @@ describe('generateCliProgressTable()', () => {
   });
 
   describe('getSolvedRow()', () => {
-    test.each([
-      undefined, () => {}, Promise.resolve(10), NaN, Infinity,
-    ])('throws if solved count is: "%s"', async (solvedCount) => {
-      getSolvedCount.mockResolvedValue(solvedCount);
-      await expect(async () => getSolvedRow({ year: 2022 })).rejects.toThrow();
-    });
+    test.each([undefined, () => {}, Promise.resolve(10), NaN, Infinity])(
+      'throws if solved count is: "%s"',
+      async (solvedCount) => {
+        getSolvedCount.mockResolvedValue(solvedCount);
+        await expect(async () => getSolvedRow({ year: 2022 })).rejects.toThrow();
+      }
+    );
 
-    test.each([
-      undefined, () => {}, Promise.resolve(10), NaN,
-    ])('throws if total count is: "%s"', async (totalCount) => {
-      getSolvedCount.mockResolvedValue(12);
-      getTotalPuzzleCount.mockReturnValue(totalCount);
-      await expect(async () => getSolvedRow({ year: 2022 })).rejects.toThrow();
-    });
+    test.each([undefined, () => {}, Promise.resolve(10), NaN])(
+      'throws if total count is: "%s"',
+      async (totalCount) => {
+        getSolvedCount.mockResolvedValue(12);
+        getTotalPuzzleCount.mockReturnValue(totalCount);
+        await expect(async () => getSolvedRow({ year: 2022 })).rejects.toThrow();
+      }
+    );
 
     test('handles divide by zero', async () => {
       getSolvedCount.mockResolvedValue(12);
@@ -263,7 +285,12 @@ describe('generateCliProgressTable()', () => {
       getTotalPuzzleCount.mockReturnValue(total);
 
       const result = await getSolvedRow({ year: 2023 });
-      expect(result).toEqual([`Solved ${solved}/${total} (${expectedPercent}%)`, '', '', '']);
+      expect(result).toEqual([
+        `Solved ${solved}/${total} (${expectedPercent}%)`,
+        '',
+        '',
+        '',
+      ]);
     });
   });
 
@@ -282,10 +309,18 @@ describe('generateCliProgressTable()', () => {
       humanizeDuration.mockImplementation((x) => x?.toString() || '');
       const result = await generatePuzzleRows(2022, [
         {
-          day: 1, level: 1, solved: false, runtimeNs: 1234, numberOfAttempts: 6,
+          day: 1,
+          level: 1,
+          solved: false,
+          runtimeNs: 1234,
+          numberOfAttempts: 6,
         },
         {
-          day: 1, level: 2, solved: true, runtimeNs: 4321, numberOfAttempts: 4,
+          day: 1,
+          level: 2,
+          solved: true,
+          runtimeNs: 4321,
+          numberOfAttempts: 4,
         },
       ]);
       expect(result).toEqual([
@@ -297,13 +332,25 @@ describe('generateCliProgressTable()', () => {
     test('marks best/worst if more than 2 rows', async () => {
       const completionData = [
         {
-          day: 1, level: 1, solved: false, runtimeNs: 1234, numberOfAttempts: 6,
+          day: 1,
+          level: 1,
+          solved: false,
+          runtimeNs: 1234,
+          numberOfAttempts: 6,
         },
         {
-          day: 1, level: 2, solved: true, runtimeNs: 4321, numberOfAttempts: 4,
+          day: 1,
+          level: 2,
+          solved: true,
+          runtimeNs: 4321,
+          numberOfAttempts: 4,
         },
         {
-          day: 2, level: 1, solved: false, runtimeNs: 661, numberOfAttempts: 1,
+          day: 2,
+          level: 1,
+          solved: false,
+          runtimeNs: 661,
+          numberOfAttempts: 1,
         },
       ];
       mockChalk.green.mockImplementation((x) => x?.toString() || '');

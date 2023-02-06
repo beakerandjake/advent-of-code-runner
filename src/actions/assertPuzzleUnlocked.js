@@ -7,7 +7,9 @@ import { puzzleIsInFuture } from '../validation/validatePuzzle.js';
 export const assertPuzzleUnlocked = ({ year, day } = {}) => {
   // puzzle is unlocked if its not in the future.
   if (puzzleIsInFuture(year, day)) {
-    logger.error(`You cannot attempt this puzzle because it is not unlocked yet, check back on December ${day} at midnight EST`);
+    logger.error(
+      `You cannot attempt this puzzle because it is not unlocked yet, check back on December ${day} at midnight EST`
+    );
     return false;
   }
   return true;

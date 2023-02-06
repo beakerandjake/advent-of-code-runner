@@ -1,0 +1,7 @@
+# Ignore Everything
+/*
+
+# Explicitly Include
+!/scripts
+!/src
+!/tests

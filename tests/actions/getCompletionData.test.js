@@ -1,11 +1,11 @@
-import {
-  describe, jest, test, afterEach,
-} from '@jest/globals';
+import { describe, jest, test, afterEach } from '@jest/globals';
 import { mockLogger } from '../mocks.js';
 
 // setup mocks
 mockLogger();
-jest.unstable_mockModule('src/statistics.js', () => ({ getPuzzleCompletionData: jest.fn() }));
+jest.unstable_mockModule('src/statistics.js', () => ({
+  getPuzzleCompletionData: jest.fn(),
+}));
 
 // import after mocks set up
 const { getPuzzleCompletionData } = await import('../../src/statistics.js');
@@ -16,9 +16,7 @@ describe('getCompletionData()', () => {
     jest.resetAllMocks();
   });
 
-  test.each([
-    undefined, null, '',
-  ])('throws if year is: "%s"', async (year) => {
+  test.each([undefined, null, ''])('throws if year is: "%s"', async (year) => {
     await expect(async () => getCompletionData({ year })).rejects.toThrow();
   });
 

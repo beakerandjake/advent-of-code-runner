@@ -10,8 +10,10 @@ export const assertInitialized = async () => {
    * not worth it to check packages installed or src files exist etc.
    * we can be pretty sure they have ran init if the data store file is there.
    */
-  if (!await dataFileExists()) {
-    logger.error('This directory does not appear to have been initialized. Please run the "init" command.');
+  if (!(await dataFileExists())) {
+    logger.error(
+      'This directory does not appear to have been initialized. Please run the "init" command.'
+    );
     return false;
   }
 

@@ -1,14 +1,13 @@
-import {
-  describe, jest, test,
-} from '@jest/globals';
-import {
-  or, not, and, ifThen,
-} from '../../src/actions/logical.js';
+import { describe, jest, test } from '@jest/globals';
+import { or, not, and, ifThen } from '../../src/actions/logical.js';
 
 describe('logical', () => {
   describe('or()', () => {
     test('returns function', () => {
-      const result = or(() => {}, () => {});
+      const result = or(
+        () => {},
+        () => {}
+      );
       expect(result).toBeInstanceOf(Function);
     });
 
@@ -43,7 +42,10 @@ describe('logical', () => {
 
   describe('and()', () => {
     test('returns function', () => {
-      const result = and(() => {}, () => {});
+      const result = and(
+        () => {},
+        () => {}
+      );
       expect(result).toBeInstanceOf(Function);
     });
 

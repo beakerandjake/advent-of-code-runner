@@ -1,13 +1,11 @@
-import {
-  describe, jest, test, afterEach,
-} from '@jest/globals';
+import { describe, jest, test, afterEach } from '@jest/globals';
 
 // setup mocks
 const mockPrompt = jest.fn();
 jest.unstable_mockModule('inquirer', () => ({
-  default: ({
+  default: {
     prompt: mockPrompt,
-  }),
+  },
 }));
 
 // import after setting up mocks

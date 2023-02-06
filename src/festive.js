@@ -7,25 +7,40 @@ import { getConfigValue } from './config.js';
 export const festiveStyle = chalk.bold.green;
 
 const festiveEmojis = [
-  '🎅', '🤶', '🦌', '🍪', '🥛', '🌟', '❄️ ', '☃️ ', '🌨️ ', '⛄️', '🎄', '🎁', '🛷', '🔔',
+  '🎅',
+  '🤶',
+  '🦌',
+  '🍪',
+  '🥛',
+  '🌟',
+  '❄️ ',
+  '☃️ ',
+  '🌨️ ',
+  '⛄️',
+  '🎄',
+  '🎁',
+  '🛷',
+  '🔔',
 ];
 
 /**
  * Title box originally created using https://www.npmjs.com/package/boxen
  * I spent too much time making the dang tree..
  */
-const festiveTitle = festiveStyle([
-  '┌ 🎅 advent-of-code-runner 🤶 ┐',
-  '│                             │',
-  '│              🌟             │',
-  '│              🎄             │',
-  '│             🎄🎄            │',
-  '│            🎄🎄🎄           │',
-  '│           🎄🎄🎄🎄          │',
-  '│             🎁🎁            │',
-  '│                             │',
-  '└─────────────────────────────┘',
-].join(EOL));
+const festiveTitle = festiveStyle(
+  [
+    '┌ 🎅 advent-of-code-runner 🤶 ┐',
+    '│                             │',
+    '│              🌟             │',
+    '│              🎄             │',
+    '│             🎄🎄            │',
+    '│            🎄🎄🎄           │',
+    '│           🎄🎄🎄🎄          │',
+    '│             🎁🎁            │',
+    '│                             │',
+    '└─────────────────────────────┘',
+  ].join(EOL)
+);
 
 /**
  * Prints the title box to the console, unless configured to suppress.
@@ -41,17 +56,17 @@ export const printFestiveTitle = () => {
 /**
  * Returns a random *festive* emoji.
  */
-export const festiveEmoji = () => festiveEmojis[Math.floor(Math.random() * festiveEmojis.length)];
+export const festiveEmoji = () =>
+  festiveEmojis[Math.floor(Math.random() * festiveEmojis.length)];
 
 /**
  * Turns a normal string into a *festive* one.
  * @param {String} message
  */
-const makeFestive = (message) => (
+const makeFestive = (message) =>
   getConfigValue('cli.suppressFestive')
     ? message
-    : `${festiveEmoji()} ${message} ${festiveEmoji()}`
-);
+    : `${festiveEmoji()} ${message} ${festiveEmoji()}`;
 
 /**
  * Special winston Transport that creates festive console logs.

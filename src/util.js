@@ -23,10 +23,11 @@ export const get = (target, path, defaultValue = undefined) => {
 export const has = (target, key) => {
   const keyParts = String.prototype.split.call(key || '', '.');
 
-  return !!target && (
-    keyParts.length > 1
+  return (
+    !!target &&
+    (keyParts.length > 1
       ? has(target[key.split('.')[0]], keyParts.slice(1).join('.'))
-      : hasOwnProperty.call(target, key)
+      : hasOwnProperty.call(target, key))
   );
 };
 
@@ -60,4 +61,5 @@ export const getType = (value) => {
  * Returns the average of the elements in the array.
  * @param {Number[]} items
  */
-export const average = (items = []) => items?.reduce((m, x, i) => m + (x - m) / (i + 1), 0) || NaN;
+export const average = (items = []) =>
+  items?.reduce((m, x, i) => m + (x - m) / (i + 1), 0) || NaN;

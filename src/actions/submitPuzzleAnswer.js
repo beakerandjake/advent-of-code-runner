@@ -5,7 +5,11 @@ import { logger } from '../logger.js';
  * Submit the answer to advent of code and returns the submission result.
  */
 export const submitPuzzleAnswer = async ({
-  year, day, level, answer, authToken,
+  year,
+  day,
+  level,
+  answer,
+  authToken,
 } = {}) => {
   if (authToken == null) {
     throw new Error('null or undefined auth token');

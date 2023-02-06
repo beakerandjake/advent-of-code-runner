@@ -65,11 +65,7 @@ const ensureWorkspaceDir = async () => ensureDir(workspaceDir);
  * Launches the main.js script, forwarding arguments and setting the cwd to the workspace.
  */
 const start = async () => {
-  await Promise.all([
-    ensureWorkspaceDir(),
-    ensureDotEnv(),
-  ]);
-
+  await Promise.all([ensureWorkspaceDir(), ensureDotEnv()]);
   fork(mainJsPath, argv.slice(2), { cwd: workspaceDir });
 };
 

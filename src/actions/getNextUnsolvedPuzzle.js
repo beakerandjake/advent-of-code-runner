@@ -8,7 +8,9 @@ import { logger } from '../logger.js';
 export const getNextUnsolvedPuzzle = async ({ year } = {}) => {
   const nextPuzzle = await getNextUnansweredPuzzle(year);
   if (!nextPuzzle) {
-    logger.festive('Congratulations, you\'ve already solved all the puzzles for this year! If you want to solve a specific puzzle use the "solve" command instead.');
+    logger.festive(
+      'Congratulations, you\'ve already solved all the puzzles for this year! If you want to solve a specific puzzle use the "solve" command instead.'
+    );
     return false;
   }
 

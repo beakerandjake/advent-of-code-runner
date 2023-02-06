@@ -12,7 +12,9 @@ export const getCompletionData = async ({ year } = {}) => {
   const completionData = await getPuzzleCompletionData(year);
 
   if (completionData.length === 0) {
-    logger.festive('You have not submitted any puzzles yet, please run this command after submitting a puzzle');
+    logger.festive(
+      'You have not submitted any puzzles yet, please run this command after submitting a puzzle'
+    );
     return false;
   }
 
