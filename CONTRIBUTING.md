@@ -35,7 +35,7 @@ There is no need to add a git tag or bump the `package.json` version, these are 
 
 Pull requests run a CI workflow, which must pass for the PR to be merged.
 
-### Additional Pull Request Tips
+#### Additional Pull Request Tips
 - Try to focus on accomplishing one thing, be it a feature or a bug fix. 
 - Try to do the least amount of change possible to accomplish the goal. 
 - Skip the temptation to make unnecessary changes or refactors (this makes tracing changes easier in the future). 
@@ -52,14 +52,14 @@ A high level overview of tools used:
 1. Checkout repo and install packages.
 2. Run commands using `npm start` e.g. `npm start -- init` or `npm start -- solve 17 1`
 
-### Checkout repo & install packages
+#### Checkout repo & install packages
 ```
 git clone https://github.com/beakerandjake/advent-of-code-runner.git
 cd advent-of-code-runner
 npm install
 ```
 
-### `npm start`
+#### `npm start`
 This is the command to run the program for development. It runs a the `scripts/start.js` file. 
 
 This file contains some logic to ensure local development is easy:
@@ -74,7 +74,7 @@ Examples:
 - `npm start -- stats --save`
 - `npm start -- init`
 
-### `.env` Development Options
+#### `.env` Development Options
 Use the `.env` file at the root of the project (created on first run of `npm start`) to customize how the CLI behaves. 
 
 The following options are relevant to development:
@@ -92,7 +92,7 @@ The project folder structure attempts to be as flat as possible to avoid deep ne
 
 Each js file strives to have a single purpose, and if it starts to do too much it should be split into different files. This makes finding the implementation of a feature easy and makes the code more testable. Big multipurpose files are generally avoided save for some exceptions such as `util.js` or `formatting.js`. 
 
-### Folders
+#### Folders
 - `scripts/` contains development scripts launched by the `package.json`
 - `src/` contains all source code necessary to run the CLI.
 - `templates/` template files used by the `init` command.
@@ -103,7 +103,7 @@ This project uses [commander](https://github.com/tj/commander.js/) for the CLI l
 
 The project uses ESM for modules.
 
-### Action Chains
+#### Action Chains
 Commands are generally implemented using action chains. An action chain is a abstraction for combining small pieces of functionality together to accomplish complex logic. An action chain is composed of "links", each link in the chain is a small single purpose function. 
 
 The action chain executes each link sequentially. It maintains an `args` object that is passed to each link in the chain, links can modify this args object by returning an object. When a link returns an object that value is spread onto the chains current args object. 
