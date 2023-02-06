@@ -88,8 +88,21 @@ The following options are relevant to development:
 Additionally, all of the options specified in the [advanced configuration](https://github.com/beakerandjake/advent-of-code-runner#christmas_tree-advanced-configuration) are available.
 
 ## Project Structure
+The project folder structure attempts to be as flat as possible to avoid deep nesting. The general rule is that folders are created per feature or area and are only created if that feature starts to have more than a few files. 
+
+Each js file strives to have a single purpose, and if it starts to do too much it should be split into different files. This makes lfinding the implementation of a feature easy and makes the code more testable. Big multipurpose files are generally avoided save for some exceptions such as `util.js` or `formatting.js`. 
+
+### Folders
+- `scripts/` contains development scripts launched by the `package.json`
+- `src/` contains all source code necessary to run the CLI.
+- `templates/` template files used by the `init` command.
+- `tests/` the unit tests, matches the structure of `src/`
 
 ## Code overview
+The CLI is driven via [commander](https://github.com/tj/commander.js/) in `main.js`, here you can see all of the commands that are added. Each command corresponds to a file in the `src/cli` folder. 
+
+### Action Chains
+Commands are implemented using action chains. An action chain is a abstraction for combining small pieces of functionality together to accomplish complex logic. An action chain is composed of "links", each link in the chain is a small single purpose function. The action chain executes each link sequentially. It maintains an `args` object that is passed to each link in the chain, links can modify this args object by returning an object. When a link returns an object that value is spread onto the chains current args object. Links can halt the 
 
 ## Tests
 
