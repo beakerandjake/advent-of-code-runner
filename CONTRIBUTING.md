@@ -101,6 +101,8 @@ Each js file strives to have a single purpose, and if it starts to do too much i
 ## Code overview
 This project uses [commander](https://github.com/tj/commander.js/) for the CLI logic. In `main.js` you can see all of the commands that are added. Each command corresponds to a file in the `src/cli` folder. 
 
+The project uses ESM for modules.
+
 ### Action Chains
 Commands are generally implemented using action chains. An action chain is a abstraction for combining small pieces of functionality together to accomplish complex logic. An action chain is composed of "links", each link in the chain is a small single purpose function. 
 
@@ -130,10 +132,21 @@ The chain runs these links in order:
 The order of the links is very important. Some links expect certain args to be present and will fail if those ars are missing. For instance `outputPuzzleLink` requires an args object like `{ year, day, level }`. These fields are added to the args object by the earlier links `getYear` and `getNextUnsolvedPuzzle`.
 
 ## Tests
-[Jest](https://github.com/facebook/jest) is used for unit testing. There is no set coverage target, but the goal is to have as many quality tests as possible. Tests can be ran locally using the `npm test` command, you could also run `npm test -- --coverage` to see code coverage. 
+[Jest](https://github.com/facebook/jest) is used for unit testing. There is no set coverage target, but the goal is to have as many quality tests as possible. 
+
+Tests can be ran locally using the `npm test` command, you could also run `npm test -- --coverage` to see code coverage. 
+
+## Releasing
+Releases are handled by the [publish workflow](https://github.com/beakerandjake/advent-of-code-runner/blob/main/.github/workflows/publish.yml). This workflow:
+- Bumps the npm version and sets a dist tag.
+- Updates the CHANGELOG with a new section for the release
+- Publishes the new version of the package to npm
+- Adds a git tag for the release
+- Creates a github release.
 
 ## Code Style Guide
 
+TBD
 
 Inspo while creating:
 - https://github.com/facebook/create-react-app/blob/main/CONTRIBUTING.md
