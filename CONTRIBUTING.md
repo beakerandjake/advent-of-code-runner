@@ -99,10 +99,10 @@ Each js file strives to have a single purpose, and if it starts to do too much i
 - `tests/` the unit tests, matches the structure of `src/`
 
 ## Code overview
-The CLI is driven via [commander](https://github.com/tj/commander.js/) in `main.js`, here you can see all of the commands that are added. Each command corresponds to a file in the `src/cli` folder. 
+This project uses [commander](https://github.com/tj/commander.js/) for the CLI logic. In `main.js` you can see all of the commands that are added. Each command corresponds to a file in the `src/cli` folder. 
 
 ### Action Chains
-Commands are implemented using action chains. An action chain is a abstraction for combining small pieces of functionality together to accomplish complex logic. An action chain is composed of "links", each link in the chain is a small single purpose function. 
+Commands are generally implemented using action chains. An action chain is a abstraction for combining small pieces of functionality together to accomplish complex logic. An action chain is composed of "links", each link in the chain is a small single purpose function. 
 
 The action chain executes each link sequentially. It maintains an `args` object that is passed to each link in the chain, links can modify this args object by returning an object. When a link returns an object that value is spread onto the chains current args object. 
 
@@ -129,8 +129,8 @@ The chain runs these links in order:
 
 The order of the links is very important. Some links expect certain args to be present and will fail if those ars are missing. For instance `outputPuzzleLink` requires an args object like `{ year, day, level }`. These fields are added to the args object by the earlier links `getYear` and `getNextUnsolvedPuzzle`.
 
-
 ## Tests
+[Jest](https://github.com/facebook/jest) is used for unit testing. There is no set coverage target, but the goal is to have as many quality tests as possible. Tests can be ran locally using the `npm test` command, you could also run `npm test -- --coverage` to see code coverage. 
 
 ## Code Style Guide
 
