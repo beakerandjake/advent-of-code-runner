@@ -1,19 +1,7 @@
 import { logger } from '../logger.js';
 
 /**
- * Could get really crazy with this and have the chain return a value.
- * That would let us nest chains within chains :D
- *
- * Could also have decorator links like NOT, OR
- *
- * Would be cool to support a .requires property on functions.
- * It would check the args for each value in the requires array
- * and throw if that value was missing from the args.
- *
- */
-
-/**
- * Run the pre action chain and the action.
+ * Runs the links of the action chain.
  * @private
  */
 export const executeChain = async (links, args = {}) => {

@@ -232,7 +232,7 @@ You can customize the behavior of this CLI by using the following options in you
 #### Example .env file
 This example modifies the default `.env` file created by the `init` command. It sets the `AOC_DISABLE_README_AUTO_SAVE_PROGRESS` option to `true`, which disables the progress table being automatically saved to the README file. It also sets the `AOC_SUPPRESS_FESTIVE` to `true` which disables emojis in the console output. 
 
-```Shell
+```dosini
 # This is an authentication token to advent of code.
 # It is a SECRET and should be treated like a password.
 # That means this .env file should NOT be committed to source control!
