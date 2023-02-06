@@ -102,7 +102,35 @@ Each js file strives to have a single purpose, and if it starts to do too much i
 The CLI is driven via [commander](https://github.com/tj/commander.js/) in `main.js`, here you can see all of the commands that are added. Each command corresponds to a file in the `src/cli` folder. 
 
 ### Action Chains
-Commands are implemented using action chains. An action chain is a abstraction for combining small pieces of functionality together to accomplish complex logic. An action chain is composed of "links", each link in the chain is a small single purpose function. The action chain executes each link sequentially. It maintains an `args` object that is passed to each link in the chain, links can modify this args object by returning an object. When a link returns an object that value is spread onto the chains current args object. Links can halt the 
+Commands are implemented using action chains. An action chain is a abstraction for combining small pieces of functionality together to accomplish complex logic. An action chain is composed of "links", each link in the chain is a small single purpose function. 
+
+The action chain executes each link sequentially. It maintains an `args` object that is passed to each link in the chain, links can modify this args object by returning an object. When a link returns an object that value is spread onto the chains current args object. 
+
+Links can halt the chain by explicitly returning `false`. When the chain is halted by a link, no further links in that chain are run. A chain is also halted if a link throws an exception.
+
+Chains can be created using the `createChain` function which takes an array of links. This function returns a new function which executes the chain when invoked.
+
+Here is an example chain: 
+```js
+const exampleChain = createChain([
+  assertInitialized,
+  getYear,
+  getNextUnsolvedPuzzle,
+  outputPuzzleLink
+])
+
+await exampleChain();
+```
+The chain runs these links in order: 
+  1. `assertInitialized` - Halts the chain if the `cwd` does not contain a user data file. 
+  2. `getYear` - Loads the year from the user data file and adds the year to the chains args. 
+  3. `getNextUnsolvedPuzzle` - Searches the user data file for the first puzzle the user has not solved, the puzzle day and level are added to the chain args. 
+  4. `outputPuzzleLink` - Prints a link to the puzzle in the terminal. 
+
+The order of the links is very important. Some links expect certain args to be present and will fail if those ars are missing. For instance `outputPuzzleLink` requires an args object like `{ year, day, level }`. These fields are added to the args object by the earlier links `getYear` and `getNextUnsolvedPuzzle`.
+
+
+
 
 ## Tests
 
