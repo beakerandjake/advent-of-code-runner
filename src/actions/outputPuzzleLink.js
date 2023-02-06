@@ -18,10 +18,7 @@ export const outputPuzzleLink = ({ year, day, level } = {}) => {
     throw new Error('null or undefined level');
   }
 
-  const clickableLink = terminalLink(
-    'Puzzle',
-    puzzleBaseUrl(year, day),
-  );
+  const clickableLink = terminalLink('Puzzle', puzzleBaseUrl(year, day));
 
   logger.festive(`${clickableLink} (Year: ${year} Day: ${day} Level: ${level}) `);
 };

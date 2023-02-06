@@ -18,8 +18,9 @@
   "bin": "src/main.js",
   "scripts": {
     "test": "NODE_OPTIONS=\"--experimental-vm-modules --no-warnings\" jest",
-    "start": "node src/main.js",
-    "lint": "eslint 'src/**/*.js' 'tests/**/*.js'"
+    "start": "node scripts/start.js",
+    "lint": "eslint 'src/**/*.js' 'tests/**/*.js'",
+    "prettier": "prettier --check ."
   },
   "repository": {
     "type": "git",
@@ -52,11 +53,12 @@
   "devDependencies": {
     "@jest/globals": "^29.3.1",
     "@types/jest": "^29.2.4",
-    "coveralls": "^3.1.1",
     "eslint": "^8.29.0",
     "eslint-config-airbnb-base": "^15.0.0",
+    "eslint-config-prettier": "^8.6.0",
     "eslint-plugin-import": "^2.26.0",
-    "jest": "^29.3.1"
+    "jest": "^29.3.1",
+    "prettier": "2.8.3"
   },
   "engines": {
     "node": ">=18"

@@ -47,9 +47,7 @@ const isoStringToDate = (value) => {
  */
 export const getRateLimit = async (actionType) => {
   const rateLimits = await loadRateLimitData();
-  return rateLimits[actionType]
-    ? isoStringToDate(rateLimits[actionType])
-    : null;
+  return rateLimits[actionType] ? isoStringToDate(rateLimits[actionType]) : null;
 };
 
 /**
@@ -59,7 +57,9 @@ export const getRateLimit = async (actionType) => {
  */
 export const setRateLimit = async (actionType, expiration) => {
   if (!isDate(expiration) || !isValid(expiration)) {
-    throw new TypeError(`Attempted to set rate limit expiration to invalid date: "${expiration}"`);
+    throw new TypeError(
+      `Attempted to set rate limit expiration to invalid date: "${expiration}"`
+    );
   }
   const rateLimits = await loadRateLimitData();
   const updated = { ...rateLimits, [actionType]: expiration.toISOString() };

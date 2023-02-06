@@ -14,7 +14,7 @@ describe('initialize', () => {
       false,
       {},
       () => {},
-      new class Cats {}(),
+      new (class Cats {})(),
       Promise.resolve(true),
     ])('throws if tokens is: "%s"', (tokens) => {
       expect(() => replaceTokens(tokens, {}, '')).toThrow(TypeError);
@@ -30,7 +30,7 @@ describe('initialize', () => {
       false,
       {},
       () => {},
-      new class Cats {}(),
+      new (class Cats {})(),
       Promise.resolve(true),
     ])('throws if target is: "%s"', (target) => {
       expect(() => replaceTokens([], {}, target)).toThrow(TypeError);
@@ -82,7 +82,11 @@ describe('initialize', () => {
         { key: 'cats', match: 'catspeak' },
       ];
       const args = { dogs: 'woof', cats: 'meow' };
-      const result = replaceTokens(tokens, args, 'the dog says: dogspeak, the cat says: catspeak');
+      const result = replaceTokens(
+        tokens,
+        args,
+        'the dog says: dogspeak, the cat says: catspeak'
+      );
       expect(result).toBe('the dog says: woof, the cat says: meow');
     });
 
@@ -92,7 +96,11 @@ describe('initialize', () => {
         { key: 'cats', match: 'catspeak' },
       ];
       const args = { dogs: 'woof', cats: 'meow' };
-      const result = replaceTokens(tokens, args, 'the dog says: dogspeak dogspeak, the cat says: catspeak catspeak');
+      const result = replaceTokens(
+        tokens,
+        args,
+        'the dog says: dogspeak dogspeak, the cat says: catspeak catspeak'
+      );
       expect(result).toBe('the dog says: woof woof, the cat says: meow meow');
     });
   });

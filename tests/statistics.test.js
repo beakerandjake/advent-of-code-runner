@@ -1,6 +1,4 @@
-import {
-  describe, jest, test, afterEach,
-} from '@jest/globals';
+import { describe, jest, test, afterEach } from '@jest/globals';
 import { mockLogger } from './mocks.js';
 
 // setup mocks.
@@ -18,9 +16,9 @@ jest.unstable_mockModule('src/validation/validationUtils.js', () => ({
 }));
 
 // import after setting up the mock so the modules import the mocked version
-const {
-  addOrEditPuzzle, findPuzzle, createPuzzle, getPuzzlesForYear,
-} = await import('../src/persistence/puzzleRepository.js');
+const { addOrEditPuzzle, findPuzzle, createPuzzle, getPuzzlesForYear } = await import(
+  '../src/persistence/puzzleRepository.js'
+);
 const { parsePositiveInt } = await import('../src/validation/validationUtils.js');
 const {
   getPuzzlesFastestRuntime,
@@ -62,8 +60,12 @@ describe('statistics', () => {
 
   describe('setPuzzlesFastestRuntime()', () => {
     test('throws if not positive int', async () => {
-      parsePositiveInt.mockImplementation(() => { throw new RangeError('NOPE'); });
-      await expect(async () => setPuzzlesFastestRuntime(2022, 1, 1)).rejects.toThrow(RangeError);
+      parsePositiveInt.mockImplementation(() => {
+        throw new RangeError('NOPE');
+      });
+      await expect(async () => setPuzzlesFastestRuntime(2022, 1, 1)).rejects.toThrow(
+        RangeError
+      );
       expect(addOrEditPuzzle).not.toHaveBeenCalled();
     });
 
@@ -168,9 +170,7 @@ describe('statistics', () => {
 
     test('calculates average', async () => {
       const runtimes = [1234, 345634, 238, 12394];
-      getPuzzlesForYear.mockResolvedValue(
-        runtimes.map((x) => ({ fastestRuntimeNs: x })),
-      );
+      getPuzzlesForYear.mockResolvedValue(runtimes.map((x) => ({ fastestRuntimeNs: x })));
       const result = await getAverageRuntime(2022);
       expect(result).toBe(runtimes.reduce((acc, x) => acc + x, 0) / runtimes.length);
     });
@@ -184,21 +184,27 @@ describe('statistics', () => {
     });
 
     test('counts correct answer', async () => {
-      getPuzzlesForYear.mockResolvedValue([{ correctAnswer: 'ASDF', incorrectAnswers: [] }]);
+      getPuzzlesForYear.mockResolvedValue([
+        { correctAnswer: 'ASDF', incorrectAnswers: [] },
+      ]);
       const result = await getMaxAttempts(2022);
       expect(result).toBe(1);
     });
 
     test('counts incorrect answers', async () => {
       const answers = ['ASDF', '1234', 'fdsa'];
-      getPuzzlesForYear.mockResolvedValue([{ correctAnswer: null, incorrectAnswers: answers }]);
+      getPuzzlesForYear.mockResolvedValue([
+        { correctAnswer: null, incorrectAnswers: answers },
+      ]);
       const result = await getMaxAttempts(2022);
       expect(result).toBe(answers.length);
     });
 
     test('counts correct and incorrect answers', async () => {
       const answers = ['ASDF', '1234', 'fdsa'];
-      getPuzzlesForYear.mockResolvedValue([{ correctAnswer: 'ASDF', incorrectAnswers: answers }]);
+      getPuzzlesForYear.mockResolvedValue([
+        { correctAnswer: 'ASDF', incorrectAnswers: answers },
+      ]);
       const result = await getMaxAttempts(2022);
       expect(result).toBe(answers.length + 1);
     });
@@ -235,10 +241,11 @@ describe('statistics', () => {
         { correctAnswer: 'ASDF', incorrectAnswers: [] },
       ];
 
-      const expected = data.reduce(
-        (acc, x) => acc + x.incorrectAnswers.length + (x.correctAnswer ? 1 : 0),
-        0,
-      ) / data.length;
+      const expected =
+        data.reduce(
+          (acc, x) => acc + x.incorrectAnswers.length + (x.correctAnswer ? 1 : 0),
+          0
+        ) / data.length;
 
       getPuzzlesForYear.mockResolvedValue(data);
       const result = await getAverageAttempts(2022);
@@ -281,7 +288,14 @@ describe('statistics', () => {
   });
 
   describe('getPuzzleCompletionData()', () => {
-    const mockPuzzle = (year, day, level, correctAnswer = '', incorrectAnswers = [], fastestRuntimeNs = null) => ({
+    const mockPuzzle = (
+      year,
+      day,
+      level,
+      correctAnswer = '',
+      incorrectAnswers = [],
+      fastestRuntimeNs = null
+    ) => ({
       id: `${year}${day}${level}`,
       year,
       day,
@@ -320,8 +334,8 @@ describe('statistics', () => {
       ];
       getPuzzlesForYear.mockResolvedValue(expected);
       const result = await getPuzzleCompletionData(year);
-      expected.forEach(
-        (x, index) => expect(result[index].solved).toBe(!!x.correctAnswer),
+      expected.forEach((x, index) =>
+        expect(result[index].solved).toBe(!!x.correctAnswer)
       );
     });
 
@@ -343,9 +357,7 @@ describe('statistics', () => {
 
     test('numberOfAttempts is 1 if solved with no wrong answers', async () => {
       const year = 2022;
-      const puzzles = [
-        mockPuzzle(year, 1, 1, 'ASDF', [], 1234),
-      ];
+      const puzzles = [mockPuzzle(year, 1, 1, 'ASDF', [], 1234)];
       getPuzzlesForYear.mockResolvedValue(puzzles);
       const result = await getPuzzleCompletionData(year);
       expect(result[0]?.numberOfAttempts).toBe(1);
@@ -354,9 +366,7 @@ describe('statistics', () => {
     test('numberOfAttempts is correct if solved with wrong answers', async () => {
       const year = 2022;
       const wrongAnswers = ['1234', 'sadf', 'zxcv', 'qwer'];
-      const puzzles = [
-        mockPuzzle(year, 1, 1, 'ASDF', wrongAnswers, 1234),
-      ];
+      const puzzles = [mockPuzzle(year, 1, 1, 'ASDF', wrongAnswers, 1234)];
       getPuzzlesForYear.mockResolvedValue(puzzles);
       const result = await getPuzzleCompletionData(year);
       expect(result[0]?.numberOfAttempts).toBe(wrongAnswers.length + 1);
@@ -387,7 +397,11 @@ describe('statistics', () => {
         mockPuzzle(year, 1, 1),
       ];
       const expected = input.reverse().map(({ day, level }) => ({
-        day, level, solved: false, runtimeNs: null, numberOfAttempts: 0,
+        day,
+        level,
+        solved: false,
+        runtimeNs: null,
+        numberOfAttempts: 0,
       }));
       getPuzzlesForYear.mockResolvedValue(input);
       const result = await getPuzzleCompletionData(year);

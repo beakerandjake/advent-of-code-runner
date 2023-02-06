@@ -13,10 +13,15 @@ import { get, has } from './util.js';
 const __dirname = fileURLToPath(new URL('.', import.meta.url));
 
 // ensure dotenv runs before we attempt to read any environment variables.
+
+// read the users config from the cwd.
 dotenv.config();
 
+// attempt to read an .env file at the root of this repository.
+// this helps in local development by having one place to set development settings.
+dotenv.config({ path: join(__dirname, '..', '.env') });
+
 export const envOptions = {
-  cwdOverride: 'AOC_CWD_OVERRIDE',
   suppressTitle: 'AOC_SUPPRESS_TITLE',
   suppressFestive: 'AOC_SUPPRESS_FESTIVE',
   authenticationToken: 'AOC_AUTHENTICATION_TOKEN',
@@ -31,14 +36,14 @@ export const envOptions = {
  * This will be the root folder where this program operates.
  * User solution files, inputs, data store etc will all exist in this folder.
  */
-const cwd = process.env[envOptions.cwdOverride] || getCwd();
+const cwd = getCwd();
 
 /**
  * Load meta details about this package form the package json
  */
 const readMetaFromPackageJson = async () => {
   const packageJson = JSON.parse(
-    await readFile(join(__dirname, '..', 'package.json'), { encoding: 'utf8' }),
+    await readFile(join(__dirname, '..', 'package.json'), { encoding: 'utf8' })
   );
 
   return {
@@ -62,8 +67,7 @@ const CONFIG = {
   aoc: {
     authenticationToken: process.env[envOptions.authenticationToken] || null,
     baseUrl: 'http://192.168.0.1', // 'https://adventofcode.com',
-    userAgent:
-      'https://github.com/beakerandjake/advent-of-code-runner by beakerandjake',
+    userAgent: 'https://github.com/beakerandjake/advent-of-code-runner by beakerandjake',
     responseParsing: {
       correctSolution: /that's the right answer/gim,
       incorrectSolution: /that's not the right answer/gim,
@@ -126,7 +130,11 @@ const CONFIG = {
     userDataFile: join(cwd, 'aocr-data.json'),
     inputsDir: join(cwd, 'inputs'),
     solutionsDir: join(cwd, 'src'),
-    solutionRunnerWorkerFile: join(__dirname, 'solutions', 'solutionRunnerWorkerThread.js'),
+    solutionRunnerWorkerFile: join(
+      __dirname,
+      'solutions',
+      'solutionRunnerWorkerThread.js'
+    ),
     templates: {
       gitignore: {
         source: join(__dirname, '..', 'templates', 'template-gitignore'),
@@ -149,14 +157,11 @@ const CONFIG = {
     },
   },
   initialize: {
-    emptyCwdWhitelist: [
-      '.git',
-      '.DS_Store',
-      'LICENSE',
-      'node_modules',
-    ],
+    emptyCwdWhitelist: ['.git', '.DS_Store', 'LICENSE', 'node_modules'],
   },
-  disableReadmeAutoSaveProgress: yn(process.env[envOptions.disableReadmeAutoSaveProgress]),
+  disableReadmeAutoSaveProgress: yn(
+    process.env[envOptions.disableReadmeAutoSaveProgress]
+  ),
 };
 
 /**

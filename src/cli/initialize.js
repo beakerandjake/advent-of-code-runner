@@ -23,7 +23,7 @@ const confirmInitializeQuestion = {
   type: 'confirm',
   name: 'confirmed',
   message: festiveStyle(
-    'This directory is not empty! This operation will overwrite files, do you want to continue?',
+    'This directory is not empty! This operation will overwrite files, do you want to continue?'
   ),
   default: false,
   prefix: festiveEmoji(),
@@ -66,7 +66,10 @@ const createFiles = async ({ answers }) => {
  */
 const initialize = async () => {
   // if there are files in the cwd, get confirmation with the user that they want to proceed.
-  if (!await cwdIsEmpty() && !await assertUserConfirmation(confirmInitializeQuestion)()) {
+  if (
+    !(await cwdIsEmpty()) &&
+    !(await assertUserConfirmation(confirmInitializeQuestion)())
+  ) {
     return;
   }
 
@@ -74,10 +77,13 @@ const initialize = async () => {
   const { answers } = await getAnswersFromUser(initializeQuestions)();
 
   // run initialize steps in an action chain that reports its progress to the user.
-  const actionChain = createChainWithReporting([
-    { fn: createFiles, message: 'Creating files...' },
-    { fn: installPackages, message: 'Installing Packages...' },
-  ], 'Successfully initialized your repository, have fun! (see README for help)');
+  const actionChain = createChainWithReporting(
+    [
+      { fn: createFiles, message: 'Creating files...' },
+      { fn: installPackages, message: 'Installing Packages...' },
+    ],
+    'Successfully initialized your repository, have fun! (see README for help)'
+  );
 
   await actionChain({ answers });
 };

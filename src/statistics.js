@@ -1,5 +1,8 @@
 import {
-  addOrEditPuzzle, createPuzzle, findPuzzle, getPuzzlesForYear,
+  addOrEditPuzzle,
+  createPuzzle,
+  findPuzzle,
+  getPuzzlesForYear,
 } from './persistence/puzzleRepository.js';
 import { parsePositiveInt } from './validation/validationUtils.js';
 import { logger } from './logger.js';
@@ -26,7 +29,7 @@ export const getPuzzlesFastestRuntime = async (year, day, level) => {
  */
 export const setPuzzlesFastestRuntime = async (year, day, level, timeNs) => {
   const parsed = parsePositiveInt(timeNs);
-  const puzzle = await findPuzzle(year, day, level) || createPuzzle(year, day, level);
+  const puzzle = (await findPuzzle(year, day, level)) || createPuzzle(year, day, level);
   const updated = { ...puzzle, fastestRuntimeNs: parsed };
   logger.debug('setting fastest runtime to: %s', timeNs, { year, day, level });
   return addOrEditPuzzle(updated);
@@ -68,7 +71,9 @@ export const getAverageRuntime = async (year) => {
  */
 export const getMaxAttempts = async (year) => {
   const puzzles = await getPuzzlesForYear(year);
-  const attempts = puzzles.map((x) => x.incorrectAnswers.length + (x.correctAnswer ? 1 : 0));
+  const attempts = puzzles.map(
+    (x) => x.incorrectAnswers.length + (x.correctAnswer ? 1 : 0)
+  );
   return attempts.length ? Math.max(...attempts) : null;
 };
 
@@ -78,7 +83,9 @@ export const getMaxAttempts = async (year) => {
  */
 export const getAverageAttempts = async (year) => {
   const puzzles = await getPuzzlesForYear(year);
-  const attempts = puzzles.map((x) => x.incorrectAnswers.length + (x.correctAnswer ? 1 : 0));
+  const attempts = puzzles.map(
+    (x) => x.incorrectAnswers.length + (x.correctAnswer ? 1 : 0)
+  );
   return attempts.length ? average(attempts) : null;
 };
 
@@ -99,13 +106,13 @@ export const getPuzzleCompletionData = async (year) => {
   const puzzles = await getPuzzlesForYear(year);
   return puzzles
     .sort((a, b) => a.id.localeCompare(b.id))
-    .map(({
-      day, level, correctAnswer, fastestRuntimeNs, incorrectAnswers,
-    }) => ({
+    .map(({ day, level, correctAnswer, fastestRuntimeNs, incorrectAnswers }) => ({
       day,
       level,
       solved: !!correctAnswer,
       runtimeNs: correctAnswer ? fastestRuntimeNs : null,
-      numberOfAttempts: correctAnswer ? incorrectAnswers.length + 1 : incorrectAnswers.length,
+      numberOfAttempts: correctAnswer
+        ? incorrectAnswers.length + 1
+        : incorrectAnswers.length,
     }));
 };

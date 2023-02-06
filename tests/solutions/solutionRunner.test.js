@@ -1,6 +1,4 @@
-import {
-  beforeEach, describe, jest, test,
-} from '@jest/globals';
+import { beforeEach, describe, jest, test } from '@jest/globals';
 import { join as realJoin } from 'node:path';
 import {
   SolutionWorkerEmptyInputError,
@@ -26,9 +24,8 @@ jest.unstable_mockModule('node:worker_threads', () => ({
 const { Worker } = await import('node:worker_threads');
 const { join } = await import('path');
 const { pathExists } = await import('fs-extra/esm');
-const {
-  execute, getSolutionFileName, getFunctionNameForLevel, spawnWorker,
-} = await import('../../src/solutions/solutionRunner.js');
+const { execute, getSolutionFileName, getFunctionNameForLevel, spawnWorker } =
+  await import('../../src/solutions/solutionRunner.js');
 
 describe('solutionRunner', () => {
   const origEnv = process.env;
@@ -110,7 +107,9 @@ describe('solutionRunner', () => {
       const promise = spawnWorker('ASDF', {});
       await Promise.resolve();
       exitCallback();
-      await expect(async () => promise).rejects.toThrow(SolutionWorkerExitWithoutAnswerError);
+      await expect(async () => promise).rejects.toThrow(
+        SolutionWorkerExitWithoutAnswerError
+      );
     });
 
     test('logs if worker posts log message', async () => {
@@ -129,7 +128,10 @@ describe('solutionRunner', () => {
       await Promise.resolve();
       messageCallback(logMessage);
       await Promise.resolve();
-      expect(loggerMockInstance.log).toHaveBeenLastCalledWith(logMessage.level, logMessage.message);
+      expect(loggerMockInstance.log).toHaveBeenLastCalledWith(
+        logMessage.level,
+        logMessage.message
+      );
     });
 
     test('resolves if worker posts answer', async () => {
@@ -149,9 +151,10 @@ describe('solutionRunner', () => {
       messageCallback(answerMessage);
       await Promise.resolve();
       const result = await workerPromise;
-      expect(result).toEqual(
-        { answer: answerMessage.answer, runtimeNs: answerMessage.runtimeNs },
-      );
+      expect(result).toEqual({
+        answer: answerMessage.answer,
+        runtimeNs: answerMessage.runtimeNs,
+      });
     });
   });
 
@@ -159,9 +162,15 @@ describe('solutionRunner', () => {
     /**
      * helps set the mock getConfigValue for the solution runner.
      */
-    const setConfigMocks = (level, {
-      solutionsDir = '.', levelFunctions = [{ key: level, name: 'cats' }], workerFileName = '.', authToken = '',
-    } = {}) => {
+    const setConfigMocks = (
+      level,
+      {
+        solutionsDir = '.',
+        levelFunctions = [{ key: level, name: 'cats' }],
+        workerFileName = '.',
+        authToken = '',
+      } = {}
+    ) => {
       getConfigValue.mockImplementation((key) => {
         switch (key) {
           case 'paths.solutionsDir':
@@ -179,16 +188,24 @@ describe('solutionRunner', () => {
     };
 
     test('throws if input is empty', async () => {
-      expect(async () => execute(1, 1, null)).rejects.toThrow(SolutionWorkerEmptyInputError);
-      expect(async () => execute(1, 1, undefined)).rejects.toThrow(SolutionWorkerEmptyInputError);
-      expect(async () => execute(1, 1, '')).rejects.toThrow(SolutionWorkerEmptyInputError);
+      expect(async () => execute(1, 1, null)).rejects.toThrow(
+        SolutionWorkerEmptyInputError
+      );
+      expect(async () => execute(1, 1, undefined)).rejects.toThrow(
+        SolutionWorkerEmptyInputError
+      );
+      expect(async () => execute(1, 1, '')).rejects.toThrow(
+        SolutionWorkerEmptyInputError
+      );
     });
 
     test('throws if user solution file not found', async () => {
       const level = 1;
       setConfigMocks(level);
       pathExists.mockResolvedValue(false);
-      expect(async () => execute(1, 1, 'asdf')).rejects.toThrow(UserSolutionFileNotFoundError);
+      expect(async () => execute(1, 1, 'asdf')).rejects.toThrow(
+        UserSolutionFileNotFoundError
+      );
     });
 
     test('passes worker data to worker', async () => {
@@ -200,7 +217,9 @@ describe('solutionRunner', () => {
         lines: ['ASDF', 'ASDF'],
       };
       pathExists.mockResolvedValue(true);
-      setConfigMocks(level, { levelFunctions: [{ key: level, name: expected.functionToExecute }] });
+      setConfigMocks(level, {
+        levelFunctions: [{ key: level, name: expected.functionToExecute }],
+      });
 
       // hacky way to ensure worker constructor is called.
       // cant await execute cause that promise never resolves.
@@ -210,7 +229,7 @@ describe('solutionRunner', () => {
 
       expect(Worker).toHaveBeenCalledWith(
         expect.any(String),
-        expect.objectContaining({ workerData: expected }),
+        expect.objectContaining({ workerData: expected })
       );
     });
 
@@ -227,7 +246,7 @@ describe('solutionRunner', () => {
 
       expect(Worker).toHaveBeenCalledWith(
         expect.any(String),
-        expect.not.objectContaining({ env: { authToken } }),
+        expect.not.objectContaining({ env: { authToken } })
       );
     });
   });

@@ -1,6 +1,4 @@
-import {
-  describe, jest, test, afterEach,
-} from '@jest/globals';
+import { describe, jest, test, afterEach } from '@jest/globals';
 import { mockLogger, mockConfig } from '../mocks.js';
 
 // setup mocks.
@@ -12,8 +10,12 @@ jest.unstable_mockModule('../../src/persistence/rateLimitRepository.js', () => (
 }));
 
 // import after setting up the mock so the modules import the mocked version
-const { getRateLimit, setRateLimit } = await import('../../src/persistence/rateLimitRepository.js');
-const { updateRateLimit, isRateLimited, rateLimitedActions } = await import('../../src/api/rateLimit.js');
+const { getRateLimit, setRateLimit } = await import(
+  '../../src/persistence/rateLimitRepository.js'
+);
+const { updateRateLimit, isRateLimited, rateLimitedActions } = await import(
+  '../../src/api/rateLimit.js'
+);
 
 afterEach(() => {
   jest.clearAllMocks();
@@ -22,9 +24,9 @@ afterEach(() => {
 describe('rateLimit', () => {
   describe('updateRateLimit()', () => {
     test('throws on invalid action type', async () => {
-      expect(async () => updateRateLimit('THIS ACTION TYPE DOES NOT EXIST', new Date()))
-        .rejects
-        .toThrow();
+      expect(async () =>
+        updateRateLimit('THIS ACTION TYPE DOES NOT EXIST', new Date())
+      ).rejects.toThrow();
     });
 
     test('sets expected expiration date', async () => {
@@ -54,46 +56,50 @@ describe('rateLimit', () => {
 
       expect(setRateLimit).toHaveBeenCalledWith(
         rateLimitedActions.downloadInput,
-        new Date(now.getTime() + msToAdd),
+        new Date(now.getTime() + msToAdd)
       );
     });
   });
 
   describe('isRateLimited()', () => {
     test('throws on invalid action type', async () => {
-      expect(async () => isRateLimited('THIS ACTION TYPE DOES NOT EXIST'))
-        .rejects
-        .toThrow();
+      expect(async () =>
+        isRateLimited('THIS ACTION TYPE DOES NOT EXIST')
+      ).rejects.toThrow();
     });
 
     test('returns false if no expiration', async () => {
       getRateLimit.mockReturnValueOnce(null);
-      expect(
-        await isRateLimited(rateLimitedActions.submitAnswer),
-      ).toStrictEqual({ expiration: null, limited: false });
+      expect(await isRateLimited(rateLimitedActions.submitAnswer)).toStrictEqual({
+        expiration: null,
+        limited: false,
+      });
     });
 
     test('returns false if expiration is invalid date', async () => {
       getRateLimit.mockReturnValueOnce(new Date(Infinity));
-      expect(
-        await isRateLimited(rateLimitedActions.submitAnswer),
-      ).toStrictEqual({ expiration: null, limited: false });
+      expect(await isRateLimited(rateLimitedActions.submitAnswer)).toStrictEqual({
+        expiration: null,
+        limited: false,
+      });
     });
 
     test('returns false if expiration is in future', async () => {
-      const future = new Date(new Date().getTime() + (1000 * 60 * 5));
+      const future = new Date(new Date().getTime() + 1000 * 60 * 5);
       getRateLimit.mockReturnValueOnce(future);
-      expect(
-        await isRateLimited(rateLimitedActions.submitAnswer),
-      ).toStrictEqual({ expiration: future, limited: true });
+      expect(await isRateLimited(rateLimitedActions.submitAnswer)).toStrictEqual({
+        expiration: future,
+        limited: true,
+      });
     });
 
     test('returns true if expiration is in past', async () => {
-      const past = new Date(new Date().getTime() - (1000 * 60 * 5));
+      const past = new Date(new Date().getTime() - 1000 * 60 * 5);
       getRateLimit.mockReturnValueOnce(past);
-      expect(
-        await isRateLimited(rateLimitedActions.submitAnswer),
-      ).toStrictEqual({ expiration: past, limited: false });
+      expect(await isRateLimited(rateLimitedActions.submitAnswer)).toStrictEqual({
+        expiration: past,
+        limited: false,
+      });
     });
   });
 });

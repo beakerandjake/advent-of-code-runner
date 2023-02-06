@@ -1,6 +1,4 @@
-import {
-  describe, jest, test, afterEach,
-} from '@jest/globals';
+import { describe, jest, test, afterEach } from '@jest/globals';
 import { mockLogger } from '../mocks.js';
 
 // setup mocks
@@ -9,7 +7,9 @@ jest.unstable_mockModule('src/answers.js', () => ({ puzzleHasBeenSolved: jest.fn
 
 // import after mocks set up
 const { puzzleHasBeenSolved } = await import('../../src/answers.js');
-const { assertPuzzleUnsolved } = await import('../../src/actions/assertPuzzleUnsolved.js');
+const { assertPuzzleUnsolved } = await import(
+  '../../src/actions/assertPuzzleUnsolved.js'
+);
 
 describe('assertPuzzleUnsolved()', () => {
   afterEach(() => {

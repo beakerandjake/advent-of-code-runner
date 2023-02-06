@@ -1,6 +1,4 @@
-import {
-  describe, jest, test, afterEach,
-} from '@jest/globals';
+import { describe, jest, test, afterEach } from '@jest/globals';
 import { mockConfig, mockLogger } from '../mocks.js';
 
 // setup mocks
@@ -8,16 +6,16 @@ mockLogger();
 const { getConfigValue } = mockConfig();
 
 // import after mocks set up
-const { getAuthenticationToken } = await import('../../src/actions/getAuthenticationToken.js');
+const { getAuthenticationToken } = await import(
+  '../../src/actions/getAuthenticationToken.js'
+);
 
 describe('getAuthenticationToken()', () => {
   afterEach(() => {
     jest.resetAllMocks();
   });
 
-  test.each([
-    undefined, null, '',
-  ])('throws if token is value: "%s"', (token) => {
+  test.each([undefined, null, ''])('throws if token is value: "%s"', (token) => {
     getConfigValue.mockReturnValue(token);
     expect(() => getAuthenticationToken()).toThrow();
   });

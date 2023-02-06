@@ -6,9 +6,7 @@ import { logger } from '../logger.js';
  * Returns true only if the values are equal.
  * Returns false if the puzzle has not been solved or the values are not equal
  */
-export const assertAnswerCorrect = async ({
-  year, day, level, answer,
-} = {}) => {
+export const assertAnswerCorrect = async ({ year, day, level, answer } = {}) => {
   if (answer == null) {
     throw new Error('null or undefined answer');
   }
@@ -25,7 +23,11 @@ export const assertAnswerCorrect = async ({
     // the user might have already submitted the correct answer to this problem
     // but are re-executing their solution because they made code or performance improvements.
     // let them know their changes might have broke something.
-    logger.error('You have already correctly answered this puzzle, but answer: "%s" doesn\'t match correct answer: "%s"', answer, correctAnswer);
+    logger.error(
+      'You have already correctly answered this puzzle, but answer: "%s" doesn\'t match correct answer: "%s"',
+      answer,
+      correctAnswer
+    );
     return false;
   }
 

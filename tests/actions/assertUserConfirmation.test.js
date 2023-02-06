@@ -1,26 +1,24 @@
-import {
-  describe, jest, test, afterEach,
-} from '@jest/globals';
+import { describe, jest, test, afterEach } from '@jest/globals';
 
 // setup mocks
 const mockPrompt = jest.fn();
 jest.unstable_mockModule('inquirer', () => ({
-  default: ({
+  default: {
     prompt: mockPrompt,
-  }),
+  },
 }));
 
 // import after setting up mocks
-const { assertUserConfirmation } = await import('../../src/actions/assertUserConfirmation.js');
+const { assertUserConfirmation } = await import(
+  '../../src/actions/assertUserConfirmation.js'
+);
 
 describe('assertUserConfirmation()', () => {
   afterEach(() => {
     jest.resetAllMocks();
   });
 
-  test.each([
-    null, undefined,
-  ])('throws if question is %s', (question) => {
+  test.each([null, undefined])('throws if question is %s', (question) => {
     expect(() => assertUserConfirmation(question)).toThrow();
   });
 
