@@ -48,11 +48,9 @@ A high level overview of tools used:
 - [Jest](https://github.com/facebook/jest) for unit testing
 - [eslint](https://github.com/eslint/eslint) for code linting
 
-
 **TLDR**
 1. Checkout repo and install packages.
-2. Create `.env` file and add `AOC_AUTHENTICATION_TOKEN`, `AOC_MOCK_API_ENABLED`, `AOC_MOCK_API_ANSWER_CORRECT` and optionally `AOC_LOG_LEVEL`.
-3. Run commands using `npm start` e.g. `npm start -- init` or `npm start -- solve 17 1`
+2. Run commands using `npm start` e.g. `npm start -- init` or `npm start -- solve 17 1`
 
 ### Checkout repo & install packages
 ```
@@ -60,53 +58,34 @@ git clone https://github.com/beakerandjake/advent-of-code-runner.git
 cd advent-of-code-runner
 npm install
 ```
-### Creating `.env` file
-Create a file named `.env` at the root of the repository. This file **should not** be committed to source control and is ignored by default. 
 
-The following options are available:
-| Name | Type | Default | Description |
-| --- | --- | --- | --- |
-| `AOC_AUTHENTICATION_TOKEN` | string | `null` | Your actual adventofcode.com token (if using real api) or a fake value. |
-| `AOC_LOG_LEVEL` | string | `warn` | Controls [logging level](https://github.com/winstonjs/winston#logging-levels). One of `error`, `warn`, `info`, `verbose`, `debug`, `silly`. You will probably want a higher level while developing such as `debug`. |
-| `AOC_MOCK_API_ENABLED` | boolean | `false` | Controls whether or not to to use the real advent of code api or the mock one. When developing you should almost certainly use the mock api. An additional benefit of using the mock is that the rate limiting featur |
-| `AOC_MOCK_API_ANSWER_CORRECT` | boolean | `false` | Controls how the mock api responds when submitting answers. If set to true the answer will be correct, if false the answer will be incorrect.
+### `npm start`
+This is the command to run the program for development. It runs a the `scripts/start.js` file. 
 
-Additionally, all of the options specified in the [advanced configuration](https://github.com/beakerandjake/advent-of-code-runner#christmas_tree-advanced-configuration) are available.
+This file contains some logic to ensure local development is easy:
+- A working directory is created (if it does not exist) at the root of the repository called `development`. This folder acts as the cwd when running commands, it is ignored by git.
+- A `.env` file is created (if it does not exist) at the root of the repository. This file will contain options which configure the CLI for local development.
 
-Here is the minimum example needed for local development
-```dosini
-# If hitting real API you will need to use your real token.
-AOC_AUTHENTICATION_TOKEN=real-or-fake-token-value
-
-# Should almost always be set to 1 during local development.
-AOC_MOCK_API_ENABLED=1
-
-# Set to 1 or 0 depending on how you want the mock api to respond.
-AOC_MOCK_API_ANSWER_CORRECT=1
-
-AOC_LOG_LEVEL=debug
-```
-
-### Create mock CWD Folder
-TODO may not need this step, can probably `mkdir -p` in the run script...... 
-
-### Running Commands
-The `package.json` defines a script called `start` which runs `src/main.js`. Run this command from the root of the repository. You can pass arguments to the CLI by putting them after a `--` separator.
+You can pass arguments to the CLI by putting them after a `--` separator.
 
 Examples:
 - `npm start -- solve`
 - `npm start -- submit 5 1`
 - `npm start -- stats --save`
+- `npm start -- init`
 
-### `dev` Directory
-When developing locally the CLI will run commands against a local directory called `dev`. This directory simulates a cwd the end user would run commands in. 
-Commands are run against a directory in the repository called `dev` this directory is ignored by default.  If this folder does not exist it will be created the first time you run the `npm start` command. 
+### `.env` Development Options
+Use the `.env` file at the root of the project (created on first run of `npm start`) to customize how the CLI behaves. 
 
-If you are running commands locally suhc as `solve` or `submit` you will likely want to initialize this directory first. You can initialize this folder by using the CLI, run: 
-```
-npm start -- init
-```
+The following options are relevant to development:
+| Name | Type | Default | Description |
+| --- | --- | --- | --- |
+| `AOC_AUTHENTICATION_TOKEN` | string | `null` | Your actual adventofcode.com token (if using real api) or a fake value. |
+| `AOC_LOG_LEVEL` | string | `warn` | Controls [logging level](https://github.com/winstonjs/winston#logging-levels). One of `error`, `warn`, `info`, `verbose`, `debug`, `silly`. You will probably want a higher level while developing such as `debug`. |
+| `AOC_MOCK_API_ENABLED` | boolean | `false` | Controls whether or not to to use the real advent of code api or the mock one. When developing you should almost certainly use the mock api. An additional benefit of using the mock is that the rate limiting feature is disabled. |
+| `AOC_MOCK_API_ANSWER_CORRECT` | boolean | `false` | Controls how the mock api responds when submitting answers. If set to true the answer will be correct, if false the answer will be incorrect.
 
+Additionally, all of the options specified in the [advanced configuration](https://github.com/beakerandjake/advent-of-code-runner#christmas_tree-advanced-configuration) are available.
 
 ## Project Structure
 
