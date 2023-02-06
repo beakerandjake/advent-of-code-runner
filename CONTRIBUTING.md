@@ -47,6 +47,7 @@ You will need [git](http://git-scm.com/) and [Node.js](https://nodejs.org) versi
 A high level overview of tools used:
 - [Jest](https://github.com/facebook/jest) for unit testing
 - [eslint](https://github.com/eslint/eslint) for code linting
+- [prettier](https://github.com/prettier/prettier) for code formatting
 
 **TLDR**
 1. Checkout repo and install packages.
@@ -146,12 +147,23 @@ Releases are handled by the [publish workflow](https://github.com/beakerandjake/
 
 ## Code Style Guide
 
-TBD
+Code style is enforced via [prettier](https://github.com/prettier/prettier), linting is handled via [eslint](https://github.com/eslint/eslint). 
 
-Inspo while creating:
-- https://github.com/facebook/create-react-app/blob/main/CONTRIBUTING.md
-- https://github.com/tj/commander.js/blob/master/CONTRIBUTING.md
-- https://github.com/axios/axios/blob/v1.x/CONTRIBUTING.md
-- https://reactjs.org/docs/how-to-contribute.html
-- https://github.com/vuejs/core/blob/main/.github/contributing.md
-- https://github.com/moment/moment/blob/develop/CONTRIBUTING.md
+The code is using the [airbnb eslint preset](https://www.npmjs.com/package/eslint-config-airbnb-base), with some modifications (defined in `.eslintrc.cjs`)
+
+An attempt should be made follow clean coding principles and to match the existing code style and not deviate from the general conventions of the existing code. Consistency is most important. 
+
+Some basic non-exhaustive guidelines:
+
+- Small single purpose methods, decompose large functions into small ones.
+- Minimize state, prefer pure functions. 
+- Minimize coupling.
+- Comment public functions with [JSDoc](https://github.com/jsdoc/jsdoc)
+- Code should be self documenting, comments should explain the "whys".
+- Prefer descriptive naming and avoid abbreviations (except for common acronyms such as URL or api).
+- Prefer latest JS features and async functions.
+- Follow rules of thumb 
+  - [DRY](https://en.wikipedia.org/wiki/Don%27t_repeat_yourself), 
+  - [SRP](https://en.wikipedia.org/wiki/Single-responsibility_principle), 
+  - [YAGNI](https://en.wikipedia.org/wiki/You_aren%27t_gonna_need_it), 
+  - [KISS](https://en.wikipedia.org/wiki/KISS_principle)
