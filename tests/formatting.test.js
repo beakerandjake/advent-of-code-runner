@@ -12,11 +12,24 @@ describe('formatting', () => {
   });
 
   describe('sizeOfStringInKb()', () => {
+    test.each([null, undefined])('throws if value is: "%s"', (value) => {
+      expect(() => sizeOfStringInKb(value)).toThrow('null or undefined');
+    });
+
+    test.each([1234, {}])('throws if value is non-string: "%s"', (value) => {
+      expect(() => sizeOfStringInKb(value)).toThrow('type string or an instance of Buffer');
+    });
+
+    test('returns expected value - empty string', () => {
+      const result = sizeOfStringInKb('');
+      expect(result).toBe('0kb');
+    });
+
     test('returns expected value', () => {
       const string = 'A'.repeat(550);
       const result = sizeOfStringInKb(string);
       // assuming each character in string is 1 byte (since A is first 128 chars)
-      expect(result).toBe('0.55');
+      expect(result).toBe('0.55kb');
     });
   });
 
@@ -79,13 +92,13 @@ describe('formatting', () => {
     });
 
     test('returns expected value - milliseconds', () => {
-      const nanoseconds = 96.27 *  (1000 * 1000);
+      const nanoseconds = 96.27 * (1000 * 1000);
       const result = humanizeDuration(nanoseconds);
       expect(result).toBe('96.270ms');
     });
 
     test('returns expected value - microseconds', () => {
-      const nanoseconds = 122.052 *  (1000);
+      const nanoseconds = 122.052 * 1000;
       const result = humanizeDuration(nanoseconds);
       expect(result).toBe('122.052μs');
     });
