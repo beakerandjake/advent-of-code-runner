@@ -13,8 +13,19 @@ import { createChain } from './actionChain.js';
  * @param {ReportingLink[]} links - Array of links to execute
  * @param {String} successMessage - Message displayed if all links in the chain are completed.
  */
-export const createChainWithReporting = (links = [], successMessage = '') => {
+export const createChainWithProgress = (links = [], successMessage = '') => {
   const spinner = ora({ spinner: 'christmas' });
+
+  // ensure all links have required fields.
+  links.forEach(({ fn, message }) => {
+    if (fn == null || !(fn instanceof Function)) {
+      throw new Error('link has null or undefined "fn" field');
+    }
+
+    if (!message) {
+      throw new Error('link has null or undefined "message" field');
+    }
+  });
 
   // create a wrapper function for each link which updates the spinner
   // with a message when that link starts.

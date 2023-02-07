@@ -1,5 +1,5 @@
 import { Command } from 'commander';
-import { createChainWithReporting } from '../actions/actionChainWithProgress.js';
+import { createChainWithProgress } from '../actions/actionChainWithProgress.js';
 import { assertUserConfirmation, getAnswersFromUser } from '../actions/index.js';
 import { getConfigValue } from '../config.js';
 import { festiveEmoji, festiveStyle, printFestiveTitle } from '../festive.js';
@@ -77,7 +77,7 @@ const initialize = async () => {
   const { answers } = await getAnswersFromUser(initializeQuestions)();
 
   // run initialize steps in an action chain that reports its progress to the user.
-  const actionChain = createChainWithReporting(
+  const actionChain = createChainWithProgress(
     [
       { fn: createFiles, message: 'Creating files...' },
       { fn: installPackages, message: 'Installing Packages...' },
