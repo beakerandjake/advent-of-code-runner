@@ -16,42 +16,51 @@ describe('errorHandler', () => {
   });
 
   describe('handleError()', () => {
-    describe('UserError', () => {
-      test('logs on error - instance of UserError', () => {
-        class CoolUserError extends UserError {}
-        const myError = new CoolUserError('ASDF');
-        handleError(myError);
-        expect(logger.error).toHaveBeenCalledWith(myError, { simpleErrorFormat: true });
-      });
+    test('logs on error - instance of UserError', () => {
+      class CoolUserError extends UserError {}
+      const myError = new CoolUserError('ASDF');
+      handleError(myError);
+      expect(logger.error).toHaveBeenCalledWith(myError, { simpleErrorFormat: true });
+    });
 
-      test('logs on error - name containing User', () => {
-        class CoolUserError extends Error {
-          constructor() {
-            super();
-            this.name = 'CoolUserError';
-          }
+    test('logs on error - name containing User', () => {
+      class CoolUserError extends Error {
+        constructor() {
+          super();
+          this.name = 'CoolUserError';
         }
-        const myError = new CoolUserError('ASDF');
-        handleError(myError);
-        expect(logger.error).toHaveBeenCalledWith(myError, { simpleErrorFormat: true });
-      });
+      }
+      const myError = new CoolUserError('ASDF');
+      handleError(myError);
+      expect(logger.error).toHaveBeenCalledWith(myError, { simpleErrorFormat: true });
+    });
 
-      test('calls exit on error - instance of UserError', () => {
-        class CoolUserError extends UserError {}
-        handleError(new CoolUserError('ASDF'));
-        expect(exit).toHaveBeenCalled();
-      });
+    test('logs on error - non UserError', () => {
+      const error = new RangeError();
+      handleError(error);
+      expect(logger.error).toHaveBeenCalledWith(error);
+    });
 
-      test('calls exit on error - name containing User', () => {
-        class CoolUserError extends Error {
-          constructor() {
-            super();
-            this.name = 'CoolUserError';
-          }
+    test('calls exit on error - instance of UserError', () => {
+      class CoolUserError extends UserError {}
+      handleError(new CoolUserError('ASDF'));
+      expect(exit).toHaveBeenCalled();
+    });
+
+    test('calls exit on error - name containing User', () => {
+      class CoolUserError extends Error {
+        constructor() {
+          super();
+          this.name = 'CoolUserError';
         }
-        handleError(new CoolUserError('ASDF'));
-        expect(exit).toHaveBeenCalled();
-      });
+      }
+      handleError(new CoolUserError('ASDF'));
+      expect(exit).toHaveBeenCalled();
+    });
+
+    test('calls exit on error - non UserError', () => {
+      handleError(new RangeError());
+      expect(exit).toHaveBeenCalled();
     });
   });
 });
