@@ -11,10 +11,6 @@ export const parsePositiveInt = (value) => {
     throw new TypeError('Value was not a number');
   }
 
-  if (!Number.isFinite(parsed)) {
-    throw new TypeError('Value must be a finite number');
-  }
-
   if (parsed < 0) {
     throw new RangeError('Value must be greater than zero');
   }
