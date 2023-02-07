@@ -156,6 +156,23 @@ describe('solutionRunner', () => {
         runtimeNs: answerMessage.runtimeNs,
       });
     });
+
+    test('throws if worker posts unknown message type', async () => {
+      let messageCallback;
+      workerOnMock.mockImplementation((key, callback) => {
+        if (key === 'message') {
+          messageCallback = callback;
+        }
+      });
+      const badMessage = {
+        type: 'BAD MESSAGE TYPE HEHE',
+        value: 'ASDF',
+      };
+      const promise = spawnWorker('ASDF', {});
+      await Promise.resolve();
+      messageCallback(badMessage);
+      await expect(async () => promise).rejects.toThrow('unknown message type');
+    });
   });
 
   describe('execute()', () => {
