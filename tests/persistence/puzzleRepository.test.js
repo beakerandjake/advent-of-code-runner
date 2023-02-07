@@ -621,6 +621,10 @@ describe('puzzleRepository', () => {
   });
 
   describe('addOrEditPuzzle()', () => {
+    test.each([null, undefined])('throws if puzzle is: "%s"', async (puzzle) => {
+      await expect(async () => addOrEditPuzzle(puzzle)).rejects.toThrow('null puzzle');
+    });
+
     test("adds puzzle doesn't exist", async () => {
       const doesNotExist = {
         id: '20221301',
