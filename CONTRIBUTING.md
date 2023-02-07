@@ -163,7 +163,7 @@ Some basic non-exhaustive guidelines:
 - Prefer descriptive naming and avoid abbreviations (except for common acronyms such as URL or api).
 - Prefer latest JS features and async functions.
 - Follow rules of thumb 
-  - [DRY](https://en.wikipedia.org/wiki/Don%27t_repeat_yourself), 
-  - [SRP](https://en.wikipedia.org/wiki/Single-responsibility_principle), 
-  - [YAGNI](https://en.wikipedia.org/wiki/You_aren%27t_gonna_need_it), 
+  - [DRY](https://en.wikipedia.org/wiki/Don%27t_repeat_yourself)
+  - [SRP](https://en.wikipedia.org/wiki/Single-responsibility_principle)
+  - [YAGNI](https://en.wikipedia.org/wiki/You_aren%27t_gonna_need_it)
   - [KISS](https://en.wikipedia.org/wiki/KISS_principle)
