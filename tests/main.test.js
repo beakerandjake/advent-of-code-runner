@@ -1,23 +1,9 @@
 import { describe, jest, test, beforeEach } from '@jest/globals';
-import { mockConfig } from './mocks.js';
+import { mockConfig, mockCommander } from './mocks.js';
 
 // setup mocks
 mockConfig();
-const mockCommand = {
-  name: jest.fn().mockReturnThis(),
-  description: jest.fn().mockReturnThis(),
-  version: jest.fn().mockReturnThis(),
-  addHelpText: jest.fn().mockReturnThis(),
-  addCommand: jest.fn().mockReturnThis(),
-  exitOverride: jest.fn().mockReturnThis(),
-  parseAsync: jest.fn(),
-};
-jest.unstable_mockModule('commander', () => ({
-  // eslint-disable-next-line func-names, object-shorthand
-  Command: function () {
-    return mockCommand;
-  },
-}));
+const mockCommand = mockCommander();
 jest.unstable_mockModule('src/cli/auth.js', () => ({ authCommand: jest.fn() }));
 jest.unstable_mockModule('src/cli/exitOverride.js', () => ({
   exitOverride: jest.fn(),
