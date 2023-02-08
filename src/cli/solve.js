@@ -38,6 +38,20 @@ const autoSolve = createChain([
 ]);
 
 /**
+ * The action that is invoked by commander.
+ * @private
+ */
+export const solveAction = async (day, level) => {
+  if (day == null && level == null) {
+    await autoSolve({});
+  } else if (day != null && level == null) {
+    await solve({ day, level: 1 });
+  } else {
+    await solve({ day, level });
+  }
+};
+
+/**
  * Command which lets the user solve a puzzle
  */
 export const solveCommand = new Command()
@@ -56,12 +70,4 @@ Example Calls:
   )
   .addArgument(dayArgument)
   .addArgument(levelArgument)
-  .action(async (day, level) => {
-    if (day == null && level == null) {
-      await autoSolve({});
-    } else if (day != null && level == null) {
-      await solve({ day, level: 1 });
-    } else {
-      await solve({ day, level });
-    }
-  });
+  .action(solveAction);

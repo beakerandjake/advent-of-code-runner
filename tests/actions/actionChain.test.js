@@ -40,6 +40,13 @@ describe('actionChain', () => {
       const chain = [() => {}, () => {}, () => {}, 'seriously not a function'];
       expect(() => createChain(chain)).toThrow();
     });
+
+    test('returned function executes chain', async () => {
+      const mock = jest.fn();
+      const chain = [() => mock(), () => mock(), () => mock()];
+      await createChain(chain)();
+      expect(mock).toHaveBeenCalledTimes(chain.length);
+    });
   });
 
   describe('runAction()', () => {

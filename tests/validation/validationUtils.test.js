@@ -11,9 +11,10 @@ describe('validationUtils', () => {
       Promise.resolve(1234),
       'NOTANUMBER',
       '@2#$',
+      NaN,
       Infinity,
       -Infinity,
-      NaN,
+      1 / 0,
     ])('throws if non-numeric value: %s', (value) => {
       expect(() => parsePositiveInt(value)).toThrow(TypeError);
     });

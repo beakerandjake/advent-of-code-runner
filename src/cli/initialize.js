@@ -1,5 +1,5 @@
 import { Command } from 'commander';
-import { createChainWithReporting } from '../actions/actionChainWithProgress.js';
+import { createChainWithProgress } from '../actions/actionChainWithProgress.js';
 import { assertUserConfirmation, getAnswersFromUser } from '../actions/index.js';
 import { getConfigValue } from '../config.js';
 import { festiveEmoji, festiveStyle, printFestiveTitle } from '../festive.js';
@@ -40,7 +40,7 @@ const initializeQuestions = [
     name: 'year',
     message: festiveStyle('What year of advent of code are you doing?'),
     prefix: festiveEmoji(),
-    choices: getConfigValue('aoc.validation.years').reverse(),
+    choices: getConfigValue('aoc.validation.years')?.reverse(),
     loop: false,
   },
   authTokenQuestion,
@@ -62,9 +62,10 @@ const createFiles = async ({ answers }) => {
 };
 
 /**
- * Scaffolds the cwd with all files required to use this cli.
+ * The action that is invoked by commander.
+ * @private
  */
-const initialize = async () => {
+export const initializeAction = async () => {
   // if there are files in the cwd, get confirmation with the user that they want to proceed.
   if (
     !(await cwdIsEmpty()) &&
@@ -77,7 +78,7 @@ const initialize = async () => {
   const { answers } = await getAnswersFromUser(initializeQuestions)();
 
   // run initialize steps in an action chain that reports its progress to the user.
-  const actionChain = createChainWithReporting(
+  const actionChain = createChainWithProgress(
     [
       { fn: createFiles, message: 'Creating files...' },
       { fn: installPackages, message: 'Installing Packages...' },
@@ -95,4 +96,4 @@ export const initializeCommand = new Command()
   .name('init')
   .hook('preAction', printFestiveTitle)
   .description('Initialize the directory so this CLI can run.')
-  .action(initialize);
+  .action(initializeAction);

@@ -18,12 +18,17 @@ afterEach(() => {
 
 describe('rateLimitRepository', () => {
   describe('getRateLimit()', () => {
-    test('no file, returns null', async () => {
+    test('returns null if loadJson returns ENOENT', async () => {
       const error = new Error('file not found');
       error.code = 'ENOENT';
       readJson.mockRejectedValue(error);
       const result = await getRateLimit('ASDF');
       expect(result).toBe(null);
+    });
+
+    test('throws if loadJson throws', async () => {
+      readJson.mockRejectedValue(new RangeError());
+      await expect(async () => getRateLimit('ASDF')).rejects.toThrow();
     });
 
     test('no stored data, returns null', async () => {

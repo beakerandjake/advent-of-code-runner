@@ -2,6 +2,7 @@ import { describe, jest, test } from '@jest/globals';
 import { workerMessageTypes } from '../../src/solutions/workerMessageTypes';
 import {
   SolutionWorkerMissingDataError,
+  UserSolutionAnswerInvalidError,
   UserSolutionFileNotFoundError,
   UserSolutionMissingFunctionError,
   UserSolutionThrewError,
@@ -158,19 +159,19 @@ describe('solutionRunnerWorkerThread', () => {
   });
 
   describe('runWorker()', () => {
-    test('throws if user data missing "solutionName"', async () => {
+    test('throws SolutionWorkerMissingDataError if user data missing "solutionName"', async () => {
       await expect(async () =>
         runWorker({ functionToExecute: 'asdf', input: 'asdf', lines: ['asdf'] })
       ).rejects.toThrow(SolutionWorkerMissingDataError);
     });
 
-    test('throws if user data missing "functionToExecute"', async () => {
+    test('throws SolutionWorkerMissingDataError if user data missing "functionToExecute"', async () => {
       await expect(async () =>
         runWorker({ solutionFileName: 'asdf', input: 'asdf', lines: ['asdf'] })
       ).rejects.toThrow(SolutionWorkerMissingDataError);
     });
 
-    test('throws if user data missing "input"', async () => {
+    test('throws SolutionWorkerMissingDataError if user data missing "input"', async () => {
       await expect(async () =>
         runWorker({
           functionToExecute: 'asdf',
@@ -180,13 +181,13 @@ describe('solutionRunnerWorkerThread', () => {
       ).rejects.toThrow(SolutionWorkerMissingDataError);
     });
 
-    test('throws if user data missing "lines"', async () => {
+    test('throws SolutionWorkerMissingDataError if user data missing "lines"', async () => {
       await expect(async () =>
         runWorker({ functionToExecute: 'asdf', solutionFileName: 'asdf', input: 'asdf' })
       ).rejects.toThrow(SolutionWorkerMissingDataError);
     });
 
-    test('throws if user solution file not found', async () => {
+    test('throws UserSolutionFileNotFoundError if user solution file not found', async () => {
       importUserSolutionModule.mockRejectedValue(
         new UserSolutionFileNotFoundError('NOT FOUND')
       );
@@ -211,17 +212,66 @@ describe('solutionRunnerWorkerThread', () => {
       new (class Cats {})(),
       false,
       true,
-    ])('throws if user function returns non function value - %s', async (fn) => {
-      importUserSolutionModule.mockResolvedValue({});
-      get.mockReturnValue(fn);
+    ])(
+      'throws UserSolutionMissingFunctionError if user function returns non function value - %s',
+      async (fn) => {
+        importUserSolutionModule.mockResolvedValue({});
+        get.mockReturnValue(fn);
+        await expect(async () =>
+          runWorker({
+            solutionFileName: 'asdf',
+            functionToExecute: 'asdf',
+            input: 'asdf',
+            lines: ['asdf'],
+          })
+        ).rejects.toThrow(UserSolutionMissingFunctionError);
+      }
+    );
+
+    test('throws UserSolutionAnswerInvalidError if executeSolution throws TypeError', async () => {
+      const functionToExecute = 'levelOne';
+      const userModule = { levelOne: () => '1234' };
+      importUserSolutionModule.mockResolvedValue(userModule);
+      answerTypeIsValid.mockReturnValue(false);
+      get.mockImplementation((object, key) => {
+        if (object === userModule && key === functionToExecute) {
+          return object[functionToExecute];
+        }
+        throw new Error('invalid value passed to get');
+      });
       await expect(async () =>
         runWorker({
-          solutionFileName: 'asdf',
-          functionToExecute: 'asdf',
-          input: 'asdf',
-          lines: ['asdf'],
+          solutionFileName: 'ASDF',
+          functionToExecute,
+          input: 'SADF',
+          lines: ['SADF'],
         })
-      ).rejects.toThrow(UserSolutionMissingFunctionError);
+      ).rejects.toThrow(UserSolutionAnswerInvalidError);
+    });
+
+    test('throws UserSolutionThrewError if executeUserSolution throws error', async () => {
+      const functionToExecute = 'levelOne';
+      const userModule = {
+        levelOne: () => {
+          throw new RangeError();
+        },
+      };
+      importUserSolutionModule.mockResolvedValue(userModule);
+      answerTypeIsValid.mockReturnValue(true);
+      get.mockImplementation((object, key) => {
+        if (object === userModule && key === functionToExecute) {
+          return object[functionToExecute];
+        }
+        throw new Error('invalid value passed to get');
+      });
+      await expect(async () =>
+        runWorker({
+          solutionFileName: 'ASDF',
+          functionToExecute,
+          input: 'SADF',
+          lines: ['SADF'],
+        })
+      ).rejects.toThrow(UserSolutionThrewError);
     });
   });
 });

@@ -63,7 +63,7 @@ export const festiveEmoji = () =>
  * Turns a normal string into a *festive* one.
  * @param {String} message
  */
-const makeFestive = (message) =>
+export const makeFestive = (message) =>
   getConfigValue('cli.suppressFestive')
     ? message
     : `${festiveEmoji()} ${message} ${festiveEmoji()}`;

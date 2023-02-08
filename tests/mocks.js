@@ -32,3 +32,40 @@ export const mockConfig = () => {
   jest.unstable_mockModule('src/config.js', () => toReturn);
   return toReturn;
 };
+
+/**
+ * Mocks the Commander module and all of the commonly used functions.
+ */
+export const mockCommander = () => {
+  class InvalidArgumentError extends Error {
+    constructor(message) {
+      super(message);
+      this.name = 'InvalidArgumentError';
+    }
+  }
+  const toReturn = {
+    name: jest.fn().mockReturnThis(),
+    description: jest.fn().mockReturnThis(),
+    version: jest.fn().mockReturnThis(),
+    addHelpText: jest.fn().mockReturnThis(),
+    addCommand: jest.fn().mockReturnThis(),
+    exitOverride: jest.fn().mockReturnThis(),
+    hook: jest.fn().mockReturnThis(),
+    action: jest.fn().mockReturnThis(),
+    parseAsync: jest.fn(),
+  };
+  jest.unstable_mockModule('commander', () => ({
+    // eslint-disable-next-line func-names, object-shorthand
+    Command: function () {
+      return toReturn;
+    },
+    // eslint-disable-next-line func-names, object-shorthand
+    Argument: function () {
+      return {
+        argParser: jest.fn().mockReturnThis(),
+      };
+    },
+    InvalidArgumentError,
+  }));
+  return toReturn;
+};

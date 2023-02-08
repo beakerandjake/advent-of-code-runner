@@ -33,6 +33,21 @@ addColors({
 
 const simpleFormat = format.simple();
 
+/**
+ * Custom formatter passed to printf which gives
+ * us simple formatted logs for the terminal
+ * @private
+ */
+export const printfCustomFormat = (info) => {
+  if (info[LEVEL] === 'error') {
+    return info.simpleErrorFormat
+      ? `${info.level}: ${info.message}`
+      : `${info.level}: ${info.stack ? info.stack : info.message}`;
+  }
+
+  return simpleFormat.transform(info)[MESSAGE];
+};
+
 let loggerInstance;
 
 try {
@@ -47,15 +62,7 @@ try {
         level,
         format: format.combine(
           // format.simple would be nice to use but we need more customization
-          format.printf((info) => {
-            if (info[LEVEL] === 'error') {
-              return info.simpleErrorFormat
-                ? `${info.level}: ${info.message}`
-                : `${info.level}: ${info.stack ? info.stack : info.message}`;
-            }
-
-            return simpleFormat.transform(info)[MESSAGE];
-          }),
+          format.printf(printfCustomFormat),
           format.colorize({ all: true })
         ),
       }),

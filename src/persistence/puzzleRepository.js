@@ -187,7 +187,7 @@ export const createPuzzle = (year, day, level) => {
  * @param {Object} puzzle
  */
 export const addOrEditPuzzle = async (puzzle) => {
-  if (!puzzle) {
+  if (puzzle == null) {
     throw new Error('Cannot add or edit a null puzzle');
   }
 
