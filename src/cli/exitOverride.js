@@ -1,6 +1,11 @@
 import { exit } from 'node:process';
 
-const commanderErrorCodes = [
+/**
+ * Error codes which are raised by commanded.
+ * These codes will trigger a program exit instead of throwing the exception.
+ * @private
+ */
+export const commanderErrorCodes = [
   'commander.help',
   'commander.version',
   'commander.helpDisplayed',
