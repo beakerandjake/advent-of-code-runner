@@ -33,41 +33,39 @@ const { createDotEnv } = await import('../../src/initialize/index.js');
 const { dotEnvExists } = await import('../../src/validation/userFilesExist.js');
 const { auth } = await import('../../src/cli/auth.js');
 
-describe('cli', () => {
-  describe('auth()', () => {
-    afterEach(() => {
-      jest.resetAllMocks();
-    });
+describe('auth command', () => {
+  afterEach(() => {
+    jest.resetAllMocks();
+  });
 
-    test('bails if user has not initialized', async () => {
-      assertInitialized.mockResolvedValue(false);
-      await auth();
-      expect(createDotEnv).not.toHaveBeenCalled();
-    });
+  test('bails if user has not initialized', async () => {
+    assertInitialized.mockResolvedValue(false);
+    await auth();
+    expect(createDotEnv).not.toHaveBeenCalled();
+  });
 
-    test('confirms with user if .env file exists', async () => {
-      assertInitialized.mockResolvedValue(true);
-      dotEnvExists.mockResolvedValue(true);
-      assertUserConfirmation.mockReturnValue(() => Promise.resolve(false));
-      await auth();
-      expect(assertUserConfirmation).toHaveBeenCalled();
-    });
+  test('confirms with user if .env file exists', async () => {
+    assertInitialized.mockResolvedValue(true);
+    dotEnvExists.mockResolvedValue(true);
+    assertUserConfirmation.mockReturnValue(() => Promise.resolve(false));
+    await auth();
+    expect(assertUserConfirmation).toHaveBeenCalled();
+  });
 
-    test('bails if user does not confirm', async () => {
-      assertInitialized.mockResolvedValue(true);
-      dotEnvExists.mockResolvedValue(true);
-      assertUserConfirmation.mockReturnValue(() => Promise.resolve(false));
-      await auth();
-      expect(createDotEnv).not.toHaveBeenCalled();
-    });
+  test('bails if user does not confirm', async () => {
+    assertInitialized.mockResolvedValue(true);
+    dotEnvExists.mockResolvedValue(true);
+    assertUserConfirmation.mockReturnValue(() => Promise.resolve(false));
+    await auth();
+    expect(createDotEnv).not.toHaveBeenCalled();
+  });
 
-    test('creates dotenv if user confirms', async () => {
-      assertInitialized.mockResolvedValue(true);
-      dotEnvExists.mockResolvedValue(true);
-      assertUserConfirmation.mockReturnValue(() => Promise.resolve(true));
-      getAnswersFromUser.mockReturnValue(() => Promise.resolve({}));
-      await auth();
-      expect(createDotEnv).toHaveBeenCalled();
-    });
+  test('creates dotenv if user confirms', async () => {
+    assertInitialized.mockResolvedValue(true);
+    dotEnvExists.mockResolvedValue(true);
+    assertUserConfirmation.mockReturnValue(() => Promise.resolve(true));
+    getAnswersFromUser.mockReturnValue(() => Promise.resolve({}));
+    await auth();
+    expect(createDotEnv).toHaveBeenCalled();
   });
 });

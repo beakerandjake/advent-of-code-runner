@@ -16,7 +16,7 @@ jest.unstable_mockModule('src/cli/arguments.js', () => ({
 // import after mocks set up.
 const { solveAction } = await import('../../src/cli/solve.js');
 
-describe('solve', () => {
+describe('solve command', () => {
   afterEach(() => {
     jest.resetAllMocks();
   });
