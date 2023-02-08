@@ -33,16 +33,22 @@ const saveStats = createChain([
 ]);
 
 /**
+ * The action that is invoked by commander.
+ * @private
+ */
+export const statsAction = async ({ save } = {}) => {
+  if (save) {
+    await saveStats();
+  } else {
+    await outputStats();
+  }
+};
+
+/**
  * Command to output user statistics.
  */
 export const statsCommand = new Command()
   .name('stats')
   .description('Output your completion progress for the years advent of code.')
   .option('--save', 'Save your completion progress to the README file')
-  .action(async ({ save }) => {
-    if (save) {
-      await saveStats();
-    } else {
-      await outputStats();
-    }
-  });
+  .action(statsAction);
