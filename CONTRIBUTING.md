@@ -135,7 +135,9 @@ The order of the links is very important. Some links expect certain args to be p
 ## Tests
 [Jest](https://github.com/facebook/jest) is used for unit testing. There is no set coverage target, but the goal is to have as many quality tests as possible. 
 
-Tests can be ran locally using the `npm test` command, you could also run `npm test -- --coverage` to see code coverage. 
+Tests can be ran locally using the `npm test` command, you could also run `npm test -- --coverage` to see code coverage.
+
+Functions which are "private" should still be tested, they should be exported for testing and marked with the JSDoc comment `@private` tag.
 
 ## Releasing
 Releases are handled by the [publish workflow](https://github.com/beakerandjake/advent-of-code-runner/blob/main/.github/workflows/publish.yml). This workflow:
