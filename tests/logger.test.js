@@ -2,7 +2,7 @@ import { describe, jest, test, afterEach } from '@jest/globals';
 import { mockConfig } from './mocks.js';
 
 // setup mocks
-const { getConfigValue } = mockConfig();
+mockConfig();
 jest.unstable_mockModule('winston', () => ({
   createLogger: jest.fn(),
   format: {
