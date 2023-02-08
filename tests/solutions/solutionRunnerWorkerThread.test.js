@@ -212,18 +212,21 @@ describe('solutionRunnerWorkerThread', () => {
       new (class Cats {})(),
       false,
       true,
-    ])('throws UserSolutionMissingFunctionError if user function returns non function value - %s', async (fn) => {
-      importUserSolutionModule.mockResolvedValue({});
-      get.mockReturnValue(fn);
-      await expect(async () =>
-        runWorker({
-          solutionFileName: 'asdf',
-          functionToExecute: 'asdf',
-          input: 'asdf',
-          lines: ['asdf'],
-        })
-      ).rejects.toThrow(UserSolutionMissingFunctionError);
-    });
+    ])(
+      'throws UserSolutionMissingFunctionError if user function returns non function value - %s',
+      async (fn) => {
+        importUserSolutionModule.mockResolvedValue({});
+        get.mockReturnValue(fn);
+        await expect(async () =>
+          runWorker({
+            solutionFileName: 'asdf',
+            functionToExecute: 'asdf',
+            input: 'asdf',
+            lines: ['asdf'],
+          })
+        ).rejects.toThrow(UserSolutionMissingFunctionError);
+      }
+    );
 
     test('throws UserSolutionAnswerInvalidError if executeSolution throws TypeError', async () => {
       const functionToExecute = 'levelOne';

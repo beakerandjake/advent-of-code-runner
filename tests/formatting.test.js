@@ -17,7 +17,9 @@ describe('formatting', () => {
     });
 
     test.each([1234, {}])('throws if value is non-string: "%s"', (value) => {
-      expect(() => sizeOfStringInKb(value)).toThrow('type string or an instance of Buffer');
+      expect(() => sizeOfStringInKb(value)).toThrow(
+        'type string or an instance of Buffer'
+      );
     });
 
     test('returns expected value - empty string', () => {

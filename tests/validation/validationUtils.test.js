@@ -12,9 +12,9 @@ describe('validationUtils', () => {
       'NOTANUMBER',
       '@2#$',
       NaN,
-      Infinity, 
+      Infinity,
       -Infinity,
-      1/0
+      1 / 0,
     ])('throws if non-numeric value: %s', (value) => {
       expect(() => parsePositiveInt(value)).toThrow(TypeError);
     });
