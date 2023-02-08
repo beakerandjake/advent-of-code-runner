@@ -41,6 +41,20 @@ const autoSubmit = createChain([
 ]);
 
 /**
+ * The action that is invoked by commander.
+ * @private
+ */
+export const submitAction = async (day, level) => {
+  if (day == null && level == null) {
+    await autoSubmit({});
+  } else if (day != null && level == null) {
+    await submit({ day, level: 1 });
+  } else {
+    await submit({ day, level });
+  }
+};
+
+/**
  * Command which allows the user to submit a puzzles answer to advent of code.
  */
 export const submitCommand = new Command()
@@ -59,12 +73,4 @@ Example Calls:
   )
   .addArgument(dayArgument)
   .addArgument(levelArgument)
-  .action(async (day, level) => {
-    if (day == null && level == null) {
-      await autoSubmit({});
-    } else if (day != null && level == null) {
-      await submit({ day, level: 1 });
-    } else {
-      await submit({ day, level });
-    }
-  });
+  .action(submitAction);
