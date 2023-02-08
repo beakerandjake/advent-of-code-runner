@@ -40,7 +40,7 @@ const initializeQuestions = [
     name: 'year',
     message: festiveStyle('What year of advent of code are you doing?'),
     prefix: festiveEmoji(),
-    choices: getConfigValue('aoc.validation.years').reverse(),
+    choices: getConfigValue('aoc.validation.years')?.reverse(),
     loop: false,
   },
   authTokenQuestion,
@@ -62,9 +62,10 @@ const createFiles = async ({ answers }) => {
 };
 
 /**
- * Scaffolds the cwd with all files required to use this cli.
+ * The action that is invoked by commander.
+ * @private
  */
-const initialize = async () => {
+export const initializeAction = async () => {
   // if there are files in the cwd, get confirmation with the user that they want to proceed.
   if (
     !(await cwdIsEmpty()) &&
@@ -95,4 +96,4 @@ export const initializeCommand = new Command()
   .name('init')
   .hook('preAction', printFestiveTitle)
   .description('Initialize the directory so this CLI can run.')
-  .action(initialize);
+  .action(initializeAction);
