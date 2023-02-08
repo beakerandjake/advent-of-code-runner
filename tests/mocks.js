@@ -50,6 +50,8 @@ export const mockCommander = () => {
     addHelpText: jest.fn().mockReturnThis(),
     addCommand: jest.fn().mockReturnThis(),
     exitOverride: jest.fn().mockReturnThis(),
+    hook: jest.fn().mockReturnThis(),
+    action: jest.fn().mockReturnThis(),
     parseAsync: jest.fn(),
   };
   jest.unstable_mockModule('commander', () => ({
