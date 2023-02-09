@@ -1,4 +1,4 @@
-import { pathToFileURL } from 'url';
+import { pathToFileURL } from 'node:url';
 
 /**
  * Error raised if the Solution Worker thread exits without posting an answer message.
