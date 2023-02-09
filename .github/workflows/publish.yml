@@ -46,10 +46,10 @@ jobs:
           # using custom token to bypass branch protections and push directly to main.
           token: ${{ secrets.WORKFLOW_GITHUB_PAT }}
           
-      - name: Configure Git User
-        run: |
-          git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git config --global user.name "github-actions[bot]"
+#       - name: Configure Git User
+#         run: |
+#           git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
+#           git config --global user.name "github-actions[bot]"
             
       - name: Setup Node
         uses: actions/setup-node@v3
@@ -58,27 +58,27 @@ jobs:
           cache: 'npm'
           registry-url: 'https://registry.npmjs.org'
         
-      - name: Run Tests
-        run: |
-          npm ci
-          npm test
+#       - name: Run Tests
+#         run: |
+#           npm ci
+#           npm test
           
-      - name: npm version (@latest)
-        if: startsWith(github.event.inputs.release-type, 'pre') != true
-        run: |
-          echo "NEW_VERSION=$(npm --no-git-tag-version version $RELEASE_TYPE)" >> $GITHUB_ENV
-          echo "NPM_DIST_TAG=latest" >> $GITHUB_ENV
-        env:
-          RELEASE_TYPE: ${{ github.event.inputs.release-type }}
+#       - name: npm version (@latest)
+#         if: startsWith(github.event.inputs.release-type, 'pre') != true
+#         run: |
+#           echo "NEW_VERSION=$(npm --no-git-tag-version version $RELEASE_TYPE)" >> $GITHUB_ENV
+#           echo "NPM_DIST_TAG=latest" >> $GITHUB_ENV
+#         env:
+#           RELEASE_TYPE: ${{ github.event.inputs.release-type }}
 
-      - name: npm version (@prerelease)
-        if: startsWith(github.event.inputs.release-type, 'pre')
-        run: |
-          echo $RELEASE_TYPE
-          echo "NEW_VERSION=$(npm --no-git-tag-version --preid=beta version $RELEASE_TYPE)" >> $GITHUB_ENV
-          echo "NPM_DIST_TAG=beta" >> $GITHUB_ENV
-        env:
-          RELEASE_TYPE: ${{ github.event.inputs.release-type }}
+#       - name: npm version (@prerelease)
+#         if: startsWith(github.event.inputs.release-type, 'pre')
+#         run: |
+#           echo $RELEASE_TYPE
+#           echo "NEW_VERSION=$(npm --no-git-tag-version --preid=beta version $RELEASE_TYPE)" >> $GITHUB_ENV
+#           echo "NPM_DIST_TAG=beta" >> $GITHUB_ENV
+#         env:
+#           RELEASE_TYPE: ${{ github.event.inputs.release-type }}
           
       - name: Update CHANGELOG
         uses: superfaceai/release-changelog-action@b1411d74107d4691016c93940673c67535a927aa # v2.0.0
@@ -87,21 +87,21 @@ jobs:
           version: ${{ env.NEW_VERSION }}
           operation: release
           
-      - name: Commit changes & tag
-        run: |
-          git add "package.json"
-          git add "package-lock.json"
-          git add "CHANGELOG.md"
-          git commit -m "chore: release v${{ env.NEW_VERSION }}"
-          git tag ${{ env.NEW_VERSION }}
+#       - name: Commit changes & tag
+#         run: |
+#           git add "package.json"
+#           git add "package-lock.json"
+#           git add "CHANGELOG.md"
+#           git commit -m "chore: release v${{ env.NEW_VERSION }}"
+#           git tag ${{ env.NEW_VERSION }}
           
-      - name: Publish to npm
-        run: npm publish --tag ${{ env.NPM_DIST_TAG }}
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
+#       - name: Publish to npm
+#         run: npm publish --tag ${{ env.NPM_DIST_TAG }}
+#         env:
+#           NODE_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
           
-      - name: Push changes & tags
-        run: git push --atomic origin main ${{ env.NEW_VERSION }}
+#       - name: Push changes & tags
+#         run: git push --atomic origin main ${{ env.NEW_VERSION }}
         
       - name: Get changes for Release
         id: get-changelog
@@ -111,10 +111,13 @@ jobs:
           version: ${{ env.NEW_VERSION }}
           operation: read
           
-      - name: Create Github Release
-        uses: softprops/action-gh-release@de2c0eb89ae2a093876385947365aca7b0e5f844 # v0.1.15
-        with:
-          tag_name: ${{ env.NEW_VERSION }}
-          prerelease: ${{ startsWith(github.event.inputs.release-type, 'pre') }}
-          body: ${{ steps.get-changelog.outputs.changelog }}
+      - name: Log changelog
+        run: echo ${{ steps.get-changelog.outputs.changelog }}
+          
+#       - name: Create Github Release
+#         uses: softprops/action-gh-release@de2c0eb89ae2a093876385947365aca7b0e5f844 # v0.1.15
+#         with:
+#           tag_name: ${{ env.NEW_VERSION }}
+#           prerelease: ${{ startsWith(github.event.inputs.release-type, 'pre') }}
+#           body: ${{ steps.get-changelog.outputs.changelog }}
 
