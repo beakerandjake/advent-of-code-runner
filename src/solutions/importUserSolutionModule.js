@@ -1,4 +1,4 @@
-/* istanbul ignore file */
+import { pathToFileURL } from 'node:url';
 import {
   UserSolutionFileNotFoundError,
   UserSolutionSyntaxError,
@@ -12,7 +12,9 @@ import {
  */
 export const importUserSolutionModule = async (fileName) => {
   try {
-    const module = await import(fileName);
+    // fix ERR_UNSUPPORTED_EM_URL_SCHEME error on windows, and ensure path starts with file://
+    const fileUrl = pathToFileURL(fileName).href;
+    const module = await import(fileUrl);
     return module;
   } catch (error) {
     // throw nicer error if user file not found.
