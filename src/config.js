@@ -19,7 +19,7 @@ dotenv.config();
 
 // attempt to read an .env file at the root of this repository.
 // this helps in local development by having one place to set development settings.
-dotenv.config({ path: join(__dirname, '..', '.env') });
+dotenv.config({ path: join(__dirname, '..', '.env'), override: true });
 
 export const envOptions = {
   suppressTitle: 'AOC_SUPPRESS_TITLE',
