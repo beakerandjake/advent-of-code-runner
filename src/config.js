@@ -66,7 +66,7 @@ const CONFIG = {
   },
   aoc: {
     authenticationToken: process.env[envOptions.authenticationToken] || null,
-    baseUrl: 'http://192.168.0.1', // 'https://adventofcode.com',
+    baseUrl: 'https://adventofcode.com',
     userAgent: 'https://github.com/beakerandjake/advent-of-code-runner by beakerandjake',
     responseParsing: {
       correctSolution: /that's the right answer/gim,
