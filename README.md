@@ -63,7 +63,7 @@ your-repository-folder/
 advent of code generates puzzle inputs unique to your account. In order to download inputs and submit answers this CLI needs to store your advent of code authentication token. The token will be stored in a .env file in your project directory. This .env file ***should not*** be committed to source control. When you run the `init` command a .gitignore file is generated which ignores .env files, so *your token is safe by default*. 
 
 #### Finding your Authentication Token
-The authentication token is stored in a advent of code cookie. Navigate to [advent of code](https://adventofcode.com/), and sign in to your account. Once signed in open up your browsers development tools, find the cookies for adventofcode.com and copy the value of the "session" cookie. 
+The authentication token is stored in an advent of code cookie. Navigate to [advent of code](https://adventofcode.com/), and sign in to your account. Once signed in open up your browsers development tools, find the cookies for adventofcode.com and copy the value of the "session" cookie. 
 - [Firefox help](https://firefox-source-docs.mozilla.org/devtools-user/storage_inspector/index.html)
 - [Chrome help](https://developer.chrome.com/docs/devtools/storage/cookies/)
 

@@ -61,7 +61,7 @@ npm install
 ```
 
 #### `npm start`
-This is the command to run the program for development. It runs a the `scripts/start.js` file. 
+This is the command to run the program for development. It runs the `scripts/start.js` file. 
 
 This file contains some logic to ensure local development is easy:
 - A working directory is created (if it does not exist) at the root of the repository called `development`. This folder acts as the cwd when running commands, it is ignored by git.
@@ -130,7 +130,7 @@ The chain runs these links in order:
   3. `getNextUnsolvedPuzzle` - Searches the user data file for the first puzzle the user has not solved, the puzzle day and level are added to the chain args. 
   4. `outputPuzzleLink` - Prints a link to the puzzle in the terminal. 
 
-The order of the links is very important. Some links expect certain args to be present and will fail if those ars are missing. For instance `outputPuzzleLink` requires an args object like `{ year, day, level }`. These fields are added to the args object by the earlier links `getYear` and `getNextUnsolvedPuzzle`.
+Since the links in a chain are executed sequentially, the order of the links is very important. Some links expect certain args to be present and will fail if those ars are missing. For instance `outputPuzzleLink` requires an args object like `{ year, day, level }`. These fields are added to the args object by the earlier links `getYear` and `getNextUnsolvedPuzzle`.
 
 ## Tests
 [Jest](https://github.com/facebook/jest) is used for unit testing. There is no set coverage target, but the goal is to have as many quality tests as possible. 
