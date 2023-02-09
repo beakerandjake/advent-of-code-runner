@@ -1,6 +1,16 @@
+import { platform } from 'node:process';
 import { spawn } from 'node:child_process';
 import { getConfigValue } from '../config.js';
 import { logger } from '../logger.js';
+
+/**
+ * Returns the npm command to execute for the specific platform.
+ * Fixes ENOENT errors on windows.
+ * @param {String} platform
+ * @private
+ */
+export const getNpmCommand = (platformName) =>
+  /^win/.test(platformName) ? 'npm.cmd' : 'npm';
 
 /**
  * Install packages for the user.
@@ -11,7 +21,7 @@ export const installPackages = async () => {
   logger.debug('installing npm packages');
   await new Promise((resolve, reject) => {
     // run npm install command
-    const childProcess = spawn('npm', ['i', '--omit=dev'], {
+    const childProcess = spawn(getNpmCommand(platform), ['i', '--omit=dev'], {
       cwd: getConfigValue('cwd'),
       stdio: ['ignore', 'ignore', 'pipe'],
       detached: false,

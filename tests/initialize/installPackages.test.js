@@ -8,7 +8,9 @@ jest.unstable_mockModule('node:child_process', () => ({ spawn: jest.fn() }));
 
 // import after mocks set up
 const { spawn } = await import('node:child_process');
-const { installPackages } = await import('../../src/initialize/installPackages.js');
+const { installPackages, getNpmCommand } = await import(
+  '../../src/initialize/installPackages.js'
+);
 
 describe('initialize', () => {
   describe('installPackages()', () => {
@@ -98,6 +100,21 @@ describe('initialize', () => {
       await Promise.resolve();
       exitCallback(0);
       await expect(promise).resolves.not.toThrow();
+    });
+  });
+
+  describe('getNpmCommand()', () => {
+    test.each([
+      ['npm', 'aix'],
+      ['npm', 'darwin'],
+      ['npm', 'freebsd'],
+      ['npm', 'linux'],
+      ['npm', 'openbsd'],
+      ['npm', 'sunos'],
+      ['npm.cmd', 'windows'],
+    ])('returns "%s" for platform "%s"', (expected, platform) => {
+      const result = getNpmCommand(platform);
+      expect(result).toBe(expected);
     });
   });
 });
