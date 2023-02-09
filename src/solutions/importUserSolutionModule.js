@@ -1,4 +1,3 @@
-/* istanbul ignore file */
 import { pathToFileURL } from 'node:url';
 import {
   UserSolutionFileNotFoundError,
