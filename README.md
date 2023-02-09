@@ -1,7 +1,5 @@
 # :santa: advent-of-code-runner :christmas_tree:
 
-## Please note this is a WIP repo and is not ready to be used
-
 A Node.Js CLI solution generator and runner for [advent of code](https://adventofcode.com/).
 
 [![npm](https://img.shields.io/npm/v/advent-of-code-runner)](https://www.npmjs.com/package/advent-of-code-runner)
