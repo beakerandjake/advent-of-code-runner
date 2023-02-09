@@ -18,7 +18,7 @@ A Node.Js CLI solution generator and runner for [advent of code](https://advento
 - Stores and outputs statistics to the CLI or your README file.
 - Rate limits submissions to prevent timeout penalties.
 - Tracks your progress and knows which puzzle to run.
-- Uses modern ECMAScript modules (ESM).
+- Uses ECMAScript modules (ESM).
 
 ## :deer: Table of Contents
 - [Installation](#milk_glass-installation)
@@ -63,7 +63,7 @@ your-repository-folder/
 advent of code generates puzzle inputs unique to your account. In order to download inputs and submit answers this CLI needs to store your advent of code authentication token. The token will be stored in a .env file in your project directory. This .env file ***should not*** be committed to source control. When you run the `init` command a .gitignore file is generated which ignores .env files, so *your token is safe by default*. 
 
 #### Finding your Authentication Token
-The authentication token is stored in a advent of code cookie. Navigate to [advent of code](https://adventofcode.com/), and sign in to your account. Once signed in open up your browsers development tools, find the cookies for adventofcode.com and copy the value of the "session" cookie. 
+The authentication token is stored in an advent of code cookie. Navigate to [advent of code](https://adventofcode.com/), and sign in to your account. Once signed in open up your browsers development tools, find the cookies for adventofcode.com and copy the value of the "session" cookie. 
 - [Firefox help](https://firefox-source-docs.mozilla.org/devtools-user/storage_inspector/index.html)
 - [Chrome help](https://developer.chrome.com/docs/devtools/storage/cookies/)
 
@@ -161,10 +161,10 @@ If you run the command with the `--save` argument then the table will be saved t
 ```
 npm run stats -- --save
 ```
-Note you must add `--` seperator between the command name and the `--save` argument. See this [stackoverflow question](https://stackoverflow.com/q/11580961) for more info.
+Note you must add `--` separator between the command name and the `--save` argument. See this [stackoverflow question](https://stackoverflow.com/q/11580961) for more info.
 
 ### `auth`
-Creates or updates the `.env` file with your advent of code authentication token. This is a useful command if you checkout your repository on a new machine, since the `.env` file is not commited to source control and wont be present on the new machine.
+Creates or updates the `.env` file with your advent of code authentication token. This is a useful command if you checkout your repository on a new machine, since the `.env` file is not committed to source control and wont be present on the new machine.
 
 ```
 npm run auth
@@ -191,7 +191,7 @@ These functions:
 ### Arguments
 Solution functions are invoked with a single argument, an object containing the following fields:
 - `input: string`: A string containing the raw, unprocessed puzzle input. Provided for flexibility and custom parsing.
-- `lines: string[]`:  An array of strings containing the each line of the puzzle input. Provided for convience and speed. 
+- `lines: string[]`:  An array of strings containing the each line of the puzzle input. Provided for convenience and speed. 
 
 Depending on the puzzle and its input you might need to [parse string values into integers](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/parseInt). 
 
@@ -202,10 +202,10 @@ This CLI downloads puzzles inputs only once and saves them to the `inputs/` fold
 ## :gift: Misc File Information
 
 #### `aocr-data.json`
-This file stores your progress. Every time you submit an answer, it is stored in this file to prevent duplicate submissions and track statistics. Additionally it stores the fastest recorded runtime for each puzzle. You should not edit this file manually. This file should be commited to source control. 
+This file stores your progress. Every time you submit an answer, it is stored in this file to prevent duplicate submissions and track statistics. Additionally it stores the fastest recorded runtime for each puzzle. You should not edit this file manually. This file should be committed to source control. 
 
 #### `.ratelimits.json`
-This file stores rate limit information used when querying the advent of code website. The creator of the website has requested automated tools such as this CLI are conservative in the number of requests made to the website. This file tracks when the last request was made and the CLI uses this data to prevent requests from occuring too frequently. This file is ignored in source control.
+This file stores rate limit information used when querying the advent of code website. The creator of the website has requested automated tools such as this CLI are conservative in the number of requests made to the website. This file tracks when the last request was made and the CLI uses this data to prevent requests from occurring too frequently. This file is ignored in source control.
 
 #### `.env`
 This file stores your authentication token, it ***should not be committed to source control***. See the [Authentication Token](https://github.com/beakerandjake/advent-of-code-runner#authentication-token) section for more information.

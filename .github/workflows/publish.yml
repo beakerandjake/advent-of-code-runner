@@ -117,4 +117,3 @@ jobs:
           tag_name: ${{ env.NEW_VERSION }}
           prerelease: ${{ startsWith(github.event.inputs.release-type, 'pre') }}
           body: ${{ steps.get-changelog.outputs.changelog }}
-
