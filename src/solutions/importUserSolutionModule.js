@@ -1,4 +1,5 @@
 /* istanbul ignore file */
+import { pathToFileURL } from 'node:url';
 import {
   UserSolutionFileNotFoundError,
   UserSolutionSyntaxError,
@@ -12,7 +13,8 @@ import {
  */
 export const importUserSolutionModule = async (fileName) => {
   try {
-    const module = await import(fileName);
+    // fix issue with windows, and ensure path starts with file://
+    const module = await import(pathToFileURL(fileName).href);
     return module;
   } catch (error) {
     // throw nicer error if user file not found.
