@@ -92,7 +92,7 @@ jobs:
           git add "package.json"
           git add "package-lock.json"
           git add "CHANGELOG.md"
-          git commit -m "chore: release v${{ env.NEW_VERSION }}"
+          git commit -m "chore: release ${{ env.NEW_VERSION }}"
           git tag ${{ env.NEW_VERSION }}
           
       - name: Publish to npm
