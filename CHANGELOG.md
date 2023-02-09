@@ -12,6 +12,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [1.3.2] - 2023-02-09
 
+### Added
 - Initial Release
 
 [Unreleased]: https://github.com/beakerandjake/advent-of-code-runner/compare/v1.3.2...HEAD
