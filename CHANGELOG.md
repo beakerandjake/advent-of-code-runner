@@ -7,6 +7,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+- `downloadInput()` no longer trims the start of the text ([#216](https://github.com/beakerandjake/advent-of-code-runner/issues/216))
+
 ## [1.3.3] - 2023-02-09
 ### Fixed
 - Removed WIP warning message on README
