@@ -53,7 +53,7 @@ export const downloadInput = async (year, day, authenticationToken) => {
   }
 
   // expect text of response is the input.
-  const text = (await response.text())?.trim() || '';
+  const text = (await response.text())?.trimEnd() || '';
   logger.debug('downloaded: %s', sizeOfStringInKb(text));
 
   if (!text) {

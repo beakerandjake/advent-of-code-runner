@@ -98,9 +98,35 @@ describe('api', () => {
       const result = await downloadInput(2022, 1, 'ASDF');
       expect(result).toBe(expected);
     });
+
+    test('does not trim start of input', async () => {
+      const expected = '\t1234\n5678\n9101112';
+      mockFetch.mockImplementation(() =>
+        Promise.resolve({
+          ok: true,
+          status: 200,
+          text: () => Promise.resolve(expected),
+        })
+      );
+      const result = await downloadInput(2022, 1, 'ASDF');
+      expect(result).toBe(expected);
+    });
+
+    test('trims end of input', async () => {
+      const expected = '1234\n5678\n9101112';
+      mockFetch.mockImplementation(() =>
+        Promise.resolve({
+          ok: true,
+          status: 200,
+          text: () => Promise.resolve(`${expected}\t\n`),
+        })
+      );
+      const result = await downloadInput(2022, 1, 'ASDF');
+      expect(result).toBe(expected);
+    });
   });
 
-  describe('submitSolution', () => {
+  describe('submitSolution()', () => {
     test.each([undefined, null, ''])(
       'throws if authentication token is: "%s"',
       async (value) => {
