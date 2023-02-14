@@ -7,6 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.3.4] - 2023-02-14
 ### Fixed
 - `downloadInput()` no longer trims the start of the text ([#216](https://github.com/beakerandjake/advent-of-code-runner/issues/216))
 
@@ -18,6 +19,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - Initial Release
 
-[Unreleased]: https://github.com/beakerandjake/advent-of-code-runner/compare/v1.3.3...HEAD
+[Unreleased]: https://github.com/beakerandjake/advent-of-code-runner/compare/v1.3.4...HEAD
+[1.3.4]: https://github.com/beakerandjake/advent-of-code-runner/compare/v1.3.3...v1.3.4
 [1.3.3]: https://github.com/beakerandjake/advent-of-code-runner/compare/v1.3.2...v1.3.3
 [1.3.2]: https://github.com/beakerandjake/advent-of-code-runner/releases/tag/v1.3.2
