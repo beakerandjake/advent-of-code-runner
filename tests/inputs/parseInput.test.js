@@ -1,6 +1,9 @@
 import { describe, test } from '@jest/globals';
 import { splitLines } from '../../src/inputs/parseInput.js';
 
+const addEndingLineBreak = (input) => `${input}\n`;
+const inputStringFromArray = (lines) => addEndingLineBreak(lines.join('\n'));
+
 describe('parseInput', () => {
   describe('splitLines()', () => {
     test.each([null, undefined])('returns [] if input is "%s"', (input) => {
@@ -16,16 +19,17 @@ describe('parseInput', () => {
     );
 
     test('returns array with one element if no line breaks', async () => {
-      const input = 'ASDFQWERRTY';
-      const result = splitLines(input);
-      expect(result).toEqual([input]);
+      const expected = ['ASDFQWERRTY'];
+      const result = splitLines(inputStringFromArray(expected));
+      expect(result).toEqual(expected);
     });
 
     test('returns each line as array element', async () => {
-      const lines = ['1234', 'ASDF', 'QWER', '@#$', 'asdf', '', 'zxcgv'];
-      const input = lines.join('\n');
-      const result = splitLines(input);
-      expect(result).toEqual(lines);
+      const expected = ['1234', 'ASDF', 'QWER', '@#$', 'asdf', '', 'zxcgv'];
+      const result = splitLines(inputStringFromArray(expected));
+      expect(result).toEqual(expected);
     });
+
+    // test('does not include empty ');
   });
 });
