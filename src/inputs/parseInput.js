@@ -11,5 +11,5 @@ export const splitLines = (input) => {
     throw new TypeError('Expected argument of type String');
   }
 
-  return input.split('\n');
+  return input.trimEnd().split('\n');
 };
