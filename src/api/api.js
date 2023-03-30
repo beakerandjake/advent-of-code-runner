@@ -53,12 +53,13 @@ export const downloadInput = async (year, day, authenticationToken) => {
   }
 
   // expect text of response is the input.
-  const text = (await response.text())?.trimEnd() || '';
-  logger.debug('downloaded: %s', sizeOfStringInKb(text));
+  const text = await response.text();
 
   if (!text) {
     throw new Error('Advent of code returned empty input');
   }
+
+  logger.debug('downloaded: %s', sizeOfStringInKb(text));
 
   return text;
 };

@@ -70,21 +70,16 @@ describe('api', () => {
       );
     });
 
-    test.each([undefined, null, '', '\t'])(
-      'throws on empty input: "%s"',
-      async (value) => {
-        mockFetch.mockImplementation(() =>
-          Promise.resolve({
-            ok: true,
-            status: 200,
-            text: () => Promise.resolve(value),
-          })
-        );
-        await expect(async () => downloadInput(2022, 1, 'ASDF')).rejects.toThrow(
-          /empty/i
-        );
-      }
-    );
+    test.each([undefined, null, ''])('throws on empty input: "%s"', async (value) => {
+      mockFetch.mockImplementation(() =>
+        Promise.resolve({
+          ok: true,
+          status: 200,
+          text: () => Promise.resolve(value),
+        })
+      );
+      await expect(async () => downloadInput(2022, 1, 'ASDF')).rejects.toThrow(/empty/i);
+    });
 
     test('returns input on success', async () => {
       const expected = '1234\n5678\n9101112';
@@ -112,13 +107,13 @@ describe('api', () => {
       expect(result).toBe(expected);
     });
 
-    test('trims end of input', async () => {
-      const expected = '1234\n5678\n9101112';
+    test('does not trim end of input', async () => {
+      const expected = '1234\n5678\n9101112\n';
       mockFetch.mockImplementation(() =>
         Promise.resolve({
           ok: true,
           status: 200,
-          text: () => Promise.resolve(`${expected}\t\n`),
+          text: () => Promise.resolve(expected),
         })
       );
       const result = await downloadInput(2022, 1, 'ASDF');
