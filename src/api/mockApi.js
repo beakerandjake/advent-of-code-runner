@@ -11,7 +11,7 @@ import { logger } from '../logger.js';
  */
 export const downloadInput = async (year, day, authenticationToken) => {
   logger.debug('downloading mock input file for year: %s, day: %s', year, day);
-  return [...Array(100).keys()].map((x) => x + 1).join('\n');
+  return `${[...Array(100).keys()].map((x) => x + 1).join('\n')}\n`;
 };
 
 /**
