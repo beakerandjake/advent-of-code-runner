@@ -7,13 +7,13 @@ _Created using [advent-of-code-runner](https://github.com/beakerandjake/advent-o
 ## Usage
 See [advent-of-code-runner](https://github.com/beakerandjake/advent-of-code-runner) for more information.
 
-### `npm start solve [day] [level]`
+### `npm run solve [day] [level]`
 Solve the specified puzzle and output the answer.
 
-### `npm start submit [day] [level]`
+### `npm run submit [day] [level]`
 Submit the answer for the specified puzzle to advent of code.
 
-### `npm start stats`
+### `npm run stats`
 Output a table to the terminal showing the current completion progress.
 
 <!--Please do not delete the following comments, they are required to save your stats to this file.-->
