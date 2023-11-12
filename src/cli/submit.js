@@ -9,7 +9,7 @@ import { dayArgument, levelArgument } from './arguments.js';
 const submitActions = [
   actions.outputPuzzleLink,
   actions.assertPuzzleUnlocked,
-  actions.assertPuzzleLevelValid,
+  actions.assertPuzzleLevelMet,
   actions.assertPuzzleUnsolved,
   actions.getAuthenticationToken,
   actions.getPuzzleInput,
