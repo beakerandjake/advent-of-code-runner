@@ -153,7 +153,13 @@ const CONFIG = {
         source: join(__dirname, '..', 'templates', 'template-dataFile.json'),
         dest: join(cwd, 'aocr-data.json'),
       },
-      solution: join(__dirname, '..', 'templates', 'template-solution.js'),
+      solutionDefault: join(__dirname, '..', 'templates', 'template-solution.js'),
+      solutionLastDay: join(
+        __dirname,
+        '..',
+        'templates',
+        'template-solution-last-day.js'
+      ),
     },
   },
   initialize: {
