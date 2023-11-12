@@ -2,7 +2,7 @@ import { assertAnswerCorrect } from './assertAnswerCorrect.js';
 import { assertAnswerNotPreviouslySubmitted } from './assertAnswerNotPreviouslySubmitted.js';
 import { assertConfigValue } from './assertConfigValue.js';
 import { assertInitialized } from './assertInitialized.js';
-import { assertPuzzleLevelMet } from './assertPuzzleLevelMet.js';
+import { assertPuzzleLevelValid } from './assertPuzzleLevelValid.js';
 import { assertPuzzleUnlocked } from './assertPuzzleUnlocked.js';
 import { assertPuzzleUnsolved } from './assertPuzzleUnsolved.js';
 import { assertUserConfirmation } from './assertUserConfirmation.js';
@@ -37,7 +37,7 @@ export {
   assertInitialized,
   assertPuzzleUnlocked,
   assertPuzzleUnsolved,
-  assertPuzzleLevelMet,
+  assertPuzzleLevelValid,
   assertUserConfirmation,
   executeUserSolution,
   generateMarkdownProgressTable,
