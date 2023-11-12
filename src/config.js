@@ -108,7 +108,7 @@ const CONFIG = {
       // also allows possibility that aoc doesn't run during a specific year.
       // also ensures that this package gets updates at least once a year to support
       // that years aoc and any changes that might be needed.
-      years: [2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022],
+      years: [2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023],
       days: [...Array(25).keys()].map((x) => x + 1), // 1-25 expected to always be advent calendar..
       levels: [1, 2],
     },
