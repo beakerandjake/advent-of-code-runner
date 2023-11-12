@@ -120,7 +120,8 @@ describe('validatePuzzle', () => {
         throw new Error('unexpected getConfigValue call in test');
       });
       const result = getTotalPuzzleCount();
-      expect(result).toBe(days.length * levels.length);
+      // expect days 1-(n-1) have levels.length levels, while day n has 1 level.
+      expect(result).toBe((days.length - 1) * levels.length + 1);
     });
   });
 });

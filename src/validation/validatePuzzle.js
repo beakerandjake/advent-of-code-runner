@@ -34,5 +34,6 @@ export const getAllPuzzlesForYear = (year) => {
 export const getTotalPuzzleCount = () => {
   const days = getConfigValue('aoc.validation.days');
   const levels = getConfigValue('aoc.validation.levels');
-  return days.length * levels.length;
+  // Days 1-24 have 2 levels, but day 25 has 1 level.
+  return (days.length - 1) * levels.length + 1;
 };
