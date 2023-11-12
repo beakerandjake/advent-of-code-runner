@@ -2,8 +2,8 @@
  * Contains solutions for Day 25
  * Puzzle Description: https://adventofcode.com/{{year}}/day/25
  * 
- * Day 25 only has a level one problem that is solvable.
- * To solve level two visit the advent of code website.
+ * Day 25 only one level that is solvable in code.
+ * To solve level two of this puzzle visit the advent of code website.
  */
 
 /**
