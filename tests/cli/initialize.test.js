@@ -1,9 +1,9 @@
-import { describe, jest, test, afterEach } from '@jest/globals';
+import { describe, jest, test, afterEach, beforeEach } from '@jest/globals';
 import { mockCommander, mockConfig } from '../mocks.js';
 
 // setup mocks
 mockCommander();
-mockConfig();
+const { getConfigValue } = mockConfig();
 const actionChainMock = jest.fn();
 jest.unstable_mockModule('src/actions/actionChainWithProgress.js', () => ({
   createChainWithProgress: () => actionChainMock,
@@ -36,14 +36,20 @@ jest.unstable_mockModule('src/cli/auth.js', () => ({
 
 // import after mocks set up.
 const { cwdIsEmpty } = await import('../../src/initialize/index.js');
-const { initializeAction } = await import('../../src/cli/initialize.js');
 
 describe('initialize command', () => {
+  beforeEach(() => {
+    getConfigValue.mockImplementation((key) =>
+      key === 'aoc.validation.years' ? [2001, 2002, 2003, 2004] : undefined
+    );
+  });
+
   afterEach(() => {
     jest.resetAllMocks();
   });
 
   test('does not ask for confirmation if cwd is empty', async () => {
+    const { initializeAction } = await import('../../src/cli/initialize.js');
     cwdIsEmpty.mockResolvedValue(true);
     getAnswersFromUserMock.mockResolvedValue({ answers: {} });
     await initializeAction();
@@ -51,6 +57,7 @@ describe('initialize command', () => {
   });
 
   test('asks for confirmation if cwd is not empty', async () => {
+    const { initializeAction } = await import('../../src/cli/initialize.js');
     cwdIsEmpty.mockResolvedValue(false);
     assertUserConfirmationMock.mockResolvedValue(false);
     await initializeAction();
@@ -58,6 +65,7 @@ describe('initialize command', () => {
   });
 
   test('aborts if user does not confirm', async () => {
+    const { initializeAction } = await import('../../src/cli/initialize.js');
     cwdIsEmpty.mockResolvedValue(false);
     assertUserConfirmationMock.mockResolvedValue(false);
     await initializeAction();
@@ -65,6 +73,7 @@ describe('initialize command', () => {
   });
 
   test('continues if user confirms', async () => {
+    const { initializeAction } = await import('../../src/cli/initialize.js');
     cwdIsEmpty.mockResolvedValue(false);
     assertUserConfirmationMock.mockResolvedValue(true);
     getAnswersFromUserMock.mockResolvedValue({ answers: {} });
