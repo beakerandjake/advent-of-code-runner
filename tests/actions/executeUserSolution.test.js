@@ -16,8 +16,8 @@ describe('executeUserSolution()', () => {
     jest.resetAllMocks();
   });
 
-  test.each([null, undefined])('throws if question is %s', async (question) => {
-    await expect(async () => executeUserSolution(question)).rejects.toThrow();
+  test.each([null, undefined])('throws if provided %s', async (args) => {
+    await expect(async () => executeUserSolution(args)).rejects.toThrow();
   });
 
   test('returns results', async () => {

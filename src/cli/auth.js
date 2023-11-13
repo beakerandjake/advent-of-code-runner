@@ -1,60 +1,52 @@
 import { Command } from 'commander';
-import { assertInitialized } from '../actions/assertInitialized.js';
-import { assertUserConfirmation } from '../actions/assertUserConfirmation.js';
-import { getAnswersFromUser } from '../actions/getAnswersFromUser.js';
-import { festiveEmoji, festiveStyle, printFestiveTitle } from '../festive.js';
+import { createChain } from '../actions/actionChain.js';
+import * as actions from '../actions/index.js';
+import { festiveStyle, printFestiveTitle } from '../festive.js';
 import { createDotEnv } from '../initialize/index.js';
-import { dotEnvExists } from '../validation/userFilesExist.js';
 import { logger } from '../logger.js';
+import { dotEnvExists } from '../validation/userFilesExist.js';
 
 /**
- * inquirer question which prompts the user for their auth token.
+ * inquirer questions which can be used to prompt the user to input their auth token.
  */
-/* istanbul ignore next */
 export const authTokenQuestion = {
   type: 'password',
-  name: 'authToken',
   message: festiveStyle(
     'Enter your advent of code authentication token (see README for help)'
   ),
-  prefix: festiveEmoji(),
+  mask: true,
   validate: (input) => (input ? true : 'Token cannot be empty!'),
-  filter: (input) => input.trim(),
 };
 
 /**
- * inquirer.js question which makes the user confirm the overwriting the .env file
+ * inquirer question which makes the user confirm the overwriting the .env file
  */
-const confirmOverwriteQuestion = {
-  type: 'confirm',
-  name: 'confirmed',
+const confirmQuestion = {
   message: festiveStyle(
     'It appears a .env file is already present, do you want to overwrite this file?'
   ),
   default: false,
-  prefix: festiveEmoji(),
 };
 
 /**
  * Updates or creates the .env file and writes the users auth token to it.
  * @private
  */
-export const auth = async () => {
-  // don't let the user run this command if they haven't ran the "init" command.
-  if (!(await assertInitialized())) {
-    return;
-  }
+export const authAction = async () => {
+  const actionChain = createChain([
+    actions.assertInitialized,
+    actions.and(dotEnvExists, actions.assertUserConfirmation),
+    actions.getAnswersFromUser,
+    createDotEnv,
+  ]);
 
-  // if there is already a .env file then ask users confirmation.
-  if (
-    (await dotEnvExists()) &&
-    !(await assertUserConfirmation(confirmOverwriteQuestion)())
-  ) {
-    return;
-  }
+  await actionChain({
+    confirmQuestion,
+    questions: {
+      authToken: authTokenQuestion,
+    },
+  });
 
-  const { answers } = await getAnswersFromUser([authTokenQuestion])();
-  await createDotEnv(answers);
   logger.festive(
     'Added auth token to the .env file, do not commit this file to source control'
   );
@@ -67,4 +59,4 @@ export const authCommand = new Command()
   .name('auth')
   .hook('preAction', printFestiveTitle)
   .description('Add or update the .env file with your advent of code auth token.')
-  .action(auth);
+  .action(authAction);

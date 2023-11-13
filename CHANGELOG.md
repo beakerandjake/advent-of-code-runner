@@ -10,7 +10,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added support for 2023 to the config file ([#226](https://github.com/beakerandjake/advent-of-code-runner/issues/226))
 ### Fixed
 - Fix number of solvable problems to be 49 not 50 (day 25 only has one level) ([#224](https://github.com/beakerandjake/advent-of-code-runner/issues/224))
-
+### Changed
+- Replaced inquirer package with @inquirer/prompts, will reduce package size. ([#230](https://github.com/beakerandjake/advent-of-code-runner/issues/230))
 
 ## [1.3.6] - 2023-08-23
 ### Fixed
