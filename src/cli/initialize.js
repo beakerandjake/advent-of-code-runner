@@ -1,8 +1,7 @@
-import { Command } from 'commander';
 import { createChainWithProgress } from '../actions/actionChainWithProgress.js';
 import { assertUserConfirmation, getAnswersFromUser } from '../actions/index.js';
 import { getConfigValue } from '../config.js';
-import { festiveStyle, printFestiveTitle } from '../festive.js';
+import { festiveStyle } from '../festive.js';
 import {
   createDataFile,
   createDotEnv,
@@ -79,12 +78,3 @@ export const initializeAction = async () => {
 
   await actionChain({ answers });
 };
-
-/**
- * Command to initialize the users repository so it can run our cli.
- */
-export const initializeCommand = new Command()
-  .name('init')
-  .hook('preAction', printFestiveTitle)
-  .description('Initialize the directory so this CLI can run.')
-  .action(initializeAction);

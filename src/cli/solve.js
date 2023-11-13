@@ -1,7 +1,5 @@
-import { Command } from 'commander';
 import { createChain } from '../actions/actionChain.js';
 import * as actions from '../actions/index.js';
-import { dayArgument, levelArgument } from './arguments.js';
 
 /**
  * The common actions between the 'solve' and 'autosolve' commands
@@ -52,23 +50,23 @@ export const solveAction = async (day, level) => {
   }
 };
 
-/**
- * Command which lets the user solve a puzzle
- */
-export const solveCommand = new Command()
-  .name('solve')
-  .description(
-    'Runs your solution for a puzzle, measures the runtime, and outputs the answer.'
-  )
-  .addHelpText(
-    'after',
-    `
-Example Calls:
-  solve               (Finds and solves your next unsolved puzzle)
-  solve [day]         (Solves level one of the specified days puzzle)
-  solve [day] [level] (Solves the puzzle for the specified day and level)
-  `
-  )
-  .addArgument(dayArgument)
-  .addArgument(levelArgument)
-  .action(solveAction);
+// /**
+//  * Command which lets the user solve a puzzle
+//  */
+// export const solveCommand = new Command()
+//   .name('solve')
+//   .description(
+//     'Runs your solution for a puzzle, measures the runtime, and outputs the answer.'
+//   )
+//   .addHelpText(
+//     'after',
+//     `
+// Example Calls:
+//   solve               (Finds and solves your next unsolved puzzle)
+//   solve [day]         (Solves level one of the specified days puzzle)
+//   solve [day] [level] (Solves the puzzle for the specified day and level)
+//   `
+//   )
+//   .addArgument(dayArgument)
+//   .addArgument(levelArgument)
+//   .action(solveAction);

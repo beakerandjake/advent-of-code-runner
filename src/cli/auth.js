@@ -1,7 +1,6 @@
-import { Command } from 'commander';
 import { createChain } from '../actions/actionChain.js';
 import * as actions from '../actions/index.js';
-import { festiveStyle, printFestiveTitle } from '../festive.js';
+import { festiveStyle } from '../festive.js';
 import { createDotEnv } from '../initialize/index.js';
 import { logger } from '../logger.js';
 import { dotEnvExists } from '../validation/userFilesExist.js';
@@ -51,12 +50,3 @@ export const authAction = async () => {
     'Added auth token to the .env file, do not commit this file to source control'
   );
 };
-
-/**
- * Adds or updates the .env file with the users auth token.
- */
-export const authCommand = new Command()
-  .name('auth')
-  .hook('preAction', printFestiveTitle)
-  .description('Add or update the .env file with your advent of code auth token.')
-  .action(authAction);
