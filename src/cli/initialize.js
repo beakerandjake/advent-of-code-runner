@@ -19,7 +19,7 @@ import { authTokenQuestion } from './auth.js';
 /**
  * inquirer.js question which makes the user confirm the initialize operation.
  */
-const confirmInitializeQuestion = {
+const confirmQuestion = {
   type: 'confirm',
   name: 'confirmed',
   message: festiveStyle(
@@ -29,22 +29,18 @@ const confirmInitializeQuestion = {
   prefix: festiveEmoji(),
 };
 
-/**
- * Array of inquirer questions which will be asked in order.
- * The answers will provide us all of the information we need to initialize.
- */
-const initializeQuestions = [
-  {
+const initializeQuestions = {
+  year: {
     // in future if list of years becomes too large the change to raw input.
-    type: 'list',
-    name: 'year',
+    type: 'select',
     message: festiveStyle('What year of advent of code are you doing?'),
-    prefix: festiveEmoji(),
-    choices: [...getConfigValue('aoc.validation.years')].reverse(),
+    choices: [...getConfigValue('aoc.validation.years')]
+      .reverse()
+      .map((year) => ({ value: year })),
     loop: false,
   },
-  authTokenQuestion,
-];
+  authToken: authTokenQuestion,
+};
 
 /**
  * A Link which creates all required files in the cwd.
@@ -67,15 +63,12 @@ const createFiles = async ({ answers }) => {
  */
 export const initializeAction = async () => {
   // if there are files in the cwd, get confirmation with the user that they want to proceed.
-  if (
-    !(await cwdIsEmpty()) &&
-    !(await assertUserConfirmation(confirmInitializeQuestion)())
-  ) {
+  if (!(await cwdIsEmpty()) && !(await assertUserConfirmation({ confirmQuestion }))) {
     return;
   }
 
   // get all the info we need in order to initialize.
-  const { answers } = await getAnswersFromUser(initializeQuestions)();
+  const answers = await getAnswersFromUser({ questions: initializeQuestions });
 
   // run initialize steps in an action chain that reports its progress to the user.
   const actionChain = createChainWithProgress(
