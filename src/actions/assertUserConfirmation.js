@@ -7,7 +7,7 @@ import { confirm } from '@inquirer/prompts';
  * @param {string} confirmQuestion.message - The question to ask
  * @param {boolean} confirmQuestion.default - The default answer (true or false)
  */
-export const assertUserConfirmation = async ({ confirmQuestion }) => {
+export const assertUserConfirmation = async ({ confirmQuestion } = {}) => {
   if (!confirmQuestion || !confirmQuestion.message) {
     throw new Error('must specify a message');
   }
