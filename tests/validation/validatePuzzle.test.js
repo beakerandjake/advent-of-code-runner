@@ -98,8 +98,6 @@ describe('validatePuzzle', () => {
         { year, day: 4, level: 2 },
         { year, day: 4, level: 3 },
         { year, day: 5, level: 1 },
-        { year, day: 5, level: 2 },
-        { year, day: 5, level: 3 },
       ];
 
       expect(getAllPuzzlesForYear(year)).toStrictEqual(expected);

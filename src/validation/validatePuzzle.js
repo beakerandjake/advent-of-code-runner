@@ -22,10 +22,12 @@ export const puzzleIsInFuture = (year, day) => {
 export const getAllPuzzlesForYear = (year) => {
   const days = getConfigValue('aoc.validation.days');
   const levels = getConfigValue('aoc.validation.levels');
-  return days.reduce(
-    (acc, day) => [...acc, ...levels.map((level) => ({ year, day, level }))],
-    []
-  );
+  return [
+    // days 1-(n-1) has L levels.
+    ...days.slice(0, -1).map((day) => levels.map((level) => ({ year, day, level }))),
+    // day n has one level.
+    { year, day: days.at(-1), level: 1 },
+  ].flat();
 };
 
 /**
@@ -34,6 +36,6 @@ export const getAllPuzzlesForYear = (year) => {
 export const getTotalPuzzleCount = () => {
   const days = getConfigValue('aoc.validation.days');
   const levels = getConfigValue('aoc.validation.levels');
-  // Days 1-24 have 2 levels, but day 25 has 1 level.
+  // Days 1-(n-1) have L levels, but day n has 1 level.
   return (days.length - 1) * levels.length + 1;
 };
