@@ -19,9 +19,9 @@ const prompt = (type, args) => {
 /**
  * Creates a link which, when invoked will ask the user the specified questions.
  * The link will add the user answers to the args.
- * @param {Object[]} questions - The inquirer.js questions to ask the user
+ * @param {Object} questions - The inquirer.js questions to ask the user
  */
-export const getAnswersFromUser = async ({ questions }) => {
+export const getAnswersFromUser = async ({ questions } = {}) => {
   if (!questions) {
     throw new Error('null or undefined question');
   }
