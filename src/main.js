@@ -1,7 +1,6 @@
 #!/usr/bin/env node
 import { Command } from 'commander';
 import { authCommand } from './cli/auth.js';
-import { exitOverride } from './cli/exitOverride.js';
 import { initializeCommand } from './cli/initialize.js';
 import { solveCommand } from './cli/solve.js';
 import { statsCommand } from './cli/stats.js';
@@ -16,8 +15,7 @@ program
   .name(getConfigValue('meta.name'))
   .description(getConfigValue('meta.description'))
   .version(getConfigValue('meta.version'))
-  .addHelpText('before', printFestiveTitle)
-  .exitOverride(exitOverride);
+  .addHelpText('before', printFestiveTitle);
 
 program.addCommand(authCommand);
 program.addCommand(initializeCommand);
