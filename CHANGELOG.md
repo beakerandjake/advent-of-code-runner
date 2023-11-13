@@ -6,12 +6,16 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+
+## [1.4.0] - 2023-11-13
 ### Added
 - Added support for 2023 to the config file ([#226](https://github.com/beakerandjake/advent-of-code-runner/issues/226))
-### Fixed
-- Fix number of solvable problems to be 49 not 50 (day 25 only has one level) ([#224](https://github.com/beakerandjake/advent-of-code-runner/issues/224))
+
 ### Changed
 - Replaced inquirer package with @inquirer/prompts, will reduce package size. ([#230](https://github.com/beakerandjake/advent-of-code-runner/issues/230))
+
+### Fixed
+- Fix number of solvable problems to be 49 not 50 (day 25 only has one level) ([#224](https://github.com/beakerandjake/advent-of-code-runner/issues/224))
 
 ## [1.3.6] - 2023-08-23
 ### Fixed
@@ -36,7 +40,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - Initial Release
 
-[Unreleased]: https://github.com/beakerandjake/advent-of-code-runner/compare/v1.3.6...HEAD
+[Unreleased]: https://github.com/beakerandjake/advent-of-code-runner/compare/v1.4.0...HEAD
+[1.4.0]: https://github.com/beakerandjake/advent-of-code-runner/compare/v1.3.6...v1.4.0
 [1.3.6]: https://github.com/beakerandjake/advent-of-code-runner/compare/v1.3.5...v1.3.6
 [1.3.5]: https://github.com/beakerandjake/advent-of-code-runner/compare/v1.3.4...v1.3.5
 [1.3.4]: https://github.com/beakerandjake/advent-of-code-runner/compare/v1.3.3...v1.3.4
