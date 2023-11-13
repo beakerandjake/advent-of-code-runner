@@ -1,5 +1,5 @@
 /* eslint-disable no-underscore-dangle */
-import { argv } from 'node:process';
+import { argv, exit } from 'node:process';
 import { fileURLToPath, URL } from 'node:url';
 import { join } from 'node:path';
 import { fork } from 'node:child_process';
@@ -66,7 +66,20 @@ const ensureWorkspaceDir = async () => ensureDir(workspaceDir);
  */
 const start = async () => {
   await Promise.all([ensureWorkspaceDir(), ensureDotEnv()]);
-  fork(mainJsPath, argv.slice(2), { cwd: workspaceDir });
+  return new Promise((resolve, reject) => {
+    const child = fork(mainJsPath, argv.slice(2), { cwd: workspaceDir });
+    child.on('exit', (code) => {
+      if (code === 0) {
+        resolve();
+      } else {
+        reject();
+      }
+    });
+  });
 };
 
-await start();
+try {
+  await start();
+} catch (error) {
+  exit(1);
+}
