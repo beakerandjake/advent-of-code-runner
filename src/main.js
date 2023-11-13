@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-import { Command } from 'commander';
+import { Argument, Command, InvalidArgumentError } from 'commander';
 import { authAction } from './cli/auth.js';
 import { initializeAction } from './cli/initialize.js';
 import { solveAction } from './cli/solve.js';
@@ -8,7 +8,31 @@ import { submitAction } from './cli/submit.js';
 import { getConfigValue } from './config.js';
 import { handleError } from './errorHandler.js';
 import { printFestiveTitle } from './festive.js';
-import { dayArgument, levelArgument } from './cli/arguments.js';
+
+/**
+ * Returns an argParse function which constrains the choice to a list of integers.
+ * @param {string} name - The name of the argument which is being parsed.
+ * @param {number[]} choices - The valid options to choose from
+ */
+export const intParser = (choices) => (value) => {
+  const parsed = Number.parseInt(value, 10);
+  if (!choices.includes(parsed)) {
+    const min = Math.min(...choices);
+    const max = Math.max(...choices);
+    throw new InvalidArgumentError(`Value must be between ${min} and ${max}.`);
+  }
+  return parsed;
+};
+
+const dayArgument = new Argument(
+  '[day]',
+  'The day of the puzzle to solve (1-25).'
+).argParser(intParser(getConfigValue('aoc.validation.days')));
+
+const levelArgument = new Argument(
+  '[level]',
+  `The the level of the puzzle to solve (1 or 2).`
+).argParser(intParser(getConfigValue('aoc.validation.levels')));
 
 const program = new Command();
 
