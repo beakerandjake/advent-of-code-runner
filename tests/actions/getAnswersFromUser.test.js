@@ -82,4 +82,14 @@ describe('getAnswersFromUser()', () => {
     expect(answers.three).toBe(expected);
     expect(password).toHaveBeenCalledTimes(1);
   });
+
+  test('throws on unknown question type', async () => {
+    const input = {
+      questions: {
+        one: { type: 'NOT FOUND', message: 'hi' },
+      },
+    };
+
+    await expect(async () => getAnswersFromUser(input)).rejects.toThrow();
+  });
 });
