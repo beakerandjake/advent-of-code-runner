@@ -133,3 +133,6 @@ dist
 
 # advent of code api rate limit file
 .ratelimits.json
+
+# advent of code input files
+inputs/
