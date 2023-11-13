@@ -26,10 +26,6 @@ jest.unstable_mockModule('src/actions/index.js', () => ({
   getCompletionData: jest.fn(),
   getYear: jest.fn(),
 }));
-jest.unstable_mockModule('src/cli/arguments.js', () => ({
-  dayArgument: jest.fn(),
-  levelArgument: jest.fn(),
-}));
 
 // import after mocks set up.
 const { statsAction } = await import('../../src/cli/stats.js');

@@ -8,10 +8,6 @@ jest.unstable_mockModule('src/actions/actionChain.js', () => ({
 jest.unstable_mockModule('src/actions/index.js', () => ({
   ifThen: jest.fn(),
 }));
-jest.unstable_mockModule('src/cli/arguments.js', () => ({
-  dayArgument: jest.fn(),
-  levelArgument: jest.fn(),
-}));
 
 // import after mocks set up.
 const { submitAction } = await import('../../src/cli/submit.js');

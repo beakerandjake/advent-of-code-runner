@@ -1,3 +1,4 @@
+import { InvalidArgumentError } from 'commander';
 import { getConfigValue } from '../config.js';
 
 /**
@@ -8,14 +9,18 @@ export const yearIsValid = (year) =>
   getConfigValue('aoc.validation.years').includes(year);
 
 /**
- * Is the day one where an advent of code puzzle happens?
- * @param {Number} day
+ * Returns a function which parses the string value as an integer.
+ * Then compares the parsed integer value to an array of choices.
+ * The returned function throws an InvalidArgumentError if the value is not included in the choices.
+ * @param {number[]} choices - The valid options to choose from
+ * @throws {RangeError} - The parsed integer value was not included in the choices.
  */
-export const dayIsValid = (day) => getConfigValue('aoc.validation.days').includes(day);
-
-/**
- * Is the level of the puzzle a valid value?
- * @param {Number} level
- */
-export const levelIsValid = (level) =>
-  getConfigValue('aoc.validation.levels').includes(level);
+export const intParser = (choices) => (value) => {
+  const parsed = Number.parseInt(value, 10);
+  if (!choices.includes(parsed)) {
+    const min = Math.min(...choices);
+    const max = Math.max(...choices);
+    throw new InvalidArgumentError(`Value must be between ${min} and ${max}.`);
+  }
+  return parsed;
+};
