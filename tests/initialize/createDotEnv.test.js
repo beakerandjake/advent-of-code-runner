@@ -60,7 +60,7 @@ describe('initialize', () => {
       );
       const contents = 'ASDF';
       replaceTokens.mockReturnValue(contents);
-      await createDotEnv({ authToken: 1234 });
+      await createDotEnv({ authToken: '1234' });
       expect(outputFile).toHaveBeenCalledWith(paths.dest, contents);
     });
   });
