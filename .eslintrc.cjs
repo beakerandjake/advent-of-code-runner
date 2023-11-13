@@ -29,7 +29,6 @@ module.exports = {
       // ignore false positive when importing v11.1.0
       { ignore: ['fs-extra/esm'] },
     ],
-    'no-plusplus':'off',
-    'no-unused-vars': ['error', { "argsIgnorePattern": "^_" } ]
+    'no-plusplus':'off'
   },
 };
