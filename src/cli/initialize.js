@@ -40,7 +40,7 @@ const initializeQuestions = [
     name: 'year',
     message: festiveStyle('What year of advent of code are you doing?'),
     prefix: festiveEmoji(),
-    choices: getConfigValue('aoc.validation.years')?.reverse(),
+    choices: [...getConfigValue('aoc.validation.years')].reverse(),
     loop: false,
   },
   authTokenQuestion,
