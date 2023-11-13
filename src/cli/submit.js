@@ -7,6 +7,7 @@ import { dayArgument, levelArgument } from './arguments.js';
  * The common actions between the 'submit' and 'autosubmit' commands
  */
 const submitActions = [
+  actions.assertPuzzleHasLevel,
   actions.outputPuzzleLink,
   actions.assertPuzzleUnlocked,
   actions.assertPuzzleLevelMet,

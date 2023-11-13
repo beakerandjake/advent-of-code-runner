@@ -98,8 +98,6 @@ describe('validatePuzzle', () => {
         { year, day: 4, level: 2 },
         { year, day: 4, level: 3 },
         { year, day: 5, level: 1 },
-        { year, day: 5, level: 2 },
-        { year, day: 5, level: 3 },
       ];
 
       expect(getAllPuzzlesForYear(year)).toStrictEqual(expected);
@@ -120,7 +118,8 @@ describe('validatePuzzle', () => {
         throw new Error('unexpected getConfigValue call in test');
       });
       const result = getTotalPuzzleCount();
-      expect(result).toBe(days.length * levels.length);
+      // expect days 1-(n-1) have levels.length levels, while day n has 1 level.
+      expect(result).toBe((days.length - 1) * levels.length + 1);
     });
   });
 });

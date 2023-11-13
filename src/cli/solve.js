@@ -7,6 +7,7 @@ import { dayArgument, levelArgument } from './arguments.js';
  * The common actions between the 'solve' and 'autosolve' commands
  */
 const solveActions = [
+  actions.assertPuzzleHasLevel,
   actions.outputPuzzleLink,
   actions.assertPuzzleUnlocked,
   actions.assertPuzzleLevelMet,

@@ -14,6 +14,21 @@ const tokens = [
 ];
 
 /**
+ * Create a solution template for each day.
+ * @param {String} template
+ * @param {Number[]} days
+ * @returns {Array<Promise>}
+ */
+const doCreate = (template, year, days) =>
+  days.map((day) =>
+    writeFile(
+      getSolutionFileName(day),
+      replaceTokens(tokens, { year, day }, template),
+      'utf-8'
+    )
+  );
+
+/**
  * Creates the solution files in the cwd.
  */
 export const createSolutionFiles = async ({ year } = {}) => {
@@ -23,24 +38,19 @@ export const createSolutionFiles = async ({ year } = {}) => {
     throw new Error('null or undefined year');
   }
 
-  // create directory if doesn't exist.
-  const solutionsDir = getConfigValue('paths.solutionsDir');
-  await ensureDir(solutionsDir);
+  // create solution dir if does not already exist.
+  await ensureDir(getConfigValue('paths.solutionsDir'));
 
-  // load the contents of the template solution
-  const templateSolutionFile = await readFile(
-    getConfigValue('paths.templates.solution'),
-    { encoding: 'utf-8' }
-  );
+  // load the template files (last day is special and needs a different template than default)
+  const [basicTemplate, lastDayTemplate] = await Promise.all([
+    readFile(getConfigValue('paths.templates.solutionDefault'), 'utf8'),
+    readFile(getConfigValue('paths.templates.solutionLastDay'), 'utf8'),
+  ]);
 
-  // create each template solution file.
-  const createFilePromises = getConfigValue('aoc.validation.days').map((day) =>
-    writeFile(
-      getSolutionFileName(day),
-      replaceTokens(tokens, { year, day }, templateSolutionFile),
-      'utf-8'
-    )
-  );
-
-  await Promise.all(createFilePromises);
+  return Promise.all([
+    // all days but the last day share a default solution template.
+    ...doCreate(basicTemplate, year, getConfigValue('aoc.validation.days').slice(0, -1)),
+    // last day is special and needs a different solution template.
+    ...doCreate(lastDayTemplate, year, getConfigValue('aoc.validation.days').slice(-1)),
+  ]);
 };
