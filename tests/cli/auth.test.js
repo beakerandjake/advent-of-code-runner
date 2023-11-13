@@ -17,6 +17,7 @@ jest.unstable_mockModule('src/actions/actionChain.js', () => ({
   createChain: (links) => async (args) => {
     let currentArgs = args;
     for (const link of links) {
+      // eslint-disable-next-line no-await-in-loop
       const result = await link(args);
       if (result === false) {
         break;
