@@ -2,7 +2,7 @@ import { Command } from 'commander';
 import { createChainWithProgress } from '../actions/actionChainWithProgress.js';
 import { assertUserConfirmation, getAnswersFromUser } from '../actions/index.js';
 import { getConfigValue } from '../config.js';
-import { festiveEmoji, festiveStyle, printFestiveTitle } from '../festive.js';
+import { festiveStyle, printFestiveTitle } from '../festive.js';
 import {
   createDataFile,
   createDotEnv,
@@ -21,12 +21,10 @@ import { authTokenQuestion } from './auth.js';
  */
 const confirmQuestion = {
   type: 'confirm',
-  name: 'confirmed',
   message: festiveStyle(
     'This directory is not empty! This operation will overwrite files, do you want to continue?'
   ),
   default: false,
-  prefix: festiveEmoji(),
 };
 
 const initializeQuestions = {

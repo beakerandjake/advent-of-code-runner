@@ -8,14 +8,11 @@ const actionChainMock = jest.fn();
 jest.unstable_mockModule('src/actions/actionChainWithProgress.js', () => ({
   createChainWithProgress: () => actionChainMock,
 }));
-const assertUserConfirmationMock = jest.fn();
-const getAnswersFromUserMock = jest.fn();
 jest.unstable_mockModule('src/actions/index.js', () => ({
-  assertUserConfirmation: () => assertUserConfirmationMock,
-  getAnswersFromUser: () => getAnswersFromUserMock,
+  assertUserConfirmation: jest.fn(),
+  getAnswersFromUser: jest.fn(),
 }));
 jest.unstable_mockModule('src/festive.js', () => ({
-  festiveEmoji: jest.fn(),
   festiveStyle: jest.fn(),
   printFestiveTitle: jest.fn(),
 }));
@@ -31,10 +28,13 @@ jest.unstable_mockModule('src/initialize/index.js', () => ({
   installPackages: jest.fn(),
 }));
 jest.unstable_mockModule('src/cli/auth.js', () => ({
-  authTokenQuestion: () => jest.fn(),
+  authTokenQuestion: {},
 }));
 
 // import after mocks set up.
+const { assertUserConfirmation, getAnswersFromUser } = await import(
+  '../../src/actions/index.js'
+);
 const { cwdIsEmpty } = await import('../../src/initialize/index.js');
 
 describe('initialize command', () => {
@@ -51,23 +51,23 @@ describe('initialize command', () => {
   test('does not ask for confirmation if cwd is empty', async () => {
     const { initializeAction } = await import('../../src/cli/initialize.js');
     cwdIsEmpty.mockResolvedValue(true);
-    getAnswersFromUserMock.mockResolvedValue({ answers: {} });
+    assertUserConfirmation.mockResolvedValue({});
     await initializeAction();
-    expect(assertUserConfirmationMock).not.toHaveBeenCalled();
+    expect(assertUserConfirmation).not.toHaveBeenCalled();
   });
 
   test('asks for confirmation if cwd is not empty', async () => {
     const { initializeAction } = await import('../../src/cli/initialize.js');
     cwdIsEmpty.mockResolvedValue(false);
-    assertUserConfirmationMock.mockResolvedValue(false);
+    assertUserConfirmation.mockResolvedValue(false);
     await initializeAction();
-    expect(assertUserConfirmationMock).toHaveBeenCalled();
+    expect(assertUserConfirmation).toHaveBeenCalled();
   });
 
   test('aborts if user does not confirm', async () => {
     const { initializeAction } = await import('../../src/cli/initialize.js');
     cwdIsEmpty.mockResolvedValue(false);
-    assertUserConfirmationMock.mockResolvedValue(false);
+    assertUserConfirmation.mockResolvedValue(false);
     await initializeAction();
     expect(actionChainMock).not.toHaveBeenCalled();
   });
@@ -75,8 +75,8 @@ describe('initialize command', () => {
   test('continues if user confirms', async () => {
     const { initializeAction } = await import('../../src/cli/initialize.js');
     cwdIsEmpty.mockResolvedValue(false);
-    assertUserConfirmationMock.mockResolvedValue(true);
-    getAnswersFromUserMock.mockResolvedValue({ answers: {} });
+    assertUserConfirmation.mockResolvedValue(true);
+    getAnswersFromUser.mockResolvedValue({ answers: {} });
     await initializeAction();
     expect(actionChainMock).toHaveBeenCalled();
   });
