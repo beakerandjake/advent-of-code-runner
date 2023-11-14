@@ -43,7 +43,7 @@ export const statsAction = async ({ save }) => {
   // bail if no puzzles completed
   if (!completionData?.length) {
     logger.festive(
-      'no puzzles submitted, run this command after submitting at least puzzle'
+      'No puzzles submitted, run this command after submitting at least puzzle'
     );
     return;
   }
