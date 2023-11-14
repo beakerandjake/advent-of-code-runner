@@ -61,7 +61,7 @@ npm install
 ```
 
 #### `npm start`
-This is the command to run the program for development. It runs the `scripts/start.js` file. 
+This is the command to run the program for development. It runs the `bin/start.js` file. 
 
 This file contains some logic to ensure local development is easy:
 - A working directory is created (if it does not exist) at the root of the repository called `development`. This folder acts as the cwd when running commands, it is ignored by git.
@@ -94,7 +94,7 @@ The project folder structure attempts to be as flat as possible to avoid deep ne
 Each js file strives to have a single purpose, and if it starts to do too much it should be split into different files. This makes finding the implementation of a feature easy and makes the code more testable. Big multipurpose files are generally avoided save for some exceptions such as `util.js` or `formatting.js`. 
 
 #### Folders
-- `scripts/` contains development scripts launched by the `package.json`
+- `bin/` contains development scripts launched by the `package.json`
 - `src/` contains all source code necessary to run the CLI.
 - `templates/` template files used by the `init` command.
 - `tests/` the unit tests, matches the structure of `src/`
