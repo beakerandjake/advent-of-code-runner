@@ -1,15 +1,17 @@
 import { requiredLevelsHaveBeenSolved } from '../answers.js';
 import { puzzleBaseUrl } from '../api/urls.js';
+import { getConfigValue } from '../config.js';
 import { DirectoryNotInitializedError } from '../errors/cliErrors.js';
 import {
   PuzzleInFutureError,
   PuzzleLevelInvalidError,
   PuzzleLevelNotMetError,
 } from '../errors/puzzleErrors.js';
-import { makeClickableLink } from '../formatting.js';
+import { humanizeDuration, makeClickableLink } from '../formatting.js';
 import { getPuzzleInput } from '../inputs/getPuzzleInput.js';
 import { logger } from '../logger.js';
 import { getYear } from '../persistence/metaRepository.js';
+import { execute } from '../solutions/solutionRunner.js';
 import { dataFileExists } from '../validation/userFilesExist.js';
 import {
   puzzleHasLevel,
@@ -17,14 +19,36 @@ import {
 } from '../validation/validatePuzzle.js';
 
 /**
+ * Execute the users solution file for the puzzle and return the result.
+ */
+const executeUserSolution = async (day, level, input) => {
+  logger.festive('Executing your code');
+
+  // output a pending message to user if their code is taking a while.
+  const timeout = setTimeout(() => {
+    logger.festive('Your code is still running, press Ctrl+C to cancel...');
+  }, getConfigValue('solutionRunner.cancelMessageDelayMs'));
+
+  const { answer, runtimeNs } = await execute(day, level, input);
+
+  clearTimeout(timeout);
+
+  logger.festive(
+    'You answered: %s (solved in %s)',
+    answer,
+    humanizeDuration(runtimeNs)
+  );
+
+  return { answer, runtimeNs };
+};
+
+/**
  * Attempts to execute the users solution for the puzzle.
  * @param {number} day
  * @param {number} level
- * @returns {Promise<string|int>} The value returned by the users code.
  */
-const tryToSolvePuzzle = async (day, level) => {
+export const tryToSolvePuzzle = async (day, level) => {
   const year = await getYear();
-  // ensure day/level combination is valid (day 25 only has one level)
   if (!puzzleHasLevel(year, day, level)) {
     throw new PuzzleLevelInvalidError(day, level);
   }
@@ -42,6 +66,9 @@ const tryToSolvePuzzle = async (day, level) => {
   // load the puzzle input.
   logger.festive('Loading puzzle input.');
   const input = await getPuzzleInput(year, day, level);
+
+  // run the users code and return the result.
+  return executeUserSolution(day, level, input);
 };
 
 /**
