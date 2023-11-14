@@ -165,7 +165,7 @@ export const generateTable = async (year, completionData) => {
 /**
  * Generates a progress table in markdown syntax.
  * @param {number} year
- * @param {object} completionData
+ * @param {object[]} completionData
  */
 export const markdownTable = async (year, completionData) => {
   if (year == null) {
