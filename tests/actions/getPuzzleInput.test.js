@@ -1,5 +1,5 @@
 import { describe, jest, test, afterEach } from '@jest/globals';
-import { mockConfig, mockLogger } from '../mocks';
+import { mockConfig, mockLogger } from '../mocks.js';
 
 // setup mocks.
 mockLogger();

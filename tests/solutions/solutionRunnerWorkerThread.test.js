@@ -1,5 +1,5 @@
 import { describe, jest, test } from '@jest/globals';
-import { workerMessageTypes } from '../../src/solutions/workerMessageTypes';
+import { workerMessageTypes } from '../../src/solutions/workerMessageTypes.js';
 import {
   SolutionWorkerMissingDataError,
   UserSolutionAnswerInvalidError,
