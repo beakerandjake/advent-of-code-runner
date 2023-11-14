@@ -60,28 +60,13 @@ const npmInit = async (year) => {
 };
 
 /**
- * Scaffolds a new project in the directory.
+ * Wrap the execution of the function in an ora spinner to report its progress.
  */
-export const initializeAction = async () => {
-  // confirm action with user if cwd is not empty.
-  if (!(await cwdIsEmpty()) && !(await confirm(confirmPrompt))) {
-    logger.debug('user did not confirm the init action');
-    return;
-  }
-
-  const { year, token } = await getUserAnswers();
+const wrapInSpinner = async (fn) => {
   const spinner = ora({ spinner: 'christmas' });
   try {
     spinner.start(festiveStyle('The elves are getting the place ready...'));
-    await Promise.all([
-      npmInit(year),
-      deleteExistingInputFiles(),
-      createDataFile(year),
-      createDotEnv(token),
-      createGitIgnore(),
-      createReadme(year),
-      createSolutionFiles(year),
-    ]);
+    await fn();
     spinner.succeed(
       festiveStyle(
         'Successfully initialized your repository, have fun! (see README for help)'
@@ -91,4 +76,27 @@ export const initializeAction = async () => {
     spinner.fail();
     throw error;
   }
+};
+
+/**
+ * Scaffolds a new project in the directory.
+ */
+export const initializeAction = async () => {
+  // confirm action with user if cwd is not empty.
+  if (!(await cwdIsEmpty()) && !(await confirm(confirmPrompt))) {
+    logger.debug('user did not confirm the init action');
+    return;
+  }
+  const { year, token } = await getUserAnswers();
+  await wrapInSpinner(async () =>
+    Promise.all([
+      npmInit(year),
+      deleteExistingInputFiles(),
+      createDataFile(year),
+      createDotEnv(token),
+      createGitIgnore(),
+      createReadme(year),
+      createSolutionFiles(year),
+    ])
+  );
 };
