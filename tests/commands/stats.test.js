@@ -6,9 +6,9 @@ import { DirectoryNotInitializedError } from '../../src/errors/cliErrors.js';
 const easyMocks = [
   ['src/persistence/metaRepository.js', ['getYear']],
   ['src/statistics.js', ['getPuzzleCompletionData']],
-  ['src/stats/markdownTable.js', ['markdownTable']],
-  ['src/stats/stdoutTable.js', ['stdoutTable']],
-  ['src/stats/updateReadmeProgress.js', ['updateReadmeProgress']],
+  ['src/tables/markdownTable.js', ['markdownTable']],
+  ['src/tables/stdoutTable.js', ['stdoutTable']],
+  ['src/tables/updateReadmeProgress.js', ['updateReadmeProgress']],
   ['src/validation/userFilesExist.js', ['dataFileExists']],
 ];
 easyMock(easyMocks);

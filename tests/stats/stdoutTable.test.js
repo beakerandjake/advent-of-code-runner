@@ -47,7 +47,7 @@ const {
   getSolvedRow,
   generatePuzzleRows,
   stdoutTable,
-} = await import('../../src/stats/stdoutTable.js');
+} = await import('../../src/tables/stdoutTable.js');
 
 describe('stdoutTable()', () => {
   afterEach(() => {

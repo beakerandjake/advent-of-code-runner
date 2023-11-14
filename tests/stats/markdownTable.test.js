@@ -43,7 +43,7 @@ const {
   markdownTable,
   generatePuzzleRows,
   generateTable,
-} = await import('../../src/stats/markdownTable.js');
+} = await import('../../src/tables/markdownTable.js');
 
 describe('markdownTable()', () => {
   afterEach(() => {

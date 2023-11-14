@@ -15,7 +15,7 @@ const { readFile } = await import('node:fs/promises');
 const { outputFile } = await import('fs-extra/esm');
 const { readmeExists } = await import('../../src/validation/userFilesExist.js');
 const { updateReadmeProgress } = await import(
-  '../../src/stats/updateReadmeProgress.js'
+  '../../src/tables/updateReadmeProgress.js'
 );
 
 describe('updateReadmeProgress()', () => {

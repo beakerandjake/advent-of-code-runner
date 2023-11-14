@@ -2,9 +2,9 @@ import { DirectoryNotInitializedError } from '../errors/cliErrors.js';
 import { logger } from '../logger.js';
 import { getYear } from '../persistence/metaRepository.js';
 import { getPuzzleCompletionData } from '../statistics.js';
-import { markdownTable } from '../stats/markdownTable.js';
-import { stdoutTable } from '../stats/stdoutTable.js';
-import { updateReadmeProgress } from '../stats/updateReadmeProgress.js';
+import { markdownTable } from '../tables/markdownTable.js';
+import { stdoutTable } from '../tables/stdoutTable.js';
+import { updateReadmeProgress } from '../tables/updateReadmeProgress.js';
 import { dataFileExists } from '../validation/userFilesExist.js';
 
 /**
