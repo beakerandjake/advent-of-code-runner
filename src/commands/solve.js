@@ -1,72 +1,127 @@
-import { createChain } from '../actions/actionChain.js';
-import * as actions from '../actions/index.js';
+import { requiredLevelsHaveBeenSolved } from '../answers.js';
+import { puzzleBaseUrl } from '../api/urls.js';
+import { DirectoryNotInitializedError } from '../errors/cliErrors.js';
+import {
+  PuzzleInFutureError,
+  PuzzleLevelInvalidError,
+  PuzzleLevelNotMetError,
+} from '../errors/puzzleErrors.js';
+import { makeClickableLink } from '../formatting.js';
+import { getPuzzleInput } from '../inputs/getPuzzleInput.js';
+import { logger } from '../logger.js';
+import { getYear } from '../persistence/metaRepository.js';
+import { dataFileExists } from '../validation/userFilesExist.js';
+import {
+  puzzleHasLevel,
+  puzzleIsInFuture,
+} from '../validation/validatePuzzle.js';
 
 /**
- * The common actions between the 'solve' and 'autosolve' commands
+ * Attempts to execute the users solution for the puzzle.
+ * @param {number} day
+ * @param {number} level
+ * @returns {Promise<string|int>} The value returned by the users code.
  */
-const solveActions = [
-  actions.assertPuzzleHasLevel,
-  actions.outputPuzzleLink,
-  actions.assertPuzzleUnlocked,
-  actions.assertPuzzleLevelMet,
-  actions.getPuzzleInput,
-  actions.executeUserSolution,
-  actions.assertAnswerCorrect,
-  actions.tryToUpdateFastestRuntime,
-  actions.tryToUpdateReadmeWithProgressTable,
-];
+const tryToSolvePuzzle = async (day, level) => {
+  const year = await getYear();
+  // ensure day/level combination is valid (day 25 only has one level)
+  if (!puzzleHasLevel(year, day, level)) {
+    throw new PuzzleLevelInvalidError(day, level);
+  }
+  if (puzzleIsInFuture(year, day)) {
+    throw new PuzzleInFutureError(day);
+  }
+  if (!(await requiredLevelsHaveBeenSolved(year, day, level))) {
+    throw new PuzzleLevelNotMetError(day, level);
+  }
+
+  // log puzzle url to console.
+  const clickable = makeClickableLink('Puzzle', puzzleBaseUrl(year, day));
+  logger.festive(`${clickable} (Year: ${year} Day: ${day} Level: ${level})`);
+
+  // load the puzzle input.
+  logger.festive('Loading puzzle input.');
+  const input = await getPuzzleInput(year, day, level);
+};
 
 /**
- * Solves a specific puzzle.
+ * Solves the specific puzzle
  */
-// prettier-ignore
-const solve = createChain([
-  actions.assertInitialized,
-  actions.getYear,
-  ...solveActions,
-]);
+const solve = async (day, level) => {
+  // bail if not initialized.
+  if (!(await dataFileExists())) {
+    throw new DirectoryNotInitializedError();
+  }
+
+  const solution = await tryToSolvePuzzle(day, level);
+  console.log('solution', solution);
+};
 
 /**
- * Finds the next unsolved puzzle and then solves it.
+ * Solves the next unsolved puzzle based on users progress.
  */
-const autoSolve = createChain([
-  actions.assertInitialized,
-  actions.getYear,
-  actions.getNextUnsolvedPuzzle,
-  ...solveActions,
-]);
+const autoSolve = async () => {};
 
 /**
- * The action that is invoked by commander.
- * @private
+ * Command to execute the users solution for a specific puzzle.
+ * @param {number} day
+ * @param {number} level
  */
 export const solveAction = async (day, level) => {
-  if (day == null && level == null) {
-    await autoSolve({});
-  } else if (day != null && level == null) {
-    await solve({ day, level: 1 });
+  if (!day && !level) {
+    await autoSolve();
+  } else if (day && !level) {
+    await solve(day, 1);
   } else {
-    await solve({ day, level });
+    await solve(day, level);
   }
 };
 
 // /**
-//  * Command which lets the user solve a puzzle
+//  * The common actions between the 'solve' and 'autosolve' commands
 //  */
-// export const solveCommand = new Command()
-//   .name('solve')
-//   .description(
-//     'Runs your solution for a puzzle, measures the runtime, and outputs the answer.'
-//   )
-//   .addHelpText(
-//     'after',
-//     `
-// Example Calls:
-//   solve               (Finds and solves your next unsolved puzzle)
-//   solve [day]         (Solves level one of the specified days puzzle)
-//   solve [day] [level] (Solves the puzzle for the specified day and level)
-//   `
-//   )
-//   .addArgument(dayArgument)
-//   .addArgument(levelArgument)
-//   .action(solveAction);
+// const solveActions = [
+//   actions.assertPuzzleHasLevel,
+//   actions.outputPuzzleLink,
+//   actions.assertPuzzleUnlocked,
+//   actions.assertPuzzleLevelMet,
+//   actions.getPuzzleInput,
+//   actions.executeUserSolution,
+//   actions.assertAnswerCorrect,
+//   actions.tryToUpdateFastestRuntime,
+//   actions.tryToUpdateReadmeWithProgressTable,
+// ];
+
+// /**
+//  * Solves a specific puzzle.
+//  */
+// // prettier-ignore
+// const solve = createChain([
+//   actions.assertInitialized,
+//   actions.getYear,
+//   ...solveActions,
+// ]);
+
+// /**
+//  * Finds the next unsolved puzzle and then solves it.
+//  */
+// const autoSolve = createChain([
+//   actions.assertInitialized,
+//   actions.getYear,
+//   actions.getNextUnsolvedPuzzle,
+//   ...solveActions,
+// ]);
+
+// /**
+//  * The action that is invoked by commander.
+//  * @private
+//  */
+// export const solveAction = async (day, level) => {
+//   if (day == null && level == null) {
+//     await autoSolve({});
+//   } else if (day != null && level == null) {
+//     await solve({ day, level: 1 });
+//   } else {
+//     await solve({ day, level });
+//   }
+// };
