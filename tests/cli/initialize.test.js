@@ -2,6 +2,16 @@ import { describe, jest, test, afterEach } from '@jest/globals';
 import { easyResolve, easyMock, mockConfig, mockLogger } from '../mocks.js';
 
 // setup mocks.
+mockLogger();
+const { getConfigValue } = mockConfig();
+const oraMock = {
+  text: null,
+  isSpinning: false,
+  start: jest.fn(),
+  fail: jest.fn(),
+  succeed: jest.fn(),
+  stop: jest.fn(),
+};
 const easyMocks = [
   ['@inquirer/prompts', ['confirm', 'password', 'select']],
   ['src/festive.js', ['festiveStyle']],
@@ -15,23 +25,10 @@ const easyMocks = [
   ['src/initialize/createSolutionFiles.js', ['createSolutionFiles']],
   ['src/initialize/deleteExistingInputFiles.js', ['deleteExistingInputFiles']],
   ['src/initialize/installPackages.js', ['installPackages']],
+  ['src/cli/auth.js', [['authTokenPrompt', {}]]],
+  ['ora', [['default', () => oraMock]]],
 ];
-
-mockLogger();
-const { getConfigValue } = mockConfig();
 easyMock(easyMocks);
-jest.unstable_mockModule('src/cli/auth.js', () => ({
-  authTokenPrompt: {},
-}));
-const oraMock = {
-  text: null,
-  isSpinning: false,
-  start: jest.fn(),
-  fail: jest.fn(),
-  succeed: jest.fn(),
-  stop: jest.fn(),
-};
-jest.unstable_mockModule('ora', () => ({ default: () => oraMock }));
 
 // import after mocks set up.
 const {
@@ -48,6 +45,7 @@ const {
   deleteExistingInputFiles,
   installPackages,
 } = await easyResolve(easyMocks);
+
 /**
  * setup mock BEFORE importing the action or else error due to:
  *  choices: [...getConfigValue('aoc.validation.years')]
