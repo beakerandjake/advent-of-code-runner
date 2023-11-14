@@ -104,7 +104,7 @@ export const spawnWorker = async (workerThreadFileName, workerData) =>
  * @throws {UserSolutionThrewError}
  * @throws {SolutionWorkerEmptyInputError}
  * @throws {SolutionWorkerExitWithoutAnswerError}
- * @returns {{answer:string|number, runtimeNs:number}}
+ * @returns {Promise<{answer:string|number, runtimeNs:number}>}
  */
 export const execute = async (day, level, input) => {
   logger.debug('spawning worker thread to execute user solution', {
