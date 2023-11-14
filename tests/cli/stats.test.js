@@ -36,7 +36,7 @@ const { dataFileExists } = await import(
 );
 const { statsAction } = await import('../../src/cli/stats.js');
 
-describe('stats', () => {
+describe('statsAction()', () => {
   beforeAll(() => {});
 
   afterEach(() => {
