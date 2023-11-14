@@ -128,12 +128,10 @@ const autoSolve = async (year) => {
     logger.festive(
       'Congratulations, you solved all the puzzles this year! If you want to solve a specific puzzle use the "solve [day] [level]" instead.'
     );
-  } else {
-    logger.verbose(
-      `next unsolved puzzle is (day: ${next.day}, level: ${next.level})`
-    );
-    await solve(year, next.day, next.level);
+    return;
   }
+  logger.verbose(`autosolve day:${next.day}, level:${next.level}`);
+  await solve(year, next.day, next.level);
 };
 
 /**
