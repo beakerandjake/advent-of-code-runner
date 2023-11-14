@@ -6,6 +6,20 @@ import { UserError } from './userError.js';
 export class PuzzleLevelInvalidError extends UserError {
   constructor(day, level, ...args) {
     super(`Day ${day} does not have level ${level}.`, ...args);
-    this.name = 'InvalidLevelError';
+    this.name = 'PuzzleLevelInvalidError';
+  }
+}
+
+/**
+ * Error raised if user attempts puzzle before it is unlocked.
+ */
+export class PuzzleInFutureError extends UserError {
+  //      ``
+  constructor(day, ...args) {
+    super(
+      `You cannot attempt this puzzle because it is not unlocked yet, check back on December ${day} at midnight EST`,
+      ...args
+    );
+    this.name = 'PuzzleInFutureError';
   }
 }
