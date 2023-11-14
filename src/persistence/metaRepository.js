@@ -16,7 +16,7 @@ export const getYear = async () => {
   // ensure stored year value is actually valid.
   if (!getConfigValue('aoc.validation.years').includes(year)) {
     throw new RangeError(
-      `could not get valid year from data file, year should have been set during init. value was: "${year}"`
+      `could not get valid year from data file, year should have been set during init. value was: ${year}`
     );
   }
   return year;
