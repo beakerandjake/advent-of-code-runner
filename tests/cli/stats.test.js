@@ -1,52 +1,89 @@
 import { describe, jest, test, afterEach } from '@jest/globals';
+import { mockLogger } from '../mocks.js';
 
 // setup mocks
-const printLinkMock = jest.fn();
-const printChainMock = jest.fn();
-const saveChainMock = jest.fn();
-const saveLinkMock = jest.fn();
-jest.unstable_mockModule('src/actions/actionChain.js', () => ({
-  createChain: (links) => {
-    if (links.includes(saveLinkMock)) {
-      return saveChainMock;
-    }
-    if (links.includes(printLinkMock)) {
-      return printChainMock;
-    }
-    return jest.fn();
-  },
-}));
-jest.unstable_mockModule('src/actions/index.js', () => ({
-  ifThen: jest.fn(),
-  printProgressTable: printLinkMock,
-  saveProgressTableToReadme: saveLinkMock,
-  assertInitialized: jest.fn(),
-  generateCliProgressTable: jest.fn(),
-  generateMarkdownProgressTable: jest.fn(),
-  getCompletionData: jest.fn(),
+mockLogger();
+jest.unstable_mockModule('src/persistence/metaRepository.js', () => ({
   getYear: jest.fn(),
 }));
+jest.unstable_mockModule('src/statistics.js', () => ({
+  getPuzzleCompletionData: jest.fn(),
+}));
+jest.unstable_mockModule('src/stats/markdownTable.js', () => ({
+  markdownTable: jest.fn(),
+}));
+jest.unstable_mockModule('src/stats/stdoutTable.js', () => ({
+  stdoutTable: jest.fn(),
+}));
+jest.unstable_mockModule('src/stats/updateReadmeProgress.js', () => ({
+  updateReadmeProgressTable: jest.fn(),
+}));
+jest.unstable_mockModule('src/validation/userFilesExist.js', () => ({
+  dataFileExists: jest.fn(),
+}));
+const consoleLogMock = jest.spyOn(console, 'log').mockImplementation();
 
 // import after mocks set up.
+const { getPuzzleCompletionData } = await import('../../src/statistics.js');
+const { markdownTable } = await import('../../src/stats/markdownTable.js');
+const { stdoutTable } = await import('../../src/stats/stdoutTable.js');
+const { updateReadmeProgressTable } = await import(
+  '../../src/stats/updateReadmeProgress.js'
+);
+const { dataFileExists } = await import(
+  '../../src/validation/userFilesExist.js'
+);
 const { statsAction } = await import('../../src/cli/stats.js');
 
 describe('stats', () => {
+  beforeAll(() => {});
+
   afterEach(() => {
     jest.clearAllMocks();
   });
 
-  test('prints to console by default', async () => {
-    await statsAction();
-    expect(printChainMock).toHaveBeenCalled();
+  test('throws if not initialized', async () => {
+    dataFileExists.mockResolvedValue(false);
+    await expect(async () => statsAction({})).rejects.toThrow();
   });
 
-  test('prints to console if save option is false', async () => {
+  test('does nothing if no puzzles completed', async () => {
+    dataFileExists.mockResolvedValue(true);
+    getPuzzleCompletionData.mockResolvedValue([]);
+    await statsAction({});
+    expect(markdownTable).not.toHaveBeenCalled();
+    expect(stdoutTable).not.toHaveBeenCalled();
+    expect(consoleLogMock).not.toHaveBeenCalled();
+    expect(updateReadmeProgressTable).not.toHaveBeenCalled();
+  });
+
+  test('prints if not passed --save option', async () => {
+    dataFileExists.mockResolvedValue(true);
+    getPuzzleCompletionData.mockResolvedValue([1, 2, 3, 4]);
     await statsAction({ save: false });
-    expect(printChainMock).toHaveBeenCalled();
+    expect(stdoutTable).toHaveBeenCalled();
+    expect(consoleLogMock).toHaveBeenCalled();
   });
 
-  test('saves to readme if save option is true', async () => {
+  test('does not update readme if not passed --save option', async () => {
+    dataFileExists.mockResolvedValue(true);
+    getPuzzleCompletionData.mockResolvedValue([1, 2, 3, 4]);
+    await statsAction({ save: false });
+    expect(updateReadmeProgressTable).not.toHaveBeenCalled();
+  });
+
+  test('updates readme if passed --save option', async () => {
+    dataFileExists.mockResolvedValue(true);
+    getPuzzleCompletionData.mockResolvedValue([1, 2, 3, 4]);
     await statsAction({ save: true });
-    expect(saveChainMock).toHaveBeenCalled();
+    expect(markdownTable).toHaveBeenCalled();
+    expect(updateReadmeProgressTable).toHaveBeenCalled();
+  });
+
+  test('does not print if passed --save option', async () => {
+    dataFileExists.mockResolvedValue(true);
+    getPuzzleCompletionData.mockResolvedValue([1, 2, 3, 4]);
+    await statsAction({ save: true });
+    expect(consoleLogMock).not.toHaveBeenCalled();
   });
 });

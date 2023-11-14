@@ -22,7 +22,6 @@ const saveToReadme = async (year, completionData) => {
 const printToStdout = async (year, completionData) => {
   logger.debug('printing table to stdout due to lack of --save option');
   const progressTable = await stdoutTable(year, completionData);
-  /* istanbul ignore next */
   console.log(progressTable);
 };
 
