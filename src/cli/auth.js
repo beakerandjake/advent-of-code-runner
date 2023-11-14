@@ -6,9 +6,9 @@ import { logger } from '../logger.js';
 import { dataFileExists, dotEnvExists } from '../validation/userFilesExist.js';
 
 /**
- * prompt for a inquirer password which asks the user for their auth token.
+ * prompt for an inquirer password which asks the user for their auth token.
  */
-export const authTokenQuestion = {
+export const authTokenPrompt = {
   message: festiveStyle(
     'Enter your advent of code authentication token (see README for help)'
   ),
@@ -17,9 +17,9 @@ export const authTokenQuestion = {
 };
 
 /**
- * prompt for a inquirer confirm which makes the user confirm the overwriting the .env file.
+ * prompt for an inquirer confirm which makes the user confirm the overwriting the .env file.
  */
-const confirmQuestion = {
+const confirmPrompt = {
   message: festiveStyle(
     'It appears a .env file is already present, do you want to overwrite this file?'
   ),
@@ -35,11 +35,11 @@ export const authAction = async () => {
     throw new DirectoryNotInitializedError();
   }
   // if a .env file is present, ask the user for confirmation to proceed
-  if ((await dotEnvExists()) && !(await confirm(confirmQuestion))) {
+  if ((await dotEnvExists()) && !(await confirm(confirmPrompt))) {
     logger.debug('not updating the .env file because user did not confirm');
     return;
   }
-  const token = await password(authTokenQuestion);
+  const token = await password(authTokenPrompt);
   if (!token) {
     throw new Error('password prompt returned empty token');
   }
