@@ -22,9 +22,12 @@ describe('initialize', () => {
       jest.resetAllMocks();
     });
 
-    test.each([null, undefined, ''])('throws if year is: "%s"', async (year) => {
-      await expect(async () => createReadme({ year })).rejects.toThrow();
-    });
+    test.each([null, undefined, ''])(
+      'throws if year is: "%s"',
+      async (year) => {
+        await expect(async () => createReadme(year)).rejects.toThrow();
+      }
+    );
 
     test('loads template source file', async () => {
       const paths = { source: 'source.txt', dest: 'dest.txt' };
@@ -37,7 +40,7 @@ describe('initialize', () => {
         }
         throw new Error('unknown config key');
       });
-      await createReadme({ year: 2022 });
+      await createReadme(2022);
       expect(readFile).toHaveBeenCalledWith(paths.source, expect.anything());
     });
 
@@ -55,7 +58,7 @@ describe('initialize', () => {
       const fileContents = 'ASDFASDFasDF';
       readFile.mockResolvedValue(fileContents);
       const year = 2023;
-      await createReadme({ year });
+      await createReadme(year);
       expect(replaceTokens).toHaveBeenCalledWith(
         expect.any(Array),
         { year },
@@ -76,7 +79,7 @@ describe('initialize', () => {
       });
       const contents = 'ASDF';
       replaceTokens.mockReturnValue(contents);
-      await createReadme({ year: 2022 });
+      await createReadme(2022);
       expect(outputFile).toHaveBeenCalledWith(paths.dest, contents);
     });
   });

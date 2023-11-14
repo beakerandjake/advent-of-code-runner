@@ -23,7 +23,7 @@ describe('initialize', () => {
     });
 
     test.each([null, undefined])('throws if year is: "%s"', async (year) => {
-      await expect(async () => createDataFile({ year })).rejects.toThrow();
+      await expect(async () => createDataFile(year)).rejects.toThrow();
     });
 
     test('loads template data file', async () => {
@@ -31,7 +31,7 @@ describe('initialize', () => {
       getConfigValue.mockImplementation((key) =>
         key === 'paths.templates.userDataFile' ? paths : undefined
       );
-      await createDataFile({ year: 2022 });
+      await createDataFile(2022);
       expect(readFile).toHaveBeenCalledWith(paths.source, expect.anything());
     });
 
@@ -42,7 +42,7 @@ describe('initialize', () => {
       const fileContents = 'ASDFASDFasDF';
       readFile.mockResolvedValue(fileContents);
       const year = 2022;
-      await createDataFile({ year });
+      await createDataFile(year);
       expect(replaceTokens).toHaveBeenCalledWith(
         expect.any(Array),
         { year },
@@ -57,7 +57,7 @@ describe('initialize', () => {
       );
       const contents = 'ASDF';
       replaceTokens.mockReturnValue(contents);
-      await createDataFile({ year: 1234 });
+      await createDataFile(2022);
       expect(outputFile).toHaveBeenCalledWith(paths.dest, contents);
     });
   });

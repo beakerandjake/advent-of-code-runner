@@ -15,7 +15,7 @@ const tokens = [
 /**
  * Creates a aocr-data.json file in the cwd.
  */
-export const createDataFile = async ({ year } = {}) => {
+export const createDataFile = async (year) => {
   logger.debug('creating data file');
 
   if (year == null) {

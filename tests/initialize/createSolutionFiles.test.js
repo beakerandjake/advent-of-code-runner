@@ -23,7 +23,9 @@ const { createSolutionFiles } = await import(
   '../../src/initialize/createSolutionFiles.js'
 );
 const { replaceTokens } = await import('../../src/initialize/replaceTokens.js');
-const { getSolutionFileName } = await import('../../src/solutions/solutionRunner.js');
+const { getSolutionFileName } = await import(
+  '../../src/solutions/solutionRunner.js'
+);
 
 describe('initialize', () => {
   describe('createSolutionFiles()', () => {
@@ -31,8 +33,8 @@ describe('initialize', () => {
       jest.resetAllMocks();
     });
 
-    test.each([null, undefined])('throws if year is: "%s"', async (year) => {
-      await expect(async () => createSolutionFiles({ year })).rejects.toThrow();
+    test.each([null, undefined, ''])('throws if year is: "%s"', async (year) => {
+      await expect(async () => createSolutionFiles(year)).rejects.toThrow();
     });
 
     test('creates solution dir', async () => {
@@ -48,7 +50,7 @@ describe('initialize', () => {
             return undefined;
         }
       });
-      await createSolutionFiles({ year: 2022 });
+      await createSolutionFiles(2022);
       expect(ensureDir).toHaveBeenCalledWith('asdf');
     });
 
@@ -65,7 +67,7 @@ describe('initialize', () => {
             return undefined;
         }
       });
-      await createSolutionFiles({ year: 2022 });
+      await createSolutionFiles(2022);
       expect(readFile).toHaveBeenCalledWith('default.txt', expect.anything());
     });
 
@@ -82,7 +84,7 @@ describe('initialize', () => {
             return undefined;
         }
       });
-      await createSolutionFiles({ year: 2022 });
+      await createSolutionFiles(2022);
       expect(readFile).toHaveBeenCalledWith('lastDay.txt', expect.anything());
     });
 
@@ -99,7 +101,7 @@ describe('initialize', () => {
         }
       });
 
-      await createSolutionFiles({ year: 2022 });
+      await createSolutionFiles(2022);
       expect(writeFile).toHaveBeenCalledTimes(days.length);
     });
 
@@ -130,7 +132,7 @@ describe('initialize', () => {
       });
       getSolutionFileName.mockImplementation((day) => day);
 
-      await createSolutionFiles({ year: 2022 });
+      await createSolutionFiles(2022);
 
       // expect num of writes with default file contents to equal n - 1
       const allButLastDay = new Set(days.slice(0, -1));
@@ -168,7 +170,7 @@ describe('initialize', () => {
       });
       getSolutionFileName.mockImplementation((day) => day);
 
-      await createSolutionFiles({ year: 2022 });
+      await createSolutionFiles(2022);
 
       // expect one write with last day file name.
       const writes = writeFile.mock.calls.filter(

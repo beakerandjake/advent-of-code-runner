@@ -12,7 +12,7 @@ const tokens = [{ match: '{{year}}', key: 'year' }];
 /**
  * Creates a readme file in the cwd.
  */
-export const createReadme = async ({ year } = {}) => {
+export const createReadme = async (year) => {
   logger.debug('creating README.md file');
 
   if (!year) {

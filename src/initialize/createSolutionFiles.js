@@ -31,7 +31,7 @@ const doCreate = (template, year, days) =>
 /**
  * Creates the solution files in the cwd.
  */
-export const createSolutionFiles = async ({ year } = {}) => {
+export const createSolutionFiles = async (year) => {
   logger.debug('creating Solution files');
 
   if (year == null) {
@@ -49,8 +49,16 @@ export const createSolutionFiles = async ({ year } = {}) => {
 
   return Promise.all([
     // all days but the last day share a default solution template.
-    ...doCreate(basicTemplate, year, getConfigValue('aoc.validation.days').slice(0, -1)),
+    ...doCreate(
+      basicTemplate,
+      year,
+      getConfigValue('aoc.validation.days').slice(0, -1)
+    ),
     // last day is special and needs a different solution template.
-    ...doCreate(lastDayTemplate, year, getConfigValue('aoc.validation.days').slice(-1)),
+    ...doCreate(
+      lastDayTemplate,
+      year,
+      getConfigValue('aoc.validation.days').slice(-1)
+    ),
   ]);
 };

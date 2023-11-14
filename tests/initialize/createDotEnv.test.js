@@ -25,7 +25,7 @@ describe('initialize', () => {
     test.each([null, undefined, ''])(
       'throws if auth token is: "%s"',
       async (authToken) => {
-        await expect(async () => createDotEnv({ authToken })).rejects.toThrow();
+        await expect(async () => createDotEnv(authToken)).rejects.toThrow();
       }
     );
 
