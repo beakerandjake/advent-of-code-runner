@@ -32,7 +32,7 @@ export const mapSolvedColumn = ({ solved }) => (solved ? chalk.green('✓') : ''
  */
 export const mapAttemptColumns = (completionData, maxAttempts) => {
   let markedMax = false;
-  return completionData.map(({ numberOfAttempts }) => {
+  return completionData.map(({ numberOfAttempts, solved }) => {
     if (numberOfAttempts == null) {
       return '';
     }
@@ -48,7 +48,11 @@ export const mapAttemptColumns = (completionData, maxAttempts) => {
       return chalk.yellow(message);
     }
 
-    // highlight perfect sgeneratePuzzleRows
+    // highlight perfect solves
+    if (solved && numberOfAttempts === 1) {
+      return chalk.green(`${numberOfAttempts}`);
+    }
+
     return `${numberOfAttempts}`;
   });
 };
