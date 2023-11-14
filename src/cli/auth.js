@@ -1,15 +1,14 @@
-import { createChain } from '../actions/actionChain.js';
-import * as actions from '../actions/index.js';
+import { confirm, password } from '@inquirer/prompts';
+import { DirectoryNotInitializedError } from '../errors/cliErrors.js';
 import { festiveStyle } from '../festive.js';
 import { createDotEnv } from '../initialize/index.js';
 import { logger } from '../logger.js';
-import { dotEnvExists } from '../validation/userFilesExist.js';
+import { dataFileExists, dotEnvExists } from '../validation/userFilesExist.js';
 
 /**
- * inquirer questions which can be used to prompt the user to input their auth token.
+ * prompt for a inquirer password which asks the user for their auth token.
  */
 export const authTokenQuestion = {
-  type: 'password',
   message: festiveStyle(
     'Enter your advent of code authentication token (see README for help)'
   ),
@@ -18,7 +17,7 @@ export const authTokenQuestion = {
 };
 
 /**
- * inquirer question which makes the user confirm the overwriting the .env file
+ * prompt for a inquirer confirm which makes the user confirm the overwriting the .env file.
  */
 const confirmQuestion = {
   message: festiveStyle(
@@ -28,25 +27,24 @@ const confirmQuestion = {
 };
 
 /**
- * Updates or creates the .env file and writes the users auth token to it.
- * @private
+ * Updates the users .env file with the an advent of code auth token.
  */
 export const authAction = async () => {
-  const actionChain = createChain([
-    actions.assertInitialized,
-    actions.and(dotEnvExists, actions.assertUserConfirmation),
-    actions.getAnswersFromUser,
-    createDotEnv,
-  ]);
-
-  await actionChain({
-    confirmQuestion,
-    questions: {
-      authToken: authTokenQuestion,
-    },
-  });
-
+  // bail if not initialized.
+  if (!(await dataFileExists())) {
+    throw new DirectoryNotInitializedError();
+  }
+  // if a .env file is present, ask the user for confirmation to proceed
+  if ((await dotEnvExists()) && !(await confirm(confirmQuestion))) {
+    logger.debug('not updating the .env file because user did not confirm');
+    return;
+  }
+  const token = await password(authTokenQuestion);
+  if (!token) {
+    throw new Error('password prompt returned empty token');
+  }
+  await createDotEnv(token);
   logger.festive(
-    'Added auth token to the .env file, do not commit this file to source control'
+    'Added auth token to .env file, do not commit this file to source control'
   );
 };
