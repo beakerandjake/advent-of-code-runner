@@ -1,44 +1,53 @@
-import { createChain } from '../actions/actionChain.js';
-import {
-  assertInitialized,
-  generateCliProgressTable,
-  generateMarkdownProgressTable,
-  getCompletionData,
-  getYear,
-  printProgressTable,
-  saveProgressTableToReadme,
-} from '../actions/index.js';
+import { DirectoryNotInitializedError } from '../errors/cliErrors.js';
+import { logger } from '../logger.js';
+import { getYear } from '../persistence/metaRepository.js';
+import { getPuzzleCompletionData } from '../statistics.js';
+import { markdownTable } from '../stats/markdownTable.js';
+import { stdoutTable } from '../stats/stdoutTable.js';
+import { updateReadmeProgressTable } from '../stats/updateReadmeProgress.js';
+import { dataFileExists } from '../validation/userFilesExist.js';
 
 /**
- * Output stats to the cli
+ * Saves the completion data to the README file.
  */
-const outputStats = createChain([
-  assertInitialized,
-  getYear,
-  getCompletionData,
-  generateCliProgressTable,
-  printProgressTable,
-]);
+const saveToReadme = async (year, completionData) => {
+  logger.debug('updating readme file due to --save option');
+  const progressTable = await markdownTable(year, completionData);
+  return updateReadmeProgressTable(progressTable);
+};
 
 /**
- * Save the stats to the users readme file
+ * Prints the completion data to stdout.
  */
-const saveStats = createChain([
-  assertInitialized,
-  getYear,
-  getCompletionData,
-  generateMarkdownProgressTable,
-  saveProgressTableToReadme,
-]);
+const printToStdout = async (year, completionData) => {
+  logger.debug('printing table to stdout due to lack of --save option');
+  const progressTable = await stdoutTable(year, completionData);
+  /* istanbul ignore next */
+  console.log(progressTable);
+};
 
 /**
- * The action that is invoked by commander.
- * @private
+ * Command action to output the latest statistics.
  */
-export const statsAction = async ({ save } = {}) => {
-  if (save) {
-    await saveStats();
-  } else {
-    await outputStats();
+export const statsAction = async ({ save }) => {
+  // bail if not initialized.
+  if (!(await dataFileExists())) {
+    throw new DirectoryNotInitializedError();
   }
+
+  const year = await getYear();
+  const completionData = await getPuzzleCompletionData(year);
+
+  // bail if no puzzles completed
+  if (!completionData?.length) {
+    logger.festive(
+      'no puzzles submitted, run this command after submitting at least puzzle'
+    );
+    return;
+  }
+
+  // save or print based on the option.
+  await (save
+    ? saveToReadme(year, completionData)
+    : printToStdout(year, completionData));
 };
