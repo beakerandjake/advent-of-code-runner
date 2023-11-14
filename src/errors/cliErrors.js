@@ -19,3 +19,16 @@ export class FileNotFoundError extends UserError {
     this.name = 'DirectoryNotInitializedError';
   }
 }
+
+/**
+ * Error raised if the auth token could not be loaded.
+ */
+export class AuthTokenNotFoundError extends UserError {
+  constructor(...args) {
+    super(
+      'Could not get authentication token from .env file, you can add the auth token using the "auth" command.',
+      ...args
+    );
+    this.name = 'AuthTokenNotFoundError';
+  }
+}

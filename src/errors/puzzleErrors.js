@@ -37,3 +37,16 @@ export class PuzzleLevelNotMetError extends UserError {
     this.name = 'PuzzleLevelNotMetError';
   }
 }
+
+/**
+ * Error raised if the puzzle input string was invalid.
+ */
+export class InvalidPuzzleInputError extends UserError {
+  constructor(...args) {
+    super(
+      'Failed to load data from the input file. You can try deleting this input file and re-downloading it.',
+      ...args
+    );
+    this.name = 'InvalidPuzzleInputError';
+  }
+}
