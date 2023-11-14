@@ -12,9 +12,10 @@ const tableEnclosingTagRegex =
 
 /**
  * Saves a table to the users readme which shows the users progress for the year.
+ * @param {string} markdownTable - The string containing the progress table formatted in markdown.
  */
-export const updateReadmeProgressTable = async (progressTable) => {
-  if (!progressTable) {
+export const updateReadmeProgress = async (markdownTable) => {
+  if (!markdownTable) {
     throw new Error('null or undefined progressTable');
   }
   if (!(await readmeExists())) {
@@ -36,6 +37,6 @@ export const updateReadmeProgressTable = async (progressTable) => {
   // update the readme with the new table.
   await outputFile(
     readmePath,
-    contents.replace(tableEnclosingTagRegex, `$1\n${progressTable}\n$3`)
+    contents.replace(tableEnclosingTagRegex, `$1\n${markdownTable}\n$3`)
   );
 };

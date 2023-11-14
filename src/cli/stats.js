@@ -4,7 +4,7 @@ import { getYear } from '../persistence/metaRepository.js';
 import { getPuzzleCompletionData } from '../statistics.js';
 import { markdownTable } from '../stats/markdownTable.js';
 import { stdoutTable } from '../stats/stdoutTable.js';
-import { updateReadmeProgressTable } from '../stats/updateReadmeProgress.js';
+import { updateReadmeProgress } from '../stats/updateReadmeProgress.js';
 import { dataFileExists } from '../validation/userFilesExist.js';
 
 /**
@@ -13,7 +13,7 @@ import { dataFileExists } from '../validation/userFilesExist.js';
 const saveToReadme = async (year, completionData) => {
   logger.debug('updating readme file due to --save option');
   const progressTable = await markdownTable(year, completionData);
-  return updateReadmeProgressTable(progressTable);
+  return updateReadmeProgress(progressTable);
 };
 
 /**

@@ -16,7 +16,7 @@ jest.unstable_mockModule('src/stats/stdoutTable.js', () => ({
   stdoutTable: jest.fn(),
 }));
 jest.unstable_mockModule('src/stats/updateReadmeProgress.js', () => ({
-  updateReadmeProgressTable: jest.fn(),
+  updateReadmeProgress: jest.fn(),
 }));
 jest.unstable_mockModule('src/validation/userFilesExist.js', () => ({
   dataFileExists: jest.fn(),
@@ -27,7 +27,7 @@ const consoleLogMock = jest.spyOn(console, 'log').mockImplementation();
 const { getPuzzleCompletionData } = await import('../../src/statistics.js');
 const { markdownTable } = await import('../../src/stats/markdownTable.js');
 const { stdoutTable } = await import('../../src/stats/stdoutTable.js');
-const { updateReadmeProgressTable } = await import(
+const { updateReadmeProgress } = await import(
   '../../src/stats/updateReadmeProgress.js'
 );
 const { dataFileExists } = await import(
@@ -54,7 +54,7 @@ describe('stats', () => {
     expect(markdownTable).not.toHaveBeenCalled();
     expect(stdoutTable).not.toHaveBeenCalled();
     expect(consoleLogMock).not.toHaveBeenCalled();
-    expect(updateReadmeProgressTable).not.toHaveBeenCalled();
+    expect(updateReadmeProgress).not.toHaveBeenCalled();
   });
 
   test('prints if not passed --save option', async () => {
@@ -69,7 +69,7 @@ describe('stats', () => {
     dataFileExists.mockResolvedValue(true);
     getPuzzleCompletionData.mockResolvedValue([1, 2, 3, 4]);
     await statsAction({ save: false });
-    expect(updateReadmeProgressTable).not.toHaveBeenCalled();
+    expect(updateReadmeProgress).not.toHaveBeenCalled();
   });
 
   test('updates readme if passed --save option', async () => {
@@ -77,7 +77,7 @@ describe('stats', () => {
     getPuzzleCompletionData.mockResolvedValue([1, 2, 3, 4]);
     await statsAction({ save: true });
     expect(markdownTable).toHaveBeenCalled();
-    expect(updateReadmeProgressTable).toHaveBeenCalled();
+    expect(updateReadmeProgress).toHaveBeenCalled();
   });
 
   test('does not print if passed --save option', async () => {
