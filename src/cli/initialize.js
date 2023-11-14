@@ -39,6 +39,21 @@ const yearPrompt = {
 };
 
 /**
+ * Prompt the user for the information required to scaffold.
+ */
+const getUserAnswers = async () => {
+  const year = await select(yearPrompt);
+  if (!year) {
+    throw new Error('select prompt returned empty year');
+  }
+  const token = await password(authTokenPrompt);
+  if (!token) {
+    throw new Error('select prompt returned empty token');
+  }
+  return { year, token };
+};
+
+/**
  * Ensures package.json is created before installing npm packages.
  */
 const npmInit = async (year) => {
@@ -56,15 +71,7 @@ export const initializeAction = async () => {
     return;
   }
 
-  const year = await select(yearPrompt);
-  if (!year) {
-    throw new Error('select prompt returned empty year');
-  }
-  const token = await password(authTokenPrompt);
-  if (!token) {
-    throw new Error('select prompt returned empty token');
-  }
-
+  const { year, token } = await getUserAnswers();
   const spinner = ora({ spinner: 'christmas' });
   try {
     spinner.start(festiveStyle('The elves are getting the place ready...'));
