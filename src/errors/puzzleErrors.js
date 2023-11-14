@@ -23,3 +23,17 @@ export class PuzzleInFutureError extends UserError {
     this.name = 'PuzzleInFutureError';
   }
 }
+
+/**
+ * Error raised if user attempts puzzle level n+1 if level n has not been solved.
+ */
+export class PuzzleLevelNotMetError extends UserError {
+  constructor(day, level, ...args) {
+    const previous = level - 1;
+    super(
+      `Cannot attempt puzzle (day ${day}, level ${level}) because level ${previous} has not been not solved.`,
+      ...args
+    );
+    this.name = 'PuzzleLevelNotMetError';
+  }
+}
