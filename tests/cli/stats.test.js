@@ -1,5 +1,6 @@
 import { describe, jest, test, afterEach } from '@jest/globals';
 import { mockLogger } from '../mocks.js';
+import { DirectoryNotInitializedError } from '../../src/errors/cliErrors.js';
 
 // setup mocks
 mockLogger();
@@ -44,7 +45,9 @@ describe('stats', () => {
 
   test('throws if not initialized', async () => {
     dataFileExists.mockResolvedValue(false);
-    await expect(async () => statsAction({})).rejects.toThrow();
+    await expect(async () => statsAction({})).rejects.toThrowError(
+      DirectoryNotInitializedError
+    );
   });
 
   test('does nothing if no puzzles completed', async () => {
