@@ -21,7 +21,7 @@ const getHeaders = (authenticationToken) => ({
  * Queries the Advent of Code website for the input for a given year and day.
  * @param {Number} year - The year of the puzzle
  * @param {Number} day - The day of the puzzle.
- * @param {String} authenticationToken - Token to authenticate with aoc.
+ * @param {Promise<String>} authenticationToken - Token to authenticate with aoc.
  */
 export const downloadInput = async (year, day, authenticationToken) => {
   logger.debug('downloading input file for year: %s, day: %s', year, day);
