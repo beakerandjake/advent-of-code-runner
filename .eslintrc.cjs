@@ -19,7 +19,7 @@ module.exports = {
   },
   rules: {
     'import/prefer-default-export': 'off',
-    'import/extensions': 'off',
+    'import/extensions': ['error','ignorePackages'],
     'no-console': 'off',
     'no-restricted-syntax': 'off',
     'max-classes-per-file': 'off',
