@@ -27,7 +27,9 @@ const printToStdout = async (year, completionData) => {
 };
 
 /**
- * Command action to output the latest statistics.
+ * Outputs the latest statistics of the years solved problems.
+ * @param {Object} options
+ * @param {boolean} options.save - If true the statistics will be saved to the readme file. If false they will be printed to the console.
  */
 export const statsAction = async ({ save }) => {
   // bail if not initialized.
