@@ -1,6 +1,7 @@
 import {
   answersEqual,
   getCorrectAnswer,
+  getNextUnansweredPuzzle,
   requiredLevelsHaveBeenSolved,
 } from '../answers.js';
 import { puzzleBaseUrl } from '../api/urls.js';
@@ -17,7 +18,7 @@ import { logger } from '../logger.js';
 import { getYear } from '../persistence/metaRepository.js';
 import { execute } from '../solutions/solutionRunner.js';
 import {
-  getPuzzlesFastestRuntime,
+  beatsFastestRuntime,
   setPuzzlesFastestRuntime,
 } from '../statistics.js';
 import { dataFileExists } from '../validation/userFilesExist.js';
@@ -25,6 +26,7 @@ import {
   puzzleHasLevel,
   puzzleIsInFuture,
 } from '../validation/validatePuzzle.js';
+import { statsAction } from './stats.js';
 
 /**
  * Execute the users solution file for the puzzle and return the result.
@@ -40,13 +42,11 @@ const executeUserSolution = async (day, level, input) => {
   const { answer, runtimeNs } = await execute(day, level, input);
 
   clearTimeout(timeout);
-
   logger.festive(
     'You answered: %s (solved in %s)',
     answer,
     humanizeDuration(runtimeNs)
   );
-
   return { answer, runtimeNs };
 };
 
@@ -98,45 +98,47 @@ const answerIsCorrect = async (year, day, level, answer) => {
 };
 
 /**
- * Compares the puzzles latest runtime to the fastest stored runtime.
- * If the latest time is faster that the stored, the new value will be stored.
+ * If readme auto updates are enabled, will update the progress table of the readme
  */
-const tryToUpdateFastestRuntime = async (year, day, level, runtimeNs) => {
-  if (runtimeNs < 0) {
-    throw new RangeError('runtime cannot be negative');
+const tryToUpdateReadme = async () => {
+  if (getConfigValue('disableReadmeAutoSaveProgress')) {
+    logger.verbose('not updating readme file, auto update disabled');
+    return;
   }
-  const fastestRuntime = await getPuzzlesFastestRuntime(year, day, level);
-  if (fastestRuntime && runtimeNs >= fastestRuntime) {
-    logger.verbose(
-      'not updating fastest runtime, %s is <= to record: %s',
-      runtimeNs,
-      fastestRuntime
-    );
-  } else {
-    logger.festive("That's your fastest runtime ever for this puzzle!");
-    await setPuzzlesFastestRuntime(year, day, level, runtimeNs);
-  }
+  await statsAction({ save: true });
 };
 
 /**
- * Solves the specific puzzle
+ * Solves a specific puzzle
  */
-const solve = async (day, level) => {
-  // bail if not initialized.
-  if (!(await dataFileExists())) {
-    throw new DirectoryNotInitializedError();
-  }
-  const year = await getYear();
+const solve = async (year, day, level) => {
   const { answer, runtimeNs } = await tryToSolvePuzzle(year, day, level);
-  if (await answerIsCorrect(year, day, level, answer)) {
-    await tryToUpdateFastestRuntime(year, day, level, runtimeNs);
+  if (
+    (await answerIsCorrect(year, day, level, answer)) &&
+    (await beatsFastestRuntime(year, day, level, runtimeNs))
+  ) {
+    logger.festive("That's your fastest runtime ever for this puzzle!");
+    await setPuzzlesFastestRuntime(year, day, level, runtimeNs);
+    await tryToUpdateReadme();
   }
 };
 
 /**
  * Solves the next unsolved puzzle based on users progress.
  */
-const autoSolve = async () => {};
+const autoSolve = async (year) => {
+  const next = await getNextUnansweredPuzzle(year);
+  if (!next) {
+    logger.festive(
+      'Congratulations, you solved all the puzzles this year! If you want to solve a specific puzzle use the "solve [day] [level]" instead.'
+    );
+  } else {
+    logger.verbose(
+      `next unsolved puzzle is (day: ${next.day}, level: ${next.level})`
+    );
+    await solve(year, next.day, next.level);
+  }
+};
 
 /**
  * Command to execute the users solution for a specific puzzle.
@@ -144,12 +146,14 @@ const autoSolve = async () => {};
  * @param {number} level
  */
 export const solveAction = async (day, level) => {
+  if (!(await dataFileExists())) {
+    throw new DirectoryNotInitializedError();
+  }
+  // solve or auto solve based on provided parameters
   if (!day && !level) {
-    await autoSolve();
-  } else if (day && !level) {
-    await solve(day, 1);
+    await autoSolve(await getYear());
   } else {
-    await solve(day, level);
+    await solve(await getYear(), day, level || 1);
   }
 };
 
