@@ -1,8 +1,7 @@
 import { logger } from '../logger.js';
 import { getValue } from './userDataFile.js';
 import { getConfigValue } from '../config.js';
-
-const YEAR_STORE_KEY = 'year';
+import { AuthTokenNotFoundError } from '../errors/cliErrors.js';
 
 /**
  * Returns the year that the project is configured to use.
@@ -10,7 +9,7 @@ const YEAR_STORE_KEY = 'year';
  * @returns {Promise<number>}
  */
 export const getYear = async () => {
-  const year = await getValue(YEAR_STORE_KEY);
+  const year = await getValue('year');
   logger.verbose('loaded year value of: %s', year);
 
   // ensure stored year value is actually valid.
@@ -20,4 +19,18 @@ export const getYear = async () => {
     );
   }
   return year;
+};
+
+/**
+ * Returns the users authentication token for advent-of-code
+ * @returns {string}
+ */
+export const getAuthToken = () => {
+  const authToken = getConfigValue('aoc.authenticationToken');
+
+  if (!authToken) {
+    throw new AuthTokenNotFoundError();
+  }
+
+  return authToken;
 };
