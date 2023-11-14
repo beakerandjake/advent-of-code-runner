@@ -69,3 +69,31 @@ export const mockCommander = () => {
   }));
   return toReturn;
 };
+
+/**
+ * Sets up mocks for all of the modules
+ */
+export const easyMock = (modules) => {
+  for (const [name, fields] of modules) {
+    jest.unstable_mockModule(name, () =>
+      fields.reduce((acc, field) => {
+        acc[field] = jest.fn();
+        return acc;
+      }, {})
+    );
+  }
+};
+
+export const easyResolve = async (modules) => {
+  const imports = await Promise.all(
+    modules.map(([name]) =>
+      name.startsWith('src/') ? import(`../${name}`) : import(name)
+    )
+  );
+  return imports.reduce((acc, x, i) => {
+    for (const field of modules[i][1]) {
+      acc[field] = x[field];
+    }
+    return acc;
+  }, {});
+};
