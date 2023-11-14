@@ -14,7 +14,7 @@ const envFileTokens = [{ match: '{{authToken}}', key: 'authToken' }];
  * @param {Number} year
  * @param {String} authToken
  */
-export const createDotEnv = async ({ authToken } = {}) => {
+export const createDotEnv = async (authToken) => {
   logger.debug('creating .env file');
 
   if (!authToken) {

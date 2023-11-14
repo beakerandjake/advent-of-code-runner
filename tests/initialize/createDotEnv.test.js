@@ -34,7 +34,7 @@ describe('initialize', () => {
       getConfigValue.mockImplementation((key) =>
         key === 'paths.templates.dotenv' ? paths : undefined
       );
-      await createDotEnv({ authToken: 'asdf' });
+      await createDotEnv('asdf');
       expect(readFile).toHaveBeenCalledWith(paths.source, expect.anything());
     });
 
@@ -45,7 +45,7 @@ describe('initialize', () => {
       const fileContents = 'ASDFASDFasDF';
       readFile.mockResolvedValue(fileContents);
       const authToken = 'ASDF';
-      await createDotEnv({ authToken });
+      await createDotEnv(authToken);
       expect(replaceTokens).toHaveBeenCalledWith(
         expect.any(Array),
         { authToken },
@@ -60,7 +60,7 @@ describe('initialize', () => {
       );
       const contents = 'ASDF';
       replaceTokens.mockReturnValue(contents);
-      await createDotEnv({ authToken: '1234' });
+      await createDotEnv('1234');
       expect(outputFile).toHaveBeenCalledWith(paths.dest, contents);
     });
   });
