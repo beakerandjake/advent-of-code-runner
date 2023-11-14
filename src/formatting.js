@@ -6,6 +6,7 @@ import {
   min,
   minutesToMilliseconds,
 } from 'date-fns';
+import terminalLink from 'terminal-link';
 
 /**
  * Calculates the number of KB the string takes up.
@@ -88,4 +89,16 @@ export const betweenMessage = (choices = []) => {
   }
 
   return `between ${choices[0]} and ${choices[choices.length - 1]}`;
+};
+
+/**
+ * Makes a url clickable in supported consoles.
+ * @param {string} text - The text to display in place of the url.
+ * @param {string} url - The url to follow when clicked.
+ */
+export const makeClickableLink = (text, url) => {
+  if (!url) {
+    throw new Error('cannot make link from empty url');
+  }
+  return terminalLink(text, url);
 };
