@@ -1,43 +1,31 @@
 import { describe, jest, test, afterEach } from '@jest/globals';
-import { mockLogger } from '../mocks.js';
+import { easyMock, easyResolve, mockLogger } from '../mocks.js';
 import { DirectoryNotInitializedError } from '../../src/errors/cliErrors.js';
 
 // setup mocks
+const easyMocks = [
+  ['src/persistence/metaRepository.js', ['getYear']],
+  ['src/statistics.js', ['getPuzzleCompletionData']],
+  ['src/stats/markdownTable.js', ['markdownTable']],
+  ['src/stats/stdoutTable.js', ['stdoutTable']],
+  ['src/stats/updateReadmeProgress.js', ['updateReadmeProgress']],
+  ['src/validation/userFilesExist.js', ['dataFileExists']],
+];
+easyMock(easyMocks);
 mockLogger();
-jest.unstable_mockModule('src/persistence/metaRepository.js', () => ({
-  getYear: jest.fn(),
-}));
-jest.unstable_mockModule('src/statistics.js', () => ({
-  getPuzzleCompletionData: jest.fn(),
-}));
-jest.unstable_mockModule('src/stats/markdownTable.js', () => ({
-  markdownTable: jest.fn(),
-}));
-jest.unstable_mockModule('src/stats/stdoutTable.js', () => ({
-  stdoutTable: jest.fn(),
-}));
-jest.unstable_mockModule('src/stats/updateReadmeProgress.js', () => ({
-  updateReadmeProgress: jest.fn(),
-}));
-jest.unstable_mockModule('src/validation/userFilesExist.js', () => ({
-  dataFileExists: jest.fn(),
-}));
 const consoleLogMock = jest.spyOn(console, 'log').mockImplementation();
 
 // import after mocks set up.
-const { getPuzzleCompletionData } = await import('../../src/statistics.js');
-const { markdownTable } = await import('../../src/stats/markdownTable.js');
-const { stdoutTable } = await import('../../src/stats/stdoutTable.js');
-const { updateReadmeProgress } = await import(
-  '../../src/stats/updateReadmeProgress.js'
-);
-const { dataFileExists } = await import(
-  '../../src/validation/userFilesExist.js'
-);
+const {
+  getPuzzleCompletionData,
+  markdownTable,
+  stdoutTable,
+  updateReadmeProgress,
+  dataFileExists,
+} = await easyResolve(easyMocks);
 const { statsAction } = await import('../../src/cli/stats.js');
 
 describe('statsAction()', () => {
-  beforeAll(() => {});
 
   afterEach(() => {
     jest.clearAllMocks();
