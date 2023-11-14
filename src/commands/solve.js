@@ -1,4 +1,8 @@
-import { requiredLevelsHaveBeenSolved } from '../answers.js';
+import {
+  answersEqual,
+  getCorrectAnswer,
+  requiredLevelsHaveBeenSolved,
+} from '../answers.js';
 import { puzzleBaseUrl } from '../api/urls.js';
 import { getConfigValue } from '../config.js';
 import { DirectoryNotInitializedError } from '../errors/cliErrors.js';
@@ -47,8 +51,7 @@ const executeUserSolution = async (day, level, input) => {
  * @param {number} day
  * @param {number} level
  */
-export const tryToSolvePuzzle = async (day, level) => {
-  const year = await getYear();
+export const tryToSolvePuzzle = async (year, day, level) => {
   if (!puzzleHasLevel(year, day, level)) {
     throw new PuzzleLevelInvalidError(day, level);
   }
@@ -72,6 +75,25 @@ export const tryToSolvePuzzle = async (day, level) => {
 };
 
 /**
+ * Checks if the answer matches the previously submitted answer.
+ * Always returns false if the puzzle has not been solved.
+ */
+const answerIsCorrect = async (year, day, level, answer) => {
+  const correctAnswer = await getCorrectAnswer(year, day, level);
+  if (correctAnswer && !answersEqual(answer, correctAnswer)) {
+    // if new answer doesn't match correct answer
+    // warn user that something might have broken.
+    logger.warn(
+      'Puzzle previously submitted, but answer: "%s" doesn\'t match correct answer: "%s"',
+      answer,
+      correctAnswer
+    );
+    return false;
+  }
+  return !!correctAnswer;
+};
+
+/**
  * Solves the specific puzzle
  */
 const solve = async (day, level) => {
@@ -79,9 +101,12 @@ const solve = async (day, level) => {
   if (!(await dataFileExists())) {
     throw new DirectoryNotInitializedError();
   }
-
-  const solution = await tryToSolvePuzzle(day, level);
-  console.log('solution', solution);
+  const year = await getYear();
+  const { answer, runtimeNs } = await tryToSolvePuzzle(year, day, level);
+  if (!(await answerIsCorrect(year, day, level, answer))) {
+    return;
+  }
+  console.log('solution', answer);
 };
 
 /**
