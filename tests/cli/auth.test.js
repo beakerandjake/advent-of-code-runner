@@ -1,30 +1,20 @@
 import { describe, jest, test, afterEach } from '@jest/globals';
-import { mockLogger } from '../mocks.js';
+import { easyMock, easyResolve, mockLogger } from '../mocks.js';
 import { DirectoryNotInitializedError } from '../../src/errors/cliErrors.js';
 
 // setup mocks.
+const easyMocks = [
+  ['@inquirer/prompts', ['confirm', 'password']],
+  ['src/festive.js', ['festiveStyle']],
+  ['src/initialize/createDotEnv.js', ['createDotEnv']],
+  ['src/validation/userFilesExist.js', ['dotEnvExists', 'dataFileExists']],
+];
+easyMock(easyMocks);
 mockLogger();
-jest.unstable_mockModule('@inquirer/prompts', () => ({
-  confirm: jest.fn(),
-  password: jest.fn(),
-}));
-jest.unstable_mockModule('src/festive.js', () => ({
-  festiveStyle: jest.fn(),
-}));
-jest.unstable_mockModule('src/initialize/createDotEnv.js', () => ({
-  createDotEnv: jest.fn(),
-}));
-jest.unstable_mockModule('src/validation/userFilesExist.js', () => ({
-  dotEnvExists: jest.fn(),
-  dataFileExists: jest.fn(),
-}));
 
 // import after setting up mocks
-const { confirm, password } = await import('@inquirer/prompts');
-const { createDotEnv } = await import('../../src/initialize/createDotEnv.js');
-const { dotEnvExists, dataFileExists } = await import(
-  '../../src/validation/userFilesExist.js'
-);
+const { confirm, password, createDotEnv, dotEnvExists, dataFileExists } =
+  await easyResolve(easyMocks);
 const { authAction } = await import('../../src/cli/auth.js');
 
 describe('authAction()', () => {
