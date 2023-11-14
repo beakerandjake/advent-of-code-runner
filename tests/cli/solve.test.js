@@ -10,7 +10,7 @@ jest.unstable_mockModule('src/actions/index.js', () => ({
 }));
 
 // import after mocks set up.
-const { solveAction } = await import('../../src/cli/solve.js');
+const { solveAction } = await import('../../src/commands/solve.js');
 
 describe('solve command', () => {
   afterEach(() => {

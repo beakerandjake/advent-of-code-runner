@@ -16,7 +16,6 @@ const easyMocks = [
   ['@inquirer/prompts', ['confirm', 'password', 'select']],
   ['src/festive.js', ['festiveStyle']],
   ['src/initialize/cwdIsEmpty.js', ['cwdIsEmpty']],
-  ['src/cli/auth.js', ['authTokenPrompt']],
   ['src/initialize/createDataFile.js', ['createDataFile']],
   ['src/initialize/createDotEnv.js', ['createDotEnv']],
   ['src/initialize/createGitIgnore.js', ['createGitIgnore']],
@@ -25,7 +24,7 @@ const easyMocks = [
   ['src/initialize/createSolutionFiles.js', ['createSolutionFiles']],
   ['src/initialize/deleteExistingInputFiles.js', ['deleteExistingInputFiles']],
   ['src/initialize/installPackages.js', ['installPackages']],
-  ['src/cli/auth.js', [['authTokenPrompt', {}]]],
+  ['src/commands/auth.js', [['authTokenPrompt', {}]]],
   ['ora', [['default', () => oraMock]]],
 ];
 easyMock(easyMocks);
@@ -58,7 +57,7 @@ getConfigValue.mockImplementation((key) => {
   }
   throw new Error('unknown key');
 });
-const { initializeAction } = await import('../../src/cli/initialize.js');
+const { initializeAction } = await import('../../src/commands/initialize.js');
 
 describe('initialize command', () => {
   afterEach(() => {

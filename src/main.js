@@ -1,10 +1,10 @@
 #!/usr/bin/env node
 import { Argument, Command, InvalidArgumentError } from 'commander';
-import { authAction } from './cli/auth.js';
-import { initializeAction } from './cli/initialize.js';
-import { solveAction } from './cli/solve.js';
-import { statsAction } from './cli/stats.js';
-import { submitAction } from './cli/submit.js';
+import { authAction } from './commands/auth.js';
+import { initializeAction } from './commands/initialize.js';
+import { solveAction } from './commands/solve.js';
+import { statsAction } from './commands/stats.js';
+import { submitAction } from './commands/submit.js';
 import { getConfigValue } from './config.js';
 import { handleError } from './errorHandler.js';
 import { printFestiveTitle } from './festive.js';
@@ -40,7 +40,9 @@ try {
   program
     .command('auth')
     .hook('preAction', printFestiveTitle)
-    .description('Add or update the .env file with your advent of code auth token.')
+    .description(
+      'Add or update the .env file with your advent of code auth token.'
+    )
     .action(authAction);
 
   // add the init command
@@ -103,7 +105,9 @@ try {
   // add the stats command
   program
     .command('stats')
-    .description('Output your completion progress for the years advent of code.')
+    .description(
+      'Output your completion progress for the years advent of code.'
+    )
     .option('--save', 'Save your completion progress to the README file')
     .action(statsAction);
 

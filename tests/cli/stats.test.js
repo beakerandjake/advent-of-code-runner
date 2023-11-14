@@ -23,7 +23,7 @@ const {
   updateReadmeProgress,
   dataFileExists,
 } = await easyResolve(easyMocks);
-const { statsAction } = await import('../../src/cli/stats.js');
+const { statsAction } = await import('../../src/commands/stats.js');
 
 describe('statsAction()', () => {
 

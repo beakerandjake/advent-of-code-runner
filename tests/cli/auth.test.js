@@ -15,7 +15,7 @@ mockLogger();
 // import after setting up mocks
 const { confirm, password, createDotEnv, dotEnvExists, dataFileExists } =
   await easyResolve(easyMocks);
-const { authAction } = await import('../../src/cli/auth.js');
+const { authAction } = await import('../../src/commands/auth.js');
 
 describe('authAction()', () => {
   afterEach(() => {
