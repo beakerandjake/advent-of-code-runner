@@ -2,17 +2,15 @@ import { confirm, password, select } from '@inquirer/prompts';
 import ora from 'ora';
 import { getConfigValue } from '../config.js';
 import { festiveStyle } from '../festive.js';
-import {
-  createDataFile,
-  createDotEnv,
-  createGitIgnore,
-  createPackageJson,
-  createReadme,
-  createSolutionFiles,
-  cwdIsEmpty,
-  deleteExistingInputFiles,
-  installPackages,
-} from '../initialize/index.js';
+import { createDataFile } from '../initialize/createDataFile.js';
+import { createDotEnv } from '../initialize/createDotEnv.js';
+import { createGitIgnore } from '../initialize/createGitIgnore.js';
+import { createPackageJson } from '../initialize/createPackageJson.js';
+import { createReadme } from '../initialize/createReadme.js';
+import { createSolutionFiles } from '../initialize/createSolutionFiles.js';
+import { cwdIsEmpty } from '../initialize/cwdIsEmpty.js';
+import { deleteExistingInputFiles } from '../initialize/deleteExistingInputFiles.js';
+import { installPackages } from '../initialize/installPackages.js';
 import { logger } from '../logger.js';
 import { authTokenPrompt } from './auth.js';
 
