@@ -16,6 +16,10 @@ import { getPuzzleInput } from '../inputs/getPuzzleInput.js';
 import { logger } from '../logger.js';
 import { getYear } from '../persistence/metaRepository.js';
 import { execute } from '../solutions/solutionRunner.js';
+import {
+  getPuzzlesFastestRuntime,
+  setPuzzlesFastestRuntime,
+} from '../statistics.js';
 import { dataFileExists } from '../validation/userFilesExist.js';
 import {
   puzzleHasLevel,
@@ -94,6 +98,27 @@ const answerIsCorrect = async (year, day, level, answer) => {
 };
 
 /**
+ * Compares the puzzles latest runtime to the fastest stored runtime.
+ * If the latest time is faster that the stored, the new value will be stored.
+ */
+const tryToUpdateFastestRuntime = async (year, day, level, runtimeNs) => {
+  if (runtimeNs < 0) {
+    throw new RangeError('runtime cannot be negative');
+  }
+  const fastestRuntime = await getPuzzlesFastestRuntime(year, day, level);
+  if (fastestRuntime && runtimeNs >= fastestRuntime) {
+    logger.verbose(
+      'not updating fastest runtime, %s is <= to record: %s',
+      runtimeNs,
+      fastestRuntime
+    );
+  } else {
+    logger.festive("That's your fastest runtime ever for this puzzle!");
+    await setPuzzlesFastestRuntime(year, day, level, runtimeNs);
+  }
+};
+
+/**
  * Solves the specific puzzle
  */
 const solve = async (day, level) => {
@@ -103,10 +128,9 @@ const solve = async (day, level) => {
   }
   const year = await getYear();
   const { answer, runtimeNs } = await tryToSolvePuzzle(year, day, level);
-  if (!(await answerIsCorrect(year, day, level, answer))) {
-    return;
+  if (await answerIsCorrect(year, day, level, answer)) {
+    await tryToUpdateFastestRuntime(year, day, level, runtimeNs);
   }
-  console.log('solution', answer);
 };
 
 /**
