@@ -13,7 +13,8 @@ import { dataFileExists } from '../validation/userFilesExist.js';
 const saveToReadme = async (year, completionData) => {
   logger.debug('updating readme file due to --save option');
   const progressTable = await markdownTable(year, completionData);
-  return updateReadmeProgress(progressTable);
+  await updateReadmeProgress(progressTable);
+  logger.festive('Saved progress to README file');
 };
 
 /**
