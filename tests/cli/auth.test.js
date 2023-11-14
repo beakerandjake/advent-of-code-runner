@@ -11,7 +11,7 @@ jest.unstable_mockModule('@inquirer/prompts', () => ({
 jest.unstable_mockModule('src/festive.js', () => ({
   festiveStyle: jest.fn(),
 }));
-jest.unstable_mockModule('src/initialize/index.js', () => ({
+jest.unstable_mockModule('src/initialize/createDotEnv.js', () => ({
   createDotEnv: jest.fn(),
 }));
 jest.unstable_mockModule('src/validation/userFilesExist.js', () => ({
@@ -21,7 +21,7 @@ jest.unstable_mockModule('src/validation/userFilesExist.js', () => ({
 
 // import after setting up mocks
 const { confirm, password } = await import('@inquirer/prompts');
-const { createDotEnv } = await import('../../src/initialize/index.js');
+const { createDotEnv } = await import('../../src/initialize/createDotEnv.js');
 const { dotEnvExists, dataFileExists } = await import(
   '../../src/validation/userFilesExist.js'
 );

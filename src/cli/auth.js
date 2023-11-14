@@ -1,7 +1,7 @@
 import { confirm, password } from '@inquirer/prompts';
 import { DirectoryNotInitializedError } from '../errors/cliErrors.js';
 import { festiveStyle } from '../festive.js';
-import { createDotEnv } from '../initialize/index.js';
+import { createDotEnv } from '../initialize/createDotEnv.js';
 import { logger } from '../logger.js';
 import { dataFileExists, dotEnvExists } from '../validation/userFilesExist.js';
 
