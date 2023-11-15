@@ -6,8 +6,16 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+### Added
+- Add devDependencies: jest-extended
+
 ### Changed
 - Input files are ignored in source control by default ([#231](https://github.com/beakerandjake/advent-of-code-runner/issues/231))
+- Deprecate action chains and major rewrite of commands ([#232](https://github.com/beakerandjake/advent-of-code-runner/issues/232))
+- All commands have much better unit testing.
+- Logging output less verbose when running commands. 
+- Upgrade dependencies: commander 11.1.0
+- Upgrade devDependencies: jest 29.7.0
 
 ## [1.4.0] - 2023-11-13
 ### Added
