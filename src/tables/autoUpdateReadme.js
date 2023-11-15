@@ -7,7 +7,7 @@ import { logger } from '../logger.js';
  */
 export const autoUpdateReadme = async () => {
   if (getConfigValue('disableReadmeAutoSaveProgress')) {
-    logger.verbose('not updating readme file, auto update disabled');
+    logger.debug('not updating readme file, auto update disabled');
     return;
   }
   logger.debug('auto updating readme by invoking statsAction');
