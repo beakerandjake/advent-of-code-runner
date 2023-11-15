@@ -82,6 +82,8 @@ const wrapInSpinner = async (fn) => {
  * Scaffolds a new project in the directory.
  */
 export const initializeAction = async () => {
+  logger.debug('starting init action');
+
   // confirm action with user if cwd is not empty.
   if (!(await cwdIsEmpty()) && !(await confirm(confirmPrompt))) {
     logger.debug('user did not confirm the init action');

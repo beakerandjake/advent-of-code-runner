@@ -32,6 +32,8 @@ const printToStdout = async (year, completionData) => {
  * @param {boolean} options.save - If true the statistics will be saved to the readme file. If false they will be printed to the console.
  */
 export const statsAction = async ({ save }) => {
+  logger.debug('starting stats action: <save>=%s', save);
+
   // bail if not initialized.
   if (!(await dataFileExists())) {
     throw new DirectoryNotInitializedError();

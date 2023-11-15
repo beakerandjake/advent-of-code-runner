@@ -93,6 +93,7 @@ const solve = async (year, day, level) => {
  * Solves the next unsolved puzzle based on users progress.
  */
 const autoSolve = async (year) => {
+  logger.verbose('no args provided, running auto solve');
   const next = await getNextUnansweredPuzzle(year);
   if (!next) {
     logger.festive(
@@ -110,6 +111,8 @@ const autoSolve = async (year) => {
  * @param {number} level
  */
 export const solveAction = async (day, level) => {
+  logger.debug('starting auth action: [day]=%s, [level]=%s', day, level);
+
   if (!(await dataFileExists())) {
     throw new DirectoryNotInitializedError();
   }

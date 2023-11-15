@@ -30,6 +30,8 @@ const confirmPrompt = {
  * Updates the users .env file with the an advent of code auth token.
  */
 export const authAction = async () => {
+  logger.debug('starting auth action');
+
   // bail if not initialized.
   if (!(await dataFileExists())) {
     throw new DirectoryNotInitializedError();
