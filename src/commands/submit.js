@@ -1,54 +1,84 @@
-import { createChain } from '../actions/actionChain.js';
-import * as actions from '../actions/index.js';
+import {
+  addIncorrectAnswer,
+  answerHasBeenSubmitted,
+  getNextUnansweredPuzzle,
+  puzzleHasBeenSolved,
+  setCorrectAnswer,
+} from '../answers.js';
+import { submitSolution } from '../api/index.js';
+import { DirectoryNotInitializedError } from '../errors/cliErrors.js';
+import {
+  AnswerAlreadySubmittedError,
+  PuzzleAlreadyCompletedError,
+} from '../errors/puzzleErrors.js';
+import { logger } from '../logger.js';
+import { getAuthToken, getYear } from '../persistence/metaRepository.js';
+import { setPuzzlesFastestRuntime } from '../statistics.js';
+import { dataFileExists } from '../validation/userFilesExist.js';
+import { tryToSolvePuzzle } from './solve.js';
+import { autoUpdateReadme } from '../tables/autoUpdateReadme.js';
 
 /**
- * The common actions between the 'submit' and 'autosubmit' commands
+ * Submit a specific puzzle
  */
-const submitActions = [
-  actions.assertPuzzleHasLevel,
-  actions.outputPuzzleLink,
-  actions.assertPuzzleUnlocked,
-  actions.assertPuzzleLevelMet,
-  actions.assertPuzzleUnsolved,
-  actions.getAuthenticationToken,
-  actions.getPuzzleInput,
-  actions.executeUserSolution,
-  actions.assertAnswerNotPreviouslySubmitted,
-  actions.submitPuzzleAnswer,
-  actions.storeSubmittedAnswer,
-  actions.ifThen(actions.assertAnswerCorrect, actions.storeFastestRuntime),
-  actions.tryToUpdateReadmeWithProgressTable,
-];
+const submit = async (year, day, level) => {
+  if (await puzzleHasBeenSolved(year, day, level)) {
+    throw new PuzzleAlreadyCompletedError(day, level);
+  }
+
+  const { answer, runtimeNs } = await tryToSolvePuzzle(year, day, level);
+
+  if (await answerHasBeenSubmitted(year, day, level, answer)) {
+    throw new AnswerAlreadySubmittedError();
+  }
+
+  const { correct, message } = await submitSolution(
+    year,
+    day,
+    level,
+    answer,
+    getAuthToken()
+  );
+
+  if (!correct) {
+    logger.error(message);
+    await addIncorrectAnswer(year, day, level, answer);
+  } else {
+    logger.festive(message);
+    await setCorrectAnswer(year, day, level, answer);
+    await setPuzzlesFastestRuntime(year, day, level, runtimeNs);
+    await autoUpdateReadme();
+  }
+};
 
 /**
- * Submit a specific puzzle.
+ * Submit the next unsolved puzzle based on users progress.
  */
-const submit = createChain([
-  actions.assertInitialized,
-  actions.getYear,
-  ...submitActions,
-]);
+const autoSubmit = async (year) => {
+  const next = await getNextUnansweredPuzzle(year);
+  if (!next) {
+    logger.festive(
+      'Congratulations, you solved all the puzzles this year! There are no more puzzles left to submit. If you want to solve a specific puzzle use the "solve [day] [level]" instead.'
+    );
+    return;
+  }
+  logger.verbose(`auto submit day:${next.day}, level:${next.level}`);
+  await submit(year, next.day, next.level);
+};
 
 /**
- * Finds the next unsolved puzzle and then submits it.
- */
-const autoSubmit = createChain([
-  actions.assertInitialized,
-  actions.getYear,
-  actions.getNextUnsolvedPuzzle,
-  ...submitActions,
-]);
-
-/**
- * The action that is invoked by commander.
- * @private
+ * Command to execute and submit the answer for a specific puzzle.
+ * @param {number} day
+ * @param {number} level
  */
 export const submitAction = async (day, level) => {
-  if (day == null && level == null) {
-    await autoSubmit({});
-  } else if (day != null && level == null) {
-    await submit({ day, level: 1 });
+  logger.debug('starting submit action: [day]=%s, [level]=%s', day, level);
+  if (!(await dataFileExists())) {
+    throw new DirectoryNotInitializedError();
+  }
+  if (!day && !level) {
+    await autoSubmit(await getYear());
   } else {
-    await submit({ day, level });
+    await submit(await getYear(), day, level || 1);
   }
 };
