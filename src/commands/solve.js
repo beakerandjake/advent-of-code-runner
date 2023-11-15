@@ -1,10 +1,8 @@
 import {
-  answersEqual,
-  getCorrectAnswer,
+  answerIsCorrect,
   getNextUnansweredPuzzle,
   requiredLevelsHaveBeenSolved,
 } from '../answers.js';
-import { puzzleBaseUrl } from '../api/urls.js';
 import { getConfigValue } from '../config.js';
 import { DirectoryNotInitializedError } from '../errors/cliErrors.js';
 import {
@@ -12,7 +10,7 @@ import {
   PuzzleLevelInvalidError,
   PuzzleLevelNotMetError,
 } from '../errors/puzzleErrors.js';
-import { humanizeDuration, makeClickableLink } from '../formatting.js';
+import { clickablePuzzleUrl, humanizeDuration } from '../formatting.js';
 import { getPuzzleInput } from '../inputs/getPuzzleInput.js';
 import { logger } from '../logger.js';
 import { getYear } from '../persistence/metaRepository.js';
@@ -66,31 +64,14 @@ export const tryToSolvePuzzle = async (year, day, level) => {
   if (!(await requiredLevelsHaveBeenSolved(year, day, level))) {
     throw new PuzzleLevelNotMetError(day, level);
   }
-  const clickable = makeClickableLink('Puzzle', puzzleBaseUrl(year, day));
-  logger.festive(`${clickable} (Year: ${year} Day: ${day} Level: ${level})`);
+  const url = clickablePuzzleUrl(year, day);
+  logger.festive(`${url} (Year: ${year} Day: ${day} Level: ${level})`);
   logger.festive('Loading puzzle input.');
   return executeUserSolution(
     day,
     level,
     await getPuzzleInput(year, day, level)
   );
-};
-
-/**
- * Checks if the answer matches the previously submitted answer.
- * Always returns false if the puzzle has not been solved.
- */
-const answerIsCorrect = async (year, day, level, answer) => {
-  const correctAnswer = await getCorrectAnswer(year, day, level);
-  if (correctAnswer && !answersEqual(answer, correctAnswer)) {
-    logger.warn(
-      'Puzzle previously submitted, but answer: "%s" doesn\'t match correct answer: "%s"',
-      answer,
-      correctAnswer
-    );
-    return false;
-  }
-  return !!correctAnswer;
 };
 
 /**
