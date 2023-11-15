@@ -78,12 +78,14 @@ export const tryToSolvePuzzle = async (year, day, level) => {
  * Solves a specific puzzle
  */
 const solve = async (year, day, level) => {
+  logger.debug('solving puzzle year: %s, day: %s, level: %s', year, day, level);
   const { answer, runtimeNs } = await tryToSolvePuzzle(year, day, level);
   if (
     (await answerIsCorrect(year, day, level, answer)) &&
     (await beatsFastestRuntime(year, day, level, runtimeNs))
   ) {
     logger.festive("That's your fastest runtime ever for this puzzle!");
+    logger.debug('beat previous runtime record, new runtime: %s', runtimeNs);
     await setPuzzlesFastestRuntime(year, day, level, runtimeNs);
     await autoUpdateReadme();
   }
@@ -93,7 +95,7 @@ const solve = async (year, day, level) => {
  * Solves the next unsolved puzzle based on users progress.
  */
 const autoSolve = async (year) => {
-  logger.verbose('no args provided, running auto solve');
+  logger.debug('no args provided, running auto solve');
   const next = await getNextUnansweredPuzzle(year);
   if (!next) {
     logger.festive(
@@ -101,7 +103,7 @@ const autoSolve = async (year) => {
     );
     return;
   }
-  logger.verbose(`autosolve day:${next.day}, level:${next.level}`);
+  logger.debug('auto solve chose day: %s, level: %s', next.day, next.level);
   await solve(year, next.day, next.level);
 };
 
