@@ -29,6 +29,14 @@ describe('authAction()', () => {
     );
   });
 
+  test('throws if no auth token returned', async () => {
+    dataFileExists.mockResolvedValue(true);
+    dotEnvExists.mockResolvedValue(true);
+    confirm.mockResolvedValue(true);
+    password.mockResolvedValue(null);
+    await expect(async () => authAction()).rejects.toThrow();
+  });
+
   test('asks users confirmation if .env file exists', async () => {
     dataFileExists.mockResolvedValue(true);
     dotEnvExists.mockResolvedValue(true);
