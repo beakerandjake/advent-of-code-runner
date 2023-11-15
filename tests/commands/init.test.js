@@ -57,7 +57,7 @@ getConfigValue.mockImplementation((key) => {
   }
   throw new Error('unknown key');
 });
-const { initializeAction } = await import('../../src/commands/initialize.js');
+const { initializeAction } = await import('../../src/commands/init.js');
 
 describe('initialize command', () => {
   afterEach(() => {
