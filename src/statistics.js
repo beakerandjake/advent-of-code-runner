@@ -25,18 +25,6 @@ export const beatsFastestRuntime = async (year, day, level, runtimeNs) => {
 };
 
 /**
- * Returns the fastest runtime for the puzzle.
- * Returns null if the puzzle has not been correctly solved.
- * @param {Number} year
- * @param {Number} day
- * @param {Number} level
- */
-export const getPuzzlesFastestRuntime = async (year, day, level) => {
-  const puzzle = await findPuzzle(year, day, level);
-  return puzzle?.fastestRuntimeNs || null;
-};
-
-/**
  * Sets the fastest runtime for the puzzle.
  * @param {Number} year
  * @param {Number} day

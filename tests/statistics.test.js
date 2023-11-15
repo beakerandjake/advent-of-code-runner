@@ -21,7 +21,6 @@ const { addOrEditPuzzle, findPuzzle, createPuzzle, getPuzzlesForYear } = await i
 );
 const { parsePositiveInt } = await import('../src/validation/validationUtils.js');
 const {
-  getPuzzlesFastestRuntime,
   setPuzzlesFastestRuntime,
   getFastestRuntime,
   getSlowestRuntime,
@@ -35,27 +34,6 @@ const {
 describe('statistics', () => {
   afterEach(() => {
     jest.resetAllMocks();
-  });
-
-  describe('getPuzzlesFastestRuntime()', () => {
-    test('returns null if puzzle not found', async () => {
-      findPuzzle.mockResolvedValue(null);
-      const result = await getPuzzlesFastestRuntime(2022, 1, 1);
-      expect(result).toBe(null);
-    });
-
-    test('returns null if value not set', async () => {
-      findPuzzle.mockResolvedValue({ fastestRuntimeNs: undefined });
-      const result = await getPuzzlesFastestRuntime(2022, 1, 1);
-      expect(result).toBe(null);
-    });
-
-    test('returns value if set', async () => {
-      const expected = 324234324324;
-      findPuzzle.mockResolvedValue({ fastestRuntimeNs: expected });
-      const result = await getPuzzlesFastestRuntime(2022, 1, 1);
-      expect(result).toBe(expected);
-    });
   });
 
   describe('setPuzzlesFastestRuntime()', () => {
