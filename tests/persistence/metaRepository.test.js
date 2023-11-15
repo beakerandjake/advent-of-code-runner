@@ -1,5 +1,6 @@
 import { describe, jest, test, afterEach } from '@jest/globals';
 import { mockConfig, mockLogger } from '../mocks.js';
+import { AuthTokenNotFoundError } from '../../src/errors/cliErrors.js';
 
 // setup mocks
 mockLogger();
@@ -10,7 +11,9 @@ jest.unstable_mockModule('src/persistence/userDataFile.js', () => ({
 
 // import after mocks set up
 const { getValue } = await import('../../src/persistence/userDataFile.js');
-const { getYear } = await import('../../src/persistence/metaRepository.js');
+const { getYear, getAuthToken } = await import(
+  '../../src/persistence/metaRepository.js'
+);
 
 describe('metaRepository()', () => {
   afterEach(() => {
@@ -51,6 +54,30 @@ describe('metaRepository()', () => {
       });
       const result = await getYear();
       await expect(result).toBe(validYear);
+    });
+  });
+
+  describe('getAuthToken()', () => {
+    test('returns expected value', () => {
+      const expected = 'COOL';
+      getConfigValue.mockImplementation((key) => {
+        if (key === 'aoc.authenticationToken') {
+          return expected;
+        }
+        throw new Error('unknown key');
+      });
+      const result = getAuthToken();
+      expect(result).toBe(expected);
+    });
+
+    test.each([null, undefined, ''])('throws if token is %s', (value) => {
+      getConfigValue.mockImplementation((key) => {
+        if (key === 'aoc.authenticationToken') {
+          return value;
+        }
+        throw new Error('unknown key');
+      });
+      expect(() => getAuthToken()).toThrow(AuthTokenNotFoundError);
     });
   });
 });
