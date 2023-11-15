@@ -13,7 +13,9 @@ export const authTokenPrompt = {
     'Enter your advent of code authentication token (see README for help)'
   ),
   mask: true,
-  validate: (input) => (input ? true : 'Token cannot be empty!'),
+  validate:
+    /* istanbul ignore next */
+    (input) => (input ? true : 'Token cannot be empty!'),
 };
 
 /**
