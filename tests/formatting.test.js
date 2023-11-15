@@ -1,10 +1,23 @@
 import { describe, jest, test, afterEach } from '@jest/globals';
-import { humanizeDuration } from '../src/formatting.js';
+import { easyMock, easyResolve } from './mocks.js';
+
+// setup mocks
+const terminalLink = jest.fn();
+const easyMocks = [
+  ['terminal-link', [['default', terminalLink]]],
+  ['src//api/urls.js', ['puzzleBaseUrl']],
+];
+easyMock(easyMocks);
 
 // import after mocks set up.
-const { sizeOfStringInKb, betweenMessage, humanizeMinutesDifference } = await import(
-  '../src/formatting.js'
-);
+const { puzzleBaseUrl } = await easyResolve(easyMocks);
+const {
+  sizeOfStringInKb,
+  betweenMessage,
+  humanizeMinutesDifference,
+  humanizeDuration,
+  clickablePuzzleUrl,
+} = await import('../src/formatting.js');
 
 describe('formatting', () => {
   afterEach(() => {
@@ -83,9 +96,12 @@ describe('formatting', () => {
   });
 
   describe('humanizeDuration()', () => {
-    test.each([null, undefined])('throws if nanoseconds is: "%s"', (nanoseconds) => {
-      expect(humanizeDuration(nanoseconds)).toBe('');
-    });
+    test.each([null, undefined])(
+      'throws if nanoseconds is: "%s"',
+      (nanoseconds) => {
+        expect(humanizeDuration(nanoseconds)).toBe('');
+      }
+    );
 
     test('returns expected value - seconds', () => {
       const nanoseconds = 4.2 * (1000 * 1000 * 1000);
@@ -109,6 +125,22 @@ describe('formatting', () => {
       const nanoseconds = 662;
       const result = humanizeDuration(nanoseconds);
       expect(result).toBe('662ns');
+    });
+  });
+
+  describe('clickablePuzzleUrl()', () => {
+    test('passes year and day to puzzleBaseUrl', () => {
+      const year = 2022;
+      const day = 14;
+      clickablePuzzleUrl(year, day);
+      expect(puzzleBaseUrl).toHaveBeenCalledWith(year, day);
+    });
+
+    test('passes puzzle url to terminal-link', () => {
+      const url = 'cool.com';
+      puzzleBaseUrl.mockReturnValue(url);
+      clickablePuzzleUrl(2022, 11);
+      expect(terminalLink).toHaveBeenCalledWith(expect.any(String), url);
     });
   });
 });

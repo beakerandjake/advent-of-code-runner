@@ -7,6 +7,7 @@ import {
   minutesToMilliseconds,
 } from 'date-fns';
 import terminalLink from 'terminal-link';
+import { puzzleBaseUrl } from './api/urls.js';
 
 /**
  * Calculates the number of KB the string takes up.
@@ -92,13 +93,9 @@ export const betweenMessage = (choices = []) => {
 };
 
 /**
- * Makes a url clickable in supported consoles.
- * @param {string} text - The text to display in place of the url.
- * @param {string} url - The url to follow when clicked.
+ * Returns a url to the puzzle that is clickable in supported consoles.
+ * @param {number} year
+ * @param {number} day
  */
-export const makeClickableLink = (text, url) => {
-  if (!url) {
-    throw new Error('cannot make link from empty url');
-  }
-  return terminalLink(text, url);
-};
+export const clickablePuzzleUrl = (year, day) =>
+  terminalLink('Puzzle', puzzleBaseUrl(year, day));
