@@ -70,9 +70,14 @@ export const getCorrectAnswer = async (year, day, level) => {
  * @param {String} correctAnswer
  */
 export const setCorrectAnswer = async (year, day, level, correctAnswer) => {
-  logger.debug('saving correct answer: "%s"', correctAnswer, { year, day, level });
+  logger.debug('saving correct answer: "%s"', correctAnswer, {
+    year,
+    day,
+    level,
+  });
   const parsedAnswer = parseAnswer(correctAnswer);
-  const puzzle = (await findPuzzle(year, day, level)) || createPuzzle(year, day, level);
+  const puzzle =
+    (await findPuzzle(year, day, level)) || createPuzzle(year, day, level);
   const updatedPuzzle = { ...puzzle, correctAnswer: parsedAnswer };
   await addOrEditPuzzle(updatedPuzzle);
 };
@@ -85,10 +90,15 @@ export const setCorrectAnswer = async (year, day, level, correctAnswer) => {
  * @param {String} incorrectAnswer
  */
 export const addIncorrectAnswer = async (year, day, level, incorrectAnswer) => {
-  logger.debug('saving incorrect answer: "%s"', incorrectAnswer, { year, day, level });
+  logger.debug('saving incorrect answer: "%s"', incorrectAnswer, {
+    year,
+    day,
+    level,
+  });
 
   const parsedAnswer = parseAnswer(incorrectAnswer);
-  const puzzle = (await findPuzzle(year, day, level)) || createPuzzle(year, day, level);
+  const puzzle =
+    (await findPuzzle(year, day, level)) || createPuzzle(year, day, level);
 
   // bail if incorrect answer is already stored
   if (puzzle.incorrectAnswers.some((x) => answersEqual(x, parsedAnswer))) {
@@ -136,7 +146,9 @@ export const getNextUnansweredPuzzle = async (year) => {
     (x) =>
       !answeredPuzzles.some(
         (puzzle) =>
-          puzzle.year === x.year && puzzle.day === x.day && puzzle.level === x.level
+          puzzle.year === x.year &&
+          puzzle.day === x.day &&
+          puzzle.level === x.level
       )
   );
   return toReturn ? { day: toReturn.day, level: toReturn.level } : null;
@@ -161,4 +173,29 @@ export const requiredLevelsHaveBeenSolved = async (year, day, level) => {
     .map((x) => x.level);
   // check every required level has been solved
   return requiredParts.every((required) => solvedParts.includes(required));
+};
+
+/**
+ * Is the answer equal to the puzzles previously submitted correct answer?
+ * Always returns false if the puzzle has not been previously solved.
+ * @param {Number} year
+ * @param {Number} day
+ * @param {Number} level
+ * @param {string} answer
+ */
+export const answerIsCorrect = async (year, day, level, answer) => {
+  const puzzle = await findPuzzle(year, day, level);
+  // correct answer unknown if puzzle not solved.
+  if (!puzzle?.correctAnswer) {
+    return false;
+  }
+  const equal = answersEqual(answer, puzzle.correctAnswer);
+  if (!equal) {
+    logger.warn(
+      'answer: "%s" doesn\'t match correct answer: "%s"',
+      answer,
+      puzzle.correctAnswer
+    );
+  }
+  return equal;
 };

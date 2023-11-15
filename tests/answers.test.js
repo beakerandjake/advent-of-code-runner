@@ -2,7 +2,7 @@ import { describe, jest, test, afterEach } from '@jest/globals';
 import { mockLogger } from './mocks.js';
 
 // setup mocks.
-mockLogger();
+const logger = mockLogger();
 
 jest.unstable_mockModule('src/persistence/puzzleRepository.js', () => ({
   findPuzzle: jest.fn(),
@@ -17,7 +17,9 @@ jest.unstable_mockModule('src/validation/validatePuzzle.js', () => ({
 
 // import after setting up the mock so the modules import the mocked version
 
-const { getAllPuzzlesForYear } = await import('../src/validation/validatePuzzle.js');
+const { getAllPuzzlesForYear } = await import(
+  '../src/validation/validatePuzzle.js'
+);
 const { findPuzzle, createPuzzle, addOrEditPuzzle, getPuzzles } = await import(
   '../src/persistence/puzzleRepository.js'
 );
@@ -31,6 +33,7 @@ const {
   getNextUnansweredPuzzle,
   answersEqual,
   requiredLevelsHaveBeenSolved,
+  answerIsCorrect,
 } = await import('../src/answers.js');
 
 afterEach(() => {
@@ -173,7 +176,10 @@ describe('answers', () => {
       };
       findPuzzle.mockReturnValueOnce(originalData);
       await setCorrectAnswer(2022, 1, 1, correctAnswer);
-      expect(addOrEditPuzzle).toHaveBeenCalledWith({ ...originalData, correctAnswer });
+      expect(addOrEditPuzzle).toHaveBeenCalledWith({
+        ...originalData,
+        correctAnswer,
+      });
     });
   });
 
@@ -189,7 +195,9 @@ describe('answers', () => {
       const toAdd = 'ASDF';
       findPuzzle.mockReturnValueOnce({ incorrectAnswers: [] });
       await addIncorrectAnswer(2022, 1, 1, toAdd);
-      expect(addOrEditPuzzle).toHaveBeenCalledWith({ incorrectAnswers: [toAdd] });
+      expect(addOrEditPuzzle).toHaveBeenCalledWith({
+        incorrectAnswers: [toAdd],
+      });
     });
 
     test('pushes to non-empty incorrectAnswers array', async () => {
@@ -243,7 +251,10 @@ describe('answers', () => {
 
     test('returns false if no answers submitted', async () => {
       const answer = 'asdf';
-      findPuzzle.mockReturnValueOnce({ correctAnswer: null, incorrectAnswers: [] });
+      findPuzzle.mockReturnValueOnce({
+        correctAnswer: null,
+        incorrectAnswers: [],
+      });
       expect(await answerHasBeenSubmitted(2022, 1, 1, answer)).toEqual(false);
     });
 
@@ -296,7 +307,10 @@ describe('answers', () => {
       ];
       getAllPuzzlesForYear.mockReturnValueOnce(puzzlesForYear);
       getPuzzles.mockReturnValueOnce([]);
-      expect(await getNextUnansweredPuzzle(year)).toStrictEqual({ day: 1, level: 1 });
+      expect(await getNextUnansweredPuzzle(year)).toStrictEqual({
+        day: 1,
+        level: 1,
+      });
     });
 
     test('returns null if all answered', async () => {
@@ -372,7 +386,10 @@ describe('answers', () => {
           correctAnswer: 'asdf',
         },
       ]);
-      expect(await getNextUnansweredPuzzle(year)).toStrictEqual({ day: 4, level: 2 });
+      expect(await getNextUnansweredPuzzle(year)).toStrictEqual({
+        day: 4,
+        level: 2,
+      });
     });
 
     test('returns next (gaps)', async () => {
@@ -417,7 +434,10 @@ describe('answers', () => {
           correctAnswer: 'asdf',
         },
       ]);
-      expect(await getNextUnansweredPuzzle(year)).toStrictEqual({ day: 3, level: 1 });
+      expect(await getNextUnansweredPuzzle(year)).toStrictEqual({
+        day: 3,
+        level: 1,
+      });
     });
   });
 
@@ -571,6 +591,38 @@ describe('answers', () => {
       getPuzzles.mockReturnValue([]);
       const result = await requiredLevelsHaveBeenSolved(2022, 1, 2);
       expect(result).toBe(false);
+    });
+  });
+
+  describe('answerIsCorrect()', () => {
+    test('returns false if puzzle not found', async () => {
+      findPuzzle.mockResolvedValue(null);
+      const result = await answerIsCorrect(2022, 1, 1, 'SADF');
+      expect(result).toBe(false);
+    });
+
+    test('returns false if puzzle not answered', async () => {
+      findPuzzle.mockResolvedValue({ correctAnswer: null });
+      const result = await answerIsCorrect(2022, 1, 1, 'SADF');
+      expect(result).toBe(false);
+    });
+
+    test('returns false if answers not equal', async () => {
+      findPuzzle.mockResolvedValue({ correctAnswer: 'ONE' });
+      const result = await answerIsCorrect(2022, 1, 1, 'TWO');
+      expect(result).toBe(false);
+    });
+
+    test('returns true if answers are equal', async () => {
+      findPuzzle.mockResolvedValue({ correctAnswer: 'ONE' });
+      const result = await answerIsCorrect(2022, 1, 1, 'ONE');
+      expect(result).toBe(true);
+    });
+
+    test('warns if answers not equal', async () => {
+      findPuzzle.mockResolvedValue({ correctAnswer: 'ONE' });
+      await answerIsCorrect(2022, 1, 1, 'TWO');
+      expect(logger.warn).toHaveBeenCalled();
     });
   });
 });
