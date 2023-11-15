@@ -40,10 +40,13 @@ const yearPrompt = {
  * Prompt the user for the information required to scaffold.
  */
 const getUserAnswers = async () => {
+  logger.debug('asking user to select the year');
   const year = await select(yearPrompt);
   if (!year) {
     throw new Error('select prompt returned empty year');
   }
+  logger.debug('user selected: %s', year);
+  logger.debug('asking user for token');
   const token = await password(authTokenPrompt);
   if (!token) {
     throw new Error('select prompt returned empty token');
@@ -65,6 +68,7 @@ const npmInit = async (year) => {
 const wrapInSpinner = async (fn) => {
   const spinner = ora({ spinner: 'christmas' });
   try {
+    logger.debug('scaffolding directory');
     spinner.start(festiveStyle('The elves are getting the place ready...'));
     await fn();
     spinner.succeed(
