@@ -38,10 +38,9 @@ export const statsAction = async ({ save }) => {
   if (!(await dataFileExists())) {
     throw new DirectoryNotInitializedError();
   }
-
   const year = await getYear();
   const completionData = await getPuzzleCompletionData(year);
-
+  logger.debug('loaded completion data of length: %s', completionData.length);
   // bail if no puzzles completed
   if (!completionData?.length) {
     logger.festive(
@@ -49,7 +48,6 @@ export const statsAction = async ({ save }) => {
     );
     return;
   }
-
   // save or print based on the option.
   await (save
     ? saveToReadme(year, completionData)
