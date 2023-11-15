@@ -6,9 +6,12 @@ mockLogger();
 const { getConfigValue } = mockConfig();
 
 // import after setting up the mock so the modules import the mocked version
-const { getAllPuzzlesForYear, puzzleIsInFuture, getTotalPuzzleCount } = await import(
-  '../../src/validation/validatePuzzle.js'
-);
+const {
+  getAllPuzzlesForYear,
+  puzzleIsInFuture,
+  getTotalPuzzleCount,
+  puzzleHasLevel,
+} = await import('../../src/validation/validatePuzzle.js');
 
 afterEach(() => {
   jest.resetAllMocks();
@@ -120,6 +123,38 @@ describe('validatePuzzle', () => {
       const result = getTotalPuzzleCount();
       // expect days 1-(n-1) have levels.length levels, while day n has 1 level.
       expect(result).toBe((days.length - 1) * levels.length + 1);
+    });
+  });
+
+  describe('puzzleHasLevel()', () => {
+    test('returns true if puzzle has level', () => {
+      getConfigValue.mockImplementation((key) => {
+        switch (key) {
+          case 'aoc.validation.days':
+            return [1, 2, 3, 4, 5];
+          case 'aoc.validation.levels':
+            return [1, 2, 3];
+          default:
+            return undefined;
+        }
+      });
+      const result = puzzleHasLevel(2022, 1, 3);
+      expect(result).toBe(true);
+    });
+
+    test('returns false if puzzle does not have level', () => {
+      getConfigValue.mockImplementation((key) => {
+        switch (key) {
+          case 'aoc.validation.days':
+            return [1, 2, 3, 4, 5];
+          case 'aoc.validation.levels':
+            return [1, 2, 3];
+          default:
+            return undefined;
+        }
+      });
+      const result = puzzleHasLevel(2022, 5, 5);
+      expect(result).toBe(false);
     });
   });
 });
