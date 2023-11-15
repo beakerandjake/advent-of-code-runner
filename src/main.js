@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 import { Argument, Command, InvalidArgumentError } from 'commander';
 import { authAction } from './commands/auth.js';
-import { initializeAction } from './commands/init.js';
+import { initAction } from './commands/init.js';
 import { solveAction } from './commands/solve.js';
 import { statsAction } from './commands/stats.js';
 import { submitAction } from './commands/submit.js';
@@ -50,7 +50,7 @@ try {
     .command('init')
     .hook('preAction', printFestiveTitle)
     .description('Scaffold an empty directory.')
-    .action(initializeAction);
+    .action(initAction);
 
   const dayArgument = new Argument(
     '[day]',

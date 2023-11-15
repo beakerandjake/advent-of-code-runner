@@ -57,7 +57,7 @@ getConfigValue.mockImplementation((key) => {
   }
   throw new Error('unknown key');
 });
-const { initializeAction } = await import('../../src/commands/init.js');
+const { initAction } = await import('../../src/commands/init.js');
 
 describe('initialize command', () => {
   afterEach(() => {
@@ -67,7 +67,7 @@ describe('initialize command', () => {
   test('asks user confirmation if cwd is not empty', async () => {
     cwdIsEmpty.mockResolvedValue(false);
     confirm.mockResolvedValue(false);
-    await initializeAction();
+    await initAction();
     expect(cwdIsEmpty).toHaveBeenCalled();
     expect(confirm).toHaveBeenCalled();
   });
@@ -76,7 +76,7 @@ describe('initialize command', () => {
     cwdIsEmpty.mockResolvedValue(true);
     select.mockResolvedValue(2022);
     password.mockResolvedValue('ASDF');
-    await initializeAction();
+    await initAction();
     expect(cwdIsEmpty).toHaveBeenCalled();
     expect(confirm).not.toHaveBeenCalled();
   });
@@ -84,7 +84,7 @@ describe('initialize command', () => {
   test('aborts if user does not confirm', async () => {
     cwdIsEmpty.mockResolvedValue(false);
     confirm.mockResolvedValue(false);
-    await initializeAction();
+    await initAction();
     expect(confirm).toHaveBeenCalled();
     expect(createDataFile).not.toHaveBeenCalled();
     expect(createDotEnv).not.toHaveBeenCalled();
@@ -100,21 +100,21 @@ describe('initialize command', () => {
     cwdIsEmpty.mockResolvedValue(true);
     select.mockResolvedValue('');
     password.mockResolvedValue('ASDF');
-    await expect(async () => initializeAction()).rejects.toThrow();
+    await expect(async () => initAction()).rejects.toThrow();
   });
 
   test('throws if no token', async () => {
     cwdIsEmpty.mockResolvedValue(true);
     select.mockResolvedValue(2022);
     password.mockResolvedValue('');
-    await expect(async () => initializeAction()).rejects.toThrow();
+    await expect(async () => initAction()).rejects.toThrow();
   });
 
   test('starts spinner before initializing', async () => {
     cwdIsEmpty.mockResolvedValue(true);
     select.mockResolvedValue(2022);
     password.mockResolvedValue('Cool!');
-    await initializeAction();
+    await initAction();
     expect(oraMock.start).toHaveBeenCalledBefore(createDataFile);
     expect(oraMock.start).toHaveBeenCalledBefore(createDotEnv);
     expect(oraMock.start).toHaveBeenCalledBefore(createGitIgnore);
@@ -129,7 +129,7 @@ describe('initialize command', () => {
     cwdIsEmpty.mockResolvedValue(true);
     select.mockResolvedValue(2022);
     password.mockResolvedValue('Cool!');
-    await initializeAction();
+    await initAction();
     expect(oraMock.succeed).toHaveBeenCalledAfter(createDataFile);
     expect(oraMock.succeed).toHaveBeenCalledAfter(createDotEnv);
     expect(oraMock.succeed).toHaveBeenCalledAfter(createGitIgnore);
@@ -145,7 +145,7 @@ describe('initialize command', () => {
     select.mockResolvedValue(2022);
     password.mockResolvedValue('Cool!');
     createDataFile.mockRejectedValue(new Error('better stop!'));
-    await expect(async () => initializeAction()).rejects.toThrow();
+    await expect(async () => initAction()).rejects.toThrow();
     expect(oraMock.fail).toHaveBeenCalled();
   });
 
@@ -153,7 +153,7 @@ describe('initialize command', () => {
     cwdIsEmpty.mockResolvedValue(true);
     select.mockResolvedValue(2022);
     password.mockResolvedValue('Cool!');
-    await initializeAction();
+    await initAction();
     expect(createPackageJson).toHaveBeenCalledBefore(installPackages);
   });
 
@@ -171,6 +171,6 @@ describe('initialize command', () => {
     cwdIsEmpty.mockResolvedValue(true);
     select.mockResolvedValue(2022);
     password.mockResolvedValue('Cool!');
-    await expect(async () => initializeAction()).rejects.toThrow();
+    await expect(async () => initAction()).rejects.toThrow();
   });
 });
