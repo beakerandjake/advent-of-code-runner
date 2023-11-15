@@ -250,6 +250,6 @@ I am using this CLI for my own advent of code solutions. You can refer to this p
 ## :bell: Automation Compliance
 This CLI does follow the automation guidelines on the /r/adventofcode [community wiki](https://www.reddit.com/r/adventofcode/wiki/faqs/automation/). Specifically: 
 - Outbound calls are throttled to every five minutes in [rateLimitDecorator.js](https://github.com/beakerandjake/advent-of-code-runner/blob/main/src/api/rateLimitDecorator.js)
-- Once inputs are downloaded, they are cached locally in [getPuzzleInput.js](https://github.com/beakerandjake/advent-of-code-runner/blob/main/src/actions/getPuzzleInput.js). If you suspect your input is corrupted, you can manually request a fresh copy by deleting the downloaded file.
+- Once inputs are downloaded, they are cached locally in [getPuzzleInput.js](https://github.com/beakerandjake/advent-of-code-runner/blob/main/src/inputs/getPuzzleInput.js). If you suspect your input is corrupted, you can manually request a fresh copy by deleting the downloaded file.
 - The User-Agent header in [api.js](https://github.com/beakerandjake/advent-of-code-runner/blob/main/src/api/api.js) is set to `https://github.com/beakerandjake/advent-of-code-runner by beakerandjake`
-- Submitted answers are tracked per puzzle and duplicate submissions are prevented in [assertAnswerNotPreviouslySubmitted.js](https://github.com/beakerandjake/advent-of-code-runner/blob/main/src/actions/assertAnswerNotPreviouslySubmitted.js).
+- Submitted answers are tracked per puzzle and duplicate submissions are prevented in [submit.js](https://github.com/beakerandjake/advent-of-code-runner/blob/main/src/commands/submit.js).
