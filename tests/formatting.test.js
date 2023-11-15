@@ -13,7 +13,6 @@ easyMock(easyMocks);
 const { puzzleBaseUrl } = await easyResolve(easyMocks);
 const {
   sizeOfStringInKb,
-  betweenMessage,
   humanizeMinutesDifference,
   humanizeDuration,
   clickablePuzzleUrl,
@@ -45,27 +44,6 @@ describe('formatting', () => {
       const result = sizeOfStringInKb(string);
       // assuming each character in string is 1 byte (since A is first 128 chars)
       expect(result).toBe('0.55kb');
-    });
-  });
-
-  describe('betweenMessage()', () => {
-    test('throws if choices is undefined', () => {
-      expect(() => betweenMessage()).toThrow(RangeError);
-    });
-
-    test('throws if choices length is zero', () => {
-      expect(() => betweenMessage([])).toThrow(RangeError);
-    });
-
-    test('throws if choices length is 1', () => {
-      expect(() => betweenMessage([1])).toThrow(RangeError);
-    });
-
-    test('generates expected message', () => {
-      const first = 1234;
-      const last = 4321;
-      const result = betweenMessage([first, 1, 2, 3, 4, 5, 6, 7, last]);
-      expect(result).toBe(`between ${first} and ${last}`);
     });
   });
 

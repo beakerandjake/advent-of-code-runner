@@ -81,18 +81,6 @@ export const humanizeMinutesDifference = (startDate, endDate) => {
 };
 
 /**
- * Given a sorted array, generates a string like 'between $(first) and $(last)'
- * @param {Any[]} choices
- */
-export const betweenMessage = (choices = []) => {
-  if (choices?.length <= 1) {
-    throw new RangeError('Expected an array of at least length 2');
-  }
-
-  return `between ${choices[0]} and ${choices[choices.length - 1]}`;
-};
-
-/**
  * Returns a url to the puzzle that is clickable in supported consoles.
  * @param {number} year
  * @param {number} day
