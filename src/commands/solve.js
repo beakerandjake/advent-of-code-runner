@@ -24,7 +24,7 @@ import {
   puzzleHasLevel,
   puzzleIsInFuture,
 } from '../validation/validatePuzzle.js';
-import { statsAction } from './stats.js';
+import { autoUpdateReadme } from '../tables/autoUpdateReadme.js';
 
 /**
  * Execute the users solution file for the puzzle and return the result.
@@ -75,17 +75,6 @@ export const tryToSolvePuzzle = async (year, day, level) => {
 };
 
 /**
- * If readme auto updates are enabled, will update the progress table of the readme
- */
-const tryToUpdateReadme = async () => {
-  if (getConfigValue('disableReadmeAutoSaveProgress')) {
-    logger.verbose('not updating readme file, auto update disabled');
-    return;
-  }
-  await statsAction({ save: true });
-};
-
-/**
  * Solves a specific puzzle
  */
 const solve = async (year, day, level) => {
@@ -96,7 +85,7 @@ const solve = async (year, day, level) => {
   ) {
     logger.festive("That's your fastest runtime ever for this puzzle!");
     await setPuzzlesFastestRuntime(year, day, level, runtimeNs);
-    await tryToUpdateReadme();
+    await autoUpdateReadme();
   }
 };
 

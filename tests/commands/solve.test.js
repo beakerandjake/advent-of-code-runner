@@ -25,7 +25,7 @@ const easyMocks = [
   ['src/statistics.js', ['beatsFastestRuntime', 'setPuzzlesFastestRuntime']],
   ['src/validation/userFilesExist.js', ['dataFileExists']],
   ['src/validation/validatePuzzle.js', ['puzzleHasLevel', 'puzzleIsInFuture']],
-  ['src/commands/stats.js', ['statsAction']],
+  ['src/tables/autoUpdateReadme.js', ['autoUpdateReadme']],
 ];
 easyMock(easyMocks);
 const logger = mockLogger();
@@ -42,7 +42,7 @@ const {
   getPuzzleInput,
   clickablePuzzleUrl,
   setPuzzlesFastestRuntime,
-  statsAction,
+  autoUpdateReadme,
   answerIsCorrect,
   beatsFastestRuntime,
 } = await easyResolve(easyMocks);
@@ -200,7 +200,7 @@ describe('solveAction', () => {
     answerIsCorrect.mockResolvedValue(false);
     beatsFastestRuntime.mockResolvedValue(false);
     await solveAction(1, 2);
-    expect(statsAction).not.toHaveBeenCalled();
+    expect(autoUpdateReadme).not.toHaveBeenCalled();
   });
 
   test('does not set fastest runtime if answer is correct and not fastest runtime', async () => {
@@ -216,7 +216,7 @@ describe('solveAction', () => {
     answerIsCorrect.mockResolvedValue(true);
     beatsFastestRuntime.mockResolvedValue(false);
     await solveAction(1, 2);
-    expect(statsAction).not.toHaveBeenCalled();
+    expect(autoUpdateReadme).not.toHaveBeenCalled();
   });
 
   test('does not set fastest runtime if answer is not correct and is fastest runtime', async () => {
@@ -232,7 +232,7 @@ describe('solveAction', () => {
     answerIsCorrect.mockResolvedValue(false);
     beatsFastestRuntime.mockResolvedValue(true);
     await solveAction(1, 2);
-    expect(statsAction).not.toHaveBeenCalled();
+    expect(autoUpdateReadme).not.toHaveBeenCalled();
   });
 
   test('sets fastest runtime if answer is correct and is fastest runtime', async () => {
@@ -248,52 +248,6 @@ describe('solveAction', () => {
     answerIsCorrect.mockResolvedValue(true);
     beatsFastestRuntime.mockResolvedValue(true);
     await solveAction(1, 2);
-    expect(statsAction).toHaveBeenCalledWith({ save: true });
-  });
-
-  test('does not update readme if configured not to', async () => {
-    getConfigValue.mockImplementation((key) =>
-      key === 'disableReadmeAutoSaveProgress' ? true : undefined
-    );
-    setupSuccessfulSolve();
-    answerIsCorrect.mockResolvedValue(true);
-    beatsFastestRuntime.mockResolvedValue(true);
-    await solveAction(1, 2);
-    expect(statsAction).not.toHaveBeenCalled();
+    expect(autoUpdateReadme).toHaveBeenCalledWith();
   });
 });
-
-// // setup mocks
-// const chainMock = jest.fn();
-// jest.unstable_mockModule('src/actions/actionChain.js', () => ({
-//   createChain: () => chainMock,
-// }));
-// jest.unstable_mockModule('src/actions/index.js', () => ({
-//   ifThen: jest.fn(),
-// }));
-
-// // import after mocks set up.
-// const { solveAction } = await import('../../src/commands/solve.js');
-
-// describe('solve command', () => {
-//   afterEach(() => {
-//     jest.resetAllMocks();
-//   });
-
-//   test('passes empty args if no day/level specified.', async () => {
-//     await solveAction();
-//     expect(chainMock).toHaveBeenCalledWith({});
-//   });
-
-//   test('passes args with level set to one if only day is specified.', async () => {
-//     const day = 10;
-//     await solveAction(day);
-//     expect(chainMock).toHaveBeenCalledWith({ day, level: 1 });
-//   });
-
-//   test('passes args with day and level if both are specified', async () => {
-//     const args = { day: 10, level: 5 };
-//     await solveAction(args.day, args.level);
-//     expect(chainMock).toHaveBeenCalledWith(args);
-//   });
-// });
