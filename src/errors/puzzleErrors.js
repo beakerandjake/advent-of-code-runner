@@ -50,3 +50,26 @@ export class InvalidPuzzleInputError extends UserError {
     this.name = 'InvalidPuzzleInputError';
   }
 }
+
+/**
+ * Error raised if user attempts to submit a puzzle that they have already submitted.
+ */
+export class PuzzleAlreadyCompletedError extends UserError {
+  constructor(day, level, ...args) {
+    super(
+      `Puzzle (day ${day}, level ${level}) has already been submitted.`,
+      ...args
+    );
+    this.name = 'PuzzleAlreadyCompletedError';
+  }
+}
+
+/**
+ * Error raised if user submits an answer to a puzzle that they have already submitted.
+ */
+export class AnswerAlreadySubmittedError extends UserError {
+  constructor(...args) {
+    super(`Answer has already been submitted and was incorrect.`, ...args);
+    this.name = 'AnswerAlreadySubmittedError';
+  }
+}
