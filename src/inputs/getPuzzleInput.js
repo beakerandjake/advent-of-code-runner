@@ -3,6 +3,7 @@ import { cacheInput, getCachedInput, inputIsCached } from './inputCache.js';
 import { inputIsValid } from '../validation/validateInput.js';
 import { getAuthToken } from '../persistence/metaRepository.js';
 import { InvalidPuzzleInputError } from '../errors/puzzleErrors.js';
+import { logger } from '../logger.js';
 
 /**
  * Downloads the input file and saves it to the inputs folder.
@@ -23,6 +24,7 @@ const downloadAndCacheInput = async (year, day) => {
  * @returns {Promise<string>}
  */
 export const getPuzzleInput = async (year, day) => {
+  logger.debug('loading input file for puzzle year: %s, day: %s', year, day);
   const input = (await inputIsCached(year, day))
     ? await getCachedInput(year, day)
     : await downloadAndCacheInput(year, day);

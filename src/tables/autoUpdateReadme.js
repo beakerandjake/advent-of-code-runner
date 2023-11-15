@@ -10,5 +10,6 @@ export const autoUpdateReadme = async () => {
     logger.verbose('not updating readme file, auto update disabled');
     return;
   }
+  logger.debug('auto updating readme by invoking statsAction');
   await statsAction({ save: true });
 };

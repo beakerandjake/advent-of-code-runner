@@ -10,7 +10,7 @@ import { AuthTokenNotFoundError } from '../errors/cliErrors.js';
  */
 export const getYear = async () => {
   const year = await getValue('year');
-  logger.verbose('loaded year value of: %s', year);
+  logger.debug('loaded year value of: %s', year);
 
   // ensure stored year value is actually valid.
   if (!getConfigValue('aoc.validation.years').includes(year)) {
