@@ -22,6 +22,7 @@ import { autoUpdateReadme } from '../tables/autoUpdateReadme.js';
  * Submit a specific puzzle
  */
 const submit = async (year, day, level) => {
+  logger.debug('submit puzzle year: %s, day: %s, level: %s', year, day, level);
   if (await puzzleHasBeenSolved(year, day, level)) {
     throw new PuzzleAlreadyCompletedError(day, level);
   }
@@ -55,6 +56,7 @@ const submit = async (year, day, level) => {
  * Submit the next unsolved puzzle based on users progress.
  */
 const autoSubmit = async (year) => {
+  logger.debug('no args provided, running auto submit');
   const next = await getNextUnansweredPuzzle(year);
   if (!next) {
     logger.festive(
@@ -62,7 +64,7 @@ const autoSubmit = async (year) => {
     );
     return;
   }
-  logger.verbose(`auto submit day:${next.day}, level:${next.level}`);
+  logger.debug('auto submit chose day: %s, level: %s', next.day, next.level);
   await submit(year, next.day, next.level);
 };
 
