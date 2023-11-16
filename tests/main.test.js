@@ -1,64 +1,100 @@
 import { describe, jest, test, beforeEach } from '@jest/globals';
-// import { mockConfig, mockCommander } from './mocks.js';
+import { mockConfig, easyMock, easyResolve } from './mocks.js';
 
 // setup mocks
-// mockConfig();
-// const mockCommand = mockCommander();
-// jest.unstable_mockModule('src/cli/auth.js', () => ({ authCommand: jest.fn() }));
-// jest.unstable_mockModule('src/cli/exitOverride.js', () => ({
-//   exitOverride: jest.fn(),
-// }));
-// jest.unstable_mockModule('src/cli/initialize.js', () => ({
-//   initializeCommand: jest.fn(),
-// }));
-// jest.unstable_mockModule('src/cli/solve.js', () => ({ solveCommand: jest.fn() }));
-// jest.unstable_mockModule('src/cli/stats.js', () => ({ statsCommand: jest.fn() }));
-// jest.unstable_mockModule('src/cli/submit.js', () => ({ submitCommand: jest.fn() }));
-// jest.unstable_mockModule('src/errorHandler.js', () => ({ handleError: jest.fn() }));
-// jest.unstable_mockModule('src/festive.js', () => ({ printFestiveTitle: jest.fn() }));
+const easyMocks = [
+  ['src/commands/auth.js', ['authAction']],
+  ['src/commands/init.js', ['initAction']],
+  ['src/commands/solve.js', ['solveAction']],
+  ['src/commands/stats.js', ['statsAction']],
+  ['src/commands/submit.js', ['submitAction']],
+  ['src/errorHandler.js', ['handleError']],
+  ['src/festive.js', ['printFestiveTitle']],
+];
+easyMock(easyMocks);
+mockConfig();
+const mockCommander = (() => {
+  class InvalidArgumentError extends Error {
+    constructor(message) {
+      super(message);
+      this.name = 'InvalidArgumentError';
+    }
+  }
+  const toReturn = {
+    name: jest.fn().mockReturnThis(),
+    description: jest.fn().mockReturnThis(),
+    version: jest.fn().mockReturnThis(),
+    addHelpText: jest.fn().mockReturnThis(),
+    command: jest.fn().mockReturnThis(),
+    hook: jest.fn().mockReturnThis(),
+    action: jest.fn().mockReturnThis(),
+    addArgument: jest.fn().mockReturnThis(),
+    option: jest.fn().mockReturnThis(),
+    parseAsync: jest.fn(),
+  };
+  jest.unstable_mockModule('commander', () => ({
+    // eslint-disable-next-line func-names, object-shorthand
+    Command: function () {
+      return toReturn;
+    },
+    // eslint-disable-next-line func-names, object-shorthand
+    Argument: function () {
+      return {
+        argParser: jest.fn().mockReturnThis(),
+      };
+    },
+    InvalidArgumentError,
+  }));
+  return toReturn;
+})();
 
-// const commands = [
-//   { path: '../src/cli/auth.js', fnName: 'authCommand' },
-//   { path: '../src/cli/initialize.js', fnName: 'initializeCommand' },
-//   { path: '../src/cli/solve.js', fnName: 'solveCommand' },
-//   { path: '../src/cli/submit.js', fnName: 'submitCommand' },
-//   { path: '../src/cli/stats.js', fnName: 'statsCommand' },
-// ];
+// import after mocks set up
+const {
+  authAction,
+  initAction,
+  solveAction,
+  statsAction,
+  submitAction,
+  handleError,
+} = await easyResolve(easyMocks);
 
 describe('main', () => {
-  test.todo('fix main tests after refactor');
-  // beforeEach(() => {
-  //   jest.resetModules();
-  //   jest.clearAllMocks();
-  // });
+  beforeEach(() => {
+    jest.clearAllMocks();
+  });
 
-  // test.each(commands)('adds "$fnName" command', async ({ path, fnName }) => {
-  //   const module = await import(path);
-  //   await import('../src/main.js');
-  //   const calls = mockCommand.addCommand.mock.calls.flat();
-  //   expect(calls).toContain(module[fnName]);
-  // });
+  test.each([
+    ['auth', authAction],
+    ['init', initAction],
+    ['solve', solveAction],
+    ['submit', submitAction],
+    ['stats', statsAction],
+  ])('adds command %s', async (name, action) =>
+    jest.isolateModulesAsync(async () => {
+      await import('../src/main.js');
+      const commandIndex = mockCommander.command.mock.calls
+        .flat()
+        .indexOf(name);
+      const actionIndex = mockCommander.action.mock.calls
+        .flat()
+        .indexOf(action);
+      expect(commandIndex).not.toBe(-1);
+      expect(actionIndex).not.toBe(-1);
+      expect(commandIndex).toBe(actionIndex);
+    })
+  );
 
-  // test('loads correct number of commands', async () => {
-  //   // test is brittle on purpose, ensures if a new command is added in main
-  //   // that this test suite must be updated with the new command too.
-  //   await import('../src/main.js');
-  //   expect(mockCommand.addCommand).toHaveBeenCalledTimes(commands.length);
-  // });
+  test('invokes the CLI', async () =>
+    jest.isolateModulesAsync(async () => {
+      await import('../src/main.js');
+      expect(mockCommander.parseAsync).toHaveBeenCalledTimes(1);
+    }));
 
-  // test('invokes the CLI', async () => {
-  //   await import('../src/main.js');
-  //   expect(mockCommand.parseAsync).toHaveBeenCalledTimes(1);
-  // });
-
-  // test('handles error if CLI throws', async () => {
-  //   const { handleError } = await import('../src/errorHandler.js');
-  //   const error = new RangeError('WRONG');
-  //   mockCommand.parseAsync.mockImplementationOnce(async () => {
-  //     throw error;
-  //   });
-  //   await import('../src/main.js');
-  //   expect(handleError).toHaveBeenCalledTimes(1);
-  //   expect(handleError).toHaveBeenCalledWith(error);
-  // });
+  test('invokes errorHandler on exception', async () =>
+    jest.isolateModulesAsync(async () => {
+      const error = new Error('BAD');
+      mockCommander.parseAsync.mockRejectedValue(error);
+      await import('../src/main.js');
+      expect(handleError).toHaveBeenCalledWith(error);
+    }));
 });
