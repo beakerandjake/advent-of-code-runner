@@ -6,6 +6,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+
+## [1.5.0] - 2023-11-16
 ### Added
 - Add devDependencies: jest-extended
 
@@ -13,7 +15,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Input files are ignored in source control by default ([#231](https://github.com/beakerandjake/advent-of-code-runner/issues/231))
 - Deprecate action chains and major rewrite of commands ([#232](https://github.com/beakerandjake/advent-of-code-runner/issues/232))
 - All commands have much better unit testing.
-- Logging output less verbose when running commands. 
+- Logging output less verbose when running commands.
 - Upgrade dependencies: commander 11.1.0
 - Upgrade devDependencies: jest 29.7.0
 
@@ -50,7 +52,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - Initial Release
 
-[Unreleased]: https://github.com/beakerandjake/advent-of-code-runner/compare/v1.4.0...HEAD
+[Unreleased]: https://github.com/beakerandjake/advent-of-code-runner/compare/v1.5.0...HEAD
+[1.5.0]: https://github.com/beakerandjake/advent-of-code-runner/compare/v1.4.0...v1.5.0
 [1.4.0]: https://github.com/beakerandjake/advent-of-code-runner/compare/v1.3.6...v1.4.0
 [1.3.6]: https://github.com/beakerandjake/advent-of-code-runner/compare/v1.3.5...v1.3.6
 [1.3.5]: https://github.com/beakerandjake/advent-of-code-runner/compare/v1.3.4...v1.3.5
