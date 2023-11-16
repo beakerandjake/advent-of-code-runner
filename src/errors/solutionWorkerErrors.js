@@ -52,7 +52,9 @@ export class UserSolutionAnswerInvalidError extends Error {
 export class UserSolutionFileNotFoundError extends Error {
   constructor(fileName, ...args) {
     super(
-      `Could not load your solution file, ensure file exits (${pathToFileURL(fileName)})`,
+      `Could not load your solution file, ensure file exits (${pathToFileURL(
+        fileName
+      )})`,
       ...args
     );
     this.name = 'UserSolutionFileNotFoundError';
@@ -66,7 +68,10 @@ export class UserSolutionFileNotFoundError extends Error {
  * @param {Error} originalError
  */
 const withOriginalErrorStack = (message, originalError) =>
-  [message, `↳ ${originalError?.stack ? originalError.stack : originalError}`].join('\n');
+  [
+    message,
+    `↳ ${originalError?.stack ? originalError.stack : originalError}`,
+  ].join('\n');
 
 /**
  * Error raised if a users solution function raises an error.

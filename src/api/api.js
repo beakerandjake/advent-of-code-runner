@@ -27,7 +27,9 @@ export const downloadInput = async (year, day, authenticationToken) => {
   logger.debug('downloading input file for year: %s, day: %s', year, day);
 
   if (!authenticationToken) {
-    throw new Error('Authentication Token is required to query advent of code.');
+    throw new Error(
+      'Authentication Token is required to query advent of code.'
+    );
   }
 
   // query api
@@ -72,11 +74,19 @@ export const downloadInput = async (year, day, authenticationToken) => {
  * @param {String|Number} solution - The solution to test.
  * @param {String} authenticationToken - Token to authenticate with aoc.
  */
-export const submitSolution = async (year, day, level, solution, authenticationToken) => {
+export const submitSolution = async (
+  year,
+  day,
+  level,
+  solution,
+  authenticationToken
+) => {
   logger.debug('submitting solution to advent of code', { year, day, level });
 
   if (!authenticationToken) {
-    throw new Error('Authentication Token is required to query advent of code.');
+    throw new Error(
+      'Authentication Token is required to query advent of code.'
+    );
   }
 
   // post to api

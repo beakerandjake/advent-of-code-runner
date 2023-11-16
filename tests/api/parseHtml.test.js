@@ -1,6 +1,9 @@
 import { describe, test } from '@jest/globals';
 
-import { getElementByTagName, getTextContent } from '../../src/api/parseHtml.js';
+import {
+  getElementByTagName,
+  getTextContent,
+} from '../../src/api/parseHtml.js';
 import {
   badLevel,
   correctAnswerDayComplete,
@@ -23,10 +26,13 @@ describe('parseHtml', () => {
       expect(result).toBeNull();
     });
 
-    test.each([null, undefined, ''])('returns null with empty tag (%s)', (value) => {
-      const result = getElementByTagName('<p>Hello World</p>', value);
-      expect(result).toBeNull();
-    });
+    test.each([null, undefined, ''])(
+      'returns null with empty tag (%s)',
+      (value) => {
+        const result = getElementByTagName('<p>Hello World</p>', value);
+        expect(result).toBeNull();
+      }
+    );
 
     test('returns null if no tags in html', () => {
       const result = getElementByTagName('Hello World I have no Tags!', 'span');
@@ -57,7 +63,11 @@ describe('parseHtml', () => {
         '<!DOCTYPE html><html><body><main>Hello!</main></body></html>',
         '<main>Hello!</main>',
       ],
-      ['body', '<!DOCTYPE html><html><body>Hello!</body></html>', '<body>Hello!</body>'],
+      [
+        'body',
+        '<!DOCTYPE html><html><body>Hello!</body></html>',
+        '<body>Hello!</body>',
+      ],
       [
         'h1',
         '<!DOCTYPE html><html><body><h1 class="cats">My First Heading</h1></body></html>',
@@ -85,12 +95,18 @@ describe('parseHtml', () => {
       });
 
       test('correct answer (day complete)', () => {
-        const result = getElementByTagName(correctAnswerDayComplete.html, 'main');
+        const result = getElementByTagName(
+          correctAnswerDayComplete.html,
+          'main'
+        );
         expect(result).toBe(correctAnswerDayComplete.mainTag);
       });
 
       test('correct answer (day incomplete)', () => {
-        const result = getElementByTagName(correctAnswerDayIncomplete.html, 'main');
+        const result = getElementByTagName(
+          correctAnswerDayIncomplete.html,
+          'main'
+        );
         expect(result).toBe(correctAnswerDayIncomplete.mainTag);
       });
 

@@ -49,7 +49,9 @@ export const translateToPuzzleFromData = (data) => {
   } = data;
 
   if (!id || typeof id !== 'string' || !idRegex.test(id)) {
-    throw new TypeError(`Puzzle ${id} not expected format of YYYYDDLL (year day level)`);
+    throw new TypeError(
+      `Puzzle ${id} not expected format of YYYYDDLL (year day level)`
+    );
   }
 
   if (!Array.isArray(incorrectAnswers)) {
@@ -88,7 +90,9 @@ export const translateToDataFromPuzzle = (puzzle) => {
   } = puzzle;
 
   if (!id || typeof id !== 'string' || !idRegex.test(id)) {
-    throw new TypeError('Puzzle "id" not expected format of YYYYDDLL (year day level)');
+    throw new TypeError(
+      'Puzzle "id" not expected format of YYYYDDLL (year day level)'
+    );
   }
 
   if (!Array.isArray(incorrectAnswers)) {

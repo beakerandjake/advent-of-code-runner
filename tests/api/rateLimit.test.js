@@ -4,10 +4,13 @@ import { mockLogger, mockConfig } from '../mocks.js';
 // setup mocks.
 mockLogger();
 const { getConfigValue } = mockConfig();
-jest.unstable_mockModule('../../src/persistence/rateLimitRepository.js', () => ({
-  getRateLimit: jest.fn(),
-  setRateLimit: jest.fn(),
-}));
+jest.unstable_mockModule(
+  '../../src/persistence/rateLimitRepository.js',
+  () => ({
+    getRateLimit: jest.fn(),
+    setRateLimit: jest.fn(),
+  })
+);
 
 // import after setting up the mock so the modules import the mocked version
 const { getRateLimit, setRateLimit } = await import(
@@ -70,7 +73,9 @@ describe('rateLimit', () => {
 
     test('returns false if no expiration', async () => {
       getRateLimit.mockReturnValueOnce(null);
-      expect(await isRateLimited(rateLimitedActions.submitAnswer)).toStrictEqual({
+      expect(
+        await isRateLimited(rateLimitedActions.submitAnswer)
+      ).toStrictEqual({
         expiration: null,
         limited: false,
       });
@@ -78,7 +83,9 @@ describe('rateLimit', () => {
 
     test('returns false if expiration is invalid date', async () => {
       getRateLimit.mockReturnValueOnce(new Date(Infinity));
-      expect(await isRateLimited(rateLimitedActions.submitAnswer)).toStrictEqual({
+      expect(
+        await isRateLimited(rateLimitedActions.submitAnswer)
+      ).toStrictEqual({
         expiration: null,
         limited: false,
       });
@@ -87,7 +94,9 @@ describe('rateLimit', () => {
     test('returns false if expiration is in future', async () => {
       const future = new Date(new Date().getTime() + 1000 * 60 * 5);
       getRateLimit.mockReturnValueOnce(future);
-      expect(await isRateLimited(rateLimitedActions.submitAnswer)).toStrictEqual({
+      expect(
+        await isRateLimited(rateLimitedActions.submitAnswer)
+      ).toStrictEqual({
         expiration: future,
         limited: true,
       });
@@ -96,7 +105,9 @@ describe('rateLimit', () => {
     test('returns true if expiration is in past', async () => {
       const past = new Date(new Date().getTime() - 1000 * 60 * 5);
       getRateLimit.mockReturnValueOnce(past);
-      expect(await isRateLimited(rateLimitedActions.submitAnswer)).toStrictEqual({
+      expect(
+        await isRateLimited(rateLimitedActions.submitAnswer)
+      ).toStrictEqual({
         expiration: past,
         limited: false,
       });

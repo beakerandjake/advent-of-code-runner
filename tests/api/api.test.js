@@ -54,7 +54,9 @@ describe('api', () => {
           statusText: 'da puzzle is not found pal',
         })
       );
-      await expect(async () => downloadInput(2022, 1, 'ASDF')).rejects.toThrow(/found/i);
+      await expect(async () => downloadInput(2022, 1, 'ASDF')).rejects.toThrow(
+        /found/i
+      );
     });
 
     test('throws on response not ok', async () => {
@@ -70,16 +72,21 @@ describe('api', () => {
       );
     });
 
-    test.each([undefined, null, ''])('throws on empty input: "%s"', async (value) => {
-      mockFetch.mockImplementation(() =>
-        Promise.resolve({
-          ok: true,
-          status: 200,
-          text: () => Promise.resolve(value),
-        })
-      );
-      await expect(async () => downloadInput(2022, 1, 'ASDF')).rejects.toThrow(/empty/i);
-    });
+    test.each([undefined, null, ''])(
+      'throws on empty input: "%s"',
+      async (value) => {
+        mockFetch.mockImplementation(() =>
+          Promise.resolve({
+            ok: true,
+            status: 200,
+            text: () => Promise.resolve(value),
+          })
+        );
+        await expect(async () =>
+          downloadInput(2022, 1, 'ASDF')
+        ).rejects.toThrow(/empty/i);
+      }
+    );
 
     test('returns input on success', async () => {
       const expected = '1234\n5678\n9101112';

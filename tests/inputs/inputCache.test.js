@@ -4,7 +4,9 @@ import { mockConfig, mockLogger } from '../mocks.js';
 // setup mocks.
 mockLogger();
 const { getConfigValue } = mockConfig();
-jest.unstable_mockModule('src/api/index.js', () => ({ downloadInput: jest.fn() }));
+jest.unstable_mockModule('src/api/index.js', () => ({
+  downloadInput: jest.fn(),
+}));
 jest.unstable_mockModule('node:fs/promises', () => ({ readFile: jest.fn() }));
 jest.unstable_mockModule('node:path', () => ({ join: jest.fn() }));
 jest.unstable_mockModule('fs-extra/esm', () => ({

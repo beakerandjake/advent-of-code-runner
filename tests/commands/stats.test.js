@@ -26,7 +26,6 @@ const {
 const { statsAction } = await import('../../src/commands/stats.js');
 
 describe('statsAction()', () => {
-
   afterEach(() => {
     jest.clearAllMocks();
   });

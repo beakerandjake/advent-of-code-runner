@@ -33,9 +33,12 @@ describe('initialize', () => {
       jest.resetAllMocks();
     });
 
-    test.each([null, undefined, ''])('throws if year is: "%s"', async (year) => {
-      await expect(async () => createSolutionFiles(year)).rejects.toThrow();
-    });
+    test.each([null, undefined, ''])(
+      'throws if year is: "%s"',
+      async (year) => {
+        await expect(async () => createSolutionFiles(year)).rejects.toThrow();
+      }
+    );
 
     test('creates solution dir', async () => {
       getConfigValue.mockImplementation((key) => {

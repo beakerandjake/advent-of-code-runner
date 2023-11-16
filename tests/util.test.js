@@ -41,7 +41,10 @@ describe('util', () => {
     test('returns value if key is found (nested)', () => {
       const expected = 22;
       expect(
-        get({ one: { two: { three: { four: expected } } } }, 'one.two.three.four')
+        get(
+          { one: { two: { three: { four: expected } } } },
+          'one.two.three.four'
+        )
       ).toBe(expected);
     });
   });

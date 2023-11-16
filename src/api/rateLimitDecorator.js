@@ -17,12 +17,18 @@ export const rateLimitDecorator =
     exceededMessage = 'You have made too many requests to advent of code.'
   ) =>
   async (...args) => {
-    logger.debug('checking rate limit before performing action: %s', actionType);
+    logger.debug(
+      'checking rate limit before performing action: %s',
+      actionType
+    );
 
     const { limited, expiration } = await isRateLimited(actionType);
 
     if (limited) {
-      throw new RateLimitExceededError(exceededMessage, formatDistanceToNow(expiration));
+      throw new RateLimitExceededError(
+        exceededMessage,
+        formatDistanceToNow(expiration)
+      );
     }
 
     try {

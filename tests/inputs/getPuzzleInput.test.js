@@ -68,7 +68,7 @@ describe('getPuzzleInput()', () => {
   test('does not cache input if download fails', async () => {
     inputIsCached.mockResolvedValue(false);
     downloadInput.mockRejectedValue(new Error());
-    await expect(async () => getPuzzleInput(1,2)).rejects.toThrow();
+    await expect(async () => getPuzzleInput(1, 2)).rejects.toThrow();
     expect(downloadInput).toHaveBeenCalled();
     expect(cacheInput).not.toHaveBeenCalled();
   });

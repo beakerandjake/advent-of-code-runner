@@ -10,7 +10,9 @@ jest.unstable_mockModule('../../src/persistence/userDataFile.js', () => ({
 }));
 
 // import after setting up the mock so the modules import the mocked version
-const { getValue, setValue } = await import('../../src/persistence/userDataFile.js');
+const { getValue, setValue } = await import(
+  '../../src/persistence/userDataFile.js'
+);
 const {
   translateToPuzzleFromData,
   translateToDataFromPuzzle,
@@ -40,7 +42,9 @@ describe('puzzleRepository', () => {
     test('throws with non object', () => {
       expect(() => translateToPuzzleFromData(1234)).toThrow(TypeError);
       expect(() => translateToPuzzleFromData(() => {})).toThrow(TypeError);
-      expect(() => translateToPuzzleFromData(Promise.resolve(10))).toThrow(TypeError);
+      expect(() => translateToPuzzleFromData(Promise.resolve(10))).toThrow(
+        TypeError
+      );
       expect(() => translateToPuzzleFromData('asdf')).toThrow(TypeError);
     });
 
@@ -189,7 +193,9 @@ describe('puzzleRepository', () => {
     test('throws with non object', () => {
       expect(() => translateToDataFromPuzzle(1234)).toThrow(TypeError);
       expect(() => translateToDataFromPuzzle(() => {})).toThrow(TypeError);
-      expect(() => translateToDataFromPuzzle(Promise.resolve(10))).toThrow(TypeError);
+      expect(() => translateToDataFromPuzzle(Promise.resolve(10))).toThrow(
+        TypeError
+      );
       expect(() => translateToDataFromPuzzle('asdf')).toThrow(TypeError);
     });
 
@@ -541,7 +547,11 @@ describe('puzzleRepository', () => {
     });
 
     test('returns empty array if no puzzles for year', async () => {
-      mockGetPuzzles([{ id: '20200101' }, { id: '20210101' }, { id: '20230101' }]);
+      mockGetPuzzles([
+        { id: '20200101' },
+        { id: '20210101' },
+        { id: '20230101' },
+      ]);
       const result = await getPuzzlesForYear(2022);
       expect(result).toEqual([]);
     });
@@ -621,9 +631,14 @@ describe('puzzleRepository', () => {
   });
 
   describe('addOrEditPuzzle()', () => {
-    test.each([null, undefined])('throws if puzzle is: "%s"', async (puzzle) => {
-      await expect(async () => addOrEditPuzzle(puzzle)).rejects.toThrow('null puzzle');
-    });
+    test.each([null, undefined])(
+      'throws if puzzle is: "%s"',
+      async (puzzle) => {
+        await expect(async () => addOrEditPuzzle(puzzle)).rejects.toThrow(
+          'null puzzle'
+        );
+      }
+    );
 
     test("adds puzzle doesn't exist", async () => {
       const doesNotExist = {
@@ -774,9 +789,9 @@ describe('puzzleRepository', () => {
         level: 1,
       };
 
-      expect(createPuzzle(expected.year, expected.day, expected.level)).toStrictEqual(
-        expected
-      );
+      expect(
+        createPuzzle(expected.year, expected.day, expected.level)
+      ).toStrictEqual(expected);
     });
   });
 });

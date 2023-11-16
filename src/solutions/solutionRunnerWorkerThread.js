@@ -92,7 +92,11 @@ export const runWorker = async ({
     throw new UserSolutionMissingFunctionError(functionToExecute);
   }
 
-  logFromWorker('debug', 'worker thread executing user function: %s', functionToExecute);
+  logFromWorker(
+    'debug',
+    'worker thread executing user function: %s',
+    functionToExecute
+  );
   try {
     await executeUserSolution(userSolutionFunction, input, lines);
   } catch (error) {

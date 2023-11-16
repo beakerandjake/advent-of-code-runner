@@ -20,7 +20,9 @@ describe('errorHandler', () => {
       class CoolUserError extends UserError {}
       const myError = new CoolUserError('ASDF');
       handleError(myError);
-      expect(logger.error).toHaveBeenCalledWith(myError, { simpleErrorFormat: true });
+      expect(logger.error).toHaveBeenCalledWith(myError, {
+        simpleErrorFormat: true,
+      });
     });
 
     test('logs on error - name containing User', () => {
@@ -32,7 +34,9 @@ describe('errorHandler', () => {
       }
       const myError = new CoolUserError('ASDF');
       handleError(myError);
-      expect(logger.error).toHaveBeenCalledWith(myError, { simpleErrorFormat: true });
+      expect(logger.error).toHaveBeenCalledWith(myError, {
+        simpleErrorFormat: true,
+      });
     });
 
     test('logs on error - non UserError', () => {

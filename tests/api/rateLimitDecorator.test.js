@@ -15,8 +15,12 @@ jest.unstable_mockModule('../../src/logger.js', () => ({
 }));
 
 // const { logger } = await import('../src/logger.js');
-const { isRateLimited, updateRateLimit } = await import('../../src/api/rateLimit.js');
-const { rateLimitDecorator } = await import('../../src/api/rateLimitDecorator.js');
+const { isRateLimited, updateRateLimit } = await import(
+  '../../src/api/rateLimit.js'
+);
+const { rateLimitDecorator } = await import(
+  '../../src/api/rateLimitDecorator.js'
+);
 
 afterEach(() => {
   jest.clearAllMocks();
@@ -24,7 +28,10 @@ afterEach(() => {
 
 describe('rateLimitDecorator', () => {
   test('throws if rate limit exceeded', async () => {
-    isRateLimited.mockResolvedValueOnce({ limited: true, expiration: new Date() });
+    isRateLimited.mockResolvedValueOnce({
+      limited: true,
+      expiration: new Date(),
+    });
     const fn = jest.fn();
     const decorated = rateLimitDecorator(() => {}, 'ASDF');
     expect(async () => decorated()).rejects.toThrow(RateLimitExceededError);
@@ -39,7 +46,10 @@ describe('rateLimitDecorator', () => {
   });
 
   test('does not update rate limit if rate limit exceeded', () => {
-    isRateLimited.mockResolvedValueOnce({ limited: true, expiration: new Date() });
+    isRateLimited.mockResolvedValueOnce({
+      limited: true,
+      expiration: new Date(),
+    });
     const fn = jest.fn();
     expect(async () => rateLimitDecorator(fn, 'ASDF')()).rejects.toThrow(
       RateLimitExceededError

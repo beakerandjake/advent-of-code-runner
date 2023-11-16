@@ -14,7 +14,9 @@ jest.unstable_mockModule('src/initialize/replaceTokens.js', () => ({
 const { outputFile } = await import('fs-extra/esm');
 const { readFile } = await import('node:fs/promises');
 const { replaceTokens } = await import('../../src/initialize/replaceTokens.js');
-const { createDataFile } = await import('../../src/initialize/createDataFile.js');
+const { createDataFile } = await import(
+  '../../src/initialize/createDataFile.js'
+);
 
 describe('initialize', () => {
   describe('createDataFile()', () => {
