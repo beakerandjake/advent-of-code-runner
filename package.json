@@ -18,7 +18,7 @@
   "bin": "src/main.js",
   "scripts": {
     "test": "NODE_OPTIONS=\"--experimental-vm-modules --no-warnings\" jest",
-    "start": "node scripts/start.js",
+    "start": "node bin/start.js",
     "lint": "eslint 'src/**/*.js' 'tests/**/*.js'",
     "prettier": "prettier --check ."
   },
@@ -35,7 +35,7 @@
   "dependencies": {
     "@inquirer/prompts": "^3.3.0",
     "chalk": "^5.2.0",
-    "commander": "^9.4.1",
+    "commander": "^11.1.0",
     "date-fns": "^2.29.3",
     "dom-serializer": "^2.0.0",
     "domutils": "^3.0.1",
@@ -57,7 +57,8 @@
     "eslint-config-airbnb-base": "^15.0.0",
     "eslint-config-prettier": "^8.6.0",
     "eslint-plugin-import": "^2.26.0",
-    "jest": "^29.4.2",
+    "jest": "^29.7.0",
+    "jest-extended": "^4.0.2",
     "prettier": "2.8.3"
   },
   "engines": {

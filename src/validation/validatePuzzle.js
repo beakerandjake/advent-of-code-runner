@@ -24,7 +24,9 @@ export const getAllPuzzlesForYear = (year) => {
   const levels = getConfigValue('aoc.validation.levels');
   return [
     // days 1-(n-1) has L levels.
-    ...days.slice(0, -1).map((day) => levels.map((level) => ({ year, day, level }))),
+    ...days
+      .slice(0, -1)
+      .map((day) => levels.map((level) => ({ year, day, level }))),
     // day n has one level.
     { year, day: days.at(-1), level: 1 },
   ].flat();
@@ -39,3 +41,13 @@ export const getTotalPuzzleCount = () => {
   // Days 1-(n-1) have L levels, but day n has 1 level.
   return (days.length - 1) * levels.length + 1;
 };
+
+/**
+ * Asserts that the days puzzle has the level.
+ * All days have two levels except for the last day which has one.
+ * @param {Number} year
+ * @param {Number} day
+ * @param {Number} level
+ */
+export const puzzleHasLevel = (year, day, level) =>
+  getAllPuzzlesForYear(year).some((x) => x.level === level && x.day === day);

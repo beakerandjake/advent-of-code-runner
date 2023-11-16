@@ -76,7 +76,9 @@ describe('rateLimitRepository', () => {
       {},
       new Date(Infinity),
     ])('throws on invalid date value: "%s"', async (value) => {
-      expect(async () => setRateLimit('asdf', value)).rejects.toThrow(TypeError);
+      expect(async () => setRateLimit('asdf', value)).rejects.toThrow(
+        TypeError
+      );
     });
 
     test("adds if didn't exist", async () => {
@@ -94,7 +96,10 @@ describe('rateLimitRepository', () => {
     test('updates if already exists', async () => {
       const key = 'cool';
       const value = new Date(2022, 11, 4);
-      const orig = { notCool: new Date().toISOString(), [key]: value.toISOString() };
+      const orig = {
+        notCool: new Date().toISOString(),
+        [key]: value.toISOString(),
+      };
       readJson.mockResolvedValueOnce(orig);
       await setRateLimit(key, value);
       expect(outputJson).toHaveBeenCalledWith(expect.any(String), {

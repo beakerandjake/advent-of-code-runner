@@ -1,7 +1,10 @@
 import { getConfigValue } from '../config.js';
 import { logger } from '../logger.js';
 import { getElementByTagName, getTextContent } from './parseHtml.js';
-import { RateLimitExceededError, SolvingWrongLevelError } from '../errors/apiErrors.js';
+import {
+  RateLimitExceededError,
+  SolvingWrongLevelError,
+} from '../errors/apiErrors.js';
 
 /**
  * Parses the response html, finds the <main> element and then extracts its text content.

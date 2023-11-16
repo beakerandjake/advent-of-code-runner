@@ -9,15 +9,19 @@ import { logger } from './logger.js';
 import { average } from './util.js';
 
 /**
- * Returns the fastest runtime for the puzzle.
- * Returns null if the puzzle has not been correctly solved.
+ * Compares the runtime to the fastest runtime for the puzzle.
+ * Always returns false if the puzzle has not been solved.
  * @param {Number} year
  * @param {Number} day
  * @param {Number} level
+ * @param {Number} runtimeNs
  */
-export const getPuzzlesFastestRuntime = async (year, day, level) => {
+export const beatsFastestRuntime = async (year, day, level, runtimeNs) => {
   const puzzle = await findPuzzle(year, day, level);
-  return puzzle?.fastestRuntimeNs || null;
+  if (!puzzle?.fastestRuntimeNs) {
+    return false;
+  }
+  return runtimeNs < puzzle.fastestRuntimeNs;
 };
 
 /**
@@ -29,7 +33,8 @@ export const getPuzzlesFastestRuntime = async (year, day, level) => {
  */
 export const setPuzzlesFastestRuntime = async (year, day, level, timeNs) => {
   const parsed = parsePositiveInt(timeNs);
-  const puzzle = (await findPuzzle(year, day, level)) || createPuzzle(year, day, level);
+  const puzzle =
+    (await findPuzzle(year, day, level)) || createPuzzle(year, day, level);
   const updated = { ...puzzle, fastestRuntimeNs: parsed };
   logger.debug('setting fastest runtime to: %s', timeNs, { year, day, level });
   return addOrEditPuzzle(updated);
@@ -106,13 +111,15 @@ export const getPuzzleCompletionData = async (year) => {
   const puzzles = await getPuzzlesForYear(year);
   return puzzles
     .sort((a, b) => a.id.localeCompare(b.id))
-    .map(({ day, level, correctAnswer, fastestRuntimeNs, incorrectAnswers }) => ({
-      day,
-      level,
-      solved: !!correctAnswer,
-      runtimeNs: correctAnswer ? fastestRuntimeNs : null,
-      numberOfAttempts: correctAnswer
-        ? incorrectAnswers.length + 1
-        : incorrectAnswers.length,
-    }));
+    .map(
+      ({ day, level, correctAnswer, fastestRuntimeNs, incorrectAnswers }) => ({
+        day,
+        level,
+        solved: !!correctAnswer,
+        runtimeNs: correctAnswer ? fastestRuntimeNs : null,
+        numberOfAttempts: correctAnswer
+          ? incorrectAnswers.length + 1
+          : incorrectAnswers.length,
+      })
+    );
 };

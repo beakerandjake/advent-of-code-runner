@@ -4,7 +4,8 @@ import { getConfigValue } from '../config.js';
 /**
  * Does the users README file exist?
  */
-export const readmeExists = async () => pathExists(getConfigValue('paths.readme'));
+export const readmeExists = async () =>
+  pathExists(getConfigValue('paths.readme'));
 
 /**
  * Does the users .env file exist?

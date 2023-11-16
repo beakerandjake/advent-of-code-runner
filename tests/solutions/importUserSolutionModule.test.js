@@ -54,9 +54,9 @@ describe('importUserSolutionModule', () => {
       '../../src/solutions/importUserSolutionModule.js'
     );
 
-    await expect(async () => importUserSolutionModule(modulePath)).rejects.toThrow(
-      UserSolutionFileNotFoundErrorMock
-    );
+    await expect(async () =>
+      importUserSolutionModule(modulePath)
+    ).rejects.toThrow(UserSolutionFileNotFoundErrorMock);
   });
 
   test('throws UserSolutionSyntaxError if file has syntax error', async () => {
@@ -70,9 +70,9 @@ describe('importUserSolutionModule', () => {
       '../../src/solutions/importUserSolutionModule.js'
     );
 
-    await expect(async () => importUserSolutionModule(modulePath)).rejects.toThrow(
-      UserSolutionSyntaxErrorMock
-    );
+    await expect(async () =>
+      importUserSolutionModule(modulePath)
+    ).rejects.toThrow(UserSolutionSyntaxErrorMock);
   });
 
   test('throws on unknown error', async () => {
@@ -86,8 +86,8 @@ describe('importUserSolutionModule', () => {
       '../../src/solutions/importUserSolutionModule.js'
     );
 
-    await expect(async () => importUserSolutionModule(modulePath)).rejects.toThrow(
-      RangeError
-    );
+    await expect(async () =>
+      importUserSolutionModule(modulePath)
+    ).rejects.toThrow(RangeError);
   });
 });

@@ -34,38 +34,42 @@ export const mockConfig = () => {
 };
 
 /**
- * Mocks the Commander module and all of the commonly used functions.
+ * Sets up mocks for all of the modules
  */
-export const mockCommander = () => {
-  class InvalidArgumentError extends Error {
-    constructor(message) {
-      super(message);
-      this.name = 'InvalidArgumentError';
-    }
+export const easyMock = (modules) => {
+  for (const [name, fields] of modules) {
+    jest.unstable_mockModule(name, () =>
+      fields.reduce((acc, field) => {
+        if (Array.isArray(field)) {
+          // can use an array to provide a value
+          const [key, value] = field;
+          acc[key] = value;
+        } else {
+          // simple string means just use a jest.fn
+          acc[field] = jest.fn();
+        }
+        return acc;
+      }, {})
+    );
   }
-  const toReturn = {
-    name: jest.fn().mockReturnThis(),
-    description: jest.fn().mockReturnThis(),
-    version: jest.fn().mockReturnThis(),
-    addHelpText: jest.fn().mockReturnThis(),
-    addCommand: jest.fn().mockReturnThis(),
-    exitOverride: jest.fn().mockReturnThis(),
-    hook: jest.fn().mockReturnThis(),
-    action: jest.fn().mockReturnThis(),
-    parseAsync: jest.fn(),
-  };
-  jest.unstable_mockModule('commander', () => ({
-    // eslint-disable-next-line func-names, object-shorthand
-    Command: function () {
-      return toReturn;
-    },
-    // eslint-disable-next-line func-names, object-shorthand
-    Argument: function () {
-      return {
-        argParser: jest.fn().mockReturnThis(),
-      };
-    },
-    InvalidArgumentError,
-  }));
-  return toReturn;
+};
+
+export const easyResolve = async (modules) => {
+  const imports = await Promise.all(
+    modules.map(([name]) =>
+      name.startsWith('src/') ? import(`../${name}`) : import(name)
+    )
+  );
+  return imports.reduce((acc, x, i) => {
+    for (const field of modules[i][1]) {
+      const key = Array.isArray(field) ? field[0] : field;
+      if (key === 'default') {
+        // if mocking a default export then assign to the field name.
+        acc[modules[i][0]] = x[key];
+      } else {
+        acc[key] = x[key];
+      }
+    }
+    return acc;
+  }, {});
 };

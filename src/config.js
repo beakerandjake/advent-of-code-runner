@@ -67,7 +67,8 @@ const CONFIG = {
   aoc: {
     authenticationToken: process.env[envOptions.authenticationToken] || null,
     baseUrl: 'https://adventofcode.com',
-    userAgent: 'https://github.com/beakerandjake/advent-of-code-runner by beakerandjake',
+    userAgent:
+      'https://github.com/beakerandjake/advent-of-code-runner by beakerandjake',
     responseParsing: {
       correctSolution: /that's the right answer/gim,
       incorrectSolution: /that's not the right answer/gim,
@@ -153,7 +154,12 @@ const CONFIG = {
         source: join(__dirname, '..', 'templates', 'template-dataFile.json'),
         dest: join(cwd, 'aocr-data.json'),
       },
-      solutionDefault: join(__dirname, '..', 'templates', 'template-solution.js'),
+      solutionDefault: join(
+        __dirname,
+        '..',
+        'templates',
+        'template-solution.js'
+      ),
       solutionLastDay: join(
         __dirname,
         '..',

@@ -24,7 +24,9 @@ describe('validateInput', () => {
     });
 
     ['', ' ', '\t', '\r\n', '\n'].forEach((value) =>
-      test(`returns false on empty string value ${JSON.stringify(value)}`, () => {
+      test(`returns false on empty string value ${JSON.stringify(
+        value
+      )}`, () => {
         const result = inputIsValid(value);
         expect(result).toBe(false);
       })

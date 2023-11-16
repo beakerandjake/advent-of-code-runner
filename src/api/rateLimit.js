@@ -1,7 +1,10 @@
 import { addMilliseconds, isFuture, isValid } from 'date-fns';
 import { getConfigValue } from '../config.js';
 import { logger } from '../logger.js';
-import { getRateLimit, setRateLimit } from '../persistence/rateLimitRepository.js';
+import {
+  getRateLimit,
+  setRateLimit,
+} from '../persistence/rateLimitRepository.js';
 
 /**
  * The type of aoc api requests that support rate limiting.

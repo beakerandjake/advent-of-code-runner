@@ -13,7 +13,9 @@ const execNpmInit = async (cwd) =>
     exec('npm init -y', { cwd }, (error) => {
       if (error) {
         reject(
-          new Error(`Failed to run npm init, exit code: ${error.code}`, { cause: error })
+          new Error(`Failed to run npm init, exit code: ${error.code}`, {
+            cause: error,
+          })
         );
       } else {
         logger.debug('created package.json file');
@@ -25,7 +27,7 @@ const execNpmInit = async (cwd) =>
 /**
  * Creates a package.json file in the cwd.
  */
-export const createPackageJson = async ({ year } = {}) => {
+export const createPackageJson = async (year) => {
   logger.debug('creating package.json file');
 
   if (year == null) {

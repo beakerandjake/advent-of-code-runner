@@ -56,7 +56,11 @@ try {
 
   loggerInstance = createLogger({
     levels: customLevels,
-    format: format.combine(format.errors({ stack: true }), format.splat(), format.json()),
+    format: format.combine(
+      format.errors({ stack: true }),
+      format.splat(),
+      format.json()
+    ),
     transports: [
       new transports.Console({
         level,

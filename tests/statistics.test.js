@@ -16,12 +16,12 @@ jest.unstable_mockModule('src/validation/validationUtils.js', () => ({
 }));
 
 // import after setting up the mock so the modules import the mocked version
-const { addOrEditPuzzle, findPuzzle, createPuzzle, getPuzzlesForYear } = await import(
-  '../src/persistence/puzzleRepository.js'
+const { addOrEditPuzzle, findPuzzle, createPuzzle, getPuzzlesForYear } =
+  await import('../src/persistence/puzzleRepository.js');
+const { parsePositiveInt } = await import(
+  '../src/validation/validationUtils.js'
 );
-const { parsePositiveInt } = await import('../src/validation/validationUtils.js');
 const {
-  getPuzzlesFastestRuntime,
   setPuzzlesFastestRuntime,
   getFastestRuntime,
   getSlowestRuntime,
@@ -30,6 +30,7 @@ const {
   getAverageAttempts,
   getSolvedCount,
   getPuzzleCompletionData,
+  beatsFastestRuntime,
 } = await import('../src/statistics.js');
 
 describe('statistics', () => {
@@ -37,35 +38,14 @@ describe('statistics', () => {
     jest.resetAllMocks();
   });
 
-  describe('getPuzzlesFastestRuntime()', () => {
-    test('returns null if puzzle not found', async () => {
-      findPuzzle.mockResolvedValue(null);
-      const result = await getPuzzlesFastestRuntime(2022, 1, 1);
-      expect(result).toBe(null);
-    });
-
-    test('returns null if value not set', async () => {
-      findPuzzle.mockResolvedValue({ fastestRuntimeNs: undefined });
-      const result = await getPuzzlesFastestRuntime(2022, 1, 1);
-      expect(result).toBe(null);
-    });
-
-    test('returns value if set', async () => {
-      const expected = 324234324324;
-      findPuzzle.mockResolvedValue({ fastestRuntimeNs: expected });
-      const result = await getPuzzlesFastestRuntime(2022, 1, 1);
-      expect(result).toBe(expected);
-    });
-  });
-
   describe('setPuzzlesFastestRuntime()', () => {
     test('throws if not positive int', async () => {
       parsePositiveInt.mockImplementation(() => {
         throw new RangeError('NOPE');
       });
-      await expect(async () => setPuzzlesFastestRuntime(2022, 1, 1)).rejects.toThrow(
-        RangeError
-      );
+      await expect(async () =>
+        setPuzzlesFastestRuntime(2022, 1, 1)
+      ).rejects.toThrow(RangeError);
       expect(addOrEditPuzzle).not.toHaveBeenCalled();
     });
 
@@ -170,9 +150,13 @@ describe('statistics', () => {
 
     test('calculates average', async () => {
       const runtimes = [1234, 345634, 238, 12394];
-      getPuzzlesForYear.mockResolvedValue(runtimes.map((x) => ({ fastestRuntimeNs: x })));
+      getPuzzlesForYear.mockResolvedValue(
+        runtimes.map((x) => ({ fastestRuntimeNs: x }))
+      );
       const result = await getAverageRuntime(2022);
-      expect(result).toBe(runtimes.reduce((acc, x) => acc + x, 0) / runtimes.length);
+      expect(result).toBe(
+        runtimes.reduce((acc, x) => acc + x, 0) / runtimes.length
+      );
     });
   });
 
@@ -235,7 +219,10 @@ describe('statistics', () => {
         { correctAnswer: 'ASDF', incorrectAnswers: [] },
         { correctAnswer: 'ASDF', incorrectAnswers: ['ASDF', '1234', 'zxcv'] },
         { correctAnswer: null, incorrectAnswers: ['ASDF', 'zxcv'] },
-        { correctAnswer: 'ASDF', incorrectAnswers: ['ASDF', '1234', 'zxcv', 'ASDF'] },
+        {
+          correctAnswer: 'ASDF',
+          incorrectAnswers: ['ASDF', '1234', 'zxcv', 'ASDF'],
+        },
         { correctAnswer: 'ASDF', incorrectAnswers: [] },
         { correctAnswer: 'ASDF', incorrectAnswers: ['12324'] },
         { correctAnswer: 'ASDF', incorrectAnswers: [] },
@@ -243,7 +230,8 @@ describe('statistics', () => {
 
       const expected =
         data.reduce(
-          (acc, x) => acc + x.incorrectAnswers.length + (x.correctAnswer ? 1 : 0),
+          (acc, x) =>
+            acc + x.incorrectAnswers.length + (x.correctAnswer ? 1 : 0),
           0
         ) / data.length;
 
@@ -382,7 +370,9 @@ describe('statistics', () => {
     test('numberOfAttempts is correct if unsolved with wrong answers', async () => {
       const year = 2022;
       const wrongAnswers = ['1234', 'sadf', 'zxcv', 'qwer', 'cvbx', 'rety'];
-      getPuzzlesForYear.mockResolvedValue([mockPuzzle(year, 1, 1, null, wrongAnswers)]);
+      getPuzzlesForYear.mockResolvedValue([
+        mockPuzzle(year, 1, 1, null, wrongAnswers),
+      ]);
       const result = await getPuzzleCompletionData(year);
       expect(result[0]?.numberOfAttempts).toBe(wrongAnswers.length);
     });
@@ -406,6 +396,38 @@ describe('statistics', () => {
       getPuzzlesForYear.mockResolvedValue(input);
       const result = await getPuzzleCompletionData(year);
       expect(result).toStrictEqual(expected);
+    });
+  });
+
+  describe('beatsFastestRuntime()', () => {
+    test('returns false if puzzle not found', async () => {
+      findPuzzle.mockResolvedValue(null);
+      const result = await beatsFastestRuntime(1, 2, 3, 4);
+      expect(result).toBe(false);
+    });
+
+    test('returns false if puzzle does not have fastest runtime set', async () => {
+      findPuzzle.mockResolvedValue({ fastestRuntimeNs: null });
+      const result = await beatsFastestRuntime(1, 2, 3, 5);
+      expect(result).toBe(false);
+    });
+
+    test('returns true if runtime is faster than fastest', async () => {
+      findPuzzle.mockResolvedValue({ fastestRuntimeNs: 100 });
+      const result = await beatsFastestRuntime(1, 2, 3, 50);
+      expect(result).toBe(true);
+    });
+
+    test('returns false if runtime is slower than fastest', async () => {
+      findPuzzle.mockResolvedValue({ fastestRuntimeNs: 100 });
+      const result = await beatsFastestRuntime(1, 2, 3, 150);
+      expect(result).toBe(false);
+    });
+
+    test('returns false if runtime is equal to fastest', async () => {
+      findPuzzle.mockResolvedValue({ fastestRuntimeNs: 100 });
+      const result = await beatsFastestRuntime(1, 2, 3, 100);
+      expect(result).toBe(false);
     });
   });
 });

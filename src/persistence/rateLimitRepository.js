@@ -35,7 +35,9 @@ const isoStringToDate = (value) => {
   const parsed = parseISO(value);
 
   if (!isValid(parsed)) {
-    throw new TypeError(`Failed to parse ISO8601 date string from value: "${value}"`);
+    throw new TypeError(
+      `Failed to parse ISO8601 date string from value: "${value}"`
+    );
   }
 
   return parsed;
@@ -47,7 +49,9 @@ const isoStringToDate = (value) => {
  */
 export const getRateLimit = async (actionType) => {
   const rateLimits = await loadRateLimitData();
-  return rateLimits[actionType] ? isoStringToDate(rateLimits[actionType]) : null;
+  return rateLimits[actionType]
+    ? isoStringToDate(rateLimits[actionType])
+    : null;
 };
 
 /**

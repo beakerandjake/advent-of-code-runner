@@ -42,6 +42,7 @@ export const inputIsCached = async (year, day) => {
  * Loads the cached input for the days puzzle
  * @param {Number} year
  * @param {Number} day
+ * @returns {Promise<String>}
  */
 export const getCachedInput = async (year, day) => {
   const fileName = getInputFileName(year, day);

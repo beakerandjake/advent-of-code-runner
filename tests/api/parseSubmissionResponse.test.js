@@ -16,9 +16,8 @@ const { getConfigValue } = await import('../../src/config.js');
 const { getElementByTagName, getTextContent } = await import(
   '../../src/api/parseHtml.js'
 );
-const { extractTextContentOfMain, sanitizeMessage, parseResponseMessage } = await import(
-  '../../src/api/parseSubmissionResponse.js'
-);
+const { extractTextContentOfMain, sanitizeMessage, parseResponseMessage } =
+  await import('../../src/api/parseSubmissionResponse.js');
 
 beforeEach(() => {
   jest.resetAllMocks();
@@ -93,7 +92,9 @@ describe('parseSubmissionResponse', () => {
     // sanitizer values from the actual config.
     describe('actual sanitizers from config', () => {
       test('wrong answer', () => {
-        getConfigValue.mockImplementation((...args) => getConfigValueOrig(...args));
+        getConfigValue.mockImplementation((...args) =>
+          getConfigValueOrig(...args)
+        );
         const input =
           "That's not the right answer.  If you're stuck, make sure you're using the full input data; there are also some general tips on the about page, or you can ask for hints on the subreddit.  Because you have guessed incorrectly 12 times on this puzzle, please wait 15 minutes before trying again. (You guessed 12349857.) [Return to Day 1]";
         const expected =
@@ -103,7 +104,9 @@ describe('parseSubmissionResponse', () => {
       });
 
       test('correct answer (day complete)', () => {
-        getConfigValue.mockImplementation((...args) => getConfigValueOrig(...args));
+        getConfigValue.mockImplementation((...args) =>
+          getConfigValueOrig(...args)
+        );
         const input = `That's the right answer! You are one gold star closer to collecting enough star fruit. You have completed Day 1! You can [Shareon Twitter Mastodon] this victory or [Return to Your Advent Calendar].`;
         const expected = `That's the right answer! You are one gold star closer to collecting enough star fruit. You have completed Day 1!`;
         const result = sanitizeMessage(input);
@@ -111,7 +114,9 @@ describe('parseSubmissionResponse', () => {
       });
 
       test('correct answer (day incomplete)', () => {
-        getConfigValue.mockImplementation((...args) => getConfigValueOrig(...args));
+        getConfigValue.mockImplementation((...args) =>
+          getConfigValueOrig(...args)
+        );
         const input = `That's the right answer! You are one gold star closer to collecting enough star fruit. [Continue to Part Two]`;
         const expected = `That's the right answer! You are one gold star closer to collecting enough star fruit.`;
         const result = sanitizeMessage(input);
@@ -119,7 +124,9 @@ describe('parseSubmissionResponse', () => {
       });
 
       test('bad level', () => {
-        getConfigValue.mockImplementation((...args) => getConfigValueOrig(...args));
+        getConfigValue.mockImplementation((...args) =>
+          getConfigValueOrig(...args)
+        );
         const input =
           "You don't seem to be solving the right level.  Did you already complete it? [Return to Day 2]";
         const expected =
@@ -129,7 +136,9 @@ describe('parseSubmissionResponse', () => {
       });
 
       test('too many requests', () => {
-        getConfigValue.mockImplementation((...args) => getConfigValueOrig(...args));
+        getConfigValue.mockImplementation((...args) =>
+          getConfigValueOrig(...args)
+        );
         const input =
           'You gave an answer too recently; you have to wait after submitting an answer before trying again.  You have 14m 6s left to wait. [Return to Day 1]';
         const expected =

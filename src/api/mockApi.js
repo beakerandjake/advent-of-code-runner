@@ -8,6 +8,7 @@ import { logger } from '../logger.js';
  * @param {Number} year - The year of the puzzle
  * @param {Number} day - The day of the puzzle.
  * @param {String} authenticationToken - Token to authenticate with aoc.
+ * @returns {Promise<string>}
  */
 export const downloadInput = async (year, day, authenticationToken) => {
   logger.debug('downloading mock input file for year: %s, day: %s', year, day);
@@ -22,11 +23,19 @@ export const downloadInput = async (year, day, authenticationToken) => {
  * @param {String|Number} solution - The solution to test.
  * @param {String} authenticationToken - Token to authenticate with aoc.
  */
-export const submitSolution = async (year, day, level, solution, authenticationToken) => {
+export const submitSolution = async (
+  year,
+  day,
+  level,
+  solution,
+  authenticationToken
+) => {
   logger.debug('submitting answer to mock api');
   const correct = getConfigValue('aoc.mockApi.answerCorrect');
   return {
     correct,
-    message: correct ? 'Great Job you answered correct!' : "That's the wrong answer!",
+    message: correct
+      ? 'Great Job you answered correct!'
+      : "That's the wrong answer!",
   };
 };

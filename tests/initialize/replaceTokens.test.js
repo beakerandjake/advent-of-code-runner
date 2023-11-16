@@ -72,7 +72,11 @@ describe('initialize', () => {
         { key: 'cats', match: 'catspeak' },
       ];
       const args = { dogs: 'woof', cats: 'meow' };
-      const result = replaceTokens(tokens, args, 'the dog says: dogspeak dogspeak');
+      const result = replaceTokens(
+        tokens,
+        args,
+        'the dog says: dogspeak dogspeak'
+      );
       expect(result).toBe('the dog says: woof woof');
     });
 

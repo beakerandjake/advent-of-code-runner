@@ -7,7 +7,9 @@ jest.unstable_mockModule('winston', () => ({
   createLogger: jest.fn(),
   format: {
     simple: () => ({
-      transform: jest.fn(({ level, message }) => ({ message: `${level}: ${message}` })),
+      transform: jest.fn(({ level, message }) => ({
+        message: `${level}: ${message}`,
+      })),
     }),
     combine: jest.fn(),
     errors: jest.fn(),
@@ -62,7 +64,11 @@ describe('logger', () => {
     });
 
     test('level is error - explicit simple format', async () => {
-      const info = { level: 'error', message: 'hi there!', simpleErrorFormat: true };
+      const info = {
+        level: 'error',
+        message: 'hi there!',
+        simpleErrorFormat: true,
+      };
       const { printfCustomFormat } = await import('../src/logger.js');
       const result = printfCustomFormat(info);
       expect(result).toBe(`${info.level}: ${info.message}`);

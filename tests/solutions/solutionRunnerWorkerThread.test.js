@@ -1,5 +1,5 @@
 import { describe, jest, test } from '@jest/globals';
-import { workerMessageTypes } from '../../src/solutions/workerMessageTypes';
+import { workerMessageTypes } from '../../src/solutions/workerMessageTypes.js';
 import {
   SolutionWorkerMissingDataError,
   UserSolutionAnswerInvalidError,
@@ -27,9 +27,12 @@ jest.unstable_mockModule('../../src/util.js', () => ({
   getType: jest.fn(),
 }));
 
-jest.unstable_mockModule('../../src/solutions/importUserSolutionModule.js', () => ({
-  importUserSolutionModule: jest.fn(),
-}));
+jest.unstable_mockModule(
+  '../../src/solutions/importUserSolutionModule.js',
+  () => ({
+    importUserSolutionModule: jest.fn(),
+  })
+);
 
 jest.unstable_mockModule('../../src/validation/validateAnswer.js', () => ({
   answerTypeIsValid: jest.fn(),
@@ -38,7 +41,9 @@ jest.unstable_mockModule('../../src/validation/validateAnswer.js', () => ({
 const { hrtime } = await import('node:process');
 const { parentPort } = await import('node:worker_threads');
 const { get } = await import('../../src/util.js');
-const { answerTypeIsValid } = await import('../../src/validation/validateAnswer.js');
+const { answerTypeIsValid } = await import(
+  '../../src/validation/validateAnswer.js'
+);
 const { importUserSolutionModule } = await import(
   '../../src/solutions/importUserSolutionModule.js'
 );
@@ -124,9 +129,9 @@ describe('solutionRunnerWorkerThread', () => {
 
     test('throws if answer type is invalid', async () => {
       answerTypeIsValid.mockReturnValue(false);
-      await expect(async () => executeUserSolution(() => {}, 'asdf')).rejects.toThrow(
-        TypeError
-      );
+      await expect(async () =>
+        executeUserSolution(() => {}, 'asdf')
+      ).rejects.toThrow(TypeError);
     });
 
     test('posts answer to parent thread on success', async () => {
@@ -183,7 +188,11 @@ describe('solutionRunnerWorkerThread', () => {
 
     test('throws SolutionWorkerMissingDataError if user data missing "lines"', async () => {
       await expect(async () =>
-        runWorker({ functionToExecute: 'asdf', solutionFileName: 'asdf', input: 'asdf' })
+        runWorker({
+          functionToExecute: 'asdf',
+          solutionFileName: 'asdf',
+          input: 'asdf',
+        })
       ).rejects.toThrow(SolutionWorkerMissingDataError);
     });
 

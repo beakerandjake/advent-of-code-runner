@@ -8,7 +8,9 @@ jest.unstable_mockModule('fs-extra/esm', () => ({ copy: jest.fn() }));
 
 // import after mocks set up
 const { copy } = await import('fs-extra/esm');
-const { createGitIgnore } = await import('../../src/initialize/createGitIgnore.js');
+const { createGitIgnore } = await import(
+  '../../src/initialize/createGitIgnore.js'
+);
 
 describe('initialize', () => {
   describe('createGitIgnore()', () => {

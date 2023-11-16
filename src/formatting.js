@@ -6,6 +6,8 @@ import {
   min,
   minutesToMilliseconds,
 } from 'date-fns';
+import terminalLink from 'terminal-link';
+import { puzzleBaseUrl } from './api/urls.js';
 
 /**
  * Calculates the number of KB the string takes up.
@@ -79,13 +81,9 @@ export const humanizeMinutesDifference = (startDate, endDate) => {
 };
 
 /**
- * Given a sorted array, generates a string like 'between $(first) and $(last)'
- * @param {Any[]} choices
+ * Returns a url to the puzzle that is clickable in supported consoles.
+ * @param {number} year
+ * @param {number} day
  */
-export const betweenMessage = (choices = []) => {
-  if (choices?.length <= 1) {
-    throw new RangeError('Expected an array of at least length 2');
-  }
-
-  return `between ${choices[0]} and ${choices[choices.length - 1]}`;
-};
+export const clickablePuzzleUrl = (year, day) =>
+  terminalLink('Puzzle', puzzleBaseUrl(year, day));

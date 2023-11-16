@@ -10,7 +10,10 @@ export const get = (target, path, defaultValue = undefined) => {
   const result = String.prototype.split
     .call(path || '', '.')
     .filter(Boolean)
-    .reduce((res, key) => (res !== null && res !== undefined ? res[key] : res), target);
+    .reduce(
+      (res, key) => (res !== null && res !== undefined ? res[key] : res),
+      target
+    );
   return result === undefined || result === target ? defaultValue : result;
 };
 

@@ -38,7 +38,7 @@ Pull requests run a CI workflow, which must pass for the PR to be merged.
 #### Additional Pull Request Tips
 - Try to focus on accomplishing one thing, be it a feature or a bug fix. 
 - Try to do the least amount of change possible to accomplish the goal. 
-- Skip the temptation to make unnecessary changes or refactors (this makes tracing changes easier in the future). 
+- Skip the temptation to make unnecessary changes or refactors (this makes tracking changes easier in the future). 
 - If possible try not to introduce new dependencies.  
 
 ## Development Setup
@@ -61,7 +61,7 @@ npm install
 ```
 
 #### `npm start`
-This is the command to run the program for development. It runs the `scripts/start.js` file. 
+This is the command to run the program for development. It runs the `bin/start.js` file. 
 
 This file contains some logic to ensure local development is easy:
 - A working directory is created (if it does not exist) at the root of the repository called `development`. This folder acts as the cwd when running commands, it is ignored by git.
@@ -94,43 +94,15 @@ The project folder structure attempts to be as flat as possible to avoid deep ne
 Each js file strives to have a single purpose, and if it starts to do too much it should be split into different files. This makes finding the implementation of a feature easy and makes the code more testable. Big multipurpose files are generally avoided save for some exceptions such as `util.js` or `formatting.js`. 
 
 #### Folders
-- `scripts/` contains development scripts launched by the `package.json`
+- `bin/` contains development scripts launched by the `package.json`
 - `src/` contains all source code necessary to run the CLI.
 - `templates/` template files used by the `init` command.
 - `tests/` the unit tests, matches the structure of `src/`
 
 ## Code overview
-This project uses [commander](https://github.com/tj/commander.js/) for the CLI logic. In `main.js` you can see all of the commands that are added. Each command corresponds to a file in the `src/cli` folder. 
+This project uses [commander](https://github.com/tj/commander.js/) for the CLI logic. In `main.js` you can see all of the commands that are added. Each command corresponds to an action in the `src/commands` folder. 
 
 The project uses ESM for modules.
-
-#### Action Chains
-Commands are generally implemented using action chains. An action chain is a abstraction for combining small pieces of functionality together to accomplish complex logic. An action chain is composed of "links", each link in the chain is a small single purpose function. 
-
-The action chain executes each link sequentially. It maintains an `args` object that is passed to each link in the chain, links can modify this args object by returning an object. When a link returns an object that value is spread onto the chains current args object. 
-
-Links can halt the chain by explicitly returning `false`. When the chain is halted by a link, no further links in that chain are run. A chain is also halted if a link throws an exception.
-
-Chains can be created using the `createChain` function which takes an array of links. This function returns a new function which executes the chain when invoked.
-
-Here is an example chain: 
-```js
-const exampleChain = createChain([
-  assertInitialized,
-  getYear,
-  getNextUnsolvedPuzzle,
-  outputPuzzleLink
-])
-
-await exampleChain();
-```
-The chain runs these links in order: 
-  1. `assertInitialized` - Halts the chain if the `cwd` does not contain a user data file. 
-  2. `getYear` - Loads the year from the user data file and adds the year to the chains args. 
-  3. `getNextUnsolvedPuzzle` - Searches the user data file for the first puzzle the user has not solved, the puzzle day and level are added to the chain args. 
-  4. `outputPuzzleLink` - Prints a link to the puzzle in the terminal. 
-
-Since the links in a chain are executed sequentially, the order of the links is very important. Some links expect certain args to be present and will fail if those ars are missing. For instance `outputPuzzleLink` requires an args object like `{ year, day, level }`. These fields are added to the args object by the earlier links `getYear` and `getNextUnsolvedPuzzle`.
 
 ## Tests
 [Jest](https://github.com/facebook/jest) is used for unit testing. There is no set coverage target, but the goal is to have as many quality tests as possible. 
@@ -155,13 +127,13 @@ The code is using the [airbnb eslint preset](https://www.npmjs.com/package/eslin
 
 An attempt should be made follow clean coding principles and to match the existing code style and not deviate from the general conventions of the existing code. Consistency is most important. 
 
-Some basic non-exhaustive guidelines:
+Some basic guidelines:
 
 - Small single purpose methods, decompose large functions into small ones.
 - Minimize state, prefer pure functions. 
 - Minimize coupling.
 - Comment public functions with [JSDoc](https://github.com/jsdoc/jsdoc)
-- Code should be self documenting, comments should explain the "whys".
+- Comments should explain the "whys".
 - Prefer descriptive naming and avoid abbreviations (except for common acronyms such as URL or api).
 - Prefer latest JS features and async functions.
 - Follow rules of thumb 

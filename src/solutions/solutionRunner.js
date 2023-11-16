@@ -27,7 +27,10 @@ import { workerMessageTypes } from './workerMessageTypes.js';
  * @param {Number} day
  */
 export const getSolutionFileName = (day) =>
-  join(getConfigValue('paths.solutionsDir'), `day_${day.toString().padStart(2, '0')}.js`);
+  join(
+    getConfigValue('paths.solutionsDir'),
+    `day_${day.toString().padStart(2, '0')}.js`
+  );
 
 /**
  * Returns the name of the function to execute for level.
@@ -58,7 +61,10 @@ export const spawnWorker = async (workerThreadFileName, workerData) =>
     // omit the auth token from the workers env.
     const { [envOptions.authenticationToken]: _, ...workerEnv } = env;
     // spawn the worker thread
-    const worker = new Worker(workerThreadFileName, { workerData, env: workerEnv });
+    const worker = new Worker(workerThreadFileName, {
+      workerData,
+      env: workerEnv,
+    });
     // listen to messages from the worker thread.
     worker.on('message', (data) => {
       switch (data.type) {
@@ -72,7 +78,9 @@ export const spawnWorker = async (workerThreadFileName, workerData) =>
           break;
         default:
           reject(
-            new Error(`Solution Worker provided unknown message type: ${data.type}`)
+            new Error(
+              `Solution Worker provided unknown message type: ${data.type}`
+            )
           );
           break;
       }
@@ -96,9 +104,13 @@ export const spawnWorker = async (workerThreadFileName, workerData) =>
  * @throws {UserSolutionThrewError}
  * @throws {SolutionWorkerEmptyInputError}
  * @throws {SolutionWorkerExitWithoutAnswerError}
+ * @returns {Promise<{answer:string|number, runtimeNs:number}>}
  */
 export const execute = async (day, level, input) => {
-  logger.debug('spawning worker thread to execute user solution', { day, level });
+  logger.debug('spawning worker thread to execute user solution', {
+    day,
+    level,
+  });
 
   if (!input) {
     throw new SolutionWorkerEmptyInputError();

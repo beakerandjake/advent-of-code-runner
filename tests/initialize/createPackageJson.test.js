@@ -14,7 +14,9 @@ jest.unstable_mockModule('fs-extra/esm', () => ({
 // import after mocks set up
 const { exec } = await import('node:child_process');
 const { readJson, writeJson } = await import('fs-extra/esm');
-const { createPackageJson } = await import('../../src/initialize/createPackageJson.js');
+const { createPackageJson } = await import(
+  '../../src/initialize/createPackageJson.js'
+);
 
 describe('initialize', () => {
   describe('createPackageJson()', () => {
@@ -22,12 +24,9 @@ describe('initialize', () => {
       jest.resetAllMocks();
     });
 
-    test.each([null, undefined, { year: null }, { year: undefined }, {}])(
-      'throws if given args: "%s"',
-      async (year) => {
-        await expect(async () => createPackageJson(year)).rejects.toThrow();
-      }
-    );
+    test.each([null, undefined])('throws if year is: "%s"', async (year) => {
+      await expect(async () => createPackageJson(year)).rejects.toThrow();
+    });
 
     test('resolves promise when no exec error', async () => {
       exec.mockImplementation((command, options, callback) => callback());
@@ -38,7 +37,9 @@ describe('initialize', () => {
     });
 
     test('throws if exec error', async () => {
-      exec.mockImplementation((command, options, callback) => callback(new Error()));
+      exec.mockImplementation((command, options, callback) =>
+        callback(new Error())
+      );
       const result = createPackageJson({ year: 2022 });
       await expect(result).rejects.toThrow();
       expect(writeJson).not.toHaveBeenCalled();
