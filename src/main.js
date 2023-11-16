@@ -18,6 +18,9 @@ import { printFestiveTitle } from './festive.js';
  */
 export const intParser = (choices) => (value) => {
   const parsed = Number.parseInt(value, 10);
+  if (Number.isNaN(parsed)) {
+    throw new InvalidArgumentError('Value could not be parsed as an integer.');
+  }
   if (!choices.includes(parsed)) {
     const min = Math.min(...choices);
     const max = Math.max(...choices);
