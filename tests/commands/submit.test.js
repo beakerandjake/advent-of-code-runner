@@ -54,9 +54,18 @@ describe('submit command', () => {
   });
 
   test('auto submits if no args', async () => {
+    const year = 1243;
+    const day = 10;
+    const level = 1;
+    getYear.mockReturnValue(year);
+    getNextUnansweredPuzzle.mockResolvedValue({ day, level });
     dataFileExists.mockResolvedValue(true);
+    puzzleHasBeenSolved.mockResolvedValue(false);
+    tryToSolvePuzzle.mockResolvedValue({ answer: 'great job!', runtimeNs: 5 });
+    submitSolution.mockResolvedValue({ correct: true, message: '' });
     await submitAction();
     expect(getNextUnansweredPuzzle).toHaveBeenCalled();
+    expect(tryToSolvePuzzle).toHaveBeenCalledWith(year, day, level);
   });
 
   test('does not auto submit if day provided', async () => {
@@ -96,7 +105,7 @@ describe('submit command', () => {
     );
   });
 
-  test('does not auto solve if all puzzles have been solved', async () => {
+  test('does not auto submit if all puzzles have been solved', async () => {
     dataFileExists.mockResolvedValue(true);
     getNextUnansweredPuzzle.mockResolvedValue(null);
     await submitAction();
