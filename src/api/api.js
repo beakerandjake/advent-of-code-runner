@@ -1,4 +1,5 @@
 import { getConfigValue } from '../config.js';
+import { NotAuthorizedError } from '../errors/apiErrors.js';
 import { sizeOfStringInKb } from '../formatting.js';
 import { logger } from '../logger.js';
 import {
@@ -41,7 +42,7 @@ export const downloadInput = async (year, day, authenticationToken) => {
 
   // bad request, authentication failed.
   if (response.status === 400) {
-    throw new Error('Authentication failed, double check authentication token');
+    throw new NotAuthorizedError();
   }
   // not found, invalid day or year.
   if (response.status === 404) {

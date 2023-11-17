@@ -1,5 +1,6 @@
 import { describe, jest, test, beforeEach } from '@jest/globals';
 import { mockLogger, mockConfig } from '../mocks.js';
+import { NotAuthorizedError } from '../../src/errors/apiErrors.js';
 
 // setup mocks
 mockLogger();
@@ -43,7 +44,7 @@ describe('api', () => {
         })
       );
       await expect(async () => downloadInput(2022, 1, 'ASDF')).rejects.toThrow(
-        /authentication/i
+        NotAuthorizedError
       );
     });
 

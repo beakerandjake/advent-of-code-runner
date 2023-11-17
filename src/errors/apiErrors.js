@@ -22,3 +22,16 @@ export class SolvingWrongLevelError extends UserError {
     this.name = 'SolvingWrongLevelError';
   }
 }
+
+/**
+ * Error that is raised if authentication failed.
+ */
+export class NotAuthorizedError extends UserError {
+  constructor(...args) {
+    super(
+      "Authentication failed, your token may have expired. You can run the 'auth' command to update your token.",
+      ...args
+    );
+    this.name = 'NotAuthorizedError';
+  }
+}
