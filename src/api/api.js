@@ -1,6 +1,6 @@
 import { getConfigValue } from '../config.js';
 import {
-  EmptyInputResponseError,
+  EmptyResponseError,
   InternalServerError,
   NotAuthorizedError,
   PuzzleNotFoundError,
@@ -54,7 +54,7 @@ export const downloadInput = async (year, day, authenticationToken) => {
   const text = await response.text();
   logger.debug('downloaded: %s', sizeOfStringInKb(text));
   if (!text) {
-    throw new EmptyInputResponseError();
+    throw new EmptyResponseError();
   }
   return text;
 };
@@ -109,7 +109,7 @@ export const submitSolution = async (
   );
 
   if (!responseMessage) {
-    throw new Error('Unable get message from advent of code response.');
+    throw new EmptyResponseError();
   }
 
   // the content of the message tells us what happened

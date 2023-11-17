@@ -1,7 +1,7 @@
 import { describe, jest, test, beforeEach } from '@jest/globals';
 import { mockLogger, mockConfig } from '../mocks.js';
 import {
-  EmptyInputResponseError,
+  EmptyResponseError,
   InternalServerError,
   NotAuthorizedError,
   PuzzleNotFoundError,
@@ -90,7 +90,7 @@ describe('api', () => {
         );
         await expect(async () =>
           downloadInput(2022, 1, 'ASDF')
-        ).rejects.toThrow(EmptyInputResponseError);
+        ).rejects.toThrow(EmptyResponseError);
       }
     );
 
@@ -179,7 +179,7 @@ describe('api', () => {
       );
       await expect(async () =>
         submitSolution(2022, 1, 1, 'solution', 'auth')
-      ).rejects.toThrow(/unexpected/i);
+      ).rejects.toThrow(InternalServerError);
     });
 
     test.each([null, undefined, ''])(
@@ -194,7 +194,7 @@ describe('api', () => {
         );
         await expect(async () =>
           submitSolution(2022, 1, 1, 'solution', 'auth')
-        ).rejects.toThrow(/response/i);
+        ).rejects.toThrow(EmptyResponseError);
       }
     );
 
