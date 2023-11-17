@@ -14,10 +14,13 @@ const answerTooLow = () => [
 /**
  * Returns a parser which matches an "answer too high" response.
  */
-const answerTooHigh = () => {
-  const matcher = (response) => {};
-  return [matcher, false, () => 'Answer was too high.'];
-};
+const answerTooHigh = () => [
+  (response) =>
+    /that's not the right answer/im.test(response) &&
+    /answer is too high/im.test(response),
+  false,
+  () => "That's not the right answer; your answer is too high.",
+];
 
 /**
  * Returns a parser which matches a "not the right answer" response.

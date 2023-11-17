@@ -1,6 +1,7 @@
 import { describe, jest, test, afterEach } from '@jest/globals';
 import { easyMock, easyResolve, mockLogger } from '../mocks.js';
 import {
+  answerTooHigh,
   answerTooLow,
   badLevel,
   correctAnswerDayComplete,
@@ -114,6 +115,18 @@ describe('submit command', () => {
     const { message } = await parsePostAnswerResponse(answerTooLow);
     expect(message).toBe(
       "That's not the right answer; your answer is too low."
+    );
+  });
+
+  test('returns incorrect if response: answer too high.', async () => {
+    const { correct } = await parsePostAnswerResponse(answerTooHigh);
+    expect(correct).toBe(false);
+  });
+
+  test('returns expected message if response: answer too high.', async () => {
+    const { message } = await parsePostAnswerResponse(answerTooHigh);
+    expect(message).toBe(
+      "That's not the right answer; your answer is too high."
     );
   });
 });
