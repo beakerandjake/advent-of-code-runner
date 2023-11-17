@@ -5,7 +5,7 @@ import {
   puzzleHasBeenSolved,
   setCorrectAnswer,
 } from '../answers.js';
-import { submitSolution } from '../api/index.js';
+import { postAnswer } from '../api/index.js';
 import { DirectoryNotInitializedError } from '../errors/cliErrors.js';
 import {
   AnswerAlreadySubmittedError,
@@ -33,7 +33,7 @@ const submit = async (year, day, level) => {
     throw new AnswerAlreadySubmittedError();
   }
 
-  const { correct, message } = await submitSolution(
+  const { correct, message } = await postAnswer(
     year,
     day,
     level,

@@ -23,7 +23,7 @@ global.fetch = mockFetch;
 const { sanitizeMessage, parseResponseMessage } = await import(
   '../../src/api/parseSubmissionResponse.js'
 );
-const { downloadInput, submitSolution } = await import('../../src/api/api.js');
+const { getInput, postAnswer } = await import('../../src/api/api.js');
 
 beforeEach(() => {
   jest.resetAllMocks();
@@ -31,11 +31,11 @@ beforeEach(() => {
 });
 
 describe('api', () => {
-  describe('downloadInput()', () => {
+  describe('getInput()', () => {
     test.each([undefined, null, ''])(
       'throws if authentication token is: "%s"',
       async (value) => {
-        await expect(async () => downloadInput(2022, 1, value)).rejects.toThrow(
+        await expect(async () => getInput(2022, 1, value)).rejects.toThrow(
           NotAuthorizedError
         );
       }
@@ -48,7 +48,7 @@ describe('api', () => {
           statusText: 'you no logged in pal',
         })
       );
-      await expect(async () => downloadInput(2022, 1, 'ASDF')).rejects.toThrow(
+      await expect(async () => getInput(2022, 1, 'ASDF')).rejects.toThrow(
         NotAuthorizedError
       );
     });
@@ -60,7 +60,7 @@ describe('api', () => {
           statusText: 'da puzzle is not found pal',
         })
       );
-      await expect(async () => downloadInput(2022, 1, 'ASDF')).rejects.toThrow(
+      await expect(async () => getInput(2022, 1, 'ASDF')).rejects.toThrow(
         PuzzleNotFoundError
       );
     });
@@ -73,7 +73,7 @@ describe('api', () => {
           statusText: 'da gateway is bad pal',
         })
       );
-      await expect(async () => downloadInput(2022, 1, 'ASDF')).rejects.toThrow(
+      await expect(async () => getInput(2022, 1, 'ASDF')).rejects.toThrow(
         InternalServerError
       );
     });
@@ -89,7 +89,7 @@ describe('api', () => {
           })
         );
         await expect(async () =>
-          downloadInput(2022, 1, 'ASDF')
+          getInput(2022, 1, 'ASDF')
         ).rejects.toThrow(EmptyResponseError);
       }
     );
@@ -103,7 +103,7 @@ describe('api', () => {
           text: () => Promise.resolve(expected),
         })
       );
-      const result = await downloadInput(2022, 1, 'ASDF');
+      const result = await getInput(2022, 1, 'ASDF');
       expect(result).toBe(expected);
     });
 
@@ -116,7 +116,7 @@ describe('api', () => {
           text: () => Promise.resolve(expected),
         })
       );
-      const result = await downloadInput(2022, 1, 'ASDF');
+      const result = await getInput(2022, 1, 'ASDF');
       expect(result).toBe(expected);
     });
 
@@ -129,17 +129,17 @@ describe('api', () => {
           text: () => Promise.resolve(expected),
         })
       );
-      const result = await downloadInput(2022, 1, 'ASDF');
+      const result = await getInput(2022, 1, 'ASDF');
       expect(result).toBe(expected);
     });
   });
 
-  describe('submitSolution()', () => {
+  describe('postAnswer()', () => {
     test.each([undefined, null, ''])(
       'throws if authentication token is: "%s"',
       async (value) => {
         await expect(async () =>
-          submitSolution(2022, 1, 1, 'ASDF', value)
+          postAnswer(2022, 1, 1, 'ASDF', value)
         ).rejects.toThrow(NotAuthorizedError);
       }
     );
@@ -152,7 +152,7 @@ describe('api', () => {
         })
       );
       await expect(async () =>
-        submitSolution(2022, 1, 1, 'solution', 'auth')
+        postAnswer(2022, 1, 1, 'solution', 'auth')
       ).rejects.toThrow(NotAuthorizedError);
     });
 
@@ -165,7 +165,7 @@ describe('api', () => {
         })
       );
       await expect(async () =>
-        submitSolution(2022, 1, 1, 'solution', 'auth')
+        postAnswer(2022, 1, 1, 'solution', 'auth')
       ).rejects.toThrow(PuzzleNotFoundError);
     });
 
@@ -178,7 +178,7 @@ describe('api', () => {
         })
       );
       await expect(async () =>
-        submitSolution(2022, 1, 1, 'solution', 'auth')
+        postAnswer(2022, 1, 1, 'solution', 'auth')
       ).rejects.toThrow(InternalServerError);
     });
 
@@ -193,7 +193,7 @@ describe('api', () => {
           })
         );
         await expect(async () =>
-          submitSolution(2022, 1, 1, 'solution', 'auth')
+          postAnswer(2022, 1, 1, 'solution', 'auth')
         ).rejects.toThrow(EmptyResponseError);
       }
     );
@@ -210,7 +210,7 @@ describe('api', () => {
       sanitizeMessage.mockReturnValue('not empty');
       parseResponseMessage.mockReturnValue(expected);
 
-      const result = await submitSolution(2022, 1, 1, 'solution', 'auth');
+      const result = await postAnswer(2022, 1, 1, 'solution', 'auth');
       expect(result).toBe(expected);
     });
   });

@@ -52,13 +52,13 @@ describe('rateLimit', () => {
         throw new Error('unknown config key');
       });
 
-      await updateRateLimit(rateLimitedActions.downloadInput);
+      await updateRateLimit(rateLimitedActions.getInput);
 
       // reset date for everyone else.
       spy.mockRestore();
 
       expect(setRateLimit).toHaveBeenCalledWith(
-        rateLimitedActions.downloadInput,
+        rateLimitedActions.getInput,
         new Date(now.getTime() + msToAdd)
       );
     });
@@ -74,7 +74,7 @@ describe('rateLimit', () => {
     test('returns false if no expiration', async () => {
       getRateLimit.mockReturnValueOnce(null);
       expect(
-        await isRateLimited(rateLimitedActions.submitAnswer)
+        await isRateLimited(rateLimitedActions.postAnswer)
       ).toStrictEqual({
         expiration: null,
         limited: false,
@@ -84,7 +84,7 @@ describe('rateLimit', () => {
     test('returns false if expiration is invalid date', async () => {
       getRateLimit.mockReturnValueOnce(new Date(Infinity));
       expect(
-        await isRateLimited(rateLimitedActions.submitAnswer)
+        await isRateLimited(rateLimitedActions.postAnswer)
       ).toStrictEqual({
         expiration: null,
         limited: false,
@@ -95,7 +95,7 @@ describe('rateLimit', () => {
       const future = new Date(new Date().getTime() + 1000 * 60 * 5);
       getRateLimit.mockReturnValueOnce(future);
       expect(
-        await isRateLimited(rateLimitedActions.submitAnswer)
+        await isRateLimited(rateLimitedActions.postAnswer)
       ).toStrictEqual({
         expiration: future,
         limited: true,
@@ -106,7 +106,7 @@ describe('rateLimit', () => {
       const past = new Date(new Date().getTime() - 1000 * 60 * 5);
       getRateLimit.mockReturnValueOnce(past);
       expect(
-        await isRateLimited(rateLimitedActions.submitAnswer)
+        await isRateLimited(rateLimitedActions.postAnswer)
       ).toStrictEqual({
         expiration: past,
         limited: false,

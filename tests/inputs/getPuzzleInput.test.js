@@ -4,7 +4,7 @@ import { InvalidPuzzleInputError } from '../../src/errors/puzzleErrors.js';
 
 // setup mocks.
 const easyMocks = [
-  ['src/api/index.js', ['downloadInput']],
+  ['src/api/index.js', ['getInput']],
   [
     'src/inputs/inputCache.js',
     ['cacheInput', 'getCachedInput', 'inputIsCached'],
@@ -17,7 +17,7 @@ mockLogger();
 
 // import after setting up mocks
 const {
-  downloadInput,
+  getInput,
   cacheInput,
   getCachedInput,
   inputIsCached,
@@ -41,21 +41,21 @@ describe('getPuzzleInput()', () => {
     inputIsCached.mockResolvedValue(true);
     inputIsValid.mockReturnValue(true);
     await getPuzzleInput(1, 1);
-    expect(downloadInput).not.toHaveBeenCalled();
+    expect(getInput).not.toHaveBeenCalled();
   });
 
   test('downloads input if input is not cached', async () => {
     inputIsCached.mockResolvedValue(false);
     inputIsValid.mockReturnValue(true);
     await getPuzzleInput(1, 1);
-    expect(downloadInput).toHaveBeenCalled();
+    expect(getInput).toHaveBeenCalled();
   });
 
   test('downloads input if input is not cached', async () => {
     inputIsCached.mockResolvedValue(false);
     inputIsValid.mockReturnValue(true);
     await getPuzzleInput(1, 1);
-    expect(downloadInput).toHaveBeenCalled();
+    expect(getInput).toHaveBeenCalled();
   });
 
   test('caches input if input is downloaded', async () => {
@@ -67,9 +67,9 @@ describe('getPuzzleInput()', () => {
 
   test('does not cache input if download fails', async () => {
     inputIsCached.mockResolvedValue(false);
-    downloadInput.mockRejectedValue(new Error());
+    getInput.mockRejectedValue(new Error());
     await expect(async () => getPuzzleInput(1, 2)).rejects.toThrow();
-    expect(downloadInput).toHaveBeenCalled();
+    expect(getInput).toHaveBeenCalled();
     expect(cacheInput).not.toHaveBeenCalled();
   });
 

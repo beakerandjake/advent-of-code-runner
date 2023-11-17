@@ -29,7 +29,7 @@ const getHeaders = (authenticationToken) => ({
  * @param {Number} day - The day of the puzzle.
  * @param {Promise<String>} authenticationToken - Token to authenticate with aoc.
  */
-export const downloadInput = async (year, day, authenticationToken) => {
+export const getInput = async (year, day, authenticationToken) => {
   logger.debug('downloading input file for year: %s, day: %s', year, day);
   if (!authenticationToken) {
     throw new NotAuthorizedError();
@@ -67,7 +67,7 @@ export const downloadInput = async (year, day, authenticationToken) => {
  * @param {String|Number} solution - The solution to test.
  * @param {String} authenticationToken - Token to authenticate with aoc.
  */
-export const submitSolution = async (
+export const postAnswer = async (
   year,
   day,
   level,
