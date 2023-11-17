@@ -5,18 +5,19 @@ import {
   puzzleHasBeenSolved,
   setCorrectAnswer,
 } from '../answers.js';
-import { submitAnswer } from '../api/submitAnswer.js';
+import { postAnswer } from '../api/index.js';
+import { parseSubmitAnswerResponse } from '../api/parseSubmitAnswerResponse.js';
 import { DirectoryNotInitializedError } from '../errors/cliErrors.js';
 import {
   AnswerAlreadySubmittedError,
   PuzzleAlreadyCompletedError,
 } from '../errors/puzzleErrors.js';
 import { logger } from '../logger.js';
-import { getYear } from '../persistence/metaRepository.js';
+import { getAuthToken, getYear } from '../persistence/metaRepository.js';
 import { setPuzzlesFastestRuntime } from '../statistics.js';
+import { autoUpdateReadme } from '../tables/autoUpdateReadme.js';
 import { dataFileExists } from '../validation/userFilesExist.js';
 import { tryToSolvePuzzle } from './solve.js';
-import { autoUpdateReadme } from '../tables/autoUpdateReadme.js';
 
 /**
  * Submit a specific puzzle
@@ -28,12 +29,11 @@ const submit = async (year, day, level) => {
   }
 
   const { answer, runtimeNs } = await tryToSolvePuzzle(year, day, level);
-
   if (await answerHasBeenSubmitted(year, day, level, answer)) {
     throw new AnswerAlreadySubmittedError();
   }
-
-  const { correct, message } = await submitAnswer(year, day, level, answer);
+  const response = await postAnswer(year, day, level, getAuthToken());
+  const { correct, message } = parseSubmitAnswerResponse(response);
 
   if (!correct) {
     logger.error(message);
