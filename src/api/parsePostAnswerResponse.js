@@ -80,12 +80,12 @@ const correctAnswer = () => {
 };
 
 const parsers = [
-  incorrectLevel(),
-  answeredTooRecently(),
-  answerTooLow(),
-  answerTooHigh(),
-  notTheRightAnswer(),
-  correctAnswer(),
+  incorrectLevel,
+  answeredTooRecently,
+  answerTooLow,
+  answerTooHigh,
+  notTheRightAnswer,
+  correctAnswer,
 ];
 
 /**
@@ -94,8 +94,11 @@ const parsers = [
  * @returns {Promise<{correct:boolean,message:string}>}
  */
 export const parsePostAnswerResponse = async (response) => {
-  for (const [matchFn, correct, messageFn] of parsers) {
+  for (const parser of parsers) {
+    const [matchFn, correct, messageFn] = parser();
+    logger.silly('testing response parser:%s', matchFn);
     if (matchFn(response)) {
+      logger.debug('parsed response', { correct });
       return { correct, message: messageFn(response) };
     }
   }
