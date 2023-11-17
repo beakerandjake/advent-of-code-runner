@@ -74,7 +74,7 @@ export const postAnswer = async (
   solution,
   authenticationToken
 ) => {
-  logger.debug('submitting solution to advent of code', { year, day, level });
+  logger.debug('posting answer to advent of code', { year, day, level });
 
   if (!authenticationToken) {
     throw new NotAuthorizedError();

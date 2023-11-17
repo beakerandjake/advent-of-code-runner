@@ -10,7 +10,7 @@ import { logger } from '../logger.js';
  * @param {String} authenticationToken - Token to authenticate with aoc.
  * @returns {Promise<string>}
  */
-export const getInput = async (year, day) => {
+export const getInput = async (year, day, authenticationToken) => {
   logger.debug('downloading mock input file for year: %s, day: %s', year, day);
   return `${[...Array(100).keys()].map((x) => x + 1).join('\n')}\n`;
 };
@@ -23,8 +23,14 @@ export const getInput = async (year, day) => {
  * @param {String|Number} solution - The solution to test.
  * @param {String} authenticationToken - Token to authenticate with aoc.
  */
-export const postAnswer = async () => {
-  logger.debug('submitting answer to mock api');
+export const postAnswer = async (
+  year,
+  day,
+  level,
+  solution,
+  authenticationToken
+) => {
+  logger.debug('posting answer to mock api');
   const correct = getConfigValue('aoc.mockApi.answerCorrect');
   return {
     correct,
