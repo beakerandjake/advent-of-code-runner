@@ -1,6 +1,7 @@
 import { describe, jest, test, afterEach } from '@jest/globals';
 import { easyMock, easyResolve, mockLogger } from '../mocks.js';
 import {
+  badLevel,
   correctAnswerDayComplete,
   correctAnswerDayIncomplete,
 } from './getActualResponseHtml.js';
@@ -55,6 +56,18 @@ describe('submit command', () => {
     );
     expect(message).toMatch(
       /That's the right answer! You are one gold star closer to collecting enough start fruit. You have completed Day \d+!/
+    );
+  });
+
+  test('returns incorrect if response incorrect, solving wrong level', async () => {
+    const { correct } = await parsePostAnswerResponse(badLevel.html);
+    expect(correct).toBe(false);
+  });
+
+  test('returns expected message if response incorrect, solving wrong level', async () => {
+    const { message } = await parsePostAnswerResponse(badLevel.html);
+    expect(message).toBe(
+      "You don't seem to be solving the right level. Did you already complete it?"
     );
   });
 });

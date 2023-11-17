@@ -35,10 +35,12 @@ const answeredTooRecently = () => {
 /**
  * Returns a parser which matches a not 'solving at the right level' response.
  */
-const incorrectLevel = () => {
-  const matcher = (response) => {};
-  return [matcher, false, () => ''];
-};
+const incorrectLevel = () => [
+  (response) => /solving the right level/im.test(response),
+  false,
+  () =>
+    "You don't seem to be solving the right level. Did you already complete it?",
+];
 
 /**
  * Returns a parser which matches a not 'that's the right answer' response.
