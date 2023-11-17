@@ -1,5 +1,5 @@
 import { describe, jest, test, beforeEach } from '@jest/globals';
-import { mockLogger, mockConfig } from '../mocks.js';
+import { mockLogger, mockConfig, easyMock } from '../mocks.js';
 import {
   EmptyResponseError,
   InternalServerError,
@@ -8,6 +8,10 @@ import {
 } from '../../src/errors/apiErrors.js';
 
 // setup mocks
+easyMock([
+  ['src/formatting.js', ['sizeOfStringInKb']],
+  ['src/api/urls.js', ['puzzleAnswerUrl', 'puzzleInputUrl']],
+]);
 mockLogger();
 mockConfig();
 
