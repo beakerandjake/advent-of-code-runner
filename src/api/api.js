@@ -30,42 +30,33 @@ const getHeaders = (authenticationToken) => ({
  */
 export const downloadInput = async (year, day, authenticationToken) => {
   logger.debug('downloading input file for year: %s, day: %s', year, day);
-
   if (!authenticationToken) {
     throw new Error(
       'Authentication Token is required to query advent of code.'
     );
   }
 
-  // query api
   const url = puzzleInputUrl(year, day);
   logger.debug('querying url for input: %s', url);
   const response = await fetch(url, {
     headers: getHeaders(authenticationToken),
   });
 
-  // bad request, authentication failed.
   if (response.status === 400) {
     throw new NotAuthorizedError();
   }
-  // not found, invalid day or year.
   if (response.status === 404) {
     throw new PuzzleNotFoundError(year, day);
   }
-  // handle all other error status codes
   if (!response.ok) {
     throw new InternalServerError(response.status, response.statusText);
   }
 
-  // expect text of response is the input.
   const text = await response.text();
-
   if (!text) {
     throw new Error('Advent of code returned empty input');
   }
-
   logger.debug('downloaded: %s', sizeOfStringInKb(text));
-
   return text;
 };
 
