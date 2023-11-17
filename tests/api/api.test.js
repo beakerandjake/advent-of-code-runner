@@ -140,7 +140,7 @@ describe('api', () => {
       async (value) => {
         await expect(async () =>
           submitSolution(2022, 1, 1, 'ASDF', value)
-        ).rejects.toThrow(/authentication/i);
+        ).rejects.toThrow(NotAuthorizedError);
       }
     );
 
@@ -153,7 +153,7 @@ describe('api', () => {
       );
       await expect(async () =>
         submitSolution(2022, 1, 1, 'solution', 'auth')
-      ).rejects.toThrow(/authentication/i);
+      ).rejects.toThrow(NotAuthorizedError);
     });
 
     test('throws on 404', async () => {
@@ -166,7 +166,7 @@ describe('api', () => {
       );
       await expect(async () =>
         submitSolution(2022, 1, 1, 'solution', 'auth')
-      ).rejects.toThrow(/found/i);
+      ).rejects.toThrow(PuzzleNotFoundError);
     });
 
     test('throws on response not ok', async () => {

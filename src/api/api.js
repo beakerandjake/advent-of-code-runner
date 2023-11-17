@@ -77,12 +77,9 @@ export const submitSolution = async (
   logger.debug('submitting solution to advent of code', { year, day, level });
 
   if (!authenticationToken) {
-    throw new Error(
-      'Authentication Token is required to query advent of code.'
-    );
+    throw new NotAuthorizedError();
   }
 
-  // post to api
   const url = puzzleAnswerUrl(year, day);
   logger.debug('posting to url: %s', url);
   const response = await fetch(url, {
@@ -94,21 +91,15 @@ export const submitSolution = async (
     body: `level=${level}&answer=${solution}`,
   });
 
-  // bad request, authentication failed.
-  // as of writing advent returns a 302 to redirect the user to the puzzle page on fail
-  // but check 400 too just incase.
+  // server can sometimes redirect (302) back to puzzle page if auth fails.
   if (response.status === 400 || response.status === 302) {
-    throw new Error('Authentication failed, double check authentication token');
+    throw new NotAuthorizedError();
   }
-  // not found, invalid day or year.
   if (response.status === 404) {
-    throw new Error('That year/day combination could not be found');
+    throw new PuzzleNotFoundError(year, day);
   }
-  // bail on any other type of http error
   if (!response.ok) {
-    throw new Error(
-      `Unexpected server error while posting solution, error: ${response.status} - ${response.statusText}`
-    );
+    throw new InternalServerError(response.status, response.statusText);
   }
 
   // advent of code doesn't return status codes, we have to parse the html.
