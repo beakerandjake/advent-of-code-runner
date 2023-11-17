@@ -14,17 +14,8 @@ import { puzzleBaseUrl } from './api/urls.js';
  * @param {String} value - The value whose size to calculate.
  * @param {BufferEncoding} encoding - The strings encoding
  */
-export const sizeOfStringInKb = (value, encoding = 'utf-8') => {
-  if (value == null) {
-    throw new Error('null or undefined value');
-  }
-
-  if (value === '') {
-    return '0kb';
-  }
-
-  return `${(Buffer.byteLength(value, encoding) / 1000).toFixed(2)}kb`;
-};
+export const sizeOfStringInKb = (value, encoding = 'utf-8') =>
+  value ? `${(Buffer.byteLength(value, encoding) / 1000).toFixed(2)}kb` : '0kb';
 
 /**
  * Converts a duration in nanoseconds to a human readable duration, up to seconds.

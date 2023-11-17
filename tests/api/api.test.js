@@ -1,23 +1,25 @@
 import { describe, jest, test, beforeEach } from '@jest/globals';
-import { mockLogger, mockConfig } from '../mocks.js';
+import { mockLogger, mockConfig, easyMock } from '../mocks.js';
+import {
+  EmptyResponseError,
+  InternalServerError,
+  NotAuthorizedError,
+  PuzzleNotFoundError,
+} from '../../src/errors/apiErrors.js';
 
 // setup mocks
+easyMock([
+  ['src/formatting.js', ['sizeOfStringInKb']],
+  ['src/api/urls.js', ['puzzleAnswerUrl', 'puzzleInputUrl']],
+]);
 mockLogger();
 mockConfig();
-jest.unstable_mockModule('src/api/parseSubmissionResponse.js', () => ({
-  extractTextContentOfMain: jest.fn(),
-  sanitizeMessage: jest.fn(),
-  parseResponseMessage: jest.fn(),
-}));
 
 const mockFetch = jest.fn();
 global.fetch = mockFetch;
 
 // import after mocks are setup
-const { sanitizeMessage, parseResponseMessage } = await import(
-  '../../src/api/parseSubmissionResponse.js'
-);
-const { downloadInput, submitSolution } = await import('../../src/api/api.js');
+const { getInput, postAnswer } = await import('../../src/api/api.js');
 
 beforeEach(() => {
   jest.resetAllMocks();
@@ -25,12 +27,12 @@ beforeEach(() => {
 });
 
 describe('api', () => {
-  describe('downloadInput()', () => {
+  describe('getInput()', () => {
     test.each([undefined, null, ''])(
       'throws if authentication token is: "%s"',
       async (value) => {
-        await expect(async () => downloadInput(2022, 1, value)).rejects.toThrow(
-          /authentication/i
+        await expect(async () => getInput(2022, 1, value)).rejects.toThrow(
+          NotAuthorizedError
         );
       }
     );
@@ -42,8 +44,8 @@ describe('api', () => {
           statusText: 'you no logged in pal',
         })
       );
-      await expect(async () => downloadInput(2022, 1, 'ASDF')).rejects.toThrow(
-        /authentication/i
+      await expect(async () => getInput(2022, 1, 'ASDF')).rejects.toThrow(
+        NotAuthorizedError
       );
     });
 
@@ -54,8 +56,8 @@ describe('api', () => {
           statusText: 'da puzzle is not found pal',
         })
       );
-      await expect(async () => downloadInput(2022, 1, 'ASDF')).rejects.toThrow(
-        /found/i
+      await expect(async () => getInput(2022, 1, 'ASDF')).rejects.toThrow(
+        PuzzleNotFoundError
       );
     });
 
@@ -67,13 +69,13 @@ describe('api', () => {
           statusText: 'da gateway is bad pal',
         })
       );
-      await expect(async () => downloadInput(2022, 1, 'ASDF')).rejects.toThrow(
-        /unexpected/i
+      await expect(async () => getInput(2022, 1, 'ASDF')).rejects.toThrow(
+        InternalServerError
       );
     });
 
     test.each([undefined, null, ''])(
-      'throws on empty input: "%s"',
+      'throws on empty input returned: "%s"',
       async (value) => {
         mockFetch.mockImplementation(() =>
           Promise.resolve({
@@ -82,9 +84,9 @@ describe('api', () => {
             text: () => Promise.resolve(value),
           })
         );
-        await expect(async () =>
-          downloadInput(2022, 1, 'ASDF')
-        ).rejects.toThrow(/empty/i);
+        await expect(async () => getInput(2022, 1, 'ASDF')).rejects.toThrow(
+          EmptyResponseError
+        );
       }
     );
 
@@ -97,7 +99,7 @@ describe('api', () => {
           text: () => Promise.resolve(expected),
         })
       );
-      const result = await downloadInput(2022, 1, 'ASDF');
+      const result = await getInput(2022, 1, 'ASDF');
       expect(result).toBe(expected);
     });
 
@@ -110,7 +112,7 @@ describe('api', () => {
           text: () => Promise.resolve(expected),
         })
       );
-      const result = await downloadInput(2022, 1, 'ASDF');
+      const result = await getInput(2022, 1, 'ASDF');
       expect(result).toBe(expected);
     });
 
@@ -123,18 +125,18 @@ describe('api', () => {
           text: () => Promise.resolve(expected),
         })
       );
-      const result = await downloadInput(2022, 1, 'ASDF');
+      const result = await getInput(2022, 1, 'ASDF');
       expect(result).toBe(expected);
     });
   });
 
-  describe('submitSolution()', () => {
+  describe('postAnswer()', () => {
     test.each([undefined, null, ''])(
       'throws if authentication token is: "%s"',
       async (value) => {
         await expect(async () =>
-          submitSolution(2022, 1, 1, 'ASDF', value)
-        ).rejects.toThrow(/authentication/i);
+          postAnswer(2022, 1, 1, 'ASDF', value)
+        ).rejects.toThrow(NotAuthorizedError);
       }
     );
 
@@ -146,8 +148,8 @@ describe('api', () => {
         })
       );
       await expect(async () =>
-        submitSolution(2022, 1, 1, 'solution', 'auth')
-      ).rejects.toThrow(/authentication/i);
+        postAnswer(2022, 1, 1, 'solution', 'auth')
+      ).rejects.toThrow(NotAuthorizedError);
     });
 
     test('throws on 404', async () => {
@@ -159,8 +161,8 @@ describe('api', () => {
         })
       );
       await expect(async () =>
-        submitSolution(2022, 1, 1, 'solution', 'auth')
-      ).rejects.toThrow(/found/i);
+        postAnswer(2022, 1, 1, 'solution', 'auth')
+      ).rejects.toThrow(PuzzleNotFoundError);
     });
 
     test('throws on response not ok', async () => {
@@ -172,8 +174,8 @@ describe('api', () => {
         })
       );
       await expect(async () =>
-        submitSolution(2022, 1, 1, 'solution', 'auth')
-      ).rejects.toThrow(/unexpected/i);
+        postAnswer(2022, 1, 1, 'solution', 'auth')
+      ).rejects.toThrow(InternalServerError);
     });
 
     test.each([null, undefined, ''])(
@@ -187,24 +189,21 @@ describe('api', () => {
           })
         );
         await expect(async () =>
-          submitSolution(2022, 1, 1, 'solution', 'auth')
-        ).rejects.toThrow(/response/i);
+          postAnswer(2022, 1, 1, 'solution', 'auth')
+        ).rejects.toThrow(EmptyResponseError);
       }
     );
 
     test('returns input on success', async () => {
-      const expected = { success: true, message: 'ASDF' };
+      const expected = 'One cool response!';
       mockFetch.mockImplementation(() =>
         Promise.resolve({
           ok: true,
           status: 200,
-          text: () => Promise.resolve('some response'),
+          text: () => Promise.resolve(expected),
         })
       );
-      sanitizeMessage.mockReturnValue('not empty');
-      parseResponseMessage.mockReturnValue(expected);
-
-      const result = await submitSolution(2022, 1, 1, 'solution', 'auth');
+      const result = await postAnswer(2022, 1, 1, 'solution', 'auth');
       expect(result).toBe(expected);
     });
   });

@@ -10,8 +10,8 @@ import {
  * The type of aoc api requests that support rate limiting.
  */
 export const rateLimitedActions = {
-  downloadInput: 'downloadInput',
-  submitAnswer: 'submitAnswer',
+  getInput: 'getInput',
+  postAnswer: 'postAnswer',
 };
 
 /**

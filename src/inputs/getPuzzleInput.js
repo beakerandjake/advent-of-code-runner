@@ -1,4 +1,4 @@
-import { downloadInput } from '../api/index.js';
+import { getInput } from '../api/index.js';
 import { cacheInput, getCachedInput, inputIsCached } from './inputCache.js';
 import { inputIsValid } from '../validation/validateInput.js';
 import { getAuthToken } from '../persistence/metaRepository.js';
@@ -10,7 +10,7 @@ import { logger } from '../logger.js';
  * @returns {Promise<string>}
  */
 const downloadAndCacheInput = async (year, day) => {
-  const input = await downloadInput(year, day, getAuthToken());
+  const input = await getInput(year, day, getAuthToken());
   await cacheInput(year, day, input);
   return input;
 };

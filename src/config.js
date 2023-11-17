@@ -69,37 +69,6 @@ const CONFIG = {
     baseUrl: 'https://adventofcode.com',
     userAgent:
       'https://github.com/beakerandjake/advent-of-code-runner by beakerandjake',
-    responseParsing: {
-      correctSolution: /that's the right answer/gim,
-      incorrectSolution: /that's not the right answer/gim,
-      badLevel: /you don't seem to be solving the right level/gim,
-      tooManyRequests: /you gave an answer too recently/gim,
-      sanitizers: [
-        // remove links, shows up on incorrect/correct answer
-        { pattern: /\[(Return|Continue) to .*\]\.?/gi, replace: '' },
-        // remove help message, shows up on wrong answer
-        {
-          pattern:
-            "If you're stuck, make sure you're using the full input data; there are also some general tips on the about page, or you can ask for hints on the subreddit.",
-          replace: '',
-        },
-        // remove guess text, shows up on wrong answer
-        {
-          pattern: /\(You guessed .*\)/gi,
-          replace: '',
-        },
-        // remove share text, shows up when answer is correct (but all levels not solved)
-        {
-          pattern: /You can \[.*\] this victory or/gi,
-          replace: '',
-        },
-        // standardize whitespace
-        {
-          pattern: /\s\s+/g,
-          replace: ' ',
-        },
-      ],
-    },
     rateLimiting: {
       defaultTimeoutMs: 300000,
     },

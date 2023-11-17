@@ -5,7 +5,8 @@ import {
   puzzleHasBeenSolved,
   setCorrectAnswer,
 } from '../answers.js';
-import { submitSolution } from '../api/index.js';
+import { postAnswer } from '../api/index.js';
+import { parsePostAnswerResponse } from '../api/parsePostAnswerResponse.js';
 import { DirectoryNotInitializedError } from '../errors/cliErrors.js';
 import {
   AnswerAlreadySubmittedError,
@@ -14,9 +15,9 @@ import {
 import { logger } from '../logger.js';
 import { getAuthToken, getYear } from '../persistence/metaRepository.js';
 import { setPuzzlesFastestRuntime } from '../statistics.js';
+import { autoUpdateReadme } from '../tables/autoUpdateReadme.js';
 import { dataFileExists } from '../validation/userFilesExist.js';
 import { tryToSolvePuzzle } from './solve.js';
-import { autoUpdateReadme } from '../tables/autoUpdateReadme.js';
 
 /**
  * Submit a specific puzzle
@@ -28,18 +29,11 @@ const submit = async (year, day, level) => {
   }
 
   const { answer, runtimeNs } = await tryToSolvePuzzle(year, day, level);
-
   if (await answerHasBeenSubmitted(year, day, level, answer)) {
     throw new AnswerAlreadySubmittedError();
   }
-
-  const { correct, message } = await submitSolution(
-    year,
-    day,
-    level,
-    answer,
-    getAuthToken()
-  );
+  const response = await postAnswer(year, day, level, answer, getAuthToken());
+  const { correct, message } = await parsePostAnswerResponse(response);
 
   if (!correct) {
     logger.error(message);
