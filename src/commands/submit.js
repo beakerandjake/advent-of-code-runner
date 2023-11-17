@@ -32,7 +32,7 @@ const submit = async (year, day, level) => {
   if (await answerHasBeenSubmitted(year, day, level, answer)) {
     throw new AnswerAlreadySubmittedError();
   }
-  const response = await postAnswer(year, day, level, getAuthToken());
+  const response = await postAnswer(year, day, level, answer, getAuthToken());
   const { correct, message } = await parsePostAnswerResponse(response);
 
   if (!correct) {
