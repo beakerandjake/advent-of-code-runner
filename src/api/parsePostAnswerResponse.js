@@ -28,10 +28,19 @@ const notTheRightAnswer = () => [
 /**
  * Returns a parser which matches a "answered too recently" response.
  */
-const answeredTooRecently = () => {
-  const matcher = (response) => {};
-  return [matcher, false, () => ''];
-};
+const answeredTooRecently = () => [
+  (response) => /answer too recently/im.test(response),
+  false,
+  (response) => {
+    let message =
+      'You gave an answer too recently; you have to wait after submitting an answer before trying again.';
+    const matchRemaining = response.match(/You have ([\w\d]+) left to wait./i);
+    if (matchRemaining) {
+      message += ` You have ${matchRemaining[1]} left to wait.`;
+    }
+    return message;
+  },
+];
 
 /**
  * Returns a parser which matches a not 'solving at the right level' response.
