@@ -3,10 +3,13 @@ import { ParsePostAnswerResponseError } from '../errors/apiErrors.js';
 /**
  * Returns a parser which matches an "answer too low" response.
  */
-const answerTooLow = () => {
-  const matcher = (response) => {};
-  return [matcher, false, () => 'Answer was too low'];
-};
+const answerTooLow = () => [
+  (response) =>
+    /that's not the right answer/im.test(response) &&
+    /answer is too low/im.test(response),
+  false,
+  () => "That's not the right answer; your answer is too low.",
+];
 
 /**
  * Returns a parser which matches an "answer too high" response.
@@ -34,7 +37,7 @@ const answeredTooRecently = () => [
   (response) => {
     let message =
       'You gave an answer too recently; you have to wait after submitting an answer before trying again.';
-    const matchRemaining = response.match(/You have ([\w\d]+) left to wait./i);
+    const matchRemaining = response.match(/you have ([\w\d]+) left to wait./i);
     if (matchRemaining) {
       message += ` You have ${matchRemaining[1]} left to wait.`;
     }

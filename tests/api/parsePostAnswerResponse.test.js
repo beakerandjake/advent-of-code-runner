@@ -1,6 +1,7 @@
 import { describe, jest, test, afterEach } from '@jest/globals';
 import { easyMock, easyResolve, mockLogger } from '../mocks.js';
 import {
+  answerTooLow,
   badLevel,
   correctAnswerDayComplete,
   correctAnswerDayIncomplete,
@@ -101,6 +102,18 @@ describe('submit command', () => {
     );
     expect(message).toMatch(
       /You gave an answer too recently; you have to wait after submitting an answer before trying again./
+    );
+  });
+
+  test('returns incorrect if response: answer too low.', async () => {
+    const { correct } = await parsePostAnswerResponse(answerTooLow);
+    expect(correct).toBe(false);
+  });
+
+  test('returns expected message if response: answer too low.', async () => {
+    const { message } = await parsePostAnswerResponse(answerTooLow);
+    expect(message).toBe(
+      "That's not the right answer; your answer is too low."
     );
   });
 });
