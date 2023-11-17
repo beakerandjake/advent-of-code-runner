@@ -74,7 +74,7 @@ const correctAnswer = () => {
   const getMessage = (response) => {
     const message = [
       "That's the right answer!",
-      'You are one gold star closer to collecting enough start fruit.',
+      'You are one gold star closer to collecting enough star fruit.',
     ];
     // Add completion message if user completed all levels for the day.
     const dayComplete = response.match(/you have completed day (\d+)!/i);
