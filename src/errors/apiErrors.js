@@ -73,9 +73,9 @@ export class EmptyResponseError extends UserError {
  * Raised if failed to parse a submit answer response
  */
 export class ParsePostAnswerResponseError extends UserError {
-  constructor(...args) {
+  constructor(response, ...args) {
     super(
-      'Failed to parse the response from the server when submitting answer.',
+      `Failed to parse the response from the server when submitting answer.\n\nRaw response html:\n\n${response}\n\nYou can help by submitting a bug report (https://github.com/beakerandjake/advent-of-code-runner/issues).`,
       ...args
     );
     this.name = 'ParsePostAnswerResponseError';

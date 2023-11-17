@@ -99,12 +99,5 @@ export const parsePostAnswerResponse = async (response) => {
       return { correct, message: messageFn(response) };
     }
   }
-  logger.error(
-    'Parsing the server response failed, here is the raw html response:'
-  );
-  logger.error(response);
-  logger.error(
-    'You can help by submitting a bug report (https://github.com/beakerandjake/advent-of-code-runner/issues)'
-  );
-  throw new ParsePostAnswerResponseError();
+  throw new ParsePostAnswerResponseError(response);
 };
