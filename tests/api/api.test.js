@@ -1,6 +1,10 @@
 import { describe, jest, test, beforeEach } from '@jest/globals';
 import { mockLogger, mockConfig } from '../mocks.js';
-import { NotAuthorizedError } from '../../src/errors/apiErrors.js';
+import {
+  InternalServerError,
+  NotAuthorizedError,
+  PuzzleNotFoundError,
+} from '../../src/errors/apiErrors.js';
 
 // setup mocks
 mockLogger();
@@ -56,7 +60,7 @@ describe('api', () => {
         })
       );
       await expect(async () => downloadInput(2022, 1, 'ASDF')).rejects.toThrow(
-        /found/i
+        PuzzleNotFoundError
       );
     });
 
@@ -69,7 +73,7 @@ describe('api', () => {
         })
       );
       await expect(async () => downloadInput(2022, 1, 'ASDF')).rejects.toThrow(
-        /unexpected/i
+        InternalServerError
       );
     });
 

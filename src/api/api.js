@@ -1,5 +1,9 @@
 import { getConfigValue } from '../config.js';
-import { NotAuthorizedError } from '../errors/apiErrors.js';
+import {
+  InternalServerError,
+  NotAuthorizedError,
+  PuzzleNotFoundError,
+} from '../errors/apiErrors.js';
 import { sizeOfStringInKb } from '../formatting.js';
 import { logger } from '../logger.js';
 import {
@@ -46,13 +50,11 @@ export const downloadInput = async (year, day, authenticationToken) => {
   }
   // not found, invalid day or year.
   if (response.status === 404) {
-    throw new Error('That year/day combination could not be found');
+    throw new PuzzleNotFoundError(year, day);
   }
   // handle all other error status codes
   if (!response.ok) {
-    throw new Error(
-      `Unexpected server error while downloading input file, error: ${response.status} - ${response.statusText}`
-    );
+    throw new InternalServerError(response.status, response.statusText);
   }
 
   // expect text of response is the input.

@@ -35,3 +35,26 @@ export class NotAuthorizedError extends UserError {
     this.name = 'NotAuthorizedError';
   }
 }
+
+/**
+ * Error raised if puzzle not found.
+ */
+export class PuzzleNotFoundError extends UserError {
+  constructor(year, day, ...args) {
+    super(`Server could not find puzzle (year:${year}, day:${day})`, ...args);
+    this.name = 'PuzzleNotFoundError';
+  }
+}
+
+/**
+ * Error raised if server responds with a 500 or general error.
+ */
+export class InternalServerError extends UserError {
+  constructor(status, statusText, ...args) {
+    super(
+      `Server responded with unexpected error: ${status} - ${statusText}`,
+      ...args
+    );
+    this.name = 'InternalServerError';
+  }
+}
