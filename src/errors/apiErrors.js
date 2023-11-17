@@ -81,3 +81,13 @@ export class ParsePostAnswerResponseError extends UserError {
     this.name = 'ParsePostAnswerResponseError';
   }
 }
+
+/**
+ * Raised if server responds with an 'answered too recently' response
+ */
+export class AnsweredTooRecentlyError extends UserError {
+  constructor(...args) {
+    super(...args);
+    this.name = 'AnsweredTooRecentlyError';
+  }
+}

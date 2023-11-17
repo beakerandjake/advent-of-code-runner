@@ -10,6 +10,10 @@ import {
   gaveAnswerTooRecently,
   notTheRightAnswer,
 } from './getActualResponseHtml.js';
+import {
+  AnsweredTooRecentlyError,
+  SolvingWrongLevelError,
+} from '../../src/errors/apiErrors.js';
 
 // setup mocks
 mockLogger();
@@ -26,6 +30,30 @@ describe('submit command', () => {
 
   test('throws if no parser matches', async () => {
     await expect(() => parsePostAnswerResponse(doesNotMatch)).rejects.toThrow();
+  });
+
+  test('throws if response: incorrect, solving wrong level', async () => {
+    await expect(() => parsePostAnswerResponse(badLevel)).rejects.toThrow(
+      SolvingWrongLevelError
+    );
+  });
+
+  test('throws if response: gave answer too recently (without remaining time).', async () => {
+    await expect(() =>
+      parsePostAnswerResponse(gaveAnswerTooRecently)
+    ).rejects.toThrow(
+      /You gave an answer too recently; you have to wait after submitting an answer before trying again./
+    );
+  });
+
+  test('throws if response: gave answer too recently (with remaining time).', async () => {
+    await expect(() =>
+      parsePostAnswerResponse(
+        gaveAnswerTooRecently.replace('You have 16s left to wait.', '')
+      )
+    ).rejects.toThrow(
+      /You gave an answer too recently; you have to wait after submitting an answer before trying again./
+    );
   });
 
   test('returns correct if response success, day incomplete', async () => {
@@ -45,30 +73,14 @@ describe('submit command', () => {
   });
 
   test('returns correct if response: success, day complete', async () => {
-    const { correct } = await parsePostAnswerResponse(
-      correctAnswerDayComplete
-    );
+    const { correct } = await parsePostAnswerResponse(correctAnswerDayComplete);
     expect(correct).toBe(true);
   });
 
   test('returns expected message if response: success, day complete', async () => {
-    const { message } = await parsePostAnswerResponse(
-      correctAnswerDayComplete
-    );
+    const { message } = await parsePostAnswerResponse(correctAnswerDayComplete);
     expect(message).toMatch(
       /That's the right answer! You are one gold star closer to collecting enough start fruit. You have completed Day \d+!/
-    );
-  });
-
-  test('returns incorrect if response: incorrect, solving wrong level', async () => {
-    const { correct } = await parsePostAnswerResponse(badLevel);
-    expect(correct).toBe(false);
-  });
-
-  test('returns expected message if response: incorrect, solving wrong level', async () => {
-    const { message } = await parsePostAnswerResponse(badLevel);
-    expect(message).toBe(
-      "You don't seem to be solving the right level. Did you already complete it?"
     );
   });
 
@@ -80,27 +92,6 @@ describe('submit command', () => {
   test('returns expected message if response: incorrect, no to high / low.', async () => {
     const { message } = await parsePostAnswerResponse(notTheRightAnswer);
     expect(message).toBe("That's not the right answer.");
-  });
-
-  test('returns incorrect if response: gave answer too recently.', async () => {
-    const { correct } = await parsePostAnswerResponse(gaveAnswerTooRecently);
-    expect(correct).toBe(false);
-  });
-
-  test('returns expected message if response: gave answer too recently (with remaining time).', async () => {
-    const { message } = await parsePostAnswerResponse(gaveAnswerTooRecently);
-    expect(message).toMatch(
-      /You gave an answer too recently; you have to wait after submitting an answer before trying again. You have [\w\d]+ left to wait./
-    );
-  });
-
-  test('returns expected message if response: gave answer too recently (without remaining time).', async () => {
-    const { message } = await parsePostAnswerResponse(
-      gaveAnswerTooRecently.replace('You have 16s left to wait.', '')
-    );
-    expect(message).toMatch(
-      /You gave an answer too recently; you have to wait after submitting an answer before trying again./
-    );
   });
 
   test('returns incorrect if response: answer too low.', async () => {

@@ -1,5 +1,9 @@
 import { logger } from '../logger.js';
-import { ParsePostAnswerResponseError } from '../errors/apiErrors.js';
+import {
+  AnsweredTooRecentlyError,
+  ParsePostAnswerResponseError,
+  SolvingWrongLevelError,
+} from '../errors/apiErrors.js';
 
 /**
  * Returns a parser which matches an "answer too low" response.
@@ -36,16 +40,18 @@ const notTheRightAnswer = () => [
  * Returns a parser which matches a "answered too recently" response.
  */
 const answeredTooRecently = () => [
-  (response) => /answer too recently/im.test(response),
-  false,
   (response) => {
-    let message =
-      'You gave an answer too recently; you have to wait after submitting an answer before trying again.';
-    const matchRemaining = response.match(/you have ([\w\d]+) left to wait./i);
-    if (matchRemaining) {
-      message += ` You have ${matchRemaining[1]} left to wait.`;
+    if (/answer too recently/im.test(response)) {
+      let message =
+        'You gave an answer too recently; you have to wait after submitting an answer before trying again.';
+      const matchRemaining = response.match(
+        /you have ([\w\d]+) left to wait./i
+      );
+      if (matchRemaining) {
+        message += ` You have ${matchRemaining[1]} left to wait.`;
+      }
+      throw new AnsweredTooRecentlyError(message);
     }
-    return message;
   },
 ];
 
@@ -53,10 +59,11 @@ const answeredTooRecently = () => [
  * Returns a parser which matches a not 'solving at the right level' response.
  */
 const incorrectLevel = () => [
-  (response) => /solving the right level/im.test(response),
-  false,
-  () =>
-    "You don't seem to be solving the right level. Did you already complete it?",
+  (response) => {
+    if (/solving the right level/im.test(response)) {
+      throw new SolvingWrongLevelError();
+    }
+  },
 ];
 
 /**
@@ -96,7 +103,7 @@ const parsers = [
 export const parsePostAnswerResponse = async (response) => {
   for (const parser of parsers) {
     const [matchFn, correct, messageFn] = parser();
-    logger.debug('testing response parser:%s', matchFn);
+    logger.silly('testing response parser:%s', matchFn);
     if (matchFn(response)) {
       logger.debug('parsed response', { correct });
       return { correct, message: messageFn(response) };
