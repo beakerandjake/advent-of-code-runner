@@ -7,11 +7,6 @@ import {
 } from '../errors/apiErrors.js';
 import { sizeOfStringInKb } from '../formatting.js';
 import { logger } from '../logger.js';
-import {
-  extractTextContentOfMain,
-  parseResponseMessage,
-  sanitizeMessage,
-} from './parseSubmissionResponse.js';
 import { puzzleAnswerUrl, puzzleInputUrl } from './urls.js';
 /**
  * Creates a headers object which can be passed to fetch.
@@ -102,17 +97,9 @@ export const postAnswer = async (
     throw new InternalServerError(response.status, response.statusText);
   }
 
-  // advent of code doesn't return status codes, we have to parse the html.
-  // grab the text content of the <main> element which contains the message we need.
-  const responseMessage = sanitizeMessage(
-    extractTextContentOfMain(await response.text())
-  );
-
-  if (!responseMessage) {
+  const text = await response.text();
+  if (!text) {
     throw new EmptyResponseError();
   }
-
-  // the content of the message tells us what happened
-  // parse this message to determine the submission result.
-  return parseResponseMessage(responseMessage);
+  return text;
 };

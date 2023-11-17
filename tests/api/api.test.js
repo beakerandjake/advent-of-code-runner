@@ -10,19 +10,11 @@ import {
 // setup mocks
 mockLogger();
 mockConfig();
-jest.unstable_mockModule('src/api/parseSubmissionResponse.js', () => ({
-  extractTextContentOfMain: jest.fn(),
-  sanitizeMessage: jest.fn(),
-  parseResponseMessage: jest.fn(),
-}));
 
 const mockFetch = jest.fn();
 global.fetch = mockFetch;
 
 // import after mocks are setup
-const { sanitizeMessage, parseResponseMessage } = await import(
-  '../../src/api/parseSubmissionResponse.js'
-);
 const { getInput, postAnswer } = await import('../../src/api/api.js');
 
 beforeEach(() => {
@@ -88,9 +80,9 @@ describe('api', () => {
             text: () => Promise.resolve(value),
           })
         );
-        await expect(async () =>
-          getInput(2022, 1, 'ASDF')
-        ).rejects.toThrow(EmptyResponseError);
+        await expect(async () => getInput(2022, 1, 'ASDF')).rejects.toThrow(
+          EmptyResponseError
+        );
       }
     );
 
@@ -199,17 +191,14 @@ describe('api', () => {
     );
 
     test('returns input on success', async () => {
-      const expected = { success: true, message: 'ASDF' };
+      const expected = 'One cool response!';
       mockFetch.mockImplementation(() =>
         Promise.resolve({
           ok: true,
           status: 200,
-          text: () => Promise.resolve('some response'),
+          text: () => Promise.resolve(expected),
         })
       );
-      sanitizeMessage.mockReturnValue('not empty');
-      parseResponseMessage.mockReturnValue(expected);
-
       const result = await postAnswer(2022, 1, 1, 'solution', 'auth');
       expect(result).toBe(expected);
     });

@@ -1,5 +1,5 @@
 import { describe, jest, test, afterEach } from '@jest/globals';
-import { easyMock, easyResolve, mockLogger } from '../mocks.js';
+import { mockLogger } from '../mocks.js';
 import {
   answerTooHigh,
   answerTooLow,
@@ -12,8 +12,6 @@ import {
 } from './getActualResponseHtml.js';
 
 // setup mocks
-const easyMocks = [];
-easyMock(easyMocks);
 mockLogger();
 
 // import after mocks set up
@@ -27,21 +25,19 @@ describe('submit command', () => {
   });
 
   test('throws if no parser matches', async () => {
-    await expect(() =>
-      parsePostAnswerResponse(doesNotMatch)
-    ).rejects.toThrow();
+    await expect(() => parsePostAnswerResponse(doesNotMatch)).rejects.toThrow();
   });
 
   test('returns correct if response success, day incomplete', async () => {
     const { correct } = await parsePostAnswerResponse(
-      correctAnswerDayIncomplete.html
+      correctAnswerDayIncomplete
     );
     expect(correct).toBe(true);
   });
 
   test('returns expected message if response: success, day incomplete', async () => {
     const { message } = await parsePostAnswerResponse(
-      correctAnswerDayIncomplete.html
+      correctAnswerDayIncomplete
     );
     expect(message).toBe(
       "That's the right answer! You are one gold star closer to collecting enough start fruit."
@@ -50,14 +46,14 @@ describe('submit command', () => {
 
   test('returns correct if response: success, day complete', async () => {
     const { correct } = await parsePostAnswerResponse(
-      correctAnswerDayComplete.html
+      correctAnswerDayComplete
     );
     expect(correct).toBe(true);
   });
 
   test('returns expected message if response: success, day complete', async () => {
     const { message } = await parsePostAnswerResponse(
-      correctAnswerDayComplete.html
+      correctAnswerDayComplete
     );
     expect(message).toMatch(
       /That's the right answer! You are one gold star closer to collecting enough start fruit. You have completed Day \d+!/
@@ -65,12 +61,12 @@ describe('submit command', () => {
   });
 
   test('returns incorrect if response: incorrect, solving wrong level', async () => {
-    const { correct } = await parsePostAnswerResponse(badLevel.html);
+    const { correct } = await parsePostAnswerResponse(badLevel);
     expect(correct).toBe(false);
   });
 
   test('returns expected message if response: incorrect, solving wrong level', async () => {
-    const { message } = await parsePostAnswerResponse(badLevel.html);
+    const { message } = await parsePostAnswerResponse(badLevel);
     expect(message).toBe(
       "You don't seem to be solving the right level. Did you already complete it?"
     );
