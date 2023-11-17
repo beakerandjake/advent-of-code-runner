@@ -41,11 +41,23 @@ const incorrectLevel = () => {
 };
 
 /**
- * Returns a parser which matches a not 'solving at the right level' response.
+ * Returns a parser which matches a not 'that's the right answer' response.
  */
 const correctAnswer = () => {
-  const matcher = (response) => {};
-  return [matcher, false, () => ''];
+  const matcher = (response) => /that's the right answer/im.test(response);
+  const getMessage = (response) => {
+    const message = [
+      "That's the right answer!",
+      'You are one gold star closer to collecting enough start fruit.',
+    ];
+    // Add completion message if user completed all levels for the day.
+    const dayComplete = response.match(/you have completed day (\d+)!/i);
+    if (dayComplete) {
+      message.push(`You have completed Day ${dayComplete[1]}!`);
+    }
+    return message.join(' ');
+  };
+  return [matcher, true, getMessage];
 };
 
 const parsers = [
