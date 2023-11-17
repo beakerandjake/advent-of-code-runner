@@ -6,7 +6,7 @@ import {
   setCorrectAnswer,
 } from '../answers.js';
 import { postAnswer } from '../api/index.js';
-import { parseSubmitAnswerResponse } from '../api/parseSubmitAnswerResponse.js';
+import { parsePostAnswerResponse } from '../api/parsePostAnswerResponse.js';
 import { DirectoryNotInitializedError } from '../errors/cliErrors.js';
 import {
   AnswerAlreadySubmittedError,
@@ -33,7 +33,7 @@ const submit = async (year, day, level) => {
     throw new AnswerAlreadySubmittedError();
   }
   const response = await postAnswer(year, day, level, getAuthToken());
-  const { correct, message } = parseSubmitAnswerResponse(response);
+  const { correct, message } = await parsePostAnswerResponse(response);
 
   if (!correct) {
     logger.error(message);

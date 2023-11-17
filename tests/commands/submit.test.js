@@ -18,7 +18,7 @@ const easyMocks = [
     ],
   ],
   ['src/api/index.js', ['postAnswer']],
-  ['src/api/parseSubmitAnswerResponse.js', ['parseSubmitAnswerResponse']],
+  ['src/api/parsePostAnswerResponse.js', ['parsePostAnswerResponse']],
   ['src/persistence/metaRepository.js', ['getYear', 'getAuthToken']],
   ['src/statistics.js', ['setPuzzlesFastestRuntime']],
   ['src/validation/userFilesExist.js', ['dataFileExists']],
@@ -35,7 +35,7 @@ const {
   puzzleHasBeenSolved,
   tryToSolvePuzzle,
   postAnswer,
-  parseSubmitAnswerResponse,
+  parsePostAnswerResponse,
   getYear,
   answerHasBeenSubmitted,
   addIncorrectAnswer,
@@ -65,7 +65,7 @@ describe('submit command', () => {
     puzzleHasBeenSolved.mockResolvedValue(false);
     tryToSolvePuzzle.mockResolvedValue({ answer: 'great job!', runtimeNs: 5 });
     postAnswer.mockResolvedValue('asdf');
-    parseSubmitAnswerResponse.mockReturnValue({ correct: true, message: '' });
+    parsePostAnswerResponse.mockResolvedValue({ correct: true, message: '' });
     await submitAction();
     expect(getNextUnansweredPuzzle).toHaveBeenCalled();
     expect(tryToSolvePuzzle).toHaveBeenCalledWith(year, day, level);
@@ -77,7 +77,7 @@ describe('submit command', () => {
     puzzleHasBeenSolved.mockResolvedValue(false);
     tryToSolvePuzzle.mockResolvedValue({ answer: 'great job!', runtimeNs: 5 });
     postAnswer.mockResolvedValue('asdf');
-    parseSubmitAnswerResponse.mockReturnValue({ correct: true, message: '' });
+    parsePostAnswerResponse.mockResolvedValue({ correct: true, message: '' });
     await submitAction(1);
     expect(getNextUnansweredPuzzle).not.toHaveBeenCalled();
   });
@@ -89,7 +89,7 @@ describe('submit command', () => {
     puzzleHasBeenSolved.mockResolvedValue(false);
     tryToSolvePuzzle.mockResolvedValue({ answer: 'great job!', runtimeNs: 5 });
     postAnswer.mockResolvedValue('asdf');
-    parseSubmitAnswerResponse.mockReturnValue({ correct: true, message: '' });
+    parsePostAnswerResponse.mockResolvedValue({ correct: true, message: '' });
     await submitAction(2);
     expect(tryToSolvePuzzle).toHaveBeenCalledWith(expect.any(Number), day, 1);
   });
@@ -102,7 +102,7 @@ describe('submit command', () => {
     puzzleHasBeenSolved.mockResolvedValue(false);
     tryToSolvePuzzle.mockResolvedValue({ answer: 'great job!', runtimeNs: 5 });
     postAnswer.mockResolvedValue('asdf');
-    parseSubmitAnswerResponse.mockReturnValue({ correct: true, message: '' });
+    parsePostAnswerResponse.mockResolvedValue({ correct: true, message: '' });
     await submitAction(2);
     expect(tryToSolvePuzzle).toHaveBeenCalledWith(
       expect.any(Number),
@@ -142,7 +142,7 @@ describe('submit command', () => {
     puzzleHasBeenSolved.mockResolvedValue(false);
     tryToSolvePuzzle.mockResolvedValue({ answer: 'great job!', runtimeNs: 5 });
     postAnswer.mockResolvedValue('asdf');
-    parseSubmitAnswerResponse.mockReturnValue({ correct: false, message: 'wrong!' });
+    parsePostAnswerResponse.mockResolvedValue({ correct: false, message: 'wrong!' });
     await submitAction(1, 2);
     expect(addIncorrectAnswer).toHaveBeenCalled();
   });
@@ -152,7 +152,7 @@ describe('submit command', () => {
     puzzleHasBeenSolved.mockResolvedValue(false);
     tryToSolvePuzzle.mockResolvedValue({ answer: 'great job!', runtimeNs: 5 });
     postAnswer.mockResolvedValue('asdf');
-    parseSubmitAnswerResponse.mockReturnValue({ correct: false, message: 'wrong!' });
+    parsePostAnswerResponse.mockResolvedValue({ correct: false, message: 'wrong!' });
     await submitAction(1, 2);
     expect(setCorrectAnswer).not.toHaveBeenCalled();
   });
@@ -162,7 +162,7 @@ describe('submit command', () => {
     puzzleHasBeenSolved.mockResolvedValue(false);
     tryToSolvePuzzle.mockResolvedValue({ answer: 'great job!', runtimeNs: 5 });
     postAnswer.mockResolvedValue('asdf');
-    parseSubmitAnswerResponse.mockReturnValue({ correct: false, message: 'wrong!' });
+    parsePostAnswerResponse.mockResolvedValue({ correct: false, message: 'wrong!' });
     await submitAction(1, 2);
     expect(setPuzzlesFastestRuntime).not.toHaveBeenCalled();
   });
@@ -172,7 +172,7 @@ describe('submit command', () => {
     puzzleHasBeenSolved.mockResolvedValue(false);
     tryToSolvePuzzle.mockResolvedValue({ answer: 'great job!', runtimeNs: 5 });
     postAnswer.mockResolvedValue('asdf');
-    parseSubmitAnswerResponse.mockReturnValue({ correct: false, message: 'wrong!' });
+    parsePostAnswerResponse.mockResolvedValue({ correct: false, message: 'wrong!' });
     await submitAction(1, 2);
     expect(autoUpdateReadme).not.toHaveBeenCalled();
   });
@@ -182,7 +182,7 @@ describe('submit command', () => {
     puzzleHasBeenSolved.mockResolvedValue(false);
     tryToSolvePuzzle.mockResolvedValue({ answer: 'great job!', runtimeNs: 5 });
     postAnswer.mockResolvedValue('asdf');
-    parseSubmitAnswerResponse.mockReturnValue({ correct: true, message: 'great!' });
+    parsePostAnswerResponse.mockResolvedValue({ correct: true, message: 'great!' });
     await submitAction(1, 2);
     expect(addIncorrectAnswer).not.toHaveBeenCalled();
   });
@@ -192,7 +192,7 @@ describe('submit command', () => {
     puzzleHasBeenSolved.mockResolvedValue(false);
     tryToSolvePuzzle.mockResolvedValue({ answer: 'great job!', runtimeNs: 5 });
     postAnswer.mockResolvedValue('asdf');
-    parseSubmitAnswerResponse.mockReturnValue({ correct: true, message: 'great!' });
+    parsePostAnswerResponse.mockResolvedValue({ correct: true, message: 'great!' });
     await submitAction(1, 2);
     expect(setCorrectAnswer).toHaveBeenCalled();
   });
@@ -202,7 +202,7 @@ describe('submit command', () => {
     puzzleHasBeenSolved.mockResolvedValue(false);
     tryToSolvePuzzle.mockResolvedValue({ answer: 'great job!', runtimeNs: 5 });
     postAnswer.mockResolvedValue('asdf');
-    parseSubmitAnswerResponse.mockReturnValue({ correct: true, message: 'great!' });
+    parsePostAnswerResponse.mockResolvedValue({ correct: true, message: 'great!' });
     await submitAction(1, 2);
     expect(setPuzzlesFastestRuntime).toHaveBeenCalled();
   });
@@ -212,7 +212,7 @@ describe('submit command', () => {
     puzzleHasBeenSolved.mockResolvedValue(false);
     tryToSolvePuzzle.mockResolvedValue({ answer: 'great job!', runtimeNs: 5 });
     postAnswer.mockResolvedValue('asdf');
-    parseSubmitAnswerResponse.mockReturnValue({ correct: true, message: 'great!' });
+    parsePostAnswerResponse.mockResolvedValue({ correct: true, message: 'great!' });
     await submitAction(1, 2);
     expect(autoUpdateReadme).toHaveBeenCalled();
   });

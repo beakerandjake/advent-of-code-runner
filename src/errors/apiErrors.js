@@ -68,3 +68,16 @@ export class EmptyResponseError extends UserError {
     this.name = 'EmptyResponseError';
   }
 }
+
+/**
+ * Raised if failed to parse a submit answer response
+ */
+export class ParsePostAnswerResponseError extends UserError {
+  constructor(...args) {
+    super(
+      'Failed to parse the response from the server when submitting answer.',
+      ...args
+    );
+    this.name = 'ParsePostAnswerResponseError';
+  }
+}
