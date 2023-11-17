@@ -24,9 +24,13 @@ describe('formatting', () => {
   });
 
   describe('sizeOfStringInKb()', () => {
-    test.each([null, undefined])('throws if value is: "%s"', (value) => {
-      expect(() => sizeOfStringInKb(value)).toThrow('null or undefined');
-    });
+    test.each([null, undefined, 0, ''])(
+      'returns 0kb if value is: "%s"',
+      (value) => {
+        const result = sizeOfStringInKb(value);
+        expect(result).toBe('0kb');
+      }
+    );
 
     test.each([1234, {}])('throws if value is non-string: "%s"', (value) => {
       expect(() => sizeOfStringInKb(value)).toThrow(
