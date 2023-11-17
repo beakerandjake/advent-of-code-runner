@@ -68,7 +68,7 @@ describe('submit command', () => {
       correctAnswerDayIncomplete
     );
     expect(message).toBe(
-      "That's the right answer! You are one gold star closer to collecting enough start fruit."
+      "That's the right answer! You are one gold star closer to collecting enough star fruit."
     );
   });
 
@@ -80,7 +80,7 @@ describe('submit command', () => {
   test('returns expected message if response: success, day complete', async () => {
     const { message } = await parsePostAnswerResponse(correctAnswerDayComplete);
     expect(message).toMatch(
-      /That's the right answer! You are one gold star closer to collecting enough start fruit. You have completed Day \d+!/
+      /That's the right answer! You are one gold star closer to collecting enough star fruit. You have completed Day \d+!/
     );
   });
 
