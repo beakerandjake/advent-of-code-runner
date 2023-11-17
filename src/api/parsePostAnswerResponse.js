@@ -19,10 +19,11 @@ const answerTooHigh = () => {
 /**
  * Returns a parser which matches a "not the right answer" response.
  */
-const notTheRightAnswer = () => {
-  const matcher = (response) => {};
-  return [matcher, false, () => ''];
-};
+const notTheRightAnswer = () => [
+  (response) => /that's not the right answer/im.test(response),
+  false,
+  () => "That's not the right answer.",
+];
 
 /**
  * Returns a parser which matches a "answered too recently" response.

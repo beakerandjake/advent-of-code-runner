@@ -4,6 +4,7 @@ import {
   badLevel,
   correctAnswerDayComplete,
   correctAnswerDayIncomplete,
+  notTheRightAnswer,
 } from './getActualResponseHtml.js';
 
 // setup mocks
@@ -69,5 +70,15 @@ describe('submit command', () => {
     expect(message).toBe(
       "You don't seem to be solving the right level. Did you already complete it?"
     );
+  });
+
+  test('returns incorrect if response incorrect, no to high / low.', async () => {
+    const { correct } = await parsePostAnswerResponse(notTheRightAnswer);
+    expect(correct).toBe(false);
+  });
+
+  test('returns expected message if response incorrect, no to high / low.', async () => {
+    const { message } = await parsePostAnswerResponse(notTheRightAnswer);
+    expect(message).toBe("That's not the right answer.");
   });
 });
