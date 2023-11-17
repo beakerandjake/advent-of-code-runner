@@ -775,7 +775,7 @@ ga('send', 'pageview');
 </script>
 <!-- /ga -->
 </body>
-</html>`
+</html>`;
 
 export const answerTooHigh = `<!DOCTYPE html>
 <html lang="en-us">
@@ -887,4 +887,116 @@ ga('send', 'pageview');
 </script>
 <!-- /ga -->
 </body>
-</html>`
+</html>`;
+
+export const doesNotMatch = `<!DOCTYPE html>
+<html lang="en-us">
+<head>
+<meta charset="utf-8"/>
+<title>Day 4 - Advent of Code 2021</title>
+<link rel="stylesheet" type="text/css" href="/static/style.css?31"/>
+<link rel="stylesheet alternate" type="text/css" href="/static/highcontrast.css?1" title="High Contrast"/>
+<link rel="shortcut icon" href="/favicon.png"/>
+<script>window.addEventListener('click', function(e,s,r){if(e.target.nodeName==='CODE'&&e.detail===3){s=window.getSelection();s.removeAllRanges();r=document.createRange();r.selectNodeContents(e.target);s.addRange(r);}});</script>
+</head><!--
+
+
+
+
+Oh, hello!  Funny seeing you here.
+
+I appreciate your enthusiasm, but you aren't going to find much down here.
+There certainly aren't clues to any of the puzzles.  The best surprises don't
+even appear in the source until you unlock them for real.
+
+Please be careful with automated requests; I'm not a massive company, and I can
+only take so much traffic.  Please be considerate so that everyone gets to play.
+
+If you're curious about how Advent of Code works, it's running on some custom
+Perl code. Other than a few integrations (auth, analytics, social media), I
+built the whole thing myself, including the design, animations, prose, and all
+of the puzzles.
+
+The puzzles are most of the work; preparing a new calendar and a new set of
+puzzles each year takes all of my free time for 4-5 months. A lot of effort
+went into building this thing - I hope you're enjoying playing it as much as I
+enjoyed making it for you!
+
+If you'd like to hang out, I'm @ericwastl@hachyderm.io on Mastodon and
+@ericwastl on Twitter.
+
+- Eric Wastl
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+-->
+<body>
+<header><div><h1 class="title-global"><a href="/">Advent of Code</a></h1><nav><ul><li><a href="/2021/about">[About]</a></li><li><a href="/2021/events">[Events]</a></li><li><a href="https://teespring.com/stores/advent-of-code" target="_blank">[Shop]</a></li><li><a href="/2021/settings">[Settings]</a></li><li><a href="/2021/auth/logout">[Log Out]</a></li></ul></nav><div class="user">(anonymous user)</div></div><div><h1 class="title-event">&nbsp;&nbsp;&nbsp;<span class="title-event-wrap">$year=</span><a href="/2021">2021</a><span class="title-event-wrap">;</span></h1><nav><ul><li><a href="/2021">[Calendar]</a></li><li><a href="/2021/support">[AoC++]</a></li><li><a href="/2021/sponsors">[Sponsors]</a></li><li><a href="/2021/leaderboard">[Leaderboard]</a></li><li><a href="/2021/stats">[Stats]</a></li></ul></nav></div></header>
+
+<div id="sidebar">
+<div id="sponsor"><div class="quiet">Our <a href="/2021/sponsors">sponsors</a> help make Advent of Code possible:</div><div class="sponsor"><a href="https://boards.greenhouse.io/ramp?gh_src=2783e2862us" target="_blank" onclick="if(ga)ga('send','event','sponsor','sidebar',this.href);" rel="noopener">Ramp</a> - Have you ever sped up a real-world job 5x using software? Ramp does that for companies every day with financial automation. We&apos;re hiring ambitious engineers (Python, Elixir, Typescript) - join us if you like fast growth!</div></div>
+</div><!--/sidebar-->
+
+<main>
+<article><p>I bet you're wishing this matched a parser, but it doesn't pal!</p></article>
+</main>
+
+<!-- ga -->
+<script>
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+ga('set', 'anonymizeIp', true);
+ga('send', 'pageview');
+</script>
+<!-- /ga -->
+</body>
+</html>`;
