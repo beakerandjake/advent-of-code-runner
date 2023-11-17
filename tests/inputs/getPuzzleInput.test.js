@@ -16,13 +16,8 @@ easyMock(easyMocks);
 mockLogger();
 
 // import after setting up mocks
-const {
-  getInput,
-  cacheInput,
-  getCachedInput,
-  inputIsCached,
-  inputIsValid,
-} = await easyResolve(easyMocks);
+const { getInput, cacheInput, getCachedInput, inputIsCached, inputIsValid } =
+  await easyResolve(easyMocks);
 const { getPuzzleInput } = await import('../../src/inputs/getPuzzleInput.js');
 
 describe('getPuzzleInput()', () => {

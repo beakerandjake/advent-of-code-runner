@@ -142,7 +142,10 @@ describe('submit command', () => {
     puzzleHasBeenSolved.mockResolvedValue(false);
     tryToSolvePuzzle.mockResolvedValue({ answer: 'great job!', runtimeNs: 5 });
     postAnswer.mockResolvedValue('asdf');
-    parsePostAnswerResponse.mockResolvedValue({ correct: false, message: 'wrong!' });
+    parsePostAnswerResponse.mockResolvedValue({
+      correct: false,
+      message: 'wrong!',
+    });
     await submitAction(1, 2);
     expect(addIncorrectAnswer).toHaveBeenCalled();
   });
@@ -152,7 +155,10 @@ describe('submit command', () => {
     puzzleHasBeenSolved.mockResolvedValue(false);
     tryToSolvePuzzle.mockResolvedValue({ answer: 'great job!', runtimeNs: 5 });
     postAnswer.mockResolvedValue('asdf');
-    parsePostAnswerResponse.mockResolvedValue({ correct: false, message: 'wrong!' });
+    parsePostAnswerResponse.mockResolvedValue({
+      correct: false,
+      message: 'wrong!',
+    });
     await submitAction(1, 2);
     expect(setCorrectAnswer).not.toHaveBeenCalled();
   });
@@ -162,7 +168,10 @@ describe('submit command', () => {
     puzzleHasBeenSolved.mockResolvedValue(false);
     tryToSolvePuzzle.mockResolvedValue({ answer: 'great job!', runtimeNs: 5 });
     postAnswer.mockResolvedValue('asdf');
-    parsePostAnswerResponse.mockResolvedValue({ correct: false, message: 'wrong!' });
+    parsePostAnswerResponse.mockResolvedValue({
+      correct: false,
+      message: 'wrong!',
+    });
     await submitAction(1, 2);
     expect(setPuzzlesFastestRuntime).not.toHaveBeenCalled();
   });
@@ -172,7 +181,10 @@ describe('submit command', () => {
     puzzleHasBeenSolved.mockResolvedValue(false);
     tryToSolvePuzzle.mockResolvedValue({ answer: 'great job!', runtimeNs: 5 });
     postAnswer.mockResolvedValue('asdf');
-    parsePostAnswerResponse.mockResolvedValue({ correct: false, message: 'wrong!' });
+    parsePostAnswerResponse.mockResolvedValue({
+      correct: false,
+      message: 'wrong!',
+    });
     await submitAction(1, 2);
     expect(autoUpdateReadme).not.toHaveBeenCalled();
   });
@@ -182,7 +194,10 @@ describe('submit command', () => {
     puzzleHasBeenSolved.mockResolvedValue(false);
     tryToSolvePuzzle.mockResolvedValue({ answer: 'great job!', runtimeNs: 5 });
     postAnswer.mockResolvedValue('asdf');
-    parsePostAnswerResponse.mockResolvedValue({ correct: true, message: 'great!' });
+    parsePostAnswerResponse.mockResolvedValue({
+      correct: true,
+      message: 'great!',
+    });
     await submitAction(1, 2);
     expect(addIncorrectAnswer).not.toHaveBeenCalled();
   });
@@ -192,7 +207,10 @@ describe('submit command', () => {
     puzzleHasBeenSolved.mockResolvedValue(false);
     tryToSolvePuzzle.mockResolvedValue({ answer: 'great job!', runtimeNs: 5 });
     postAnswer.mockResolvedValue('asdf');
-    parsePostAnswerResponse.mockResolvedValue({ correct: true, message: 'great!' });
+    parsePostAnswerResponse.mockResolvedValue({
+      correct: true,
+      message: 'great!',
+    });
     await submitAction(1, 2);
     expect(setCorrectAnswer).toHaveBeenCalled();
   });
@@ -202,7 +220,10 @@ describe('submit command', () => {
     puzzleHasBeenSolved.mockResolvedValue(false);
     tryToSolvePuzzle.mockResolvedValue({ answer: 'great job!', runtimeNs: 5 });
     postAnswer.mockResolvedValue('asdf');
-    parsePostAnswerResponse.mockResolvedValue({ correct: true, message: 'great!' });
+    parsePostAnswerResponse.mockResolvedValue({
+      correct: true,
+      message: 'great!',
+    });
     await submitAction(1, 2);
     expect(setPuzzlesFastestRuntime).toHaveBeenCalled();
   });
@@ -212,7 +233,10 @@ describe('submit command', () => {
     puzzleHasBeenSolved.mockResolvedValue(false);
     tryToSolvePuzzle.mockResolvedValue({ answer: 'great job!', runtimeNs: 5 });
     postAnswer.mockResolvedValue('asdf');
-    parsePostAnswerResponse.mockResolvedValue({ correct: true, message: 'great!' });
+    parsePostAnswerResponse.mockResolvedValue({
+      correct: true,
+      message: 'great!',
+    });
     await submitAction(1, 2);
     expect(autoUpdateReadme).toHaveBeenCalled();
   });

@@ -73,9 +73,7 @@ describe('rateLimit', () => {
 
     test('returns false if no expiration', async () => {
       getRateLimit.mockReturnValueOnce(null);
-      expect(
-        await isRateLimited(rateLimitedActions.postAnswer)
-      ).toStrictEqual({
+      expect(await isRateLimited(rateLimitedActions.postAnswer)).toStrictEqual({
         expiration: null,
         limited: false,
       });
@@ -83,9 +81,7 @@ describe('rateLimit', () => {
 
     test('returns false if expiration is invalid date', async () => {
       getRateLimit.mockReturnValueOnce(new Date(Infinity));
-      expect(
-        await isRateLimited(rateLimitedActions.postAnswer)
-      ).toStrictEqual({
+      expect(await isRateLimited(rateLimitedActions.postAnswer)).toStrictEqual({
         expiration: null,
         limited: false,
       });
@@ -94,9 +90,7 @@ describe('rateLimit', () => {
     test('returns false if expiration is in future', async () => {
       const future = new Date(new Date().getTime() + 1000 * 60 * 5);
       getRateLimit.mockReturnValueOnce(future);
-      expect(
-        await isRateLimited(rateLimitedActions.postAnswer)
-      ).toStrictEqual({
+      expect(await isRateLimited(rateLimitedActions.postAnswer)).toStrictEqual({
         expiration: future,
         limited: true,
       });
@@ -105,9 +99,7 @@ describe('rateLimit', () => {
     test('returns true if expiration is in past', async () => {
       const past = new Date(new Date().getTime() - 1000 * 60 * 5);
       getRateLimit.mockReturnValueOnce(past);
-      expect(
-        await isRateLimited(rateLimitedActions.postAnswer)
-      ).toStrictEqual({
+      expect(await isRateLimited(rateLimitedActions.postAnswer)).toStrictEqual({
         expiration: past,
         limited: false,
       });
