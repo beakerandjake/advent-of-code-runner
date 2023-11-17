@@ -31,11 +31,7 @@ export const postAnswer = async (
   authenticationToken
 ) => {
   logger.debug('posting answer to mock api');
-  const correct = getConfigValue('aoc.mockApi.answerCorrect');
-  return {
-    correct,
-    message: correct
-      ? 'Great Job you answered correct!'
-      : "That's the wrong answer!",
-  };
+  return getConfigValue('aoc.mockApi.answerCorrect')
+    ? "that's the right answer"
+    : "that's not the right answer";
 };
