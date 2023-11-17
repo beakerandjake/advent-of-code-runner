@@ -10,10 +10,7 @@ import {
   gaveAnswerTooRecently,
   notTheRightAnswer,
 } from './getActualResponseHtml.js';
-import {
-  AnsweredTooRecentlyError,
-  SolvingWrongLevelError,
-} from '../../src/errors/apiErrors.js';
+import { SolvingWrongLevelError } from '../../src/errors/apiErrors.js';
 
 // setup mocks
 mockLogger();
