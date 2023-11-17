@@ -58,3 +58,13 @@ export class InternalServerError extends UserError {
     this.name = 'InternalServerError';
   }
 }
+
+/**
+ * Error raised if server returns an empty input.
+ */
+export class EmptyInputResponseError extends UserError {
+  constructor(...args) {
+    super(`Server returned empty input.`, ...args);
+    this.name = 'EmptyInputResponseError';
+  }
+}

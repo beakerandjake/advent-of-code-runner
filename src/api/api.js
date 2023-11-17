@@ -1,5 +1,6 @@
 import { getConfigValue } from '../config.js';
 import {
+  EmptyInputResponseError,
   InternalServerError,
   NotAuthorizedError,
   PuzzleNotFoundError,
@@ -31,9 +32,7 @@ const getHeaders = (authenticationToken) => ({
 export const downloadInput = async (year, day, authenticationToken) => {
   logger.debug('downloading input file for year: %s, day: %s', year, day);
   if (!authenticationToken) {
-    throw new Error(
-      'Authentication Token is required to query advent of code.'
-    );
+    throw new NotAuthorizedError();
   }
 
   const url = puzzleInputUrl(year, day);
@@ -53,10 +52,10 @@ export const downloadInput = async (year, day, authenticationToken) => {
   }
 
   const text = await response.text();
-  if (!text) {
-    throw new Error('Advent of code returned empty input');
-  }
   logger.debug('downloaded: %s', sizeOfStringInKb(text));
+  if (!text) {
+    throw new EmptyInputResponseError();
+  }
   return text;
 };
 

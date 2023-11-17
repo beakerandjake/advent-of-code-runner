@@ -1,6 +1,7 @@
 import { describe, jest, test, beforeEach } from '@jest/globals';
 import { mockLogger, mockConfig } from '../mocks.js';
 import {
+  EmptyInputResponseError,
   InternalServerError,
   NotAuthorizedError,
   PuzzleNotFoundError,
@@ -35,7 +36,7 @@ describe('api', () => {
       'throws if authentication token is: "%s"',
       async (value) => {
         await expect(async () => downloadInput(2022, 1, value)).rejects.toThrow(
-          /authentication/i
+          NotAuthorizedError
         );
       }
     );
@@ -78,7 +79,7 @@ describe('api', () => {
     });
 
     test.each([undefined, null, ''])(
-      'throws on empty input: "%s"',
+      'throws on empty input returned: "%s"',
       async (value) => {
         mockFetch.mockImplementation(() =>
           Promise.resolve({
@@ -89,7 +90,7 @@ describe('api', () => {
         );
         await expect(async () =>
           downloadInput(2022, 1, 'ASDF')
-        ).rejects.toThrow(/empty/i);
+        ).rejects.toThrow(EmptyInputResponseError);
       }
     );
 
