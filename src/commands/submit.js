@@ -5,14 +5,14 @@ import {
   puzzleHasBeenSolved,
   setCorrectAnswer,
 } from '../answers.js';
-import { postAnswer } from '../api/index.js';
+import { submitAnswer } from '../api/submitAnswer.js';
 import { DirectoryNotInitializedError } from '../errors/cliErrors.js';
 import {
   AnswerAlreadySubmittedError,
   PuzzleAlreadyCompletedError,
 } from '../errors/puzzleErrors.js';
 import { logger } from '../logger.js';
-import { getAuthToken, getYear } from '../persistence/metaRepository.js';
+import { getYear } from '../persistence/metaRepository.js';
 import { setPuzzlesFastestRuntime } from '../statistics.js';
 import { dataFileExists } from '../validation/userFilesExist.js';
 import { tryToSolvePuzzle } from './solve.js';
@@ -33,13 +33,7 @@ const submit = async (year, day, level) => {
     throw new AnswerAlreadySubmittedError();
   }
 
-  const { correct, message } = await postAnswer(
-    year,
-    day,
-    level,
-    answer,
-    getAuthToken()
-  );
+  const { correct, message } = await submitAnswer(year, day, level, answer);
 
   if (!correct) {
     logger.error(message);
