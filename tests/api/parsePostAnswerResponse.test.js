@@ -6,6 +6,7 @@ import {
   badLevel,
   correctAnswerDayComplete,
   correctAnswerDayIncomplete,
+  doesNotMatch,
   gaveAnswerTooRecently,
   notTheRightAnswer,
 } from './getActualResponseHtml.js';
@@ -27,7 +28,7 @@ describe('submit command', () => {
 
   test('throws if no parser matches', async () => {
     await expect(() =>
-      parsePostAnswerResponse('MATCHING THIS WILL FAIL')
+      parsePostAnswerResponse(doesNotMatch)
     ).rejects.toThrow();
   });
 
