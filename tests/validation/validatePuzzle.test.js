@@ -55,24 +55,24 @@ describe('validatePuzzle', () => {
       expect(result).toBe(true);
     });
 
-    // test literally every minute from midnight until unlock time.
-    [...Array(60 * 19).keys()].forEach((minutes) => {
+    // test literally every minute from UTC midnight until unlock time.
+    [...Array(60 * 5).keys()].forEach((minutes) => {
       const year = 2022;
       const day = 22;
       const utcMidnightMs = new Date(year, 11, day).setUTCHours(0, 0, 0, 0);
       const systemTime = new Date(utcMidnightMs + minutes * 60000);
 
-      test(`returns false - same day time is: ${systemTime.toISOString()}`, () => {
+      test(`returns true - same day time is: ${systemTime.toISOString()}`, () => {
         jest.setSystemTime(systemTime);
         expect(puzzleIsInFuture(year, day)).toBe(true);
       });
     });
 
     // test literally every minute from unlock time until midnight.
-    [...Array(60 * 5).keys()].forEach((minutes) => {
+    [...Array(60 * 7).keys()].forEach((minutes) => {
       const year = 2022;
       const day = 22;
-      const utcUnlockTimeMs = new Date(year, 11, day).setUTCHours(19, 0, 0, 0);
+      const utcUnlockTimeMs = new Date(year, 11, day).setUTCHours(5, 0, 0, 0);
       const systemTime = new Date(utcUnlockTimeMs + minutes * 60000);
 
       test(`returns false - same day time is: ${systemTime.toISOString()}`, () => {

@@ -10,7 +10,7 @@ export const puzzleIsInFuture = (year, day) => {
   if (year !== new Date().getFullYear()) {
     return year > new Date().getFullYear();
   }
-  const puzzleUnlockTimeUTC = Date.UTC(year, 11, day, 19);
+  const puzzleUnlockTimeUTC = Date.UTC(year, 11, day, 5);
   return Date.now() < puzzleUnlockTimeUTC;
 };
 
