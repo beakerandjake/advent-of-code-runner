@@ -6,6 +6,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+
+## [1.6.1] - 2023-12-01
 ### Fixed
 - Fixed issue with puzzle unlock time being 2pm EST instead of midnight EST ([#238](https://github.com/beakerandjake/advent-of-code-runner/issues/238))
 
@@ -61,7 +63,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - Initial Release
 
-[Unreleased]: https://github.com/beakerandjake/advent-of-code-runner/compare/v1.6.0...HEAD
+[Unreleased]: https://github.com/beakerandjake/advent-of-code-runner/compare/v1.6.1...HEAD
+[1.6.1]: https://github.com/beakerandjake/advent-of-code-runner/compare/v1.6.0...v1.6.1
 [1.6.0]: https://github.com/beakerandjake/advent-of-code-runner/compare/v1.5.0...v1.6.0
 [1.5.0]: https://github.com/beakerandjake/advent-of-code-runner/compare/v1.4.0...v1.5.0
 [1.4.0]: https://github.com/beakerandjake/advent-of-code-runner/compare/v1.3.6...v1.4.0
