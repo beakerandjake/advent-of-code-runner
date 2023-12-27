@@ -203,6 +203,21 @@ Examples:
 If you have already solved some puzzles, it would be tedious to manually run the `import` command a bunch of times. The wiki has a [guide](https://github.com/beakerandjake/advent-of-code-runner/wiki/Bulk-import-of-in-progress-advent-calendar) for bulk importing puzzle answers using basic linux command line tools. 
 
 
+#### Projects `init` before 1.7.0
+Projects created using `npx advent-of-code-runner init` prior to version 1.7.0 will not have an npm script for the `import` command. You fix this by modifying your `package.json` file and adding an npm script for the `import` command:
+
+```
+"scripts": {
+  "solve": "advent-of-code-runner solve",
+  "submit": "advent-of-code-runner submit",
+  "stats": "advent-of-code-runner stats",
+  "auth": "advent-of-code-runner auth",
+  "help": "advent-of-code-runner help",
+  "import": "advent-of-code-runner import"
+},
+```
+
+
 ### `help`
 Outputs the help text for the cli
 ```
