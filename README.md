@@ -170,7 +170,7 @@ npm run auth
 ```
 
 ### `import <day> <level> <answer> [--no-confirm]`
-Stores the correct answer to a puzzle which was solved outside of advent-of-code-runner. This allows you to start using advent-of-code-runner even if you've already started the years calendar. Before this command you couldn't let advent-of-code-runner know that you had solved a puzzle already. Once you've imported an answer you will probably want to update the corresponding solution file to add your existing code. 
+Stores the correct answer to a puzzle which was solved outside of advent-of-code-runner. This allows you to use advent-of-code-runner even if you already submitted answers with different tools. Before this command you couldn't let advent-of-code-runner know that you had solved a puzzle already. Once you've imported an answer you will probably want to update the corresponding solution file to add your existing code. 
 
 **Note**: All imported puzzles are set to a runtime of 999 seconds. After importing an answer, run the `solve` command to update the puzzles runtime to a real value. 
 
@@ -200,7 +200,7 @@ Examples:
 
 #### Bulk importing
 
-If you have already solved most of the years puzzles, it would be tedious to manually run the `import` command a bunch of times. The wiki has a [guide](https://github.com/beakerandjake/advent-of-code-runner/wiki/Bulk-import-of-in-progress-advent-calendar) for bulk importing puzzle answers using basic linux command line tools. 
+If you have already solved some puzzles, it would be tedious to manually run the `import` command a bunch of times. The wiki has a [guide](https://github.com/beakerandjake/advent-of-code-runner/wiki/Bulk-import-of-in-progress-advent-calendar) for bulk importing puzzle answers using basic linux command line tools. 
 
 
 ### `help`
