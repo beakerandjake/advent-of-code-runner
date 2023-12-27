@@ -11,7 +11,11 @@ import {
   puzzleHasLevel,
   puzzleIsInFuture,
 } from '../validation/validatePuzzle.js';
-import { createPuzzle, findPuzzle } from '../persistence/puzzleRepository.js';
+import {
+  addOrEditPuzzle,
+  createPuzzle,
+  findPuzzle,
+} from '../persistence/puzzleRepository.js';
 import { getYear } from '../persistence/metaRepository.js';
 
 /**
@@ -77,5 +81,12 @@ export const importAction = async (day, level, answer, options) => {
     return;
   }
 
-  const test = createPuzzleData(year, day, level, answer);
+  // save the puzzle data to the users data file.
+  const puzzleData = createPuzzleData(year, day, level, answer);
+  logger.debug('create puzzle data to import', puzzleData);
+  await addOrEditPuzzle(puzzleData);
+
+  logger.festive(
+    "Successfully imported puzzle answer. Run the 'solve' command to update runtime statistics."
+  );
 };
