@@ -54,6 +54,7 @@ export const createPackageJson = async (year) => {
       submit: 'advent-of-code-runner submit',
       stats: 'advent-of-code-runner stats',
       auth: 'advent-of-code-runner auth',
+      import: 'advent-of-code-runner import',
       help: 'advent-of-code-runner help',
     },
     dependencies: {
