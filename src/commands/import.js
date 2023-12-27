@@ -1,4 +1,6 @@
+import { confirm } from '@inquirer/prompts';
 import { logger } from '../logger.js';
+import { festiveStyle } from '../festive.js';
 import { dataFileExists } from '../validation/userFilesExist.js';
 import { DirectoryNotInitializedError } from '../errors/cliErrors.js';
 import {
@@ -9,39 +11,71 @@ import {
   puzzleHasLevel,
   puzzleIsInFuture,
 } from '../validation/validatePuzzle.js';
-import { createPuzzle } from '../persistence/puzzleRepository.js';
+import { createPuzzle, findPuzzle } from '../persistence/puzzleRepository.js';
 import { getYear } from '../persistence/metaRepository.js';
 
 /**
- * Returns new puzzle data for the puzzle being imported which can be saved to the puzzle repository.
+ * Returns new puzzle data for the puzzle being imported which can be saved to their data file.
  */
-const createPuzzleData = async (year, day, level, answer) => ({
+const createPuzzleData = (year, day, level, answer) => ({
   ...createPuzzle(year, day, level),
+  // set fastest runtime to a high value so it can be overwritten when user runs solve.
   fastestRuntimeNs: 9e10,
   correctAnswer: answer,
 });
 
 /**
+ * Attempts to confirm with the user if an entry for the puzzle exists in their data file.
+ */
+const userConfirmed = async (year, day, level, opts) => {
+  // auto confirm if the --no-confirm flag
+  if (!opts.confirm) {
+    logger.debug('not confirming because --no-confirm flag is set');
+    return true;
+  }
+  // nothing to confirm if puzzle does not exist.
+  if (!(await findPuzzle(year, day, level))) {
+    logger.debug('not confirming because no data for puzzle exists');
+    return true;
+  }
+  logger.debug('data for puzzle exists, confirming overwrite with user');
+  return confirm({
+    message: festiveStyle(
+      'An entry exists for this puzzle in your data file, do you want to overwrite it?'
+    ),
+    default: false,
+  });
+};
+
+/**
  * Stores the correct answer to the puzzle. Used to inform advent-of-code-runner about problems
  * which were solved outside of their advent-of-code-runner repository.
  */
-export const importAction = async (day, level, answer) => {
-  logger.debug('starting import action:', { day, level, answer });
+export const importAction = async (day, level, answer, options) => {
+  logger.debug('starting import action:', { day, level, answer, options });
 
+  // can't import answer if repository has not been initialized.
   if (!(await dataFileExists())) {
     throw new DirectoryNotInitializedError();
   }
 
   const year = await getYear();
 
+  // can't import answer if puzzle doesn't have level.
   if (!puzzleHasLevel(year, day, level)) {
     throw new PuzzleLevelInvalidError(day, level);
   }
+
+  // can't import answer if puzzle isn't unlocked yet.
   if (puzzleIsInFuture(year, day)) {
     throw new PuzzleInFutureError(day);
   }
 
-  const test = createPuzzleData(await getYear(), day, level, answer);
-  console.log(test);
-  // ask for confirmation if puzzle has already been solved
+  // bail if user does not confirm action.
+  if (!(await userConfirmed(year, day, level, options))) {
+    logger.debug('user did not confirm the import action');
+    return;
+  }
+
+  const test = createPuzzleData(year, day, level, answer);
 };
