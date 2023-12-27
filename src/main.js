@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-import { Argument, Command, InvalidArgumentError } from 'commander';
+import { Argument, Command } from 'commander';
 import { authAction } from './commands/auth.js';
 import { initAction } from './commands/init.js';
 import { solveAction } from './commands/solve.js';
@@ -7,27 +7,8 @@ import { statsAction } from './commands/stats.js';
 import { submitAction } from './commands/submit.js';
 import { getConfigValue } from './config.js';
 import { handleError } from './errorHandler.js';
+import { intParser } from './validation/validateArgs.js';
 import { printFestiveTitle } from './festive.js';
-
-/**
- * Returns a function which parses the string value as an integer.
- * Then compares the parsed integer value to an array of choices.
- * The returned function throws an InvalidArgumentError if the value is not included in the choices.
- * @param {number[]} choices - The valid options to choose from
- * @throws {RangeError} - The parsed integer value was not included in the choices.
- */
-export const intParser = (choices) => (value) => {
-  const parsed = Number.parseInt(value, 10);
-  if (Number.isNaN(parsed)) {
-    throw new InvalidArgumentError('Value could not be parsed as an integer.');
-  }
-  if (!choices.includes(parsed)) {
-    const min = Math.min(...choices);
-    const max = Math.max(...choices);
-    throw new InvalidArgumentError(`Value must be between ${min} and ${max}.`);
-  }
-  return parsed;
-};
 
 try {
   const program = new Command();
