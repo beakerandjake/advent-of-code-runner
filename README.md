@@ -8,7 +8,7 @@ A Node.Js CLI solution generator and runner for [advent of code](https://advento
 [![codecov](https://codecov.io/gh/beakerandjake/advent-of-code-runner/branch/main/graph/badge.svg?token=MN3ZFKM7SX)](https://codecov.io/gh/beakerandjake/advent-of-code-runner)
 
 ## :mrs_claus: Features
-- Quickly and easily scaffolds an empty directory, creating all required solution files (similar to create-react-app). 
+- Quickly and easily scaffolds an empty directory, creating all required solution files. 
 - Runs your solutions (both sync and async) and measures performance. 
 - Downloads and caches puzzle input files.
 - Submits answers to advent of code.
@@ -176,19 +176,18 @@ Once you've imported a puzzle answer you will probably want to update the corres
 
 **Note**: All imported puzzles are set to a runtime of 999 seconds. After importing an answer you will want to run the `solve` command for the puzzle you just imported, running the `solve` command will update the runtime to a real value. 
 
+Running without the `--no-confirm` flag is the default behavior. If you are importing the answer to a puzzle which already has an entry in your `aocr-data.json` file, then you will be asked to confirm overwriting this data. It shouldn't be an issue to overwrite it in the off chance that it does exist.
+
 ```
 npm run import <day> <level> <answer>
 ```
 
-Running without the `--no-confirm` flag is the default behavior. If you are importing the answer to a puzzle which already has an entry in your `aocr-data.json` file, then you will be asked to confirm overwriting this data. It shouldn't be an issue to overwrite it in the off chance that it does exist.
-
-#### `--no-confirm` option
+Running with the `--no-confirm` flag will skip any confirmation for overwriting existing data. This option comes in handy when bulk importing answers. 
 
 ```
 npm run import --no-confirm <day> <level> <answer> 
 ```
 
-Running with the `--no-confirm` flag will skip any confirmation for overwriting existing data. This option comes in handy when bulk importing answers. 
 
 
 #### Handling different answer types
