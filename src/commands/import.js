@@ -76,7 +76,7 @@ export const importAction = async (day, level, answer, options) => {
     correctAnswer: answer,
   };
 
-  logger.debug('create puzzle data to import', puzzleData);
+  logger.debug('created puzzle data for imported puzzle', puzzleData);
 
   // save the puzzle data to the users data file.
   await addOrEditPuzzle(puzzleData);
