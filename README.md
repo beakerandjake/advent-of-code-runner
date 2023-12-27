@@ -168,6 +168,38 @@ Creates or updates the `.env` file with your advent of code authentication token
 npm run auth
 ```
 
+### `import <day> <level> <answer> [--no-confirm]`
+Stores the correct answer to a puzzle which was solved outside of advent-of-code-runner. This allows you to start using advent-of-code-runner even if you've already started the years calendar. Before this command you couldn't let advent-of-code-runner know that you had solved a puzzle already. Once you've imported a puzzle answer you will probably want to update the corresponding solution file with the code you wrote elsewhere, this way you can track runtime statistics for the puzzle. 
+
+**Note**: All imported puzzles are set to a runtime of 999 seconds. After importing an answer you will want to run the `solve` command for the puzzle you just imported, running the `solve` command will update the runtime to a real value. 
+
+```
+npm run import <day> <level> <answer>
+```
+
+Running without the `--no-confirm` flag is the default behavior. If you are importing the answer to a puzzle which already has an entry in your `aocr-data.json` file, then you will be asked to confirm overwriting this data. It shouldn't be an issue to overwrite it in the off chance that it does exist.
+
+#### `--no-confirm` option
+
+```
+npm run import --no-confirm <day> <level> <answer> 
+```
+
+Running with the `--no-confirm` flag will skip any confirmation for overwriting existing data. This option comes in handy when bulk importing answers. 
+
+
+#### Handling different answer types
+
+Answers are stored as strings, so you usually don't need to wrap your answer with quotes. However there are certain answers which will need special care: 
+
+- An answer with whitespace: wrap in quotes ```npm run import 1 1 'an answer with spaces' ```
+- An answer which is a negative number: use `--` before the args ```npm run import -- 1 1 -12345 ```
+
+#### Bulk importing
+
+If you have already solved most of the years puzzles, it would be tedious to manually run the `import` command a bunch of times. The wiki has a [guide](https://github.com/beakerandjake/advent-of-code-runner/wiki/Bulk-import-of-in-progress-advent-calendar) for bulk importing puzzle answers using basic linux command line tools. 
+
+
 ### `help`
 Outputs the help text for the cli
 ```
