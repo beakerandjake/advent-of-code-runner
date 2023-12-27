@@ -19,16 +19,6 @@ import {
 import { getYear } from '../persistence/metaRepository.js';
 
 /**
- * Returns new puzzle data for the puzzle being imported which can be saved to their data file.
- */
-const createPuzzleData = (year, day, level, answer) => ({
-  ...createPuzzle(year, day, level),
-  // set fastest runtime to a high value so it can be overwritten when user runs solve.
-  fastestRuntimeNs: 9e10,
-  correctAnswer: answer,
-});
-
-/**
  * Attempts to confirm with the user if an entry for the puzzle exists in their data file.
  */
 const userConfirmed = async (year, day, level, opts) => {
@@ -42,7 +32,10 @@ const userConfirmed = async (year, day, level, opts) => {
     logger.debug('not confirming because no data for puzzle exists');
     return true;
   }
+
   logger.debug('data for puzzle exists, confirming overwrite with user');
+
+  // confirm with user that they want to overwrite the existing puzzle data.
   return confirm({
     message: festiveStyle(
       'An entry exists for this puzzle in your data file, do you want to overwrite it?'
@@ -81,9 +74,16 @@ export const importAction = async (day, level, answer, options) => {
     return;
   }
 
-  // save the puzzle data to the users data file.
-  const puzzleData = createPuzzleData(year, day, level, answer);
+  const puzzleData = {
+    ...createPuzzle(year, day, level),
+    // set fastest runtime to a high value so it can be overwritten when user runs solve.
+    fastestRuntimeNs: 99.9e10,
+    correctAnswer: answer,
+  };
+
   logger.debug('create puzzle data to import', puzzleData);
+
+  // save the puzzle data to the users data file.
   await addOrEditPuzzle(puzzleData);
 
   logger.festive(
