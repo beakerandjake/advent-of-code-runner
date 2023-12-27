@@ -172,7 +172,7 @@ npm run auth
 ### `import <day> <level> <answer> [--no-confirm]`
 Stores the correct answer to a puzzle which was solved outside of advent-of-code-runner. This allows you to start using advent-of-code-runner even if you've already started the years calendar. Before this command you couldn't let advent-of-code-runner know that you had solved a puzzle already. Once you've imported an answer you will probably want to update the corresponding solution file to add your existing code. 
 
-**Note**: All imported puzzles are set to a runtime of 999 seconds. After importing an answer you will want to run the `solve` command for the puzzle you just imported, running the `solve` command will update the runtime to a real value. 
+**Note**: All imported puzzles are set to a runtime of 999 seconds. After importing an answer, run the `solve` command to update the puzzles runtime to a real value. 
 
 Running without the `--no-confirm` flag is the default behavior. You will be asked to confirm when importing any puzzles which already exist in your `aocr-data.json` file.
 
