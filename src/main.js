@@ -57,7 +57,7 @@ try {
         'Example Calls:',
         `  import 10 1 123456         Stores correct answer "123456" for day 10 level 1`,
         `  import 5 2 'hello world'   Stores correct answer "hello world" for day 5 level 2`,
-        `  import 1 1 \\ -123456       Stores correct answer "-123456" for day 1 level 1`,
+        `  import -- 1 1 -123456      Stores correct answer "-123456" for day 1 level 1 (note the -- to add a negative number as an answer)`,
       ].join('\n')
     )
     .action(importAction);
