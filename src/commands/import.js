@@ -1,22 +1,22 @@
 import { confirm } from '@inquirer/prompts';
-import { logger } from '../logger.js';
-import { festiveStyle } from '../festive.js';
-import { dataFileExists } from '../validation/userFilesExist.js';
 import { DirectoryNotInitializedError } from '../errors/cliErrors.js';
 import {
   PuzzleInFutureError,
   PuzzleLevelInvalidError,
 } from '../errors/puzzleErrors.js';
-import {
-  puzzleHasLevel,
-  puzzleIsInFuture,
-} from '../validation/validatePuzzle.js';
+import { festiveStyle } from '../festive.js';
+import { logger } from '../logger.js';
+import { getYear } from '../persistence/metaRepository.js';
 import {
   addOrEditPuzzle,
   createPuzzle,
   findPuzzle,
 } from '../persistence/puzzleRepository.js';
-import { getYear } from '../persistence/metaRepository.js';
+import { dataFileExists } from '../validation/userFilesExist.js';
+import {
+  puzzleHasLevel,
+  puzzleIsInFuture,
+} from '../validation/validatePuzzle.js';
 
 /**
  * Attempts to confirm with the user if an entry for the puzzle exists in their data file.
