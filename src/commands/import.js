@@ -21,12 +21,7 @@ import { getYear } from '../persistence/metaRepository.js';
 /**
  * Attempts to confirm with the user if an entry for the puzzle exists in their data file.
  */
-const userConfirmed = async (year, day, level, opts) => {
-  // auto confirm if the --no-confirm flag
-  if (!opts.confirm) {
-    logger.debug('not confirming because --no-confirm flag is set');
-    return true;
-  }
+const userConfirmed = async (year, day, level) => {
   // nothing to confirm if puzzle does not exist.
   if (!(await findPuzzle(year, day, level))) {
     logger.debug('not confirming because no data for puzzle exists');
@@ -69,7 +64,7 @@ export const importAction = async (day, level, answer, options) => {
   }
 
   // bail if user does not confirm action.
-  if (!(await userConfirmed(year, day, level, options))) {
+  if (options.confirm && !(await userConfirmed(year, day, level))) {
     logger.debug('user did not confirm the import action');
     return;
   }
