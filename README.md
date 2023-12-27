@@ -183,20 +183,20 @@ npm run import <day> <level> <answer>
 Running with the `--no-confirm` flag will skip any confirmation for overwriting existing data. 
 
 ```
-npm run import --no-confirm <day> <level> <answer> 
+npm run -- import --no-confirm <day> <level> <answer> 
 ```
 
 #### Handling different answer types
 
 Answers are stored as strings, so you usually don't need to wrap your answer with quotes. However there are certain answers which will need special care: 
 
-- An answer with whitespace: wrap in quotes ```npm run import 1 1 'an answer with spaces' ```
-- An answer which is a negative number: use `--` before the args ```npm run import -- 1 1 -12345 ```
+- An answer with whitespace: wrap in quotes `npm run import 1 1 'an answer with spaces'`
+- An answer which is a negative number: use `--` to escape `npm run -- import -- 1 1 -12345`
 
 Examples: 
 - Import answer 'asdf' for day 10 level 1: `npm run import 10 1 asdf`
 - Import answer 999100 for day 7 level 2: `npm run import 7 2 999100`
-- Import answer -4000 for day 1 level 1 and skip confirmation: `npm run import --no-confirm -- 1 1 -4000`
+- Import answer -4000 for day 1 level 1 and skip confirmation: `npm run -- import --no-confirm -- 1 1 -4000`
 
 #### Bulk importing
 
