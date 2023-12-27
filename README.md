@@ -8,7 +8,7 @@ A Node.Js CLI solution generator and runner for [advent of code](https://advento
 [![codecov](https://codecov.io/gh/beakerandjake/advent-of-code-runner/branch/main/graph/badge.svg?token=MN3ZFKM7SX)](https://codecov.io/gh/beakerandjake/advent-of-code-runner)
 
 ## :mrs_claus: Features
-- Quickly and easily scaffolds an empty directory, creating all required solution files (similar to create-react-app). 
+- Quickly and easily scaffolds an empty directory, creating all required solution files. 
 - Runs your solutions (both sync and async) and measures performance. 
 - Downloads and caches puzzle input files.
 - Submits answers to advent of code.
@@ -26,6 +26,7 @@ A Node.Js CLI solution generator and runner for [advent of code](https://advento
   - [submit](#submit-day-level)
   - [stats](#stats---save)
   - [auth](#auth)
+  - [import](#import-day-level-answer---no-confirm)
 - [Solution Files](#snowman-solution-files)
 - [Caching](#cloud_with_snow-caching)
 - [Misc File Information](#gift-misc-file-information)
@@ -167,6 +168,40 @@ Creates or updates the `.env` file with your advent of code authentication token
 ```
 npm run auth
 ```
+
+### `import <day> <level> <answer> [--no-confirm]`
+Stores the correct answer to a puzzle which was solved outside of advent-of-code-runner. This allows you to use advent-of-code-runner even if you already submitted answers with different tools. Before this command you couldn't let advent-of-code-runner know that you had solved a puzzle already. Once you've imported an answer you will probably want to update the corresponding solution file to add your existing code. 
+
+**Note**: All imported puzzles are set to a runtime of 999 seconds. After importing an answer, run the `solve` command to update the puzzles runtime to a real value. 
+
+Running without the `--no-confirm` flag is the default behavior. You will be asked to confirm when importing any puzzles which already exist in your `aocr-data.json` file.
+
+```
+npm run import <day> <level> <answer>
+```
+
+Running with the `--no-confirm` flag will skip any confirmation for overwriting existing data. 
+
+```
+npm run import --no-confirm <day> <level> <answer> 
+```
+
+#### Handling different answer types
+
+Answers are stored as strings, so you usually don't need to wrap your answer with quotes. However there are certain answers which will need special care: 
+
+- An answer with whitespace: wrap in quotes ```npm run import 1 1 'an answer with spaces' ```
+- An answer which is a negative number: use `--` before the args ```npm run import -- 1 1 -12345 ```
+
+Examples: 
+- Import answer 'asdf' for day 10 level 1: `npm run import 10 1 asdf`
+- Import answer 999100 for day 7 level 2: `npm run import 7 2 999100`
+- Import answer -4000 for day 1 level 1 and skip confirmation: `npm run import --no-confirm -- 1 1 -4000`
+
+#### Bulk importing
+
+If you have already solved some puzzles, it would be tedious to manually run the `import` command a bunch of times. The wiki has a [guide](https://github.com/beakerandjake/advent-of-code-runner/wiki/Bulk-import-of-in-progress-advent-calendar) for bulk importing puzzle answers using basic linux command line tools. 
+
 
 ### `help`
 Outputs the help text for the cli

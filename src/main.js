@@ -1,33 +1,15 @@
 #!/usr/bin/env node
-import { Argument, Command, InvalidArgumentError } from 'commander';
+import { Command } from 'commander';
 import { authAction } from './commands/auth.js';
 import { initAction } from './commands/init.js';
 import { solveAction } from './commands/solve.js';
 import { statsAction } from './commands/stats.js';
 import { submitAction } from './commands/submit.js';
+import { importAction } from './commands/import.js';
 import { getConfigValue } from './config.js';
 import { handleError } from './errorHandler.js';
+import { getDayArg, getLevelArg } from './arguments.js';
 import { printFestiveTitle } from './festive.js';
-
-/**
- * Returns a function which parses the string value as an integer.
- * Then compares the parsed integer value to an array of choices.
- * The returned function throws an InvalidArgumentError if the value is not included in the choices.
- * @param {number[]} choices - The valid options to choose from
- * @throws {RangeError} - The parsed integer value was not included in the choices.
- */
-export const intParser = (choices) => (value) => {
-  const parsed = Number.parseInt(value, 10);
-  if (Number.isNaN(parsed)) {
-    throw new InvalidArgumentError('Value could not be parsed as an integer.');
-  }
-  if (!choices.includes(parsed)) {
-    const min = Math.min(...choices);
-    const max = Math.max(...choices);
-    throw new InvalidArgumentError(`Value must be between ${min} and ${max}.`);
-  }
-  return parsed;
-};
 
 try {
   const program = new Command();
@@ -55,15 +37,30 @@ try {
     .description('Scaffold an empty directory.')
     .action(initAction);
 
-  const dayArgument = new Argument(
-    '[day]',
-    'The day of the puzzle to solve (1-25).'
-  ).argParser(intParser(getConfigValue('aoc.validation.days')));
-
-  const levelArgument = new Argument(
-    '[level]',
-    `The the level of the puzzle to solve (1 or 2).`
-  ).argParser(intParser(getConfigValue('aoc.validation.levels')));
+  // add the import command
+  program
+    .command('import')
+    .description(
+      'Store the correct answer to a puzzle solved outside of this project.'
+    )
+    .option(
+      '--no-confirm',
+      'Does not ask for confirmation if puzzle already exists in data file'
+    )
+    .addArgument(getDayArg(true))
+    .addArgument(getLevelArg(true))
+    .argument('<answer>', 'The correct answer to the puzzle')
+    .addHelpText(
+      'after',
+      [
+        '',
+        'Example Calls:',
+        `  import 10 1 123456         Stores correct answer "123456" for day 10 level 1`,
+        `  import 5 2 'hello world'   Stores correct answer "hello world" for day 5 level 2`,
+        `  import -- 1 1 -123456      Stores correct answer "-123456" for day 1 level 1 (note the -- to add a negative number as an answer)`,
+      ].join('\n')
+    )
+    .action(importAction);
 
   // add the solve command
   program
@@ -81,8 +78,8 @@ try {
         '  solve [day] [level]  Solves the puzzle for the specified day and level',
       ].join('\n')
     )
-    .addArgument(dayArgument)
-    .addArgument(levelArgument)
+    .addArgument(getDayArg(false))
+    .addArgument(getLevelArg(false))
     .action(solveAction);
 
   // add the submit command
@@ -101,8 +98,8 @@ try {
         '  submit [day] [level]  Submits the puzzle for the specified day and level',
       ].join('\n')
     )
-    .addArgument(dayArgument)
-    .addArgument(levelArgument)
+    .addArgument(getDayArg(false))
+    .addArgument(getLevelArg(false))
     .action(submitAction);
 
   // add the stats command

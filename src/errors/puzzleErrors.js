@@ -17,7 +17,7 @@ export class PuzzleInFutureError extends UserError {
   //      ``
   constructor(day, ...args) {
     super(
-      `You cannot attempt this puzzle because it is not unlocked yet, check back on December ${day} at midnight EST`,
+      `This puzzle is not unlocked yet, check back on December ${day} at midnight EST`,
       ...args
     );
     this.name = 'PuzzleInFutureError';

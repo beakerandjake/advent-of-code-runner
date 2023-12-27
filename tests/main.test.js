@@ -8,18 +8,14 @@ const easyMocks = [
   ['src/commands/solve.js', ['solveAction']],
   ['src/commands/stats.js', ['statsAction']],
   ['src/commands/submit.js', ['submitAction']],
+  ['src/commands/import.js', ['importAction']],
   ['src/errorHandler.js', ['handleError']],
   ['src/festive.js', ['printFestiveTitle']],
+  ['src/arguments.js', ['getDayArg', 'getLevelArg']],
 ];
 easyMock(easyMocks);
 mockConfig();
 const mockCommander = (() => {
-  class InvalidArgumentError extends Error {
-    constructor(message) {
-      super(message);
-      this.name = 'InvalidArgumentError';
-    }
-  }
   const toReturn = {
     name: jest.fn().mockReturnThis(),
     description: jest.fn().mockReturnThis(),
@@ -28,6 +24,7 @@ const mockCommander = (() => {
     command: jest.fn().mockReturnThis(),
     hook: jest.fn().mockReturnThis(),
     action: jest.fn().mockReturnThis(),
+    argument: jest.fn().mockReturnThis(),
     addArgument: jest.fn().mockReturnThis(),
     option: jest.fn().mockReturnThis(),
     parseAsync: jest.fn(),
@@ -43,22 +40,20 @@ const mockCommander = (() => {
         argParser: jest.fn().mockReturnThis(),
       };
     },
-    InvalidArgumentError,
   }));
   return toReturn;
 })();
 
 // import after mocks set up
-const { InvalidArgumentError } = await import('commander');
 const {
   authAction,
   initAction,
   solveAction,
   statsAction,
   submitAction,
+  importAction,
   handleError,
 } = await easyResolve(easyMocks);
-const { intParser } = await import('../src/main.js');
 
 describe('main', () => {
   beforeEach(() => {
@@ -71,6 +66,7 @@ describe('main', () => {
     ['solve', solveAction],
     ['submit', submitAction],
     ['stats', statsAction],
+    ['import', importAction],
   ])('adds command %s', async (name, action) =>
     jest.isolateModulesAsync(async () => {
       await import('../src/main.js');
@@ -99,26 +95,4 @@ describe('main', () => {
       await import('../src/main.js');
       expect(handleError).toHaveBeenCalledWith(error);
     }));
-});
-
-describe('argParser()', () => {
-  test.each([null, undefined, '', false, true, {}, Promise.resolve(true)])(
-    'throws if not parsable as int: %s',
-    (value) => {
-      expect(() => {
-        intParser([1, 2, 3])(value);
-      }).toThrow(InvalidArgumentError);
-    }
-  );
-
-  test('throws if value is not a valid choice', () => {
-    expect(() => {
-      intParser([1, 2, 3])('4');
-    }).toThrow(InvalidArgumentError);
-  });
-
-  test('returns integer if value is a valid choice', () => {
-    const result = intParser([1, 2, 3])('1');
-    expect(result).toBe(1);
-  });
 });
