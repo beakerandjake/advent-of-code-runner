@@ -170,7 +170,9 @@ npm run auth
 ```
 
 ### `import <day> <level> <answer> [--no-confirm]`
-Stores the correct answer to a puzzle which was solved outside of advent-of-code-runner. This allows you to start using advent-of-code-runner even if you've already started the years calendar. Before this command you couldn't let advent-of-code-runner know that you had solved a puzzle already. Once you've imported a puzzle answer you will probably want to update the corresponding solution file with the code you wrote elsewhere, this way you can track runtime statistics for the puzzle. 
+Stores the correct answer to a puzzle which was solved outside of advent-of-code-runner. This allows you to start using advent-of-code-runner even if you've already started the years calendar. Before this command you couldn't let advent-of-code-runner know that you had solved a puzzle already. 
+
+Once you've imported a puzzle answer you will probably want to update the corresponding solution file with the code you wrote elsewhere, this way you can track runtime statistics for the puzzle. 
 
 **Note**: All imported puzzles are set to a runtime of 999 seconds. After importing an answer you will want to run the `solve` command for the puzzle you just imported, running the `solve` command will update the runtime to a real value. 
 
@@ -195,6 +197,11 @@ Answers are stored as strings, so you usually don't need to wrap your answer wit
 
 - An answer with whitespace: wrap in quotes ```npm run import 1 1 'an answer with spaces' ```
 - An answer which is a negative number: use `--` before the args ```npm run import -- 1 1 -12345 ```
+
+Examples: 
+- Import answer 'asdf' for day 10 level 1: `npm run import 10 1 asdf`
+- Import answer 999100 for day 7 level 2: `npm run import 7 2 999100`
+- Import answer -4000 for day 1 level 1 and skip confirmation: `npm run import --no-confirm -- 1 1 -4000`
 
 #### Bulk importing
 
