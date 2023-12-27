@@ -6,6 +6,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+### Added
+- Added `import` command which stores correct answers to problems submitted outside of the cli. ([#20](https://github.com/beakerandjake/advent-of-code-runner/issues/20) and [#240](https://github.com/beakerandjake/advent-of-code-runner/issues/240))
 
 ## [1.6.1] - 2023-12-01
 ### Fixed
