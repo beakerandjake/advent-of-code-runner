@@ -1,13 +1,14 @@
 #!/usr/bin/env node
-import { Argument, Command } from 'commander';
+import { Command } from 'commander';
 import { authAction } from './commands/auth.js';
 import { initAction } from './commands/init.js';
 import { solveAction } from './commands/solve.js';
 import { statsAction } from './commands/stats.js';
 import { submitAction } from './commands/submit.js';
+import { importAction } from './commands/import.js';
 import { getConfigValue } from './config.js';
 import { handleError } from './errorHandler.js';
-import { intParser } from './validation/validateArgs.js';
+import { getDayArg, getLevelArg } from './arguments.js';
 import { printFestiveTitle } from './festive.js';
 
 try {
@@ -36,15 +37,26 @@ try {
     .description('Scaffold an empty directory.')
     .action(initAction);
 
-  const dayArgument = new Argument(
-    '[day]',
-    'The day of the puzzle to solve (1-25).'
-  ).argParser(intParser(getConfigValue('aoc.validation.days')));
-
-  const levelArgument = new Argument(
-    '[level]',
-    `The the level of the puzzle to solve (1 or 2).`
-  ).argParser(intParser(getConfigValue('aoc.validation.levels')));
+  // add the import command
+  program
+    .command('import')
+    .description(
+      'Store the correct answer to a puzzle solved outside of this project.'
+    )
+    .addArgument(getDayArg(true))
+    .addArgument(getLevelArg(true))
+    .argument('<answer>', 'The correct answer to the puzzle')
+    .addHelpText(
+      'after',
+      [
+        '',
+        'Example Calls:',
+        `  import 10 1 123456         Stores correct answer "123456" for day 10 level 1`,
+        `  import 5 2 'hello world'   Stores correct answer "hello world" for day 5 level 2`,
+        `  import 1 1 \\ -123456       Stores correct answer "-123456" for day 1 level 1`,
+      ].join('\n')
+    )
+    .action(importAction);
 
   // add the solve command
   program
@@ -62,8 +74,8 @@ try {
         '  solve [day] [level]  Solves the puzzle for the specified day and level',
       ].join('\n')
     )
-    .addArgument(dayArgument)
-    .addArgument(levelArgument)
+    .addArgument(getDayArg(false))
+    .addArgument(getLevelArg(false))
     .action(solveAction);
 
   // add the submit command
@@ -82,8 +94,8 @@ try {
         '  submit [day] [level]  Submits the puzzle for the specified day and level',
       ].join('\n')
     )
-    .addArgument(dayArgument)
-    .addArgument(levelArgument)
+    .addArgument(getDayArg(false))
+    .addArgument(getLevelArg(false))
     .action(submitAction);
 
   // add the stats command

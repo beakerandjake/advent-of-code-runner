@@ -8,9 +8,10 @@ const easyMocks = [
   ['src/commands/solve.js', ['solveAction']],
   ['src/commands/stats.js', ['statsAction']],
   ['src/commands/submit.js', ['submitAction']],
+  ['src/commands/import.js', ['importAction']],
   ['src/errorHandler.js', ['handleError']],
   ['src/festive.js', ['printFestiveTitle']],
-  ['src/validation/validateArgs.js', ['intParser']],
+  ['src/arguments.js', ['getDayArg', 'getLevelArg']],
 ];
 easyMock(easyMocks);
 mockConfig();
@@ -23,6 +24,7 @@ const mockCommander = (() => {
     command: jest.fn().mockReturnThis(),
     hook: jest.fn().mockReturnThis(),
     action: jest.fn().mockReturnThis(),
+    argument: jest.fn().mockReturnThis(),
     addArgument: jest.fn().mockReturnThis(),
     option: jest.fn().mockReturnThis(),
     parseAsync: jest.fn(),
@@ -49,6 +51,7 @@ const {
   solveAction,
   statsAction,
   submitAction,
+  importAction,
   handleError,
 } = await easyResolve(easyMocks);
 
@@ -63,6 +66,7 @@ describe('main', () => {
     ['solve', solveAction],
     ['submit', submitAction],
     ['stats', statsAction],
+    ['import', importAction],
   ])('adds command %s', async (name, action) =>
     jest.isolateModulesAsync(async () => {
       await import('../src/main.js');
