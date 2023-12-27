@@ -43,6 +43,10 @@ try {
     .description(
       'Store the correct answer to a puzzle solved outside of this project.'
     )
+    .option(
+      '--no-confirm',
+      'Does not ask for confirmation if puzzle already exists in data file'
+    )
     .addArgument(getDayArg(true))
     .addArgument(getLevelArg(true))
     .argument('<answer>', 'The correct answer to the puzzle')
