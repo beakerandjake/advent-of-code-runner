@@ -217,6 +217,13 @@ Projects created using `npx advent-of-code-runner init` prior to version 1.7.0 w
 },
 ```
 
+#### Updating your README file after import
+After running the `import` command you may notice your README progress table does not automatically update. You can fix this by running the `stats` command with the `--save` option.
+
+```
+npm run stats -- --save
+```
+
 
 ### `help`
 Outputs the help text for the cli
