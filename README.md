@@ -183,24 +183,39 @@ npm run import <day> <level> <answer>
 Running with the `--no-confirm` flag will skip any confirmation for overwriting existing data. 
 
 ```
-npm run import --no-confirm <day> <level> <answer> 
+npm run -- import --no-confirm <day> <level> <answer> 
 ```
 
 #### Handling different answer types
 
 Answers are stored as strings, so you usually don't need to wrap your answer with quotes. However there are certain answers which will need special care: 
 
-- An answer with whitespace: wrap in quotes ```npm run import 1 1 'an answer with spaces' ```
-- An answer which is a negative number: use `--` before the args ```npm run import -- 1 1 -12345 ```
+- An answer with whitespace: wrap in quotes `npm run import 1 1 'an answer with spaces'`
+- An answer which is a negative number: use `--` to escape `npm run -- import -- 1 1 -12345`
 
 Examples: 
 - Import answer 'asdf' for day 10 level 1: `npm run import 10 1 asdf`
 - Import answer 999100 for day 7 level 2: `npm run import 7 2 999100`
-- Import answer -4000 for day 1 level 1 and skip confirmation: `npm run import --no-confirm -- 1 1 -4000`
+- Import answer -4000 for day 1 level 1 and skip confirmation: `npm run -- import --no-confirm -- 1 1 -4000`
 
 #### Bulk importing
 
 If you have already solved some puzzles, it would be tedious to manually run the `import` command a bunch of times. The wiki has a [guide](https://github.com/beakerandjake/advent-of-code-runner/wiki/Bulk-import-of-in-progress-advent-calendar) for bulk importing puzzle answers using basic linux command line tools. 
+
+
+#### Projects `init` before 1.7.0
+Projects created using `npx advent-of-code-runner init` prior to version 1.7.0 will not have an npm script for the `import` command. You fix this by modifying your `package.json` file and adding an npm script for the `import` command:
+
+```
+"scripts": {
+  "solve": "advent-of-code-runner solve",
+  "submit": "advent-of-code-runner submit",
+  "stats": "advent-of-code-runner stats",
+  "auth": "advent-of-code-runner auth",
+  "help": "advent-of-code-runner help",
+  "import": "advent-of-code-runner import"
+},
+```
 
 
 ### `help`
