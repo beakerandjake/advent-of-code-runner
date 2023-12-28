@@ -1,6 +1,6 @@
 {
   "name": "advent-of-code-runner",
-  "version": "1.7.0",
+  "version": "1.7.1",
   "description": "CLI for running and submitting Advent of Code Puzzles",
   "keywords": [
     "adventofcode",
