@@ -2,6 +2,8 @@
 
 A Node.Js CLI solution generator and runner for [advent of code](https://adventofcode.com/).
 
+#### *There may be compatibility issues with the 2025 event due to changes in the number of puzzles. This will cause output statistics to never report 100% completion for 2025.*
+
 [![npm](https://img.shields.io/npm/v/advent-of-code-runner)](https://www.npmjs.com/package/advent-of-code-runner)
 [![npm](https://img.shields.io/npm/dt/advent-of-code-runner)](https://www.npmjs.com/package/advent-of-code-runner)
 [![node-current](https://img.shields.io/node/v/advent-of-code-runner)](https://www.npmjs.com/package/advent-of-code-runner)
